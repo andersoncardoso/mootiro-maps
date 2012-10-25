@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import datetime
+from dateutil.tz import tzutc
+
 from django.test import TestCase
 from django.test.client import Client
 from django.contrib.contenttypes.models import ContentType
@@ -9,6 +12,9 @@ from django.utils.importlib import import_module
 
 from authentication.models import User
 from authentication.utils import login
+
+from .utils import datetime_to_iso, iso_to_datetime
+from .models import CreationDataMixin
 
 
 A_POLYGON_GEOMETRY = '''
@@ -170,3 +176,58 @@ class UtilsTestCase(KomooBaseTestCase):
         # assert method is not allowed
         self.assertTrue(r.status_code, 405)
 
+    def test_iso_to_datetime(self):
+        iso_string = '2010-05-08T23:41:54+00:00'
+        date_obj = datetime.datetime(2010, 5, 8, 23, 41, 54, tzinfo=tzutc())
+        self.assertEqual(date_obj, iso_to_datetime(iso_string))
+
+        iso_string = 'wrong-iso-string'
+        with self.assertRaises(Exception):
+            iso_to_datetime(iso_to_datetime)
+
+        iso_string = None
+        self.assertIsNone(iso_to_datetime(iso_string))
+
+    def test_datetime_to_iso(self):
+        iso_string = '2010-05-08T23:41:54+00:00'
+        date_obj = datetime.datetime(2010, 5, 8, 23, 41, 54, tzinfo=tzutc())
+        self.assertEqual(iso_string, datetime_to_iso(date_obj))
+
+        date_obj = type('WrongClass', (object,), {})()
+        with self.assertRaises(Exception):
+            datetime_to_iso(date_obj)
+
+        date_obj = None
+        self.assertIsNone(datetime_to_iso(date_obj))
+
+    def test_creation_data_mixin(self):
+        class SomeModel(CreationDataMixin):
+            pass
+
+        model = SomeModel()
+
+        self.assertEqual(model.to_dict(), {
+            'creator': None,
+            'creation_date': None,
+            'last_editor': None,
+            'last_update': None,
+        })
+
+        user1 = User()
+        user1.id = 1
+
+        user2 = User()
+        user2.id = 2
+
+        creation = '2010-05-08T23:41:54+00:00'
+        last_update = '2010-06-08T00:00:00+00:00'
+
+        model = SomeModel(creator=user1,
+                    creation_date=iso_to_datetime(creation), last_editor=user2,
+                    last_update=iso_to_datetime(last_update))
+        self.assertEqual(model.to_dict(), {
+            'creator': 1,
+            'creation_date': creation,
+            'last_editor': 2,
+            'last_update': last_update
+        })

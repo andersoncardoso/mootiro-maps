@@ -10,9 +10,9 @@ from django.core.urlresolvers import reverse
 import reversion
 from lib.taggit.managers import TaggableManager
 
-from authentication.models import User
 from community.models import Community
-from komoo_map.models import GeoRefModel, POLYGON, LINESTRING, POINT
+from komoo_map.models import POLYGON, LINESTRING, POINT
+from main.models import BaseObject, CreationDataMixin
 from investment.models import Investment
 from fileupload.models import UploadedFile
 
@@ -36,10 +36,9 @@ class ResourceKind(models.Model):
             ).order_by('-count', 'slug')[:number]
 
 
-class Resource(GeoRefModel):
+class Resource(BaseObject, CreationDataMixin):
     """Resources model"""
     name = models.CharField(max_length=256, default=_('Resource without name'))
-    # slug = models.CharField(max_length=256, blank=False, db_index=True)
     kind = models.ForeignKey(ResourceKind, null=True, blank=True)
     description = models.TextField()
     contact = models.TextField(null=True, blank=True)
@@ -50,14 +49,6 @@ class Resource(GeoRefModel):
     investments = generic.GenericRelation(Investment,
                         content_type_field='grantee_content_type',
                         object_id_field='grantee_object_id')
-
-    # Meta info
-    creator = models.ForeignKey(User, editable=False, null=True,
-                                related_name='created_resources')
-    creation_date = models.DateTimeField(auto_now_add=True)
-    last_editor = models.ForeignKey(User, editable=False, null=True,
-                                    blank=True)
-    last_update = models.DateTimeField(auto_now=True)
 
     class Map:
         title = _('Resource')
@@ -71,6 +62,9 @@ class Resource(GeoRefModel):
     def __unicode__(self):
         return unicode(self.name)
 
+    def __init__(self):
+        self.set_type(Resource)
+
     image = "img/resource.png"
     image_off = "img/resource-off.png"
 
@@ -79,16 +73,12 @@ class Resource(GeoRefModel):
         return UploadedFile.get_files_for(self)
 
     @property
-    def home_url_params(self):
-        return dict(id=self.id)
-
-    @property
     def view_url(self):
-        return reverse('view_resource', kwargs=self.home_url_params)
+        return reverse('view_resource', kwargs={'id': self.id})
 
     @property
     def edit_url(self):
-        return reverse('edit_resource', kwargs=self.home_url_params)
+        return reverse('edit_resource', kwargs={'id': self.id})
 
     @property
     def admin_url(self):

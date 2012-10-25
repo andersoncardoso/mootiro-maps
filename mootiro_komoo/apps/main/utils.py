@@ -7,6 +7,7 @@ from markdown import markdown
 import requests
 from string import letters, digits
 from random import choice
+import dateutil.parser
 
 from django import forms
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -36,6 +37,20 @@ except ImportError:
 # def komoo_permalink(obj):
 #     from main.views import ENTITY_MODEL_REV
 #     return '/permalink/{}{}'.format(ENTITY_MODEL_REV[obj.__class__], obj.id)
+
+
+def datetime_to_iso(datetime_obj):
+    """parses a python datetime object to a ISO-8601 string"""
+    if datetime_obj is None:
+        return None
+    return datetime_obj.isoformat()
+
+
+def iso_to_datetime(iso_string):
+    """parses a ISO-8601 string into a python datetime object"""
+    if iso_string is None:
+        return None
+    return dateutil.parser.parse(iso_string)
 
 
 def create_geojson(objects, type_='FeatureCollection', convert=True,
