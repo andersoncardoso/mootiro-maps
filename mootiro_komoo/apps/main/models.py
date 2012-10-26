@@ -34,11 +34,6 @@ class BaseObject(GeoRefModel):
     """Common Base Object model"""
     type = models.CharField(max_length=512, db_index=True)
 
-    def set_type(self, _class):
-        super(_class, self).__init__()
-        self.type = _class.__name__.lower()
-
-
     def to_dict(self):
         return {
             'type': self.type,

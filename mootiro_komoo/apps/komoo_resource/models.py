@@ -62,8 +62,9 @@ class Resource(BaseObject, CreationDataMixin):
     def __unicode__(self):
         return unicode(self.name)
 
-    def __init__(self):
-        self.set_type(Resource)
+    def __init__(self, *args, **kwargs):
+        super(Resource, self).__init__(*args, **kwargs)
+        self.type = self.__class__.__name__.lower()
 
     image = "img/resource.png"
     image_off = "img/resource-off.png"
