@@ -30,14 +30,16 @@ class CreationDataMixin(models.Model):
         }
 
 
-class BaseObject(GeoRefModel):
+class BaseObject(GeoRefModel, CreationDataMixin):
     """Common Base Object model"""
     type = models.CharField(max_length=512, db_index=True)
 
     def to_dict(self):
-        return {
+        data = super(BaseObject, self).to_dict()
+        data.update({
             'type': self.type,
-        }
+        })
+        return data
 
 
 

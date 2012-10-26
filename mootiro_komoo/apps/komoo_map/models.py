@@ -24,6 +24,14 @@ class GeoRefModel(geomodels.Model):
     geometry = CollectionFrom(points='points', lines='lines', polys='polys')
 
 
+    geometry_types = dict(
+        POLYGON = 'Polygon',
+        LINESTRING = 'LineString',
+        MULTILINESTRING = 'MultiLineString',
+        POINT = 'Point',
+        MULTIPOINT = 'MultiPoint',
+    )
+
     @property
     def related_items(self):
         return []

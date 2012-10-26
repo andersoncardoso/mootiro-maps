@@ -8,26 +8,15 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 import reversion
-from django.template.defaultfilters import slugify
 from lib.taggit.managers import TaggableManager
-from komoo_map.models import GeoRefModel, POLYGON
-from authentication.models import User
+from komoo_map.models import POLYGON
+from main.models import BaseObject
 
 
-class Community(GeoRefModel):
+class Community(BaseObject):
     name = models.CharField(max_length=256, blank=False)
-    # Auto-generated url slug. It's not editable via ModelForm.
-    slug = models.SlugField(max_length=256, blank=False, db_index=True)
     population = models.IntegerField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-
-    # Meta info
-    creator = models.ForeignKey(User, editable=False, null=True,
-                                related_name='created_communities')
-    creation_date = models.DateTimeField(auto_now_add=True)
-    last_editor = models.ForeignKey(User, editable=False, null=True,
-                                    blank=True)
-    last_update = models.DateTimeField(auto_now=True)
 
     tags = TaggableManager()
 
@@ -52,10 +41,6 @@ class Community(GeoRefModel):
     class Meta:
         verbose_name = "community"
         verbose_name_plural = "communities"
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(Community, self).save(*args, **kwargs)
 
     image = "img/community.png"
     image_off = "img/community-off.png"

@@ -12,7 +12,7 @@ from lib.taggit.managers import TaggableManager
 
 from community.models import Community
 from komoo_map.models import POLYGON, LINESTRING, POINT
-from main.models import BaseObject, CreationDataMixin
+from main.models import BaseObject
 from investment.models import Investment
 from fileupload.models import UploadedFile
 
@@ -36,7 +36,7 @@ class ResourceKind(models.Model):
             ).order_by('-count', 'slug')[:number]
 
 
-class Resource(BaseObject, CreationDataMixin):
+class Resource(BaseObject):
     """Resources model"""
     name = models.CharField(max_length=256, default=_('Resource without name'))
     kind = models.ForeignKey(ResourceKind, null=True, blank=True)
