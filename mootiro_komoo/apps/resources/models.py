@@ -2,17 +2,15 @@
 from __future__ import unicode_literals
 from django.contrib.gis.db import models
 from django.contrib.contenttypes import generic
-from django.template.defaultfilters import slugify
 from django.db.models import Count
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
 import reversion
-from lib.taggit.managers import TaggableManager
 
-from community.models import Community
 from komoo_map.models import POLYGON, LINESTRING, POINT
 from main.models import BaseObject
+from community.models import Community
 from investment.models import Investment
 from fileupload.models import UploadedFile
 
@@ -20,14 +18,9 @@ from fileupload.models import UploadedFile
 class ResourceKind(models.Model):
     """Kind of Resources"""
     name = models.CharField(max_length=128)
-    slug = models.SlugField(max_length=128, blank=True, null=True)
 
     def __unicode__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        return super(ResourceKind, self).save(*args, **kwargs)
 
     @classmethod
     def favorites(cls, number=10):
@@ -38,13 +31,12 @@ class ResourceKind(models.Model):
 
 class Resource(BaseObject):
     """Resources model"""
-    name = models.CharField(max_length=256, default=_('Resource without name'))
+    baseobject__type = 'resource'
+
     kind = models.ForeignKey(ResourceKind, null=True, blank=True)
-    description = models.TextField()
     contact = models.TextField(null=True, blank=True)
     community = models.ManyToManyField(Community, related_name='resources',
             null=True, blank=True)
-    tags = TaggableManager()
 
     investments = generic.GenericRelation(Investment,
                         content_type_field='grantee_content_type',
@@ -58,13 +50,6 @@ class Resource(BaseObject):
         geometries = (POLYGON, LINESTRING, POINT)
         form_view_name = 'new_resource_from_map'
         zindex = 15
-
-    def __unicode__(self):
-        return unicode(self.name)
-
-    def __init__(self, *args, **kwargs):
-        super(Resource, self).__init__(*args, **kwargs)
-        self.type = self.__class__.__name__.lower()
 
     image = "img/resource.png"
     image_off = "img/resource-off.png"

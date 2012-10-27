@@ -15,8 +15,8 @@ from lib.taggit.models import TaggedItem
 from ajaxforms import ajax_form
 
 from authentication.utils import login_required
-from komoo_resource.models import Resource, ResourceKind
-from komoo_resource.forms import FormResource, FormResourceGeoRef
+from .models import Resource, ResourceKind
+from .forms import FormResource, FormResourceGeoRef
 from main.utils import (create_geojson, paginated_query, sorted_query,
                         filtered_query)
 

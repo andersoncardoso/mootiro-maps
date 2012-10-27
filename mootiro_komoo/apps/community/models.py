@@ -14,14 +14,9 @@ from main.models import BaseObject
 
 
 class Community(BaseObject):
-    name = models.CharField(max_length=256, blank=False)
+    baseobject__type = 'community'
+
     population = models.IntegerField(null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-
-    tags = TaggableManager()
-
-    def __unicode__(self):
-        return self.name
 
     class Map:
         title = _('Community')
@@ -37,10 +32,6 @@ class Community(BaseObject):
         min_zoom_icon = 0
         max_zoom_icon = 0
         zindex = 5
-
-    class Meta:
-        verbose_name = "community"
-        verbose_name_plural = "communities"
 
     image = "img/community.png"
     image_off = "img/community-off.png"

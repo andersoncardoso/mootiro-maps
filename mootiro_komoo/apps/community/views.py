@@ -111,8 +111,7 @@ def communities_geojson(request):
 
 def search_by_name(request):
     term = request.GET['term']
-    communities = Community.objects.filter(Q(name__icontains=term) |
-                                           Q(slug__icontains=term))
+    communities = Community.objects.filter(name__icontains=term)
     d = [{'value': c.id, 'label': c.name} for c in communities]
     return HttpResponse(simplejson.dumps(d),
                         mimetype="application/x-javascript")

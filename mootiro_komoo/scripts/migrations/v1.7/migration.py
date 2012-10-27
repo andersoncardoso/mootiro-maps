@@ -2,21 +2,20 @@
 import sys
 import simplejson as json
 import codecs
+import logging
+
+logging.basicConfig(format='>> %(message)s', level=logging.DEBUG)
 
 
+# sequence for BaseObject ids
 base_obj_seq = 1
 
+# ContentTypesIndex
 contenttypes = {
     'resource': 25,
     'baseobject': 54,
 }
 
-
-def get_base_object_seq(data):
-    global base_obj_seq
-    for entry in data:
-        if entry['model'] == 'main.baseobject':
-            base_obj_seq += 1
 
 # def migrate_contenttype_references(data, type_, old_id, new_ref):
 #     apps_with_cttype = [
@@ -50,10 +49,11 @@ def _del_field_if_exists(fields, name):
         del fields[name]
 
 
-def migrate_resource(data):
+def _migrate_app_to_baseobject(data, obj_type, model):
+    logging.info('Migrating {} to BaseObject'.format(obj_type))
     global base_obj_seq
     for entry in data:
-        if entry['model'] == 'komoo_resource.resource':
+        if entry['model'] == model:
             fields = entry['fields']
 
             base_obj = {
@@ -64,35 +64,71 @@ def migrate_resource(data):
                     'points': fields['points'],
                     'lines': fields['lines'],
                     'polys': fields['polys'],
-                    'type': 'resource',
+                    'type': obj_type,
+                    'name': fields['name'],
+                    'description': fields['description'],
                 }
             }
             [_set_field_if_exists(base_obj, fields, fname) for fname in [
-                'creator', 'creation_date', 'last_update', 'last_editor']]
+                'creator', 'creation_date', 'last_update', 'last_editor',
+                'tags']]
 
             del fields['geometry']
             del fields['points']
             del fields['lines']
             del fields['polys']
+            del fields['name']
+            del fields['description']
             [_del_field_if_exists(fields, fname) for fname in [
-                'creator', 'creation_date', 'last_update', 'last_editor']]
+                'creator', 'creation_date', 'last_update', 'last_editor',
+                'slug', 'tags']]
             fields['baseobject_ptr'] = base_obj_seq
 
-            # fix references for resource!
-            # data = migrate_contenttype_references(data, 'resource',
-                        # entry['pk'], base_obj_seq)
+            # references????
 
             base_obj_seq += 1
-
             data.append(base_obj)
     return data
 
 
+def migrate_resources(data):
+    logging.info('Migrating Resources')
+
+    data = _migrate_app_to_baseobject(data, 'resource', 'komoo_resource.resource')
+    for entry in data:
+        if entry['model'] == 'komoo_resource.resource':
+            entry['model'] = 'resources.resource'
+
+        elif entry['model'] == 'komoo_resource.resourcekind':
+            entry['model'] = 'resources.resourcekind'
+            del entry['fields']['slug']
+    return data
+
+
+def _get_community_ref(data, pk):
+    for entry in data:
+        if entry['model'] == 'community.community' and \
+           entry['pk'] == pk:
+
+            return entry['fields']['baseobject_ptr']
+    return None
+
+
 def migrate_community(data):
-    # baseobject
-    #remove slug
-    # references
-    pass
+    logging.info('Migrating Community')
+    data = _migrate_app_to_baseobject(data, 'community', 'community.community')
+
+    apps_with_reference_for_community = ['need.need', 'resources.resource', 'komoo_project.project', 'organization.organizationbranch', 'organization.organization']
+    for entry in data:
+        if entry['model'] in apps_with_reference_for_community:
+            comm_refs = []
+            for comm in entry['fields']['community']:
+                ref = _get_community_ref(data, comm)
+                if ref:
+                    comm_refs.append(ref)
+            entry['fields']['community'] = comm_refs
+
+    return data
 
 
 def parse_json_file(file_):
@@ -100,8 +136,8 @@ def parse_json_file(file_):
     with codecs.open(file_, 'r', 'utf-8') as f:
         data = json.loads(f.read())
 
-        get_base_object_seq(data)
-        data = migrate_resource(data)
+        data = migrate_resources(data)
+        data = migrate_community(data)
 
         new_data = json.dumps(data)
 

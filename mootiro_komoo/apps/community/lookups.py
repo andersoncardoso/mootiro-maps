@@ -10,7 +10,7 @@ class CommunityLookup(LookupChannel):
 
     def get_query(self, q, request):
         return Community.objects.filter(
-            Q(name__icontains=q) | Q(slug__icontains=q))
+            Q(name__icontains=q))
 
     def get_result(self, obj):
         u"""

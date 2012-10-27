@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.db import models
+from lib.taggit.managers import TaggableManager
 
 from authentication.models import User
 from komoo_map.models import GeoRefModel
@@ -30,9 +31,18 @@ class CreationDataMixin(models.Model):
         }
 
 
-class BaseObject(GeoRefModel, CreationDataMixin):
+class TagsMixin(models.Model):
+    tags = TaggableManager()
+
+    class Meta:
+        abstract = True
+
+
+class BaseObject(GeoRefModel, CreationDataMixin, TagsMixin):
     """Common Base Object model"""
     type = models.CharField(max_length=512, db_index=True)
+    name = models.CharField(max_length=256, blank=False)
+    description = models.TextField(null=True, blank=True)
 
     def to_dict(self):
         data = super(BaseObject, self).to_dict()
@@ -40,6 +50,15 @@ class BaseObject(GeoRefModel, CreationDataMixin):
             'type': self.type,
         })
         return data
+
+    def save(self, *args, **kwargs):
+        if self.baseobject__type:
+            self.type = self.baseobject__type
+        super(BaseObject, self).save(*args, **kwargs)
+
+
+    def __unicode__(self):
+        return unicode("[{}] - {}".format(self.type, self.name))
 
 
 
