@@ -7,13 +7,13 @@ import logging
 logging.basicConfig(format='>> %(message)s', level=logging.DEBUG)
 
 
-# sequence for BaseObject ids
-base_obj_seq = 1
+# sequence for CommonObject ids
+common_obj_seq = 1
 
 # ContentTypesIndex
 contenttypes = {
     'resource': 25,
-    'baseobject': 54,
+    'commonobject': 54,
 }
 
 
@@ -34,7 +34,7 @@ contenttypes = {
 #             if fields['object_id'] == old_id and \
 #                fields['content_type'] == contenttypes[type_]:
 #
-#                 entry['fields']['content_type'] = contenttypes['baseobject']
+#                 entry['fields']['content_type'] = contenttypes['commonobject']
 #                 entry['fields']['object_id'] = new_ref
 #     return data
 
@@ -49,52 +49,44 @@ def _del_field_if_exists(fields, name):
         del fields[name]
 
 
-def _migrate_app_to_baseobject(data, obj_type, model):
-    logging.info('Migrating {} to BaseObject'.format(obj_type))
-    global base_obj_seq
+def _migrate_app_to_common_object(data, obj_type, model):
+    logging.info('Migrating {} to CommonObject'.format(obj_type))
+    global common_obj_seq
     for entry in data:
         if entry['model'] == model:
             fields = entry['fields']
 
-            base_obj = {
-                'pk': base_obj_seq,
-                'model': 'main.baseobject',
+            common_obj = {
+                'pk': common_obj_seq,
+                'model': 'main.commonobject',
                 'fields': {
                     'geometry': fields['geometry'],
                     'points': fields['points'],
                     'lines': fields['lines'],
                     'polys': fields['polys'],
                     'type': obj_type,
-                    'name': fields['name'],
-                    'description': fields['description'],
                 }
             }
-            [_set_field_if_exists(base_obj, fields, fname) for fname in [
-                'creator', 'creation_date', 'last_update', 'last_editor',
-                'tags']]
 
             del fields['geometry']
             del fields['points']
             del fields['lines']
             del fields['polys']
-            del fields['name']
-            del fields['description']
-            [_del_field_if_exists(fields, fname) for fname in [
-                'creator', 'creation_date', 'last_update', 'last_editor',
-                'slug', 'tags']]
-            fields['baseobject_ptr'] = base_obj_seq
+            _del_field_if_exists(fields, 'slug')
+            fields['commonobject_ptr'] = common_obj_seq
 
             # references????
 
-            base_obj_seq += 1
-            data.append(base_obj)
+            common_obj_seq += 1
+            data.append(common_obj)
     return data
 
 
 def migrate_resources(data):
     logging.info('Migrating Resources')
 
-    data = _migrate_app_to_baseobject(data, 'resource', 'komoo_resource.resource')
+    data = _migrate_app_to_common_object(data,
+                'resource', 'komoo_resource.resource')
     for entry in data:
         if entry['model'] == 'komoo_resource.resource':
             entry['model'] = 'resources.resource'
@@ -110,15 +102,18 @@ def _get_community_ref(data, pk):
         if entry['model'] == 'community.community' and \
            entry['pk'] == pk:
 
-            return entry['fields']['baseobject_ptr']
+            return entry['fields']['commonobject_ptr']
     return None
 
 
 def migrate_community(data):
     logging.info('Migrating Community')
-    data = _migrate_app_to_baseobject(data, 'community', 'community.community')
+    data = _migrate_app_to_common_object(data,
+                'community', 'community.community')
 
-    apps_with_reference_for_community = ['need.need', 'resources.resource', 'komoo_project.project', 'organization.organizationbranch', 'organization.organization']
+    apps_with_reference_for_community = [
+            'need.need', 'resources.resource', 'komoo_project.project',
+            'organization.organizationbranch', 'organization.organization']
     for entry in data:
         if entry['model'] in apps_with_reference_for_community:
             comm_refs = []

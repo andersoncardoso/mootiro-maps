@@ -13,10 +13,10 @@ class CreationDataMixin(models.Model):
     """Mixin for creation/editing metadata"""
     # creation/editing info
     creator = models.ForeignKey(User, editable=False, null=True,
-                            related_name='created_objects')
+                            related_name='created_%(class)s')
     creation_date = models.DateTimeField(auto_now_add=True)
     last_editor = models.ForeignKey(User, editable=False, null=True,
-                            blank=True, related_name='last_editor_of')
+                            blank=True, related_name='last_editor_of_%(class)s')
     last_update = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -38,27 +38,34 @@ class TagsMixin(models.Model):
         abstract = True
 
 
-class BaseObject(GeoRefModel, CreationDataMixin, TagsMixin):
-    """Common Base Object model"""
-    type = models.CharField(max_length=512, db_index=True)
+class CommonDataMixin(CreationDataMixin, TagsMixin):
     name = models.CharField(max_length=256, blank=False)
     description = models.TextField(null=True, blank=True)
 
+    def __unicode__(self):
+        return unicode("[{}] - {}".format(self.type, self.name))
+
+    class Meta:
+        abstract = True
+
+
+class CommonObject(GeoRefModel, CreationDataMixin, TagsMixin):
+    """Common Base Object model"""
+    type = models.CharField(max_length=512, db_index=True)
+
     def to_dict(self):
-        data = super(BaseObject, self).to_dict()
+        data = super(CommonObject, self).to_dict()
         data.update({
             'type': self.type,
         })
         return data
 
     def save(self, *args, **kwargs):
-        if self.baseobject__type:
-            self.type = self.baseobject__type
-        super(BaseObject, self).save(*args, **kwargs)
+        if self.common_object__type:
+            self.type = self.common_object__type
+        super(CommonObject, self).save(*args, **kwargs)
 
 
-    def __unicode__(self):
-        return unicode("[{}] - {}".format(self.type, self.name))
 
 
 

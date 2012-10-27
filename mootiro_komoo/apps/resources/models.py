@@ -8,8 +8,8 @@ from django.core.urlresolvers import reverse
 
 import reversion
 
+from main.models import CommonObject, CommonDataMixin
 from komoo_map.models import POLYGON, LINESTRING, POINT
-from main.models import BaseObject
 from community.models import Community
 from investment.models import Investment
 from fileupload.models import UploadedFile
@@ -29,13 +29,13 @@ class ResourceKind(models.Model):
             ).order_by('-count', 'slug')[:number]
 
 
-class Resource(BaseObject):
+class Resource(CommonObject, CommonDataMixin):
     """Resources model"""
-    baseobject__type = 'resource'
+    common_object__type = 'resource'
 
     kind = models.ForeignKey(ResourceKind, null=True, blank=True)
     contact = models.TextField(null=True, blank=True)
-    community = models.ManyToManyField(Community, related_name='resources',
+    community = models.ManyToManyField(CommonObject, related_name='resources',
             null=True, blank=True)
 
     investments = generic.GenericRelation(Investment,

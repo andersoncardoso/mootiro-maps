@@ -60,6 +60,6 @@
 
   {"pk": 53, "model": "contenttypes.contenttype", "fields": {"model": "socialauth", "name": "social auth", "app_label": "authentication"}},
 
-  {"pk": 54, "model": "contenttypes.contenttype", "fields": {"model": "baseobject", "name": "base object", "app_label": "main"}}
+  {"pk": 54, "model": "contenttypes.contenttype", "fields": {"model": "commonobject", "name": "common object", "app_label": "main"}}
 
 ]

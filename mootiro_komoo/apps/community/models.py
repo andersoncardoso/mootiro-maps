@@ -8,13 +8,12 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 import reversion
-from lib.taggit.managers import TaggableManager
 from komoo_map.models import POLYGON
-from main.models import BaseObject
+from main.models import CommonObject, CommonDataMixin
 
 
-class Community(BaseObject):
-    baseobject__type = 'community'
+class Community(CommonObject, CommonDataMixin):
+    common_object__type = 'community'
 
     population = models.IntegerField(null=True, blank=True)
 
