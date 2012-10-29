@@ -11,7 +11,7 @@ logging.basicConfig(format='>> %(message)s', level=logging.DEBUG)
 common_obj_seq = 1
 
 # ContentTypesIndex
-contenttypes = {
+cttypes = {
     'resource': 25,
     'commonobject': 54,
 }
@@ -32,12 +32,11 @@ contenttypes = {
 #         if entry['model'] in apps_with_cttype:
 #             fields = entry['fields']
 #             if fields['object_id'] == old_id and \
-#                fields['content_type'] == contenttypes[type_]:
+#                fields['content_type'] == cttypes[type_]:
 #
-#                 entry['fields']['content_type'] = contenttypes['commonobject']
+#                 entry['fields']['content_type'] = cttypes['commonobject']
 #                 entry['fields']['object_id'] = new_ref
 #     return data
-
 
 def _set_field_if_exists(obj, fields, name):
     if name in fields.keys():
@@ -47,6 +46,15 @@ def _set_field_if_exists(obj, fields, name):
 def _del_field_if_exists(fields, name):
     if name in fields.keys():
         del fields[name]
+
+
+def _get_ref_for(type_, data, pk):
+    for entry in data:
+        if entry['model'] == type_ and \
+           entry['pk'] == pk:
+
+            return entry['fields']['commonobject_ptr']
+    return None
 
 
 def _migrate_app_to_common_object(data, obj_type, model):
@@ -60,18 +68,18 @@ def _migrate_app_to_common_object(data, obj_type, model):
                 'pk': common_obj_seq,
                 'model': 'main.commonobject',
                 'fields': {
-                    'geometry': fields['geometry'],
-                    'points': fields['points'],
-                    'lines': fields['lines'],
-                    'polys': fields['polys'],
+                    'geometry': fields.get('geometry', None),
+                    'points': fields.get('points', None),
+                    'lines': fields.get('lines', None),
+                    'polys': fields.get('polys', None),
                     'type': obj_type,
                 }
             }
 
-            del fields['geometry']
-            del fields['points']
-            del fields['lines']
-            del fields['polys']
+            _del_field_if_exists(fields, 'geometry')
+            _del_field_if_exists(fields, 'points')
+            _del_field_if_exists(fields, 'lines')
+            _del_field_if_exists(fields, 'polys')
             _del_field_if_exists(fields, 'slug')
             fields['commonobject_ptr'] = common_obj_seq
 
@@ -97,15 +105,6 @@ def migrate_resources(data):
     return data
 
 
-def _get_community_ref(data, pk):
-    for entry in data:
-        if entry['model'] == 'community.community' and \
-           entry['pk'] == pk:
-
-            return entry['fields']['commonobject_ptr']
-    return None
-
-
 def migrate_community(data):
     logging.info('Migrating Community')
     data = _migrate_app_to_common_object(data,
@@ -118,11 +117,54 @@ def migrate_community(data):
         if entry['model'] in apps_with_reference_for_community:
             comm_refs = []
             for comm in entry['fields']['community']:
-                ref = _get_community_ref(data, comm)
+                ref = _get_ref_for('community.community', data, comm)
                 if ref:
                     comm_refs.append(ref)
             entry['fields']['community'] = comm_refs
 
+    return data
+
+
+def migrate_need(data):
+    logging.info('Migrating Need')
+    data = _migrate_app_to_common_object(data, 'need', 'need.need')
+
+    for entry in data:
+        if entry['model'] == 'need.need':
+            f = entry['fields']
+
+            f['name'] = f['title'][:]
+
+            comm_refs = []
+            for comm in f['community']:
+                ref = _get_ref_for('community.community', data, comm)
+                if ref:
+                    comm_refs.append(ref)
+            f['community'] = comm_refs
+
+            del f['title']
+            _del_field_if_exists(f, 'slug')
+        # refs ? relations ?
+    return data
+
+
+def migrate_proposal(data):
+    logging.info('Migrating Proposal')
+
+    for entry in data:
+        if entry['model'] == 'proposal.proposal':
+            f = entry['fields']
+
+            f['name'] = f['title'][:]
+            n = _get_ref_for('need.need', data, f['need'])
+            if n:
+                f['need'] = n
+
+            _del_field_if_exists(f, 'number')
+            _del_field_if_exists(f, 'title')
+            _del_field_if_exists(f, 'realizers')
+
+            #refs? relations?
     return data
 
 
@@ -133,6 +175,8 @@ def parse_json_file(file_):
 
         data = migrate_resources(data)
         data = migrate_community(data)
+        data = migrate_need(data)
+        data = migrate_proposal(data)
 
         new_data = json.dumps(data)
 

@@ -7,32 +7,18 @@ from django.contrib.contenttypes import generic
 
 import reversion
 
+from main.models import CommonObject, CommonDataMixin
 from authentication.models import User
 from need.models import Need
 from investment.models import Investment
 
 
-class Proposal(models.Model):
+class Proposal(CommonDataMixin):
     """A proposed solution for solving a need"""
-
-    class Meta:
-        verbose_name = "proposal"
-        verbose_name_plural = "proposals"
-
-    title = models.CharField(max_length=256)
-    description = models.TextField()
-    number = models.IntegerField(null=False, blank=True, editable=False)
-
-    # Meta info
-    creator = models.ForeignKey(User, editable=False, null=True,
-                                related_name='created_proposals')
-    creation_date = models.DateTimeField(auto_now_add=True)
-    last_editor = models.ForeignKey(User, editable=False, null=True,
-                                    blank=True)
-    last_update = models.DateTimeField(auto_now=True)
+    type = 'proposal'
 
     # Relationships
-    need = models.ForeignKey(Need, related_name='proposals')
+    need = models.ForeignKey(CommonObject, related_name='proposals')
 
     # TODO: Also: organizations = model.ManyToManyField(Organization)
     cost = models.DecimalField(decimal_places=2, max_digits=14, null=True,
@@ -42,12 +28,6 @@ class Proposal(models.Model):
     investments = generic.GenericRelation(Investment,
                         content_type_field='grantee_content_type',
                         object_id_field='grantee_object_id')
-    #dummy? readding to data charge to work
-    realizers = models.ManyToManyField(User, related_name='user_realizers')
-
-    @property
-    def name(self):
-        return self.title
 
     @property
     def community(self):
@@ -56,15 +36,6 @@ class Proposal(models.Model):
     @property
     def geometry(self):
         return self.need.geometry
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            # auto numbering a need's proposals
-            self.number = Proposal.objects.filter(need=self.need).count() + 1
-        super(Proposal, self).save(*args, **kwargs)
-
-    def __unicode__(self):
-        return unicode(self.title)
 
     # Url aliases
     @property
@@ -92,6 +63,10 @@ class Proposal(models.Model):
     @property
     def perm_id(self):
         return 'p%d' % self.id
+
+    @property
+    def title(self):
+        return self.name
 
 if not reversion.is_registered(Need):
     reversion.register(Proposal)

@@ -58,12 +58,7 @@ class Update(models.Model):
         self._names = simplejson.dumps([i.name for i in instances])
         keys = []
         for i in instances:
-            if type(i) == Resource:
-                key = i.id
-            elif type(i) == Proposal:
-                key = i.number
-            else:
-                key = i.slug
+            key = i.id
             keys.append(key)
         self._keys = simplejson.dumps(keys)
         self._links = simplejson.dumps([i.view_url for i in instances])

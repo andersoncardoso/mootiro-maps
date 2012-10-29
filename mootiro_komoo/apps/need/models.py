@@ -9,6 +9,7 @@ from django.template.defaultfilters import slugify
 import reversion
 from lib.taggit.managers import TaggableManager
 
+from main.models import CommonObject, CommonDataMixin
 from authentication.models import User
 from community.models import Community
 from komoo_map.models import GeoRefModel, POLYGON, LINESTRING, POINT
@@ -59,36 +60,20 @@ class TargetAudience(models.Model):
         return self.name
 
 
-class Need(GeoRefModel):
+class Need(CommonObject, CommonDataMixin):
     """A need of a Community"""
-
-    class Meta:
-        verbose_name = "need"
-        verbose_name_plural = "needs"
-
-    title = models.CharField(max_length=256, blank=False)
-    # Auto-generated url slug. It's not editable via ModelForm.
-    slug = models.CharField(max_length=256, blank=False, db_index=True)
-    description = models.TextField()
-
-    # Meta info
-    creator = models.ForeignKey(User, editable=False, null=True, related_name='created_needs')
-    creation_date = models.DateTimeField(auto_now_add=True)
-    last_editor = models.ForeignKey(User, editable=False, null=True, blank=True)
-    last_update = models.DateTimeField(auto_now=True)
+    common_object__type = 'need'
 
     # Relationships
-    # community = models.ForeignKey(Community, related_name="needs", null=True, blank=True)
-    community = models.ManyToManyField(Community, related_name="needs", null=True, blank=True)
+    community = models.ManyToManyField(CommonObject, related_name="needs",
+                    null=True, blank=True)
     categories = models.ManyToManyField(NeedCategory)
     target_audiences = models.ManyToManyField(TargetAudience, blank=False)
-
-    tags = TaggableManager()
 
     class Map:
         title = _('Need')
         editable = True
-        background_color =  '#f42c5e'
+        background_color = '#f42c5e'
         border_color = '#d31e52'
         geometries = (POLYGON, LINESTRING, POINT)
         categories = [
@@ -105,13 +90,6 @@ class Need(GeoRefModel):
         ]
         form_view_name = 'new_need_from_map'
         form_view_kwargs = {}
-
-    def __unicode__(self):
-        return unicode(self.title)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
-        return super(Need, self).save(*args, **kwargs)
 
     image = "img/need.png"
     image_off = "img/need-off.png"
@@ -135,12 +113,12 @@ class Need(GeoRefModel):
             self._meta.module_name), args=[self.id])
 
     @property
-    def name(self):
-        return self.title
-
-    @property
     def perm_id(self):
         return 'n%d' % self.id
+
+    @property
+    def title(self):
+        return self.name
 
 
 if not reversion.is_registered(Need):

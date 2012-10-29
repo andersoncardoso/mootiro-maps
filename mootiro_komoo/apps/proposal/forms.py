@@ -21,10 +21,10 @@ class ProposalForm(AjaxModelForm):
 
     class Meta:
         model = Proposal
-        fields = ('title', 'description', 'cost', 'need')
+        fields = ('name', 'description', 'cost', 'need')
 
     _field_labels = {
-        'title': _('Title'),
+        'name': _('Name'),
         'description': _('Description'),
         'cost': _('Cost'),
         'need': ' '
