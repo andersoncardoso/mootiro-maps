@@ -1,24 +1,37 @@
 (function() {
+  var __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var $, Backbone, LoginView, SocialButton, SocialButtonsList, login_tpl, social_btn_tpl, _;
+    var $, Backbone, LoginForm, LoginView, SocialButton, SocialButtonsList, login_tpl, reForm, social_btn_tpl, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
+    reForm = require('reForm');
     login_tpl = require('text!templates/authentication/_login.html');
     social_btn_tpl = require('text!templates/authentication/_social_button.html');
-    SocialButton = Backbone.View.extend({
-      tagName: 'li',
-      template: _.template(social_btn_tpl),
-      initialize: function() {
+    SocialButton = (function(_super) {
+
+      __extends(SocialButton, _super);
+
+      function SocialButton() {
+        SocialButton.__super__.constructor.apply(this, arguments);
+      }
+
+      SocialButton.prototype.tagName = 'li';
+
+      SocialButton.prototype.template = _.template(social_btn_tpl);
+
+      SocialButton.prototype.initialize = function() {
         _.bindAll(this, 'render');
         this.className = this.options.provider;
         this.url = this.options.url;
         this.image_url = this.options.image_url;
         this.msg = this.options.message;
         return this.provider = this.options.provider;
-      },
-      render: function() {
+      };
+
+      SocialButton.prototype.render = function() {
         var renderedContent;
         renderedContent = this.template({
           provider: this.provider,
@@ -29,16 +42,29 @@
         this.$el.html(renderedContent);
         this.$el.addClass(this.className);
         return this;
+      };
+
+      return SocialButton;
+
+    })(Backbone.View);
+    SocialButtonsList = (function(_super) {
+
+      __extends(SocialButtonsList, _super);
+
+      function SocialButtonsList() {
+        SocialButtonsList.__super__.constructor.apply(this, arguments);
       }
-    });
-    SocialButtonsList = Backbone.View.extend({
-      tagName: 'ul',
-      id: 'external_providers',
-      initialize: function() {
-        _.bindAll(this, 'render', 'toString');
+
+      SocialButtonsList.prototype.tagName = 'ul';
+
+      SocialButtonsList.prototype.id = 'external_providers';
+
+      SocialButtonsList.prototype.initialize = function() {
+        _.bindAll(this, 'render');
         return this.buttons = this.options.buttons;
-      },
-      render: function() {
+      };
+
+      SocialButtonsList.prototype.render = function() {
         var buttons,
           _this = this;
         buttons = this.buttons;
@@ -49,13 +75,54 @@
           return $(_this.el).append(btnView.render().el);
         });
         return this;
+      };
+
+      return SocialButtonsList;
+
+    })(Backbone.View);
+    LoginForm = (function(_super) {
+
+      __extends(LoginForm, _super);
+
+      function LoginForm() {
+        LoginForm.__super__.constructor.apply(this, arguments);
       }
-    });
-    LoginView = Backbone.View.extend({
-      id: 'login_box',
-      tagName: 'section',
-      template: _.template(login_tpl),
-      initialize: function() {
+
+      LoginForm.prototype.fields = [
+        {
+          name: 'email',
+          widget: reForm.commonWidgets.TextWidget,
+          label: 'Email:'
+        }, {
+          password: 'password',
+          widget: reForm.commonWidgets.PasswordWidget,
+          label: 'Password:'
+        }
+      ];
+
+      LoginForm.prototype.initialize = function() {
+        console.log('YABADABADOOOO');
+        return LoginForm.__super__.initialize.apply(this, arguments);
+      };
+
+      return LoginForm;
+
+    })(reForm.Form);
+    LoginView = (function(_super) {
+
+      __extends(LoginView, _super);
+
+      function LoginView() {
+        LoginView.__super__.constructor.apply(this, arguments);
+      }
+
+      LoginView.prototype.id = 'login_box';
+
+      LoginView.prototype.tagName = 'section';
+
+      LoginView.prototype.template = _.template(login_tpl);
+
+      LoginView.prototype.initialize = function() {
         var facebookButton, googleButton;
         _.bindAll(this, 'render');
         googleButton = {
@@ -70,21 +137,26 @@
           image_url: '/static/img/login-facebook.png',
           message: 'Log In with Facebook'
         };
-        return this.socialButtonsList = new SocialButtonsList({
+        this.socialBtnsView = new SocialButtonsList({
           buttons: [googleButton, facebookButton]
         });
-      },
-      render: function() {
-        var renderedContent, socialButtonsView;
-        socialButtonsView = this.socialButtonsList.render().el;
-        renderedContent = this.template({
-          login_form: 'LOGIN FORM GOES HERE'
+        return this.formView = new LoginForm({
+          formId: 'form_login'
         });
+      };
+
+      LoginView.prototype.render = function() {
+        var renderedContent;
+        renderedContent = this.template({});
         $(this.el).html(renderedContent);
-        this.$el.find('.social_buttons').append(socialButtonsView);
+        this.$el.find('.social_buttons').append(this.socialBtnsView.render().el);
+        this.$el.find('.login_form').append(this.formView.render().el);
         return this;
-      }
-    });
+      };
+
+      return LoginView;
+
+    })(Backbone.View);
     return {
       LoginView: LoginView
     };
