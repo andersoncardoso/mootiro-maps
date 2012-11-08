@@ -3,13 +3,14 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var $, Backbone, LoginForm, LoginView, SocialButton, SocialButtonsList, login_tpl, reForm, social_btn_tpl, _;
+    var $, Backbone, LoginForm, LoginFormFooterWidget, LoginModel, LoginView, SocialButton, SocialButtonsList, form_footer_tpl, login_tpl, reForm, social_btn_tpl, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
     reForm = require('reForm');
     login_tpl = require('text!templates/authentication/_login.html');
     social_btn_tpl = require('text!templates/authentication/_social_button.html');
+    form_footer_tpl = require('text!templates/authentication/_login_form_footer_widget.html');
     SocialButton = (function(_super) {
 
       __extends(SocialButton, _super);
@@ -80,6 +81,36 @@
       return SocialButtonsList;
 
     })(Backbone.View);
+    LoginModel = (function(_super) {
+
+      __extends(LoginModel, _super);
+
+      function LoginModel() {
+        LoginModel.__super__.constructor.apply(this, arguments);
+      }
+
+      LoginModel.prototype.urlRoot = '/login/';
+
+      LoginModel.prototype.initialize = function() {
+        return LoginModel.__super__.initialize.apply(this, arguments);
+      };
+
+      return LoginModel;
+
+    })(Backbone.Model);
+    LoginFormFooterWidget = (function(_super) {
+
+      __extends(LoginFormFooterWidget, _super);
+
+      function LoginFormFooterWidget() {
+        LoginFormFooterWidget.__super__.constructor.apply(this, arguments);
+      }
+
+      LoginFormFooterWidget.prototype.template = form_footer_tpl;
+
+      return LoginFormFooterWidget;
+
+    })(reForm.Widget);
     LoginForm = (function(_super) {
 
       __extends(LoginForm, _super);
@@ -94,16 +125,15 @@
           widget: reForm.commonWidgets.TextWidget,
           label: 'Email:'
         }, {
-          password: 'password',
+          name: 'password',
           widget: reForm.commonWidgets.PasswordWidget,
           label: 'Password:'
+        }, {
+          name: 'footer',
+          widget: LoginFormFooterWidget,
+          label: ' '
         }
       ];
-
-      LoginForm.prototype.initialize = function() {
-        console.log('YABADABADOOOO');
-        return LoginForm.__super__.initialize.apply(this, arguments);
-      };
 
       return LoginForm;
 
@@ -123,7 +153,7 @@
       LoginView.prototype.template = _.template(login_tpl);
 
       LoginView.prototype.initialize = function() {
-        var facebookButton, googleButton;
+        var facebookButton, googleButton, loginModel;
         _.bindAll(this, 'render');
         googleButton = {
           provider: 'google',
@@ -140,8 +170,10 @@
         this.socialBtnsView = new SocialButtonsList({
           buttons: [googleButton, facebookButton]
         });
+        loginModel = new LoginModel({});
         return this.formView = new LoginForm({
-          formId: 'form_login'
+          formId: 'form_login',
+          model: loginModel
         });
       };
 
