@@ -26,7 +26,27 @@ form#form_login {
     height: 32px;
     background-color: white;
     box-shadow: none;
-    border: 1px solid #ababab; }
+    border: 1px solid #bcbebf;
+    transition: border 1s;
+    -moz-transition: border 1s;
+    /* Firefox 4 */
+    -webkit-transition: border 1s;
+    /* Safari and Chrome */
+    -o-transition: width border 1s;
+    /* Opera */
+    transition: box-shadow 1s;
+    -moz-transition: box-shadow 1s;
+    /* Firefox 4 */
+    -webkit-transition: box-shadow 1s;
+    /* Safari and Chrome */
+    -o-transition: width box-shadow 1s;
+    /* Opera */ }
+    form#form_login input:focus {
+      border: 1px solid #009cb4;
+      box-shadow: 1px 1px 2px #009cb4;
+      -moz-box-shadow: 1px 1px 2px #009cb4;
+      -webkit-box-shadow: 1px 1px 2px #009cb4;
+      -o-box-shadow: 1px 1px 2px #009cb4; }
   form#form_login input[type=submit] {
     width: 100%;
     padding: 3px 6px;

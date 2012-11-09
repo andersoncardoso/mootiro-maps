@@ -3,14 +3,15 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var $, Backbone, LoginForm, LoginFormFooterWidget, LoginModel, LoginView, SocialButton, SocialButtonsList, form_footer_tpl, login_tpl, reForm, social_btn_tpl, _;
+    var $, Backbone, LoginForm, LoginView, SignupWidget, SocialButton, SocialButtonsList, login_tpl, models, reForm, signup_tpl, social_btn_tpl, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
     reForm = require('reForm');
+    models = require('./models');
     login_tpl = require('text!templates/authentication/_login.html');
     social_btn_tpl = require('text!templates/authentication/_social_button.html');
-    form_footer_tpl = require('text!templates/authentication/_login_form_footer_widget.html');
+    signup_tpl = require('text!templates/widgets/_signup.html');
     SocialButton = (function(_super) {
 
       __extends(SocialButton, _super);
@@ -81,34 +82,17 @@
       return SocialButtonsList;
 
     })(Backbone.View);
-    LoginModel = (function(_super) {
+    SignupWidget = (function(_super) {
 
-      __extends(LoginModel, _super);
+      __extends(SignupWidget, _super);
 
-      function LoginModel() {
-        LoginModel.__super__.constructor.apply(this, arguments);
+      function SignupWidget() {
+        SignupWidget.__super__.constructor.apply(this, arguments);
       }
 
-      LoginModel.prototype.urlRoot = '/login/';
+      SignupWidget.prototype.template = signup_tpl;
 
-      LoginModel.prototype.initialize = function() {
-        return LoginModel.__super__.initialize.apply(this, arguments);
-      };
-
-      return LoginModel;
-
-    })(Backbone.Model);
-    LoginFormFooterWidget = (function(_super) {
-
-      __extends(LoginFormFooterWidget, _super);
-
-      function LoginFormFooterWidget() {
-        LoginFormFooterWidget.__super__.constructor.apply(this, arguments);
-      }
-
-      LoginFormFooterWidget.prototype.template = form_footer_tpl;
-
-      return LoginFormFooterWidget;
+      return SignupWidget;
 
     })(reForm.Widget);
     LoginForm = (function(_super) {
@@ -129,8 +113,8 @@
           widget: reForm.commonWidgets.PasswordWidget,
           label: 'Password:'
         }, {
-          name: 'footer',
-          widget: LoginFormFooterWidget,
+          name: 'signup',
+          widget: SignupWidget,
           label: ' '
         }
       ];
@@ -170,7 +154,7 @@
         this.socialBtnsView = new SocialButtonsList({
           buttons: [googleButton, facebookButton]
         });
-        loginModel = new LoginModel({});
+        loginModel = new models.LoginModel({});
         return this.formView = new LoginForm({
           formId: 'form_login',
           model: loginModel

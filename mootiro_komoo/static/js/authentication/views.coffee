@@ -4,9 +4,11 @@ define (require) ->
   _ = require 'underscore'
   Backbone = require 'backbone'
   reForm = require 'reForm'
+  models = require './models'
+
   login_tpl = require 'text!templates/authentication/_login.html'
   social_btn_tpl = require 'text!templates/authentication/_social_button.html'
-  form_footer_tpl = require 'text!templates/authentication/_login_form_footer_widget.html'
+  signup_tpl = require 'text!templates/widgets/_signup.html'
 
   class SocialButton extends Backbone.View
     tagName: 'li'
@@ -49,19 +51,15 @@ define (require) ->
         $(@el).append btnView.render().el
       this
 
-  class LoginModel extends Backbone.Model
-    urlRoot: '/login/'
-    initialize: ->
-      super
 
-  class LoginFormFooterWidget extends reForm.Widget
-    template: form_footer_tpl
+  class SignupWidget extends reForm.Widget
+    template: signup_tpl
 
   class LoginForm extends reForm.Form
     fields: [
       {name: 'email', widget: reForm.commonWidgets.TextWidget, label: 'Email:'}
       {name: 'password', widget: reForm.commonWidgets.PasswordWidget, label:'Password:'}
-      {name: 'footer', widget: LoginFormFooterWidget, label: ' '}
+      {name: 'signup', widget: SignupWidget, label: ' '}
     ]
 
   class LoginView extends Backbone.View
@@ -87,7 +85,7 @@ define (require) ->
       @socialBtnsView = new SocialButtonsList
         buttons: [googleButton, facebookButton]
 
-      loginModel = new LoginModel {}
+      loginModel = new models.LoginModel {}
 
       @formView = new LoginForm
         formId: 'form_login'

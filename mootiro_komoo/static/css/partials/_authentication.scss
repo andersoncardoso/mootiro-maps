@@ -17,7 +17,15 @@ form#form_login {
     height: 32px;
     background-color: white;
     box-shadow: none;
-    border: 1px solid #ababab;
+    border: 1px solid #bcbebf;
+
+    @include transition(border, 1s);
+    @include transition(box-shadow, 1s);
+
+    &:focus {
+        border: 1px solid rgb(0, 156, 180);
+        @include box-shadow(1px, 1px, 2px, rgb(0, 156, 180));
+    }
 
   }
 

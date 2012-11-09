@@ -14,3 +14,17 @@
   /* Opera 11.10+ */
   background-image: -o-linear-gradient($from, $to);
 }
+
+@mixin transition($target, $duration) {
+  transition: $target $duration;
+  -moz-transition: $target $duration; /* Firefox 4 */
+  -webkit-transition: $target $duration; /* Safari and Chrome */
+  -o-transition: width $target $duration; /* Opera */
+}
+
+@mixin box-shadow($horizontal, $vertical, $blur, $color) {
+  box-shadow: $horizontal $vertical $blur $color;
+  -moz-box-shadow: $horizontal $vertical $blur $color;
+  -webkit-box-shadow: $horizontal $vertical $blur $color;
+  -o-box-shadow: $horizontal $vertical $blur $color;
+}

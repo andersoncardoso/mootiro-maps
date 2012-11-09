@@ -5,13 +5,15 @@ from __future__ import unicode_literals  # unicode by default
 import json
 from markdown import markdown
 import requests
+import simplejson
+import dateutil
 from string import letters, digits
 from random import choice
 
 from django import forms
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.utils.translation import ugettext_lazy as _
-from django.http import Http404, HttpResponseNotAllowed
+from django.http import Http404, HttpResponseNotAllowed, HttpResponse
 from django.core.mail import send_mail as django_send_mail
 from django.conf import settings
 
@@ -339,6 +341,34 @@ class ResourceHandler:
             return HttpResponseNotAllowed(methods)
         else:
             raise Http404
+
+
+def get_json_data(request):
+    """
+    get raw json data from request.
+    Usefull for requests from Backbone.sync
+    """
+    return simplejson.loads(request.raw_post_data)
+
+
+class JsonResponse(HttpResponse):
+    """
+    Creates a Json Response. The Http status code can be changed.
+    usage:
+        def my_view(request):
+            # some code
+            return JsonResponse(my_data_dict)
+
+        def my_other_view(request):
+            #some code
+            return JsonResponse(my_errors_dict, status_code=400)
+    """
+    def __init__(self, data, status_code=None):
+        content = simplejson.dumps(data)
+        super(JsonResponse, self).__init__(content=content,
+                    mimetype='application/json')
+        if status_code:
+            self.status_code = status_code
 
 
 def randstr(l=10):

@@ -10,6 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.utils import simplejson
 from django.forms.models import model_to_dict
+from django.utils.decorators import method_decorator
 
 from annoying.decorators import render_to, ajax_request
 from annoying.functions import get_object_or_None
@@ -17,7 +18,8 @@ from reversion.models import Revision
 
 from signatures.models import Signature, DigestSignature
 from ajaxforms import ajax_form
-from main.utils import create_geojson, randstr, send_mail
+from main.utils import (create_geojson, randstr, send_mail, ResourceHandler,
+        JsonResponse, get_json_data)
 
 from .models import User
 from .forms import FormProfile, FormUser
@@ -294,33 +296,69 @@ def user_verification(request, key=''):
     return dict(message='activated')
 
 
-@render_to('authentication/login.html')
-def login(request):
-    '''
-    GET: Displays a page with login options.
-    POST: Receives email and password and authenticate the user.
-    '''
-    if request.method == 'GET':
-        next_page = request.GET.get('next', '')
-        return dict(next=next_page, js_module='authentication/login')
+# @render_to('authentication/login.html')
+# def login(request):
+#     '''
+#     GET: Displays a page with login options.
+#     POST: Receives email and password and authenticate the user.
+#     '''
+#     if request.method == 'GET':
+#         next_page = request.GET.get('next', '')
+#         return dict(next=next_page, js_module='authentication/login')
+#
+#     email = request.POST['email']
+#     password = request.POST['password']
+#     if not email or not password:
+#         return dict(login_error='wrong_credentials', js_module='authentication/login')
+#
+#     password = User.calc_hash(password)
+#     q = User.objects.filter(email=email, password=password)
+#     if not q.exists():
+#         return dict(login_error='wrong_credentials', js_module='authentication/login')
+#
+#     user = q.get()
+#     if not user.is_active:
+#          return dict(login_error='user_not_active', js_module='authentication/login')
+#
+#     auth_login(request, user)
+#     next_page = request.POST.get('next', '') or reverse('root')
+#     return redirect(next_page)
 
-    email = request.POST['email']
-    password = request.POST['password']
-    if not email or not password:
-        return dict(login_error='wrong_credentials', js_module='authentication/login')
+class LoginHandler(ResourceHandler):
 
-    password = User.calc_hash(password)
-    q = User.objects.filter(email=email, password=password)
-    if not q.exists():
-        return dict(login_error='wrong_credentials', js_module='authentication/login')
+    @method_decorator(render_to('authentication/login.html'))
+    def get(self, request):
+        # next_page = request.GET.get('next', '')
+        return {'js_module': 'authentication/login'}
 
-    user = q.get()
-    if not user.is_active:
-         return dict(login_error='user_not_active', js_module='authentication/login')
+    def post(self, request):
+        json_data = get_json_data(request)
+        email, password = [json_data.get(data, '')
+                            for data in ['email', 'password']]
 
-    auth_login(request, user)
-    next_page = request.POST.get('next', '') or reverse('root')
-    return redirect(next_page)
+        errors = {}
+        if not email:
+            errors['email'] = 'email_required'
+        if not password:
+            errors['password'] = 'password_required'
+
+        if email and password:
+            password = User.calc_hash(password)
+            q = User.objects.filter(email=email, password=password)
+            if not q.exists():
+                errors['password'] = 'wrong_credentials'
+            else:
+                user = q.get()
+                if not user.is_active:
+                    errors['email'] = 'user_not_active'
+
+        if errors:
+            return JsonResponse({'errors': errors}, status_code=400)
+        else:
+            auth_login(request, user)
+            next_page = request.POST.get('next', '') or reverse('root')
+
+            return JsonResponse({'redirect': next_page})
 
 
 def logout(request):
