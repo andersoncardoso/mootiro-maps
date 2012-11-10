@@ -264,16 +264,6 @@ def send_mail(title='', message='', sender='', receivers=[]):
                 'text': message})
 
 
-def get_handler_method(request_handler, http_method):
-    """Utility function for the Resource Class dispacther."""
-    try:
-        handler_method = getattr(request_handler, http_method.lower())
-        if callable(handler_method):
-            return handler_method
-    except AttributeError:
-        pass
-
-
 def parse_accept_header(request):
     """Parse the Accept header *accept*, returning a list with pairs of
     (media_type, q_value), ordered by q values.
@@ -321,21 +311,30 @@ class ResourceHandler:
         # Keeps compatibility with Django's class-view interface
         return cls.dispatch
 
+    def _get_handler_method(self, request_handler, http_method):
+        """Utility function for the Resource Class dispacther."""
+        try:
+            handler_method = getattr(request_handler, http_method.lower())
+            if callable(handler_method):
+                return handler_method
+        except AttributeError:
+            pass
+
     @classmethod
     def dispatch(cls, request, *args, **kwargs):
-        request_handler = cls()
+        req_handler = cls()
 
-        request_handler.accept = parse_accept_header(request)
-        request_handler.accept_type = request_handler.accept[0][0]
+        req_handler.accept = parse_accept_header(request)
+        req_handler.accept_type = req_handler.accept[0][0]
 
         if request.method in cls.http_methods:
-            handler_method = get_handler_method(request_handler,
-                                                request.method)
+            handler_method = req_handler._get_handler_method(req_handler,
+                                                             request.method)
             if handler_method:
                 return handler_method(request, *args, **kwargs)
 
-        methods = [method for method in cls.http_methods if get_handler_method(
-                                            request_handler, method)]
+        methods = [method for method in req_handler.http_methods if
+                req_handler._get_handler_method(req_handler, method)]
         if len(methods) > 0:
             # http 405: method not allowed
             return HttpResponseNotAllowed(methods)
@@ -378,3 +377,139 @@ def randstr(l=10):
         s = s + choice(chars)
     return s
 
+
+class BaseView(ResourceHandler):
+    def _get_handler_method(self, request_handler, http_method):
+        """Utility function for the Resource Class dispacther."""
+        method = http_method
+        if self.accept_type == 'application/json':
+            method = '{}_json'.format(http_method)
+        try:
+            handler_method = getattr(request_handler, method.lower())
+            if callable(handler_method):
+                return handler_method
+        except AttributeError:
+            pass
+
+
+class AllMethodsMixin(object):
+    def get(self, *args, **kwargs):
+        return self.all(*args, **kwargs)
+
+    def post(self, *args, **kwargs):
+        return self.all(*args, **kwargs)
+
+    def put(self, *args, **kwargs):
+        return self.all(*args, **kwargs)
+
+    def patch(self, *args, **kwargs):
+        return self.all(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        return self.all(*args, **kwargs)
+
+
+from django.shortcuts import get_object_or_404
+from fileupload.models import UploadedFile
+
+
+class ViewObjectMixin(object):
+    def get_object(self, pk):
+        return get_object_or_404(self.model, pk=pk)
+
+    def get_object_name(self):
+        return getattr(self, 'object_name', 'object')
+
+
+class ViewDetailsMixin(ViewObjectMixin):
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            context = super(ViewDetailsMixin, self).get(
+                    request, pk, *args, **kwargs)
+        except AttributeError:
+            context = {}
+
+        obj = self.get_object(pk)
+        context['object'] = obj
+        context[self.get_object_name()] = obj
+
+        return context
+
+
+class ViewListMixin(object):
+    sort_order = ['creation_date', 'name']
+
+    def get_queryset(self, request):
+        return getattr(self, 'queryset',
+                filtered_query(self.model.objects, request))
+
+    def get_collection(self, request):
+        return sorted_query(self.get_queryset(request), self.sort_order,
+                request)
+
+    def get_collection_name(self):
+        return getattr(self, 'collection_name', 'collection')
+
+    def get(self, request, *args, **kwargs):
+        try:
+            context = super(ViewListMixin, self).get(
+                    request, *args, **kwargs)
+        except AttributeError:
+            context = {}
+
+        collection = self.get_collection(request)
+        context['collection'] = collection
+        count = collection.count()
+        context['count'] = count
+        context['{}_count'.format(self.get_collection_name())] = count
+        context[self.get_collection_name()] = collection
+
+        return context
+
+
+class ViewPaginatedListMixin(ViewListMixin):
+    def get(self, request, *args, **kwargs):
+        try:
+            context = super(ViewPaginatedListMixin, self).get(
+                    request, *args, **kwargs)
+        except AttributeError:
+            context = {}
+
+        collection = context.get('collection', self.get_collection(request))
+        collection = paginated_query(collection, request)
+        context['collection'] = collection
+        context[self.get_collection_name()] = collection
+
+        return context
+
+
+class ViewGeojsonMixin(object):
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            context = super(ViewGeojsonMixin, self).get(
+                    request, pk, *args, **kwargs)
+        except AttributeError:
+            context = {}
+
+        obj = self.get_object(pk)
+        try:
+            geojson = create_geojson(obj)
+        except TypeError:
+            geojson = create_geojson([obj])
+        context['geojson'] = geojson
+
+        return context
+
+
+class ViewPhotosMixin(object):
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            context = super(ViewPhotosMixin, self).get(
+                    request, pk, *args, **kwargs)
+        except AttributeError:
+            context = {}
+
+        context['photos'] = paginated_query(
+                UploadedFile.get_files_for(self.get_object(pk)), request, size=3)
+
+        return context

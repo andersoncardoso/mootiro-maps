@@ -12,6 +12,7 @@ admin.autodiscover()
 # Some URL fragments to be reused throughout the application
 SLUG = r'(?P<slug>[a-zA-Z0-9-]+)'
 ID = r'(?P<id>\d+)'
+PK = r'(?P<pk>\d+)'
 
 handler500 = 'main.views.custom_500'
 handler404 = 'main.views.custom_404'
@@ -24,7 +25,7 @@ js_info_dict = {
 
 
 def prepare_regex(regex):
-    return regex.replace('SLUG', SLUG).replace('ID', ID)
+    return regex.replace('SLUG', SLUG).replace('ID', ID).replace('PK', PK)
 
 urlpatterns = patterns('',
     # admin stuff
