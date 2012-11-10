@@ -1,6 +1,5 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals  # unicode by default
+from __future__ import unicode_literals
 
 import json
 from markdown import markdown
@@ -11,14 +10,19 @@ from string import letters, digits
 from random import choice
 
 from django import forms
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.utils.translation import ugettext_lazy as _
-from django.http import Http404, HttpResponseNotAllowed, HttpResponse
-from django.core.mail import send_mail as django_send_mail
 from django.conf import settings
+from django.core.mail import send_mail as django_send_mail
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Count
+from django.db.models.query_utils import Q
+from django.http import Http404, HttpResponseNotAllowed, HttpResponse
+from django.shortcuts import get_object_or_404
+from django.utils.translation import ugettext_lazy as _
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+
+from lib.taggit.models import TaggedItem
 
 try:
     from functools import wraps
@@ -379,6 +383,27 @@ def randstr(l=10):
 
 
 class BaseView(ResourceHandler):
+    """ Base class for views
+    usage:
+
+      on views.py
+      class SomeView(BaseView):
+
+        def get(self, request, document_id):
+          # your view code for GET requests for html go here
+
+        def post(self, request, document_id):
+          # your viewcode for POST request for html go here
+
+        def get_json(self, request, document_id):
+          # your view code for GET requests for json go here
+
+        def post(self, request, document_id):
+          # your viewcode for POST request for json go here
+
+      on urls.py
+        url('^my_view/$', views.SomeView.dispatch, name='view')
+    """
     def _get_handler_method(self, request_handler, http_method):
         """Utility function for the Resource Class dispacther."""
         method = http_method
@@ -392,7 +417,53 @@ class BaseView(ResourceHandler):
             pass
 
 
+class SearchTagsBaseView(BaseView):
+    """ Base class for "search tags" views
+    usage:
+
+      on views.py
+      class SearchSomeTagsView(SearchTagsBaseView):
+          model = SomeModel
+    """
+    limit = 10
+
+    def get(self, request):
+        term = request.GET['term']
+        qset = TaggedItem.tags_for(self.model
+                ).filter(name__istartswith=term
+                ).annotate(count=Count('taggit_taggeditem_items__id')
+                ).order_by('-count', 'slug')[:self.limit]
+        tags = [t.name for t in qset]
+        return HttpResponse(simplejson.dumps(tags),
+                mimetype='application/json')
+
+
+class SearchByBaseView(BaseView):
+    """ Base class for "search by" views
+    usage:
+
+      on views.py
+      class SearchBySomethingView(SearchByBaseView):
+          model = SomeModel
+    """
+    def get(self, request):
+        term = request.GET.get('term', '')
+        collection = self.model.objects.filter(Q(name__icontains=term) |
+                                               Q(slug__icontains=term))
+        d = [{'value': obj.id, 'label': obj.name} for obj in collection]
+        return HttpResponse(simplejson.dumps(d),
+                mimetype='application/json')
+
+
 class AllMethodsMixin(object):
+    """ Mixin to return the same content to any http method
+    usage:
+
+      on views.py
+      class SomeView(BaseView, AllMethodsMixin):
+        def all(self, request, document_id):
+          # your view code go here
+    """
     def get(self, *args, **kwargs):
         return self.all(*args, **kwargs)
 
@@ -407,10 +478,6 @@ class AllMethodsMixin(object):
 
     def delete(self, *args, **kwargs):
         return self.all(*args, **kwargs)
-
-
-from django.shortcuts import get_object_or_404
-from fileupload.models import UploadedFile
 
 
 class ViewObjectMixin(object):
@@ -497,19 +564,5 @@ class ViewGeojsonMixin(object):
         except TypeError:
             geojson = create_geojson([obj])
         context['geojson'] = geojson
-
-        return context
-
-
-class ViewPhotosMixin(object):
-    def get(self, request, pk, *args, **kwargs):
-        try:
-            context = super(ViewPhotosMixin, self).get(
-                    request, pk, *args, **kwargs)
-        except AttributeError:
-            context = {}
-
-        context['photos'] = paginated_query(
-                UploadedFile.get_files_for(self.get_object(pk)), request, size=3)
 
         return context

@@ -1,25 +1,24 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import logging
-import json
 
-from django.db.models.query_utils import Q
-from django.shortcuts import HttpResponse, get_object_or_404, redirect
-from django.utils import simplejson
-from django.db.models import Count
 from django.core.urlresolvers import reverse
+from django.db.models.query_utils import Q
+from django.shortcuts import redirect
+from django.utils import simplejson
+from django.utils.decorators import method_decorator
 
+from ajaxforms import ajax_form
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
-from lib.taggit.models import TaggedItem
-from ajaxforms import ajax_form
 
 from authentication.utils import login_required
-from resources.models import Resource, ResourceKind
+from main.utils import create_geojson
+from main.utils import (BaseView, ViewDetailsMixin, ViewGeojsonMixin,
+        AllMethodsMixin, ViewPaginatedListMixin, SearchTagsBaseView,
+        SearchByBaseView)
 from resources.forms import FormResource, FormResourceGeoRef
-from main.utils import (create_geojson, paginated_query, sorted_query,
-                        filtered_query)
-
+from resources.models import Resource, ResourceKind
 
 logger = logging.getLogger(__name__)
 
@@ -28,102 +27,86 @@ def resources_to_resource(self):
     return redirect(reverse('resource_list'), permanent=True)
 
 
-@render_to('resource/list.html')
-def resource_list(request):
-    sort_order = ['creation_date', 'name']
-
-    query_set = filtered_query(Resource.objects, request)
-
-    resources_list = sorted_query(query_set, sort_order, request)
-    resources_count = resources_list.count()
-    resources = paginated_query(resources_list, request)
-
-    return dict(resources=resources, resources_count=resources_count)
+class ResourceView(BaseView):
+    model = Resource
+    object_name = 'resource'
+    collection_name = 'resources'
 
 
-@render_to('resource/show.html')
-def show(request, id=None):
-    resource = get_object_or_404(Resource, pk=id)
-    geojson = create_geojson([resource])
-    similar = Resource.objects.filter(Q(kind=resource.kind) |
-        Q(tags__in=resource.tags.all())).exclude(pk=resource.id).distinct()[:5]
-
-    return dict(resource=resource, similar=similar, geojson=geojson)
+class ListView(ResourceView, ViewPaginatedListMixin):
+    @method_decorator(render_to('resource/list.html'))
+    def get(self, request):
+        context = super(ListView, self).get(request)
+        return context
 
 
-@login_required
-@ajax_form('resource/new.html', FormResource, 'form_resource')
-def new_resource(request, *arg, **kwargs):
-    def on_get(request, form_resource):
-        form_resource.helper.form_action = reverse('new_resource')
-        return form_resource
-
-    def on_after_save(request, obj):
-        return {'redirect': obj.view_url}
-
-    return {'on_get': on_get, 'on_after_save': on_after_save}
+class AboutView(ResourceView, ViewDetailsMixin, ViewGeojsonMixin):
+    @method_decorator(render_to('resource/view.html'))
+    def get(self, request, id):
+        context = super(AboutView, self).get(request, id)
+        #context['js_module'] = 'resource/pages/about'
+        return context
 
 
-@login_required
-@ajax_form('resource/new_frommap.html', FormResourceGeoRef, 'form_resource')
-def new_resource_from_map(request, *args, **kwargs):
+class EditView(ResourceView, AllMethodsMixin):
+    @method_decorator(login_required)
+    @method_decorator(ajax_form('resource/edit.html', FormResourceGeoRef,
+        'form_resource'))
+    def all(self, request, id='', *arg, **kwargs):
+        resource = get_object_or_None(Resource, pk=id)
+        geojson = create_geojson([resource], convert=False)
 
-    def on_get(request, form_resource):
-        form_resource.helper.form_action = reverse('new_resource_from_map')
-        return form_resource
+        if geojson and geojson.get('features'):
+            geojson['features'][0]['properties']['userCanEdit'] = True
+        geojson = simplejson.dumps(geojson)
 
-    def on_after_save(request, obj):
-        return {'redirect': obj.view_url}
+        def on_get(request, form):
+            form = FormResourceGeoRef(instance=resource)
+            form.helper.form_action = reverse('edit_resource',
+                                              kwargs={'id': id})
 
-    return {'on_get': on_get, 'on_after_save': on_after_save}
+            return form
 
+        def on_after_save(request, obj):
+            return {'redirect': obj.view_url}
 
-@login_required
-@ajax_form('resource/edit.html', FormResourceGeoRef, 'form_resource')
-def edit_resource(request, id='', *arg, **kwargs):
-    resource = get_object_or_None(Resource, pk=id)
-    geojson = create_geojson([resource], convert=False)
-
-    if geojson and geojson.get('features'):
-        geojson['features'][0]['properties']['userCanEdit'] = True
-    geojson = json.dumps(geojson)
-
-    def on_get(request, form):
-        form = FormResourceGeoRef(instance=resource)
-        form.helper.form_action = reverse('edit_resource',
-                                          kwargs={'id': id})
-
-        return form
-
-    def on_after_save(request, obj):
-        return {'redirect': obj.view_url}
-
-    return {'on_get': on_get, 'on_after_save': on_after_save,
-            'geojson': geojson, 'resource': resource}
+        return {'on_get': on_get, 'on_after_save': on_after_save,
+                'geojson': geojson, 'resource': resource}
 
 
-def search_by_kind(request):
-    term = request.GET.get('term', '')
-    kinds = ResourceKind.objects.filter(Q(name__icontains=term) |
-        Q(slug__icontains=term))
-    d = [{'value': k.id, 'label': k.name} for k in kinds]
-    return HttpResponse(simplejson.dumps(d),
-        mimetype="application/x-javascript")
+class NewView(ResourceView, AllMethodsMixin):
+    @method_decorator(login_required)
+    @method_decorator(ajax_form('resource/new.html', FormResource,
+        'form_resource'))
+    def all(self, request, *arg, **kwargs):
+        def on_get(request, form_resource):
+            form_resource.helper.form_action = reverse('new_resource')
+            return form_resource
+
+        def on_after_save(request, obj):
+            return {'redirect': obj.view_url}
+
+        return {'on_get': on_get, 'on_after_save': on_after_save}
 
 
-def search_tags(request):
-    term = request.GET['term']
-    qset = TaggedItem.tags_for(Resource).filter(name__istartswith=term
-            ).annotate(count=Count('taggit_taggeditem_items__id')
-            ).order_by('-count', 'slug')[:10]
-    tags = [t.name for t in qset]
-    return HttpResponse(simplejson.dumps(tags),
-                mimetype="application/x-javascript")
+class NewFromMapView(ResourceView, AllMethodsMixin):
+    @method_decorator(login_required)
+    @method_decorator(ajax_form('resource/new_frommap.html',
+        FormResourceGeoRef, 'form_resource'))
+    def all(self, request, *arg, **kwargs):
+        def on_get(request, form_resource):
+            form_resource.helper.form_action = reverse('new_resource_from_map')
+            return form_resource
+
+        def on_after_save(request, obj):
+            return {'redirect': obj.view_url}
+
+        return {'on_get': on_get, 'on_after_save': on_after_save}
 
 
-@render_to('komoo_map/show.html')
-def show_on_map(request, geojson=''):
-    resource = get_object_or_404(Resource, pk=request.GET.get('id', ''))
-    geojson = create_geojson([resource])
-    return dict(geojson=geojson)
+class SearchTagsView(ResourceView, SearchTagsBaseView):
+    pass
 
+
+class SearchByKindView(SearchByBaseView):
+    model = ResourceKind
