@@ -27,6 +27,9 @@
       'sinon': '../lib/sinon-1.5.0'
     },
     shim: {
+      'ad-gallery': {
+        deps: ['jquery']
+      },
       'utils': {
         deps: ['jquery']
       },

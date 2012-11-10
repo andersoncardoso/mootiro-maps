@@ -4,6 +4,7 @@ require [
     'community/model',
     'project/box'
 ], ($, Backbone, CommunityModel, ProjectBox) ->
+    'use strict'
 
     community = new CommunityModel.Community(KomooNS.object or {})
     projectsBox = new ProjectBox
@@ -15,5 +16,4 @@ require [
     if community.projects.length == 0
         community.projects.fetch()
 
-    $ () ->
-        $('#projectsBox').append(projectsBox.render().$el)
+    $('#projectsBox').append(projectsBox.render().$el)

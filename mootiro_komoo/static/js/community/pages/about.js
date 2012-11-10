@@ -1,6 +1,7 @@
 (function() {
 
   require(['jquery', 'backbone', 'community/model', 'project/box'], function($, Backbone, CommunityModel, ProjectBox) {
+    'use strict';
     var community, projectsBox;
     community = new CommunityModel.Community(KomooNS.object || {});
     projectsBox = new ProjectBox({
@@ -9,9 +10,7 @@
     });
     window.c = community;
     if (community.projects.length === 0) community.projects.fetch();
-    return $(function() {
-      return $('#projectsBox').append(projectsBox.render().$el);
-    });
+    return $('#projectsBox').append(projectsBox.render().$el);
   });
 
 }).call(this);
