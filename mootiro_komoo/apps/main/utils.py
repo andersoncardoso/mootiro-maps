@@ -22,7 +22,6 @@ from django.utils.translation import ugettext_lazy as _
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
-from lib.taggit.models import TaggedItem
 
 try:
     from functools import wraps
@@ -410,7 +409,8 @@ class BaseView(ResourceHandler):
         if self.accept_type == 'application/json':
             method = '{}_json'.format(http_method)
         try:
-            handler_method = getattr(request_handler, method.lower())
+            handler_method = getattr(request_handler, method.lower(),
+                             getattr(request_handler, http_method.lower()))
             if callable(handler_method):
                 return handler_method
         except AttributeError:
@@ -428,6 +428,8 @@ class SearchTagsBaseView(BaseView):
     limit = 10
 
     def get(self, request):
+        # Import here to prevent a strange issue
+        from lib.taggit.models import TaggedItem
         term = request.GET['term']
         qset = TaggedItem.tags_for(self.model
                 ).filter(name__istartswith=term
@@ -505,6 +507,7 @@ class ViewDetailsMixin(ViewObjectMixin):
 
 class ViewListMixin(object):
     sort_order = ['creation_date', 'name']
+    default_order = 'name'
 
     def get_queryset(self, request):
         return getattr(self, 'queryset',
@@ -512,7 +515,7 @@ class ViewListMixin(object):
 
     def get_collection(self, request):
         return sorted_query(self.get_queryset(request), self.sort_order,
-                request)
+                request, default_order=self.default_order)
 
     def get_collection_name(self):
         return getattr(self, 'collection_name', 'collection')
