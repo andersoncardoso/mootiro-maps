@@ -2,24 +2,23 @@
 from django.conf.urls.defaults import patterns, url
 
 from mootiro_komoo.urls import prepare_regex as pr
+from need.views import (ListView, AboutView, SearchTagsView,
+        SearchTargetAudienceView, EditView, NewFromMapView, NewView)
 
 
 urlpatterns = patterns('need.views',
-    url(r'^new/?$', 'new_need', name='new_need'),
-    url(r'^new/from_map/?$', 'new_need_from_map',
+    url(r'^$', ListView.dispatch, name='need_list'),
+    url(pr(r'^ID/?$'), AboutView.dispatch, name='view_need'),
+    url(pr(r'^ID/edit/?$'), EditView.dispatch, name='edit_need'),
+
+    url(r'^new/?$', NewView.dispatch, name='new_need'),
+    url(r'^new/from_map/?$', NewFromMapView.dispatch,
             name='new_need_from_map'),
 
-    url(r'^$', 'list', name='need_list'),
-
-    url(r'^tag_search$', 'tag_search',
+    url(r'^search_tags/?$', SearchTagsView.dispatch,
             name='need_tag_search'),
-    url(r'^search_tags/?$', 'tag_search',
+    url(r'^tag_search$', SearchTagsView.dispatch,
             name='need_tag_search'),
-    url(r'^target_audience_search/?$', 'target_audience_search',
+    url(r'^target_audience_search/?$', SearchTargetAudienceView.dispatch,
             name='target_audience_search'),
-    url(r'^get_geojson$', 'needs_geojson', name='needs_geojson'),
-
-    url(pr(r'^ID/edit/?$'), 'edit_need', name='edit_need'),
-
-    url(pr(r'^ID/?$'), 'view', name='view_need'),
 )

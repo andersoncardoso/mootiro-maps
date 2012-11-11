@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 import logging
 
 from django.core.urlresolvers import reverse
-from django.db.models.query_utils import Q
 from django.shortcuts import redirect
 from django.utils import simplejson
 from django.utils.decorators import method_decorator

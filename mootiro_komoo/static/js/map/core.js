@@ -47,9 +47,7 @@
           try {
             instance = new componentClass(_this, el);
           } catch (e) {
-            if (typeof console !== "undefined" && console !== null) {
-              console.error(e.message);
-            }
+            throw e;
             if (typeof console !== "undefined" && console !== null) {
               console.warn("Could not initialize component '" + component + "'");
             }
@@ -78,9 +76,7 @@
           } else {
             failedId = e.requireModules && e.requireModules[0];
             require.undef(failedId);
-            if (typeof console !== "undefined" && console !== null) {
-              console.error(e.message);
-            }
+            throw e;
             if (typeof console !== "undefined" && console !== null) {
               console.warn("Could not initialize component '" + component + "'");
             }

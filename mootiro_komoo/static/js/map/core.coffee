@@ -39,7 +39,7 @@ define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
                 try
                     instance = new componentClass this, el
                 catch e
-                    console?.error e.message
+                    throw e
                     console?.warn "Could not initialize component '#{component}'"
                     dfd.resolve()
                     return
@@ -62,7 +62,7 @@ define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
                 else
                     failedId = e.requireModules && e.requireModules[0]
                     require.undef failedId
-                    console?.error e.message
+                    throw e
                     console?.warn "Could not initialize component '#{component}'"
                 dfd.resolve()
             )
