@@ -8,12 +8,14 @@ from django.db.models.query_utils import Q
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.utils.translation import gettext_lazy as _
+from django.utils.decorators import method_decorator
 
 from lib.taggit.models import TaggedItem
 from ajaxforms.forms import ajax_form
 from annoying.decorators import render_to, ajax_request
-from main.utils import (paginated_query, sorted_query, filtered_query,
-        create_geojson)
+from main.utils import create_geojson
+from main.utils import (BaseView, ViewDetailsMixin, ViewGeojsonMixin,
+        AllMethodsMixin, ViewPaginatedListMixin, ViewObjectMixin)
 
 from authentication.utils import login_required
 from .forms import FormProject
@@ -21,16 +23,6 @@ from .models import Project, ProjectRelatedObject
 from organization.models import Organization
 
 logger = logging.getLogger(__name__)
-
-
-@render_to('project/list.html')
-def project_list(request):
-    sort_order = ['creation_date', 'name']
-    query_set = filtered_query(Project.objects, request)
-    projects_list = sorted_query(query_set, sort_order, request)
-    projects_count = projects_list.count()
-    projects = paginated_query(projects_list, request)
-    return dict(projects=projects, projects_count=projects_count)
 
 
 @render_to('project/view.html')
@@ -204,3 +196,15 @@ def search_by_name(request):
     return HttpResponse(simplejson.dumps(d),
             mimetype="application/x-javascript")
 
+### New Views ###
+class ProjectView(BaseView):
+    model = Project
+    object_name = 'project'
+    collection_name = 'projects'
+
+
+class ListView(ProjectView, ViewPaginatedListMixin):
+    @method_decorator(render_to('project/list.html'))
+    def get(self, request):
+        context = super(ListView, self).get(request)
+        return context

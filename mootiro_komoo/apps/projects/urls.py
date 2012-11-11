@@ -4,10 +4,11 @@ from __future__ import unicode_literals
 from django.conf.urls.defaults import patterns, url
 
 from mootiro_komoo.urls import prepare_regex as pr
+from projects.views import ListView
 
 
 urlpatterns = patterns('projects.views',
-    url(r'^$', 'project_list', name="project_list"),
+    url(r'^$', ListView.dispatch, name="project_list"),
     url(r'^new/?$', 'project_new', name="project_new"),
     url(r'^add_related/?$', 'add_related_object', name="project_add_related"),
     url(r'^delete_relations/?$', 'delete_relations', name='delete_relations'),
