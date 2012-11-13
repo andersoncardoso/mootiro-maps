@@ -1,12 +1,12 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals  # unicode by default
-from django.conf.urls.defaults import patterns, include, url
-from django.views.i18n import javascript_catalog
-from django.conf import settings
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+from django.conf import settings
+from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.views.i18n import javascript_catalog
+
 admin.autodiscover()
 
 # Some URL fragments to be reused throughout the application
@@ -17,11 +17,7 @@ PK = r'(?P<pk>\d+)'
 handler500 = 'main.views.custom_500'
 handler404 = 'main.views.custom_404'
 
-js_info_dict = {
-    'packages': (
-        'komoo_map',
-        )
-}
+js_info_dict = {'packages': ('komoo_map',)}
 
 
 def prepare_regex(regex):
@@ -43,7 +39,7 @@ urlpatterns = patterns('',
         name='javascript_catalog'),
 
     # root
-    url(r'^$', 'update.views.frontpage', name='frontpage'),
+    url(r'^$', include('update.urls'), name='frontpage'),
 
     # unprefixed urls
     url(r'', include('update.urls')),
