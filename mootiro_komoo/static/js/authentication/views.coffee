@@ -5,6 +5,7 @@ define (require) ->
   Backbone = require 'backbone'
   reForm = require 'reForm'
   models = require './models'
+  new_utils = require 'new_utils'
 
   login_tpl = require 'text!templates/authentication/_login.html'
   social_btn_tpl = require 'text!templates/authentication/_social_button.html'
@@ -97,6 +98,7 @@ define (require) ->
       @$el.find('.social_buttons').append @socialBtnsView.render().el
       @$el.find('.login_form').append @formView.render().el
       this
+
 
   return {
     LoginView: LoginView

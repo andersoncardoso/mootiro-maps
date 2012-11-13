@@ -1,0 +1,12 @@
+$mootiro_blue: rgb(220, 239, 244);
+$mootiro_blue_dark: rgb(0, 156, 180);
+
+div.reveal-modal {
+    top: 200px;
+    background-color: $mootiro_blue;
+    background-image: none;
+    z-index: 10000;
+}
+div.reveal-modal-bg {
+    z-index: 1500;
+}

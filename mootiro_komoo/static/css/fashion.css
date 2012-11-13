@@ -1,3 +1,12 @@
+div.reveal-modal {
+  top: 200px;
+  background-color: #dceff4;
+  background-image: none;
+  z-index: 10000; }
+
+div.reveal-modal-bg {
+  z-index: 1500; }
+
 .upper_bar {
   background-color: #dceff4;
   color: #009cb4;
