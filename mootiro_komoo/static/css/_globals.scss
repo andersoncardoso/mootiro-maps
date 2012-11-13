@@ -6,7 +6,12 @@ div.reveal-modal {
     background-color: $mootiro_blue;
     background-image: none;
     z-index: 10000;
-    width: 650px;
+    width: 620px;
+    box-shadow: 3px 3px 4px #999, -3px -3px 4px #999;
+    -moz-box-shadow: 3px 3px 4px #999, -3px -3px 4px #999;
+    -webkit-box-shadow: 3px 3px 4px #999, -3px -3px 4px #999;
+    -o-box-shadow: 3px 3px 4px #999, -3px -3px 4px #999;
+
 
     header {
         h1 {
@@ -23,4 +28,5 @@ div.reveal-modal {
 }
 div.reveal-modal-bg {
     z-index: 1500;
+    background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.65);
 }

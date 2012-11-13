@@ -3,7 +3,11 @@ div.reveal-modal {
   background-color: #dceff4;
   background-image: none;
   z-index: 10000;
-  width: 650px; }
+  width: 620px;
+  box-shadow: 3px 3px 4px #999999, -3px -3px 4px #999999;
+  -moz-box-shadow: 3px 3px 4px #999999, -3px -3px 4px #999999;
+  -webkit-box-shadow: 3px 3px 4px #999999, -3px -3px 4px #999999;
+  -o-box-shadow: 3px 3px 4px #999999, -3px -3px 4px #999999; }
   div.reveal-modal header h1 {
     color: #555555;
     font-size: 2em;
@@ -14,7 +18,8 @@ div.reveal-modal {
     border-bottom: 1px solid #efefef; }
 
 div.reveal-modal-bg {
-  z-index: 1500; }
+  z-index: 1500;
+  background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.65); }
 
 .upper_bar {
   background-color: #dceff4;
