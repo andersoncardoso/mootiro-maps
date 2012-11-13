@@ -6,6 +6,20 @@ div.reveal-modal {
     background-color: $mootiro_blue;
     background-image: none;
     z-index: 10000;
+    width: 650px;
+
+    header {
+        h1 {
+            color: #555555;
+            font-size: 2em;
+            text-align: center;
+            margin-top: -20px;
+        }
+        hr {
+            border-top: 1px solid #ababab;
+            border-bottom: 1px solid #efefef;
+        }
+    }
 }
 div.reveal-modal-bg {
     z-index: 1500;

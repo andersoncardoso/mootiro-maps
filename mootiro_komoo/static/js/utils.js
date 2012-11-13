@@ -326,9 +326,18 @@ function geoObjectsListing (ul) {
 
 }
 
-require(['jquery', 'jquery-ui'], function ($) {
+require(['jquery', 'jquery-ui', 'new_utils', 'authentication/views'],
+        function ($, jqueryui, new_utils, auth_views) {
+
+    loginView = new auth_views.LoginView();
+    modalBox = new new_utils.ModalBox({
+      title: 'Login',
+      content: loginView.render().el,
+      modal_id: 'login-modal-box'
+    });
+
     // Intercepts all links that have the class /login-required/
-    $("a.login-required").bind("click.loginrequierd", function (ev) {
+    $("a.login-required").bind("click.loginrequired", function (ev) {
         if (KomooNS && !KomooNS.isAuthenticated) {
             // TODO: request status from server
             ev.stopPropagation();
@@ -338,13 +347,7 @@ require(['jquery', 'jquery-ui'], function ($) {
             if (url.charAt(0) == "#") {
                 url = document.location.pathname + url;
             }
-            $("#login_box #login-button").attr("href", "/user/login?next=" + encodeURIComponent(url));
-            $("#login_box").dialog({
-                width: 600,
-                modal: true,
-                resizable: false,
-                draggable: false
-            });
+            modalBox.show();
             return false;
         }
     });
@@ -438,7 +441,7 @@ function nestCollection(model, attributeName, nestedCollection) {
         model.attributes[attributeName][i] = nestedCollection.at(i).attributes;
     }
     //create empty arrays if none
- 
+
     nestedCollection.bind('add', function (initiative) {
         if (!model.get(attributeName)) {
             model.attributes[attributeName] = [];

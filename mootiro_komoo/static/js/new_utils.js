@@ -12,7 +12,9 @@
     loadCss = function(url) {
       var link;
       if (!$("link[href=\"" + url + "\"]").length) {
-        console.log('Loading css: ', url);
+        if (typeof console !== "undefined" && console !== null) {
+          if (typeof console.log === "function") console.log('Loading css: ', url);
+        }
         link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
@@ -34,9 +36,9 @@
         _.bindAll(this);
         this.tpl_args = _.extend({
           tile: '',
-          conten: '',
-          id: 'modal-box'
+          modal_id: 'modal-box'
         }, this.options);
+        this.content = this.options.content || '';
         loadCss('/static/lib/reveal/reveal.css');
         return this.render();
       };
@@ -46,7 +48,10 @@
         renderedContent = this.template(this.tpl_args);
         this.$el.html(renderedContent);
         $('body').append(this.el);
-        this.modal = this.$el.find("#" + this.tpl_args.id);
+        console.log(this.content);
+        console.log(this.$el.find('.reveal-modal-content'));
+        this.$el.find('.reveal-modal-content').append(this.content);
+        this.modal = this.$el.find("#" + this.tpl_args.modal_id);
         return this;
       };
 
