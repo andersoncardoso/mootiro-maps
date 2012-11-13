@@ -28,3 +28,15 @@
   -webkit-box-shadow: $horizontal $vertical $blur $color;
   -o-box-shadow: $horizontal $vertical $blur $color;
 }
+
+@mixin box-halo($horizontal, $vertical, $blur, $color) {
+  $shadow: ( $horizontal) ( $vertical)  $blur $color,
+           (-$horizontal) (-$vertical)  $blur $color,
+           ( $horizontal) (-$vertical)  $blur $color,
+           (-$horizontal) ( $vertical)  $blur $color;
+
+  box-shadow: $shadow;
+  -moz-box-shadow: $shadow;
+  -webkit-box-shadow: $shadow;
+  -o-box-shadow: $shadow;
+}

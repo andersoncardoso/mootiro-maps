@@ -6,12 +6,8 @@ div.reveal-modal {
     background-color: $mootiro_blue;
     background-image: none;
     z-index: 10000;
-    width: 620px;
-    box-shadow: 3px 3px 4px #999, -3px -3px 4px #999;
-    -moz-box-shadow: 3px 3px 4px #999, -3px -3px 4px #999;
-    -webkit-box-shadow: 3px 3px 4px #999, -3px -3px 4px #999;
-    -o-box-shadow: 3px 3px 4px #999, -3px -3px 4px #999;
-
+    width: 650px;
+    @include box-halo(3px, 3px, 4px, #bbb);
 
     header {
         h1 {
