@@ -10,7 +10,44 @@ h1 { .h1-font; }
 h2 { .h2-font; }
 h3 { .h3-font; }
 
+nav ul,
+ul.nav { .nav-list; }
+
+input[type=submit],
+button.default,
+a.button.default {
+    .button(@button-default-bg);
+}
+
+input[type=button],
+button,
+a.button {
+    .button;
+
+    &.map {
+        .icon('', 24px);
+        .button(@map-color);
+    }
+    &.community,
+    &.communities {
+        .icon('', 24px);
+        .button(@communities-color);
+    }
+    &.place,
+    &.places {
+        .icon('', 24px);
+        .button(@places-color);
+    }
+    &.project,
+    &.projects {
+        .icon('', 24px);
+        .button(@projects-color);
+    }
+}
+
 a {
+    .clickable;
+    .transition();
     color: @link-fg;
     background-color: @link-bg;
     text-decoration: underline;
@@ -42,32 +79,88 @@ a {
 header.main {
     .top-box;
     .logo {
+        .image;
         display: inline-block;
         width: 105px;
         height: 45px;
         margin: 15px 15px 5px;
-        background-color: blue;  // temporary
     }
     nav {
         text-align: center;
         li {
+            .border-radius(10px, 10px, 0px, 0px);
             @size: 24px;
-            line-height: @size;
             display: inline-block;
             a {
-                .icon(@size);
+                .icon('', @size);
+                .transition(~'color, background');
+                color: @menu-fg;
+                background-color: @main-bg;
                 text-decoration: none;
-                padding: 10px 40px;
+                line-height: @size;
+                padding: 9px 20px;
+                min-width: 120px;
+
+                &:hover {
+                    color: @menu-active-fg;
+                    background-color: transparent;
+                }
+                &:active {
+                    .border-radius(10px, 10px, 0px, 0px);
+                }
+            }
+        }
+
+        .active {
+            a {
+                color: @menu-active-fg;
+                background-color: transparent;
+            }
+            &:after {
+                @size: 5px;
+                content: '';
+                display: block;
+                border: @size solid transparent;
+                border-bottom-color: @content-bg;
+                width: 0px;
+                height: 0px;
+                margin: (-@size * 2) auto 0px;
+                z-index: 2;
+                position: relative;
+            }
+        }
+
+        @percent: 10%;
+        .map {
+            @color:@map-color;
+            .gradient(vertical, @color);
+            a:active {
+                .gradient(vertical, darken(@color, @percent));
+            }
+        }
+        .communities {
+            @color: @communities-color;
+            .gradient(vertical, @color);
+            a:active {
+                .gradient(vertical, darken(@color, @percent));
+            }
+        }
+        .places {
+            @color: @places-color;
+            .gradient(vertical, @color);
+            a:active {
+                .gradient(vertical, darken(@color, @percent));
+            }
+        }
+        .projects {
+            @color: @projects-color;
+            .gradient(vertical, @color);
+            a:active {
+                .gradient(vertical, darken(@color, @percent));
             }
         }
     }
 }
-
-nav ul,
-ul.nav { .nav-list; }
-
-
-
 
 form.search {
     @form-width: 350px;
@@ -77,6 +170,7 @@ form.search {
     input {
         border: none;
         background-color: transparent;
+        height: @button-size;
 
         &:focus {
             outline: none;
@@ -88,9 +182,13 @@ form.search {
     }
 
     input[type=submit] {
+        .clickable;
+        .image;
+        .remove-box-shadow;
+        background: none;
         width: @button-size;
-        height: @button-size;
         color: transparent;
-        background-color: blue;  // temporary
+        padding: 0px;
+        margin: 0px;
     }
 }

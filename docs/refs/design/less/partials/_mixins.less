@@ -1,6 +1,128 @@
+.border-radius (@tl, @tr, @br, @bl) {
+    @radius: @tl @tr @br @bl;
+    -webkit-border-radius: @radius;
+    -moz-border-radius: @radius;
+    border-radius: @radius;
+}
+
+.border-radius (@tl, @tr) {
+    @radius: @tl @tr;
+    -webkit-border-radius: @radius;
+    -moz-border-radius: @radius;
+    border-radius: @radius;
+}
+
+.border-radius (@radius:5px) {
+    -webkit-border-radius: @radius;
+    -moz-border-radius: @radius;
+    border-radius: @radius;
+}
+
+.inset-border (@color, @size:1px, @percentage:5%) {
+    @darker:  @size solid darken(@color, @percentage);
+    @lighter: @size solid lighten(@color, @percentage);
+    border-top:    @darker;
+    border-right:  @darker;
+    border-bottom: @lighter;
+    border-left:   @lighter;
+}
+
+.box-shadow (inset, @x:0, @y:0, @blur:5px, @spread:3px, @color:#999) when not (iscolor(@spread)) {
+    @shadow: inset @x @y @blur @spread @color;
+    -moz-box-shadow:    @shadow;
+    -webkit-box-shadow: @shadow;
+    box-shadow:         @shadow;
+}
+
+.box-shadow (@x:0, @y:0, @blur:5px, @spread:3px, @color:#999) when not (iscolor(@spread)) {
+    @shadow: @x @y @blur @spread @color;
+    -moz-box-shadow:    @shadow;
+    -webkit-box-shadow: @shadow;
+    box-shadow:         @shadow;
+}
+
+.box-shadow (inset, @x:0, @y:0, @blur:5px, @color:#999) when (iscolor(@color)) {
+    .box-shadow (inset, @x, @y, @blur, 0,  @color);
+    @shadow: inset @x @y @blur @color;
+    -moz-box-shadow:    @shadow;
+    -webkit-box-shadow: @shadow;
+    box-shadow:         @shadow;
+
+}
+.box-shadow (@x:0, @y:0, @blur:5px, @color:#999) when (iscolor(@color)) {
+    @shadow: @x @y @blur @color;
+    -moz-box-shadow:    @shadow;
+    -webkit-box-shadow: @shadow;
+    box-shadow:         @shadow;
+}
+
+.remove-box-shadow () {
+    .box-shadow (0px, 0px, 0px, 0px, transparent);
+}
+
+.gradient (vertical, @top, @bottom)  when (iscolor(@bottom)) {
+    @gradient: top, @top, @bottom;
+    background-image:         linear-gradient(@gradient);
+    background-image:      -o-linear-gradient(@gradient);
+    background-image:     -ms-linear-gradient(@gradient);
+    background-image:    -moz-linear-gradient(@gradient);
+    background-image: -webkit-linear-gradient(@gradient);
+
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, @top), color-stop(1, @bottom));
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=@{top}, endColorstr=@{bottom})";
+}
+
+.gradient (vertical, @color, @percent:5%) when (isnumber(@percent)) {
+    .gradient(vertical, lighten(@color, @percent), darken(@color, @percent));
+}
+
+.image () {
+    background-color: @menu-fg;  // temporary
+}
+
+.input () {
+    .inset-border(@input-border-color, 1px);
+    .box-shadow(inset,-1px, 1px, 8px, -1px, @input-border-color);
+    background-color: @input-bg;
+    color: @input-fg;
+}
+
+.icon (@image, @size: 24px) {
+    display: inline-block;
+
+    &:before {
+        .image;
+        content: '';
+        width: @size;
+        height: @size;
+        display: inline-block;
+        margin-right: 5px;
+        vertical-align: middle;
+    }
+}
+
+.clickable () {
+    cursor: pointer;
+}
+
+.transition (@property:all, @duration:0.1s, @timing:ease, @delay:0s) {
+    @transition: @property @duration @timing @delay;
+    transition:         @transition;
+    -moz-transition:    @transition;
+    -webkit-transition: @transition;
+}
+
 .top-box() {
     background-color: @main-bg;
-    width: @site-width;
+    width: @total-width;
+}
+
+.fg-from-bg (@bg) when (lightness(@bg) >= 70%) {
+    color: #000;
+}
+
+.fg-from-bg (@bg) when (lightness(@bg) < 70%) {
+    color: #fff;
 }
 
 .nav-list () {
@@ -17,36 +139,28 @@
     }
 }
 
-.border-radius (@radius: 5px) {
-    -webkit-border-radius: @radius;
-    -moz-border-radius: @radius;
-    border-radius: @radius;
-}
-
-.icon (@size: 24px) {
+.button (@color:@button-bg) {
+    @button-border-color: darken(@color, 8%);
+    @button-shadow-color: darken(@color, 3%);
+    .clickable;
+    .gradient(vertical, @color);
+    .border-radius();
+    .box-shadow(1px, 1px, 5px, -1px, @button-shadow-color);
+    .fg-from-bg(@color);
     display: inline-block;
-    vertical-align: text-top;
+    font-size: @font-size + 2;
+    line-height: @font-size + 10;
+    text-align: center;
+    text-decoration: none;
+    padding: 5px 20px;
+    border: solid 1px @button-border-color;
 
-    i {
-        width: @size;
-        height: @size;
-        display: inline-block;
-        margin-right: 5px;
-        background-color: blue;  // temporary
-        vertical-align: middle;
+    &:hover {
+        .gradient(vertical, lighten(@color, 5%));
+        .fg-from-bg(@color);
     }
-}
 
-.inset-border (@color, @size:1px, @percentage:15%) {
-    border-top: @size solid darken(@color, @percentage);
-    border-left: @size solid darken(@color, @percentage);
-    border-bottom: @size solid lighten(@color, @percentage);
-    border-right: @size solid lighten(@color, @percentage);
-}
-
-.input () {
-    .border-radius(3px);
-    .inset-border(@input-border-color, 1px);
-    background-color: @input-bg;
-    color: @input-fg;
+    &:active {
+        .gradient(vertical, @color);
+    }
 }
