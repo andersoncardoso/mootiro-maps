@@ -1,3 +1,26 @@
+div.reveal-modal {
+  top: 200px;
+  background-color: #dceff4;
+  background-image: none;
+  z-index: 10000;
+  width: 650px;
+  box-shadow: 3px 3px 4px #bbbbbb, -3px -3px 4px #bbbbbb, 3px -3px 4px #bbbbbb, -3px 3px 4px #bbbbbb;
+  -moz-box-shadow: 3px 3px 4px #bbbbbb, -3px -3px 4px #bbbbbb, 3px -3px 4px #bbbbbb, -3px 3px 4px #bbbbbb;
+  -webkit-box-shadow: 3px 3px 4px #bbbbbb, -3px -3px 4px #bbbbbb, 3px -3px 4px #bbbbbb, -3px 3px 4px #bbbbbb;
+  -o-box-shadow: 3px 3px 4px #bbbbbb, -3px -3px 4px #bbbbbb, 3px -3px 4px #bbbbbb, -3px 3px 4px #bbbbbb; }
+  div.reveal-modal header h1 {
+    color: #555555;
+    font-size: 2em;
+    text-align: center;
+    margin-top: -20px; }
+  div.reveal-modal header hr {
+    border-top: 1px solid #ababab;
+    border-bottom: 1px solid #efefef; }
+
+div.reveal-modal-bg {
+  z-index: 1500;
+  background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.65); }
+
 .upper_bar {
   background-color: #dceff4;
   color: #009cb4;
@@ -20,10 +43,33 @@
   display: block; }
 
 form#form_login {
-  width: 280px; }
+  width: 292.5px; }
   form#form_login input {
     width: 100%;
-    height: 28px; }
+    height: 32px;
+    background-color: white;
+    box-shadow: none;
+    border: 1px solid #bcbebf;
+    transition: border 1s;
+    -moz-transition: border 1s;
+    /* Firefox 4 */
+    -webkit-transition: border 1s;
+    /* Safari and Chrome */
+    -o-transition: width border 1s;
+    /* Opera */
+    transition: box-shadow 1s;
+    -moz-transition: box-shadow 1s;
+    /* Firefox 4 */
+    -webkit-transition: box-shadow 1s;
+    /* Safari and Chrome */
+    -o-transition: width box-shadow 1s;
+    /* Opera */ }
+    form#form_login input:focus {
+      border: 1px solid #009cb4;
+      box-shadow: 1px 1px 2px #009cb4;
+      -moz-box-shadow: 1px 1px 2px #009cb4;
+      -webkit-box-shadow: 1px 1px 2px #009cb4;
+      -o-box-shadow: 1px 1px 2px #009cb4; }
   form#form_login input[type=submit] {
     width: 100%;
     padding: 3px 6px;
@@ -48,20 +94,13 @@ form#form_login {
 
 #login_box {
   background: #dceff4;
-  width: 560px;
-  display: none; }
+  width: 650px; }
   #login_box * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box; }
-  #login_box h1 {
-    text-align: center;
-    font-size: 20px; }
-  #login_box .errors {
-    color: #c00;
-    text-align: center; }
   #login_box div#separator {
-    width: 56px;
+    width: 65px;
     height: 130px;
     text-align: center;
     line-height: 130px;
@@ -87,16 +126,19 @@ ul#external_providers, form {
   padding: 10px; }
 
 ul#external_providers {
-  width: 224px; }
+  width: 292.5px;
+  margin-top: 8px; }
   ul#external_providers li {
-    margin: 15px 0; }
+    margin: 15px 10px; }
     ul#external_providers li button {
       width: 100%;
-      padding: 3px 6px;
+      height: 32px;
+      padding: 3px 9px;
       border: 0;
       border-radius: 5px;
       color: #fff;
-      font-size: 13px; }
+      font-size: 13px;
+      margin-bottom: 15px; }
       ul#external_providers li button img {
         width: 22px;
         height: 22px;

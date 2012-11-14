@@ -105,11 +105,12 @@
       return this.model.save(this.get(), {
         success: function(model, resp) {
           _this.cleanErrors();
+          if (resp.redirect) window.location = resp.redirect;
           return _this.trigger('success', resp);
         },
         error: function(model, resp) {
-          console.log(resp);
           resp = JSON.parse(resp.responseText);
+          _this.cleanErrors();
           _this.errors(resp.errors || {});
           return _this.trigger('error', resp);
         }

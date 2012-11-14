@@ -14,6 +14,7 @@ config =
         'bootstrap': '../lib/bootstrap.min'
         'underscore': '../lib/underscore-min'
         'backbone': '../lib/backbone-min'
+        'reForm': '../lib/reForm'
         'async': '../lib/requirejs/async'
         'goog': '../lib/requirejs/goog'
         'propertyParser': '../lib/requirejs/propertyParser'
@@ -35,6 +36,9 @@ config =
         'backbone':
             deps: ['underscore', 'jquery']
             exports: 'Backbone'
+        'reForm':
+          deps: ['jquery', 'underscore', 'backbone']
+          exports: 'reForm'
         'infobox':
             deps: ['googlemaps']
             exports: 'InfoBox'

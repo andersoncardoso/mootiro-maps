@@ -3,10 +3,15 @@ define (require) ->
   $ = require 'jquery'
   _ = require 'underscore'
   Backbone = require 'backbone'
+  reForm = require 'reForm'
+  models = require './models'
+  new_utils = require 'new_utils'
+
   login_tpl = require 'text!templates/authentication/_login.html'
   social_btn_tpl = require 'text!templates/authentication/_social_button.html'
+  signup_tpl = require 'text!templates/widgets/_signup.html'
 
-  SocialButton = Backbone.View.extend
+  class SocialButton extends Backbone.View
     tagName: 'li'
     template: _.template social_btn_tpl
 
@@ -30,12 +35,12 @@ define (require) ->
       @$el.addClass @className
       this
 
-  SocialButtonsList = Backbone.View.extend
+  class SocialButtonsList extends Backbone.View
     tagName: 'ul'
     id: 'external_providers'
 
     initialize: ->
-      _.bindAll this, 'render', 'toString'
+      _.bindAll this, 'render'
       @buttons = @options.buttons
 
     render: ->
@@ -47,7 +52,18 @@ define (require) ->
         $(@el).append btnView.render().el
       this
 
-  LoginView = Backbone.View.extend
+
+  class SignupWidget extends reForm.Widget
+    template: signup_tpl
+
+  class LoginForm extends reForm.Form
+    fields: [
+      {name: 'email', widget: reForm.commonWidgets.TextWidget, label: 'Email:'}
+      {name: 'password', widget: reForm.commonWidgets.PasswordWidget, label:'Password:'}
+      {name: 'signup', widget: SignupWidget, label: ' '}
+    ]
+
+  class LoginView extends Backbone.View
     id: 'login_box'
     tagName: 'section'
     template: _.template login_tpl
@@ -67,17 +83,22 @@ define (require) ->
         image_url: '/static/img/login-facebook.png'
         message: 'Log In with Facebook'
 
-      @socialButtonsList = new SocialButtonsList
+      @socialBtnsView = new SocialButtonsList
         buttons: [googleButton, facebookButton]
 
+      loginModel = new models.LoginModel {}
+
+      @formView = new LoginForm
+        formId: 'form_login'
+        model: loginModel
+
     render: ->
-      socialButtonsView = @socialButtonsList.render().el
-      renderedContent = @template {
-        login_form: 'LOGIN FORM GOES HERE'
-      }
+      renderedContent = @template {}
       $(@el).html renderedContent
-      @$el.find('.social_buttons').append socialButtonsView
+      @$el.find('.social_buttons').append @socialBtnsView.render().el
+      @$el.find('.login_form').append @formView.render().el
       this
+
 
   return {
     LoginView: LoginView

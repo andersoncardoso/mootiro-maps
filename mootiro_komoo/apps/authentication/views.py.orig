@@ -18,9 +18,13 @@ from reversion.models import Revision
 
 from signatures.models import Signature, DigestSignature
 from ajaxforms import ajax_form
+<<<<<<< HEAD
+from main.utils import create_geojson, send_mail
+from lib.locker.models import Locker
+=======
 from main.utils import (create_geojson, randstr, send_mail, ResourceHandler,
         JsonResponse, get_json_data)
-from lib.locker.models import Locker
+>>>>>>> login_refactor
 
 from .models import User
 from .forms import FormProfile, FormUser
