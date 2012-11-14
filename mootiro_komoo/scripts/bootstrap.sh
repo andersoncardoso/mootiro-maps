@@ -1,6 +1,6 @@
 #! /usr/bin/env sh
 
-sudo apt-get install nodejs npm rubygems python-dev -y
+sudo apt-get install nodejs npm python-dev -y
 
 # install and configure rabbitmq for working with celery
 sudo apt-get install rabbitmq-server -y
@@ -12,10 +12,7 @@ pip install -r settings/requirements.txt
 
 sudo npm install -g coffee-script@1.2
 sudo npm install -g requirejs@2.1
-
-sudo gem install --version '~> 0.8.8' rb-inotify
-sudo gem install listen
-sudo gem install sass
+sudo npm install -g less@1.3.1
 
 # apply patch for django 1.3
 fab build_environment

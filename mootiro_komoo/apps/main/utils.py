@@ -371,3 +371,10 @@ class JsonResponse(HttpResponse):
             self.status_code = status_code
 
 
+def randstr(l=10):
+    chars = letters + digits
+    s = ''
+    for i in range(l):
+        s = s + choice(chars)
+    return s
+

@@ -1,7 +1,7 @@
-$facebook_blue: #3c5a98;
-$google_red: #d84a38;
-$twitter_blue: #46c8f5;
-$login_box_width: 650px;
+@facebook_blue: #3c5a98;
+@google_red: #d84a38;
+@twitter_blue: #46c8f5;
+@login_box_width: 650px;
 
 
 #main-content > #login_box { display: block }
@@ -10,7 +10,7 @@ $login_box_width: 650px;
 form#form_login {
   // Simple login form for internal accounts (not external providers).
 
-  width: $login_box_width * 0.45;
+  width: (@login_box_width * 0.45);
 
   input {
     width: 100%;
@@ -19,12 +19,12 @@ form#form_login {
     box-shadow: none;
     border: 1px solid #bcbebf;
 
-    @include transition(border, 1s);
-    @include transition(box-shadow, 1s);
+    .transition(border, 1s);
+    .transition(box-shadow, 1s);
 
     &:focus {
         border: 1px solid rgb(0, 156, 180);
-        @include box-shadow(1px, 1px, 2px, rgb(0, 156, 180));
+        .box-shadow(1px, 1px, 2px, rgb(0, 156, 180));
     }
 
   }
@@ -37,7 +37,7 @@ form#form_login {
     font-weight: bold;
     font-size: 120%;
     color: #fff;
-    @include gradient(#1e9c5b, darken(#1e9c5b, 15%));
+    .gradient(#1e9c5b, darken(#1e9c5b, 15%));
   }
 
   span {
@@ -51,7 +51,7 @@ form#form_login {
   // Login box with login form and external login providers
 
   background: #dceff4;
-  width: $login_box_width;
+  width: @login_box_width;
   // display: none;
 
   * {
@@ -61,11 +61,11 @@ form#form_login {
   }
 
   div#separator {
-    width: $login_box_width * 0.10;
-    $separator_height: 130px;
-    height: $separator_height;
+    width: (@login_box_width * 0.10);
+    @separator_height: 130px;
+    height: @separator_height;
     text-align: center;
-    line-height: $separator_height;
+    line-height: @separator_height;
     font-style: italic;
     font-weight: bold;
     margin-top: 15px;
@@ -75,7 +75,7 @@ form#form_login {
     .vertical_line {
       position: absolute;
       left: 50%;
-      height: $separator_height * 0.35;
+      height: (@separator_height * 0.35);
       border-left: 1px solid #333;
       width: 1px;
     }
@@ -93,7 +93,7 @@ ul#external_providers, form {
 }
 
 ul#external_providers {
-  width: $login_box_width * 0.45;
+  width: (@login_box_width * 0.45);
   margin-top: 8px;
 
   li {
@@ -117,12 +117,12 @@ ul#external_providers {
       }
     }
 
-    button.google { background: $google_red }
-    button.google:hover { background: lighten($google_red, 20%%) }
-    button.facebook { background: $facebook_blue }
-    button.facebook:hover { background: lighten($facebook_blue, 20%%) }
-    button.twitter { background: $twitter_blue }
-    button.twitter:hover { background: lighten($twitter_blue, 20%%) }
+    button.google { background: @google_red }
+    button.google:hover { background: lighten(@google_red, 20%) }
+    button.facebook { background: @facebook_blue }
+    button.facebook:hover { background: lighten(@facebook_blue, 20%) }
+    button.twitter { background: @twitter_blue }
+    button.twitter:hover { background: lighten(@twitter_blue, 20%) }
   }
 }
 

@@ -63,16 +63,16 @@ def compile_coffee():
     local('coffee -c static/')
 
 
-def compile_sass():
-    """Compiles sass to css"""
-    local('sass --update ./')
+def compile_less():
+    """Compiles less to css"""
+    local('lessc static/css/fashion.less > static/css/fashion.css')
 
 
 def work():
     """Start watchers"""
     # compilers
     local('coffee -cw static/js/ &')
-    local('sass --watch ./ &')
+    local('./scripts/less_watcher.js &')
 
     # test runners go here!
 
@@ -84,7 +84,7 @@ def update_reForm():
 
 
 def kill_background_tasks():
-    for task in ['coffee', 'sass']:
+    for task in ['coffee', 'less_watcher']:
         local(
             "ps -eo pid,args | grep %s | grep -v grep | "
             "cut -c1-6 | xargs kill" % task)
@@ -172,7 +172,8 @@ def recreate_db():
     from django.conf import settings
     db_name = settings.DATABASES['default']['NAME']
     logging.info("Recreating database '{}'".format(db_name))
-    local('dropdb {} && createdb -T template_postgis {}'.format(db_name, db_name))
+    local('dropdb {} && createdb -T template_postgis {}'.format(
+            db_name, db_name))
 
 
 def shell():
@@ -380,7 +381,7 @@ def build():
     """Build step"""
     compilemessages()
     js_urls()
-    compile_sass()
+    compile_less()
     build_js()
 
 
