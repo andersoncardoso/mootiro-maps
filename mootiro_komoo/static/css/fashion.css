@@ -24,8 +24,8 @@ div.reveal-modal-bg {
   background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.65);
 }
 .upper_bar {
-  background-color: #ffe5af;
-  color: #353535;
+  background-color: #dceff4;
+  color: #009cb4;
   width: 100%;
   height: 2em;
   display: block;
@@ -41,7 +41,7 @@ div.reveal-modal-bg {
 }
 .upper_bar li a:hover {
   color: #333333;
-  background: #ffe0a0;
+  background: #d0eaf0;
   border-radius: 0 0 4px 4px;
 }
 #main-content > #login_box {
