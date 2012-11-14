@@ -23,6 +23,48 @@ div.reveal-modal-bg {
   z-index: 1500;
   background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.65);
 }
+form label.error {
+  color: #d84a38;
+}
+form input {
+  background: white;
+  box-shadow: none;
+  border: 1px solid #bcbebf;
+  transition: border 1s;
+  -moz-transition: border 1s;
+  -webkit-transition: border 1s;
+  -o-transition: width border 1s;
+  transition: box-shadow 1s;
+  -moz-transition: box-shadow 1s;
+  /* Firefox 4 */
+
+  -webkit-transition: box-shadow 1s;
+  /* Safari and Chrome */
+
+  -o-transition: width box-shadow 1s;
+  /* Opera */
+
+}
+form input:focus {
+  border: 1px solid #009cb4;
+  box-shadow: 1px 1px 2px #009cb4;
+  -moz-box-shadow: 1px 1px 2px #009cb4;
+  -webkit-box-shadow: 1px 1px 2px #009cb4;
+  -o-box-shadow: 1px 1px 2px #009cb4;
+}
+form input.error,
+form textarea.error {
+  border: 1px solid #d84a38;
+}
+form small.error {
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  background-color: #f1beb8;
+  color: #8e291c;
+  border-radius: 3px;
+  width: 100%;
+  display: block;
+}
 .upper_bar {
   background-color: #dceff4;
   color: #009cb4;
@@ -53,30 +95,6 @@ form#form_login {
 form#form_login input {
   width: 100%;
   height: 32px;
-  background-color: white;
-  box-shadow: none;
-  border: 1px solid #bcbebf;
-  transition: border 1s;
-  -moz-transition: border 1s;
-  -webkit-transition: border 1s;
-  -o-transition: width border 1s;
-  transition: box-shadow 1s;
-  -moz-transition: box-shadow 1s;
-  /* Firefox 4 */
-
-  -webkit-transition: box-shadow 1s;
-  /* Safari and Chrome */
-
-  -o-transition: width box-shadow 1s;
-  /* Opera */
-
-}
-form#form_login input:focus {
-  border: 1px solid #009cb4;
-  box-shadow: 1px 1px 2px #009cb4;
-  -moz-box-shadow: 1px 1px 2px #009cb4;
-  -webkit-box-shadow: 1px 1px 2px #009cb4;
-  -o-box-shadow: 1px 1px 2px #009cb4;
 }
 form#form_login input[type=submit] {
   width: 100%;
