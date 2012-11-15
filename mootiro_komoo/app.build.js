@@ -12,6 +12,8 @@
         'underscore': 'empty:',
         'backbone': 'empty:',
         'bootstrap': 'empty:',
+        'reveal': 'empty:',
+        'reForm': 'empty:',
         'async': '../static/lib/requirejs/async',
         'goog': '../static/lib/requirejs/goog',
         'propertyParser': '../static/lib/requirejs/propertyParser',

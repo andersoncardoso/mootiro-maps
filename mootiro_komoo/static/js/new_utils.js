@@ -7,7 +7,7 @@
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
-    reveal = require('lib/reveal/jquery.reveal');
+    reveal = require('reveal');
     modal_box = require('text!templates/widgets/_modal_box.html');
     loadCss = function(url) {
       var link;

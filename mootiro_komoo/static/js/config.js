@@ -14,6 +14,7 @@
       'ajaxforms': '../js/ajaxforms',
       'jquery': '../lib/jquery-1.7.1.min',
       'jquery-ui': '../lib/jquery-ui-1.8.16/jquery-ui-1.8.16.min',
+      'reveal': '../lib/reveal/jquery.reveal',
       'bootstrap': '../lib/bootstrap.min',
       'underscore': '../lib/underscore-min',
       'backbone': '../lib/backbone-min',
@@ -27,6 +28,9 @@
       'sinon': '../lib/sinon-1.5.0'
     },
     shim: {
+      'reveal': {
+        deps: ['jquery']
+      },
       'ad-gallery': {
         deps: ['jquery']
       },
