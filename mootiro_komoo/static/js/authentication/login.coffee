@@ -1,11 +1,14 @@
 require [
     'jquery',
-    'authentication/views'
-  ], ($, login_views) ->
+    'backbone',
+    'authentication/router'
+  ], ($, Backbone, router) ->
 
     $ ->
-      loginView = new  login_views.LoginView {}
+      loginApp = new  router.LoginApp {}
 
-      $('#main-content').html loginView.render().el
+      Backbone.history.start()
+
+
 
 

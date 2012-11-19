@@ -23,6 +23,10 @@ define (require) ->
       @tpl_args = _.extend {tile: '', modal_id: 'modal-box'}, @options
       @content = @options.content or ''
       loadCss('/static/lib/reveal/reveal.css')
+      if @options.onClose
+        @onClose = @options.onClose
+      if @options.onOpen
+        @onOpen = @options.onOpen
       @render()
 
     render: ->
@@ -35,16 +39,29 @@ define (require) ->
       @modal = @$el.find "##{@tpl_args.modal_id}"
       this
 
+    bindEvents: ->
+      if @onOpen?
+        @modal.bind 'reveal:open', @onOpen
+      if @onClose?
+        @modal.bind 'reveal:close', @onClose
+
+    unbindEvents: ->
+      if @onOpen?
+        @modal.unbind 'reveal:open', @onOpen
+      if @onClose?
+        @modal.unbind 'reveal:close', @onClose
+
     show: ->
-      console.log 'showing'
       @modal.reveal
         animation: 'fadeAndPop'
         animationspeed: 300
         closeonbackgroundclick: true
         dismissmodalclass: 'close-reveal-modal'
+      @bindEvents()
       this
     hide: ->
-      console.log 'hiding'
+      @modal.trigger 'reveal:close'
+      @unbindEvents()
       this
 
   return {

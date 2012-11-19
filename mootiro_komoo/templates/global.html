@@ -108,7 +108,10 @@
       </div>
       {% include "main/error_box.html" %}
     </div>
+
     {% block page_scripts %}{% endblock %}
+    <script type="text/javascript"
+      src="{{ STATIC_URL }}js/authentication/login.js"></script>
 
     {% if js_module %}
     <script type="text/javascript">

@@ -326,32 +326,6 @@ function geoObjectsListing (ul) {
 
 }
 
-require(['jquery', 'jquery-ui', 'new_utils', 'authentication/views'],
-        function ($, jqueryui, new_utils, auth_views) {
-
-    loginView = new auth_views.LoginView();
-    modalBox = new new_utils.ModalBox({
-      title: 'Login',
-      content: loginView.render().el,
-      modal_id: 'login-modal-box'
-    });
-
-    // Intercepts all links that have the class /login-required/
-    $("a.login-required").bind("click.loginrequired", function (ev) {
-        if (KomooNS && !KomooNS.isAuthenticated) {
-            // TODO: request status from server
-            ev.stopPropagation();
-            ev.stopImmediatePropagation();
-            ev.preventDefault();
-            var url = $(this).attr("href");
-            if (url.charAt(0) == "#") {
-                url = document.location.pathname + url;
-            }
-            modalBox.show();
-            return false;
-        }
-    });
-});
 
 function _displayMessage(selector, dialogClass, title, message, imageUrl, buttons) {
     if (!buttons) {

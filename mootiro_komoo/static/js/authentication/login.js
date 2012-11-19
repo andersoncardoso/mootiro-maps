@@ -1,10 +1,10 @@
 (function() {
 
-  require(['jquery', 'authentication/views'], function($, login_views) {
+  require(['jquery', 'backbone', 'authentication/router'], function($, Backbone, router) {
     return $(function() {
-      var loginView;
-      loginView = new login_views.LoginView({});
-      return $('#main-content').html(loginView.render().el);
+      var loginApp;
+      loginApp = new router.LoginApp({});
+      return Backbone.history.start();
     });
   });
 

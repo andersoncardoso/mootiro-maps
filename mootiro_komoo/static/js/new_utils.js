@@ -40,6 +40,8 @@
         }, this.options);
         this.content = this.options.content || '';
         loadCss('/static/lib/reveal/reveal.css');
+        if (this.options.onClose) this.onClose = this.options.onClose;
+        if (this.options.onOpen) this.onOpen = this.options.onOpen;
         return this.render();
       };
 
@@ -55,19 +57,34 @@
         return this;
       };
 
+      ModalBox.prototype.bindEvents = function() {
+        if (this.onOpen != null) this.modal.bind('reveal:open', this.onOpen);
+        if (this.onClose != null) {
+          return this.modal.bind('reveal:close', this.onClose);
+        }
+      };
+
+      ModalBox.prototype.unbindEvents = function() {
+        if (this.onOpen != null) this.modal.unbind('reveal:open', this.onOpen);
+        if (this.onClose != null) {
+          return this.modal.unbind('reveal:close', this.onClose);
+        }
+      };
+
       ModalBox.prototype.show = function() {
-        console.log('showing');
         this.modal.reveal({
           animation: 'fadeAndPop',
           animationspeed: 300,
           closeonbackgroundclick: true,
           dismissmodalclass: 'close-reveal-modal'
         });
+        this.bindEvents();
         return this;
       };
 
       ModalBox.prototype.hide = function() {
-        console.log('hiding');
+        this.modal.trigger('reveal:close');
+        this.unbindEvents();
         return this;
       };
 
