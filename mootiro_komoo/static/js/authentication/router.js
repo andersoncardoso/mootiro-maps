@@ -19,12 +19,10 @@
       }
 
       LoginApp.prototype.initialize = function() {
-        var _ref,
-          _this = this;
+        var _this = this;
         _.bindAll(this, 'root', 'login');
-        this.selectors = (_ref = this.options) != null ? _ref.loginRequired : void 0;
         this.loginView = new views.LoginView();
-        this.modalBox = new new_utils.ModalBox({
+        this.loginBox = new new_utils.ModalBox({
           title: 'Login',
           content: this.loginView.render().el,
           modal_id: 'login-modal-box',
@@ -34,22 +32,43 @@
             });
           }
         });
-        return $("a.login-required").bind("click.loginrequired", function(ev) {
+        $("a.login-required").bind("click.loginrequired", function(evt) {
           if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
-            ev.stopPropagation();
-            ev.stopImmediatePropagation();
-            ev.preventDefault();
+            evt.stopPropagation();
+            evt.stopImmediatePropagation();
+            evt.preventDefault();
             _this.navigate('login', {
               trigger: true
             });
             return false;
           }
         });
+        this.registerBox = new new_utils.ModalBox({
+          title: 'Register',
+          content: $('<div>Register modal box</div>'),
+          modal_id: 'register-modal-box',
+          onClose: function(evt) {
+            return _this.navigate('', {
+              trigger: true
+            });
+          }
+        });
+        return this.loginView.$el.find('.auth-register').bind('click', function(evt) {
+          evt.stopPropagation();
+          evt.stopImmediatePropagation();
+          evt.preventDefault();
+          _this.loginBox.hide();
+          _this.navigate('register', {
+            trigger: true
+          });
+          return false;
+        });
       };
 
       LoginApp.prototype.routes = {
         '': 'root',
-        'login': 'login'
+        'login': 'login',
+        'register': 'register'
       };
 
       LoginApp.prototype.root = function() {
@@ -64,7 +83,17 @@
 
       LoginApp.prototype.login = function() {
         if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
-          return this.modalBox.show();
+          return this.loginBox.show();
+        } else {
+          return this.navigate('', {
+            trigger: true
+          });
+        }
+      };
+
+      LoginApp.prototype.register = function() {
+        if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
+          return this.registerBox.show();
         } else {
           return this.navigate('', {
             trigger: true

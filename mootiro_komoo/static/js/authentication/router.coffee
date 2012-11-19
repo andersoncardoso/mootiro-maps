@@ -11,32 +11,49 @@ define (require) ->
   class LoginApp extends Backbone.Router
     initialize: ->
       _.bindAll this, 'root', 'login'
-      @selectors = @options?.loginRequired
+
+      # login
       @loginView = new views.LoginView()
-      @modalBox = new new_utils.ModalBox
+      @loginBox = new new_utils.ModalBox
         title: 'Login',
         content: @loginView.render().el,
         modal_id: 'login-modal-box'
         onClose: (evt) =>
           @navigate '', {trigger: true}
 
-      # if @selectors?
-      #   ??
-      # else
-      $("a.login-required").bind "click.loginrequired",  (ev) =>
+      $("a.login-required").bind "click.loginrequired",  (evt) =>
         if not KomooNS?.isAuthenticated
-          ev.stopPropagation()
-          ev.stopImmediatePropagation()
-          ev.preventDefault()
+          evt.stopPropagation()
+          evt.stopImmediatePropagation()
+          evt.preventDefault()
           # url = $(this).attr "href"
           # if (url.charAt(0) == "#")
           #     url = document.location.pathname + url
           @navigate 'login', {trigger: true}
           return false
 
+      # register
+      # @registerView = new views.NewUserView()
+      @registerBox = new new_utils.ModalBox
+        title: 'Register'
+        # content: @registerView.render().el
+        content: $('<div>Register modal box</div>')
+        modal_id: 'register-modal-box'
+        onClose: (evt) =>
+          @navigate '', {trigger: true}
+
+      @loginView.$el.find('.auth-register').bind 'click', (evt) =>
+        evt.stopPropagation()
+        evt.stopImmediatePropagation()
+        evt.preventDefault()
+        @loginBox.hide()
+        @navigate 'register', {trigger: true}
+        return false
+
     routes:
       '': 'root'
       'login': 'login'
+      'register': 'register'
 
     root: ->
       path = window.location.pathname
@@ -47,7 +64,13 @@ define (require) ->
 
     login: ->
       if not KomooNS?.isAuthenticated
-        @modalBox.show()
+        @loginBox.show()
+      else
+        @navigate '', {trigger: true}
+
+    register: ->
+      if not KomooNS?.isAuthenticated
+        @registerBox.show()
       else
         @navigate '', {trigger: true}
 
