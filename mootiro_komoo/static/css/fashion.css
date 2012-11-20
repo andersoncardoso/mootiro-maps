@@ -58,6 +58,14 @@ form input.error,
 form textarea.error {
   border: 1px solid #d84a38;
 }
+form .field-container.half-box-left {
+  display: inline-block;
+  width: 48%;
+}
+form .field-container.half-box-right {
+  width: 48%;
+  float: right;
+}
 form small.error {
   padding: 5px 10px;
   margin-bottom: 5px;
@@ -216,8 +224,8 @@ ul#external_providers li button.twitter:hover {
   height: 28px;
 }
 .register #form_register input[type=submit] {
-  width: 100%;
-  padding: 3px 6px;
+  width: 50%;
+  margin: 10px auto 0 auto;
   border: 0;
   border-radius: 5px;
   font-weight: bold;

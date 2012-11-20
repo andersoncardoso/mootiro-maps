@@ -150,11 +150,13 @@ define (require) ->
         name: 'password',
         widget: reForm.commonWidgets.PasswordWidget,
         label: 'Password'
+        container_class: 'half-box-left'
       }
       {
         name: 'password_confirm',
         widget: reForm.commonWidgets.PasswordWidget,
         label: 'Password Confirmation'
+        container_class: 'half-box-right'
       }
     ]
 
@@ -172,6 +174,7 @@ define (require) ->
       userModel = new models.User {}
       @registerForm = new RegisterForm
         formId: 'form_register'
+        submit_label: 'Register'
         model: userModel
 
 

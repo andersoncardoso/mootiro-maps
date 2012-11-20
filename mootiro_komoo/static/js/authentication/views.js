@@ -195,11 +195,13 @@
         }, {
           name: 'password',
           widget: reForm.commonWidgets.PasswordWidget,
-          label: 'Password'
+          label: 'Password',
+          container_class: 'half-box-left'
         }, {
           name: 'password_confirm',
           widget: reForm.commonWidgets.PasswordWidget,
-          label: 'Password Confirmation'
+          label: 'Password Confirmation',
+          container_class: 'half-box-right'
         }
       ];
 
@@ -226,6 +228,7 @@
         userModel = new models.User({});
         return this.registerForm = new RegisterForm({
           formId: 'form_register',
+          submit_label: 'Register',
           model: userModel
         });
       };
