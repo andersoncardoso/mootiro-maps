@@ -22,6 +22,8 @@ define (require) ->
       _.bindAll this
       @tpl_args = _.extend {tile: '', modal_id: 'modal-box'}, @options
       @content = @options.content or ''
+      if @options.width
+        @width = @options.width
       loadCss('/static/lib/reveal/reveal.css')
       if @options.onClose
         @onClose = @options.onClose
@@ -33,10 +35,10 @@ define (require) ->
       renderedContent = @template @tpl_args
       @$el.html renderedContent
       $('body').append @el
-      console.log @content
-      console.log @$el.find('.reveal-modal-content')
       @$el.find('.reveal-modal-content').append @content
       @modal = @$el.find "##{@tpl_args.modal_id}"
+      if @width?
+        @modal.css('width', @width)
       this
 
     bindEvents: ->

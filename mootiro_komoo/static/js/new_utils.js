@@ -39,6 +39,7 @@
           modal_id: 'modal-box'
         }, this.options);
         this.content = this.options.content || '';
+        if (this.options.width) this.width = this.options.width;
         loadCss('/static/lib/reveal/reveal.css');
         if (this.options.onClose) this.onClose = this.options.onClose;
         if (this.options.onOpen) this.onOpen = this.options.onOpen;
@@ -50,10 +51,9 @@
         renderedContent = this.template(this.tpl_args);
         this.$el.html(renderedContent);
         $('body').append(this.el);
-        console.log(this.content);
-        console.log(this.$el.find('.reveal-modal-content'));
         this.$el.find('.reveal-modal-content').append(this.content);
         this.modal = this.$el.find("#" + this.tpl_args.modal_id);
+        if (this.width != null) this.modal.css('width', this.width);
         return this;
       };
 

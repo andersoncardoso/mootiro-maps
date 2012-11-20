@@ -43,9 +43,11 @@
             return false;
           }
         });
+        this.registerView = new views.RegisterView();
         this.registerBox = new new_utils.ModalBox({
           title: 'Register',
-          content: $('<div>Register modal box</div>'),
+          width: '450px',
+          content: this.registerView.render().el,
           modal_id: 'register-modal-box',
           onClose: function(evt) {
             return _this.navigate('', {

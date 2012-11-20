@@ -3,7 +3,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var $, Backbone, LoginForm, LoginView, SignupWidget, SocialButton, SocialButtonsList, login_tpl, models, new_utils, reForm, signup_tpl, social_btn_tpl, _;
+    var $, Backbone, LoginForm, LoginView, RegisterForm, RegisterView, SignupWidget, SocialButton, SocialButtonsList, login_tpl, models, new_utils, reForm, register_tpl, signup_tpl, social_btn_tpl, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
@@ -11,6 +11,7 @@
     models = require('./models');
     new_utils = require('new_utils');
     login_tpl = require('text!templates/authentication/_login.html');
+    register_tpl = require('text!templates/authentication/_register.html');
     social_btn_tpl = require('text!templates/authentication/_social_button.html');
     signup_tpl = require('text!templates/widgets/_signup.html');
     SocialButton = (function(_super) {
@@ -165,7 +166,7 @@
       LoginView.prototype.render = function() {
         var renderedContent;
         renderedContent = this.template({});
-        $(this.el).html(renderedContent);
+        this.$el.html(renderedContent);
         this.$el.find('.social_buttons').append(this.socialBtnsView.render().el);
         this.$el.find('.login_form').append(this.formView.render().el);
         return this;
@@ -174,8 +175,75 @@
       return LoginView;
 
     })(Backbone.View);
+    RegisterForm = (function(_super) {
+
+      __extends(RegisterForm, _super);
+
+      function RegisterForm() {
+        RegisterForm.__super__.constructor.apply(this, arguments);
+      }
+
+      RegisterForm.prototype.fields = [
+        {
+          name: 'name',
+          widget: reForm.commonWidgets.TextWidget,
+          label: 'Name'
+        }, {
+          name: 'email',
+          widget: reForm.commonWidgets.TextWidget,
+          label: 'Email'
+        }, {
+          name: 'password',
+          widget: reForm.commonWidgets.PasswordWidget,
+          label: 'Password'
+        }, {
+          name: 'password_confirm',
+          widget: reForm.commonWidgets.PasswordWidget,
+          label: 'Password Confirmation'
+        }
+      ];
+
+      return RegisterForm;
+
+    })(reForm.Form);
+    RegisterView = (function(_super) {
+
+      __extends(RegisterView, _super);
+
+      function RegisterView() {
+        RegisterView.__super__.constructor.apply(this, arguments);
+      }
+
+      RegisterView.prototype.template = _.template(register_tpl);
+
+      RegisterView.prototype.className = 'register';
+
+      RegisterView.prototype.tagName = 'section';
+
+      RegisterView.prototype.initialize = function() {
+        var userModel;
+        _.bindAll(this);
+        userModel = new models.User({});
+        return this.registerForm = new RegisterForm({
+          formId: 'form_register',
+          model: userModel
+        });
+      };
+
+      RegisterView.prototype.render = function() {
+        var renderedContent;
+        renderedContent = this.template({});
+        this.$el.html(renderedContent);
+        this.$el.find('.form-wrapper').append(this.registerForm.render().el);
+        return this;
+      };
+
+      return RegisterView;
+
+    })(Backbone.View);
     return {
-      LoginView: LoginView
+      LoginView: LoginView,
+      RegisterView: RegisterView
     };
   });
 

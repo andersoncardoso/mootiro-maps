@@ -30,6 +30,8 @@ form input {
   background: white;
   box-shadow: none;
   border: 1px solid #bcbebf;
+  display: block;
+  width: 100%;
   transition: border 1s;
   -moz-transition: border 1s;
   -webkit-transition: border 1s;
@@ -89,14 +91,14 @@ form small.error {
 #main-content > #login_box {
   display: block;
 }
-form#form_login {
+#form_login {
   width: 292.5px;
 }
-form#form_login input {
+#form_login input {
   width: 100%;
   height: 32px;
 }
-form#form_login input[type=submit] {
+#form_login input[type=submit] {
   width: 100%;
   padding: 3px 6px;
   border: 0;
@@ -120,7 +122,7 @@ form#form_login input[type=submit] {
 
   background-image: -o-linear-gradient(#1e9c5b, #125c36);
 }
-form#form_login span {
+#form_login span {
   margin-bottom: 5px;
   display: block;
 }
@@ -205,6 +207,41 @@ ul#external_providers li button.twitter {
 }
 ul#external_providers li button.twitter:hover {
   background: #a7e5fa;
+}
+.register #form_register {
+  width: 100%;
+}
+.register #form_register input {
+  width: 100%;
+  height: 28px;
+}
+.register #form_register input[type=submit] {
+  width: 100%;
+  padding: 3px 6px;
+  border: 0;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 120%;
+  color: #fff;
+  /* fallback/image non-cover color */
+
+  background-color: #1e9c5b;
+  /* Firefox 3.6+ */
+
+  background-image: -moz-linear-gradient(#1e9c5b, #125c36);
+  /* Safari 4+, Chrome 1+ */
+
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#1e9c5b), to(#125c36));
+  /* Safari 5.1+, Chrome 10+ */
+
+  background-image: -webkit-linear-gradient(#1e9c5b, #125c36);
+  /* Opera 11.10+ */
+
+  background-image: -o-linear-gradient(#1e9c5b, #125c36);
+}
+.register #form_register span {
+  margin-bottom: 5px;
+  display: block;
 }
 #user_verification {
   width: 700px;

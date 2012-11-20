@@ -18,7 +18,7 @@ from reversion.models import Revision
 
 from signatures.models import Signature, DigestSignature
 from ajaxforms import ajax_form
-from main.utils import (create_geojson, randstr, send_mail, ResourceHandler,
+from main.utils import (create_geojson, send_mail, ResourceHandler,
         JsonResponse, get_json_data)
 from lib.locker.models import Locker
 
@@ -62,7 +62,8 @@ def _prepare_contrib_data(version, created_date):
         if data['model'] in regular_types:
             obj = data['fields']
             contrib['id'] = version.object_id
-            contrib['app_name'], contrib['model_name'] = data['model'].split('.')
+            contrib['app_name'], contrib['model_name'] = data['model'
+                                                            ].split('.')
             contrib['type'] = ['A', 'E', 'D'][version.type]
 
         elif data['model'] in weird_types:
@@ -293,6 +294,11 @@ def user_verification(request, key=''):
     user.is_active = True
     user.save()
     return dict(message='activated')
+
+
+#
+# ======================== NEW STUFF ===================================== #
+#
 
 
 class LoginHandler(ResourceHandler):

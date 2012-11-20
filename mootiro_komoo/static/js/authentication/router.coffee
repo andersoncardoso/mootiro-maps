@@ -33,11 +33,11 @@ define (require) ->
           return false
 
       # register
-      # @registerView = new views.NewUserView()
+      @registerView = new views.RegisterView()
       @registerBox = new new_utils.ModalBox
         title: 'Register'
-        # content: @registerView.render().el
-        content: $('<div>Register modal box</div>')
+        width: '450px'
+        content: @registerView.render().el
         modal_id: 'register-modal-box'
         onClose: (evt) =>
           @navigate '', {trigger: true}

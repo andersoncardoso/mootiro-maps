@@ -7,10 +7,22 @@ define (require) ->
   models = require './models'
   new_utils = require 'new_utils'
 
+  # underscore templates
   login_tpl = require 'text!templates/authentication/_login.html'
+  register_tpl = require 'text!templates/authentication/_register.html'
   social_btn_tpl = require 'text!templates/authentication/_social_button.html'
   signup_tpl = require 'text!templates/widgets/_signup.html'
 
+
+  #
+  # View for Social Login Buttons (like Google or Facebook)
+  # usage:
+  #   socialBtn = new SocialButton
+  #       provider: 'provider-name'
+  #       url: 'provider/login/url/'
+  #       image_url: 'url/for/the/button/image'
+  #       msg: 'message on the button, consider i18n'
+  #
   class SocialButton extends Backbone.View
     tagName: 'li'
     template: _.template social_btn_tpl
@@ -35,6 +47,16 @@ define (require) ->
       @$el.addClass @className
       this
 
+
+  #
+  # Receives a list of objects to be passed to SocialButton constructor and
+  # render these on a nice list.
+  # usage:
+  #     btnsList = new SocialButtonsList
+  #         buttons: [
+  #           {provider: ..., url: ..., image_url: ..., msg: ...}
+  #           {provider: ..., url: ..., image_url: ..., msg: ...}
+  #         ]
   class SocialButtonsList extends Backbone.View
     tagName: 'ul'
     id: 'external_providers'
@@ -53,9 +75,15 @@ define (require) ->
       this
 
 
+  #
+  # Simple widget for the Sign Up link
+  # Used with reForm
   class SignupWidget extends reForm.Widget
     template: signup_tpl
 
+
+  #
+  # Form for Login, used internally on the LoginView
   class LoginForm extends reForm.Form
     fields: [
       {name: 'email', widget: reForm.commonWidgets.TextWidget, label: 'Email:'}
@@ -63,6 +91,11 @@ define (require) ->
       {name: 'signup', widget: SignupWidget, label: ' '}
     ]
 
+
+  #
+  # Public login view, it encapsulates the LoginForm and SocialButtonsList
+  # Its intended to be rendered in a ModalBox, but works normally outside it.
+  #
   class LoginView extends Backbone.View
     id: 'login_box'
     tagName: 'section'
@@ -94,14 +127,64 @@ define (require) ->
 
     render: ->
       renderedContent = @template {}
-      $(@el).html renderedContent
+      @$el.html renderedContent
       @$el.find('.social_buttons').append @socialBtnsView.render().el
       @$el.find('.login_form').append @formView.render().el
+      this
+
+  #
+  # Register Form
+  class RegisterForm extends reForm.Form
+    fields: [
+      {
+        name: 'name',
+        widget: reForm.commonWidgets.TextWidget,
+        label: 'Name'
+      }
+      {
+        name: 'email',
+        widget: reForm.commonWidgets.TextWidget,
+        label: 'Email'
+      }
+      {
+        name: 'password',
+        widget: reForm.commonWidgets.PasswordWidget,
+        label: 'Password'
+      }
+      {
+        name: 'password_confirm',
+        widget: reForm.commonWidgets.PasswordWidget,
+        label: 'Password Confirmation'
+      }
+    ]
+
+
+  #
+  # RegisterView to be used with the LoginBox
+  #
+  class RegisterView extends Backbone.View
+    template: _.template register_tpl
+    className: 'register'
+    tagName: 'section'
+
+    initialize: ->
+      _.bindAll this
+      userModel = new models.User {}
+      @registerForm = new RegisterForm
+        formId: 'form_register'
+        model: userModel
+
+
+    render: ->
+      renderedContent = @template {}
+      @$el.html renderedContent
+      @$el.find('.form-wrapper').append @registerForm.render().el
       this
 
 
   return {
     LoginView: LoginView
+    RegisterView: RegisterView
   }
 
 
