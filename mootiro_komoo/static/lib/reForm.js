@@ -105,10 +105,19 @@
     },
     save: function() {
       var _this = this;
-      return this.model.save(this.get(), {
+      this.model.set(this.get());
+      return this.model.save({}, {
         success: function(model, resp) {
+          console.log('success callback??');
+          console.dir(resp);
           _this.cleanErrors();
-          if (resp.redirect) window.location = resp.redirect;
+          if (resp.redirect) {
+            if (window.location.pathname === resp.redirect) {
+              window.location.reload();
+            } else {
+              window.location = resp.redirect;
+            }
+          }
           return _this.trigger('success', resp);
         },
         error: function(model, resp) {

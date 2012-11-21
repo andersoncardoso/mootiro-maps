@@ -33,10 +33,14 @@
           }
         });
         $("a.login-required").bind("click.loginrequired", function(evt) {
+          var next;
           if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
             evt.stopPropagation();
             evt.stopImmediatePropagation();
             evt.preventDefault();
+            next = $(evt.target).attr("href");
+            if (next.charAt(0) === "#") next = document.location.pathname + next;
+            _this.loginView.updateUrls(next);
             _this.navigate('login', {
               trigger: true
             });
@@ -74,9 +78,18 @@
       };
 
       LoginApp.prototype.root = function() {
-        var path;
+        var next, path, queryString, url;
         path = window.location.pathname;
         if ((path === '/user/' || path === '/user') && !(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
+          url = window.location;
+          if (url.search && url.search.indexOf('next') > -1) {
+            queryString = {};
+            url.search.replace(new RegExp("([^?=&]+)(=([^&]*))?", "g"), function($0, $1, $2, $3) {
+              return queryString[$1] = $3;
+            });
+            next = queryString['next'];
+            this.loginView.updateUrls(next);
+          }
           return this.navigate('login', {
             trigger: true
           });

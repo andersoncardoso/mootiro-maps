@@ -53,7 +53,7 @@ def login_required(func=None):
     def wrapped_func(request, *a, **kw):
         if not request.user.is_authenticated():
             next = request.get_full_path()
-            url = reverse('user') + '?next=' + next + '#login'
+            url = reverse('user') + '?next=' + next
             return redirect(url)
         else:
             return func(request, *a, **kw)

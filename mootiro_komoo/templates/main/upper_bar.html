@@ -2,14 +2,14 @@
 <nav class="upper_bar">
   <ul>
   {% if not user.is_anonymous %}
-  <li><a href="{% url user_logout %}" >{% trans 'Logout' %}</a></li>
+  <li><a href="{% url user_logout %}?next={{ request.get_full_path }}" >{% trans 'Logout' %}</a></li>
   <!-- <li><a href="#" >{% trans 'Settings' %}</a></li> -->
   <!-- <li><a href="#" >{% trans 'Notifications' %}</a></li> -->
   <li><a href="{{ user.view_url }}" >{{ user.name }}</a></li>
   {# FIXME: change the help link #}
   <li><a href="http://pt.wikibooks.org/wiki/MootiroMaps" target="_blank">{% trans 'Help' %}</a></li>
   {% else %}
-  <li><a href="{% url user %}#login" class="login-required" >{% trans 'Login'%}</a></li>
+  <li><a href="#" class="login-required" >{% trans 'Login'%}</a></li>
   {# FIXME: change the help link #}
   <li><a href="http://pt.wikiboks.org/wiki/MootiroMaps" target="_blank">{% trans 'Help' %}</a></li>
   {% endif %}

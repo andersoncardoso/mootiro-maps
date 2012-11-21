@@ -21,14 +21,15 @@ define (require) ->
         onClose: (evt) =>
           @navigate '', {trigger: true}
 
-      $("a.login-required").bind "click.loginrequired",  (evt) =>
+      $("a.login-required").bind "click.loginrequired", (evt) =>
         if not KomooNS?.isAuthenticated
           evt.stopPropagation()
           evt.stopImmediatePropagation()
           evt.preventDefault()
-          # url = $(this).attr "href"
-          # if (url.charAt(0) == "#")
-          #     url = document.location.pathname + url
+          next = $(evt.target).attr "href"
+          if (next.charAt(0) == "#")
+              next = document.location.pathname + next
+          @loginView.updateUrls next
           @navigate 'login', {trigger: true}
           return false
 
@@ -59,6 +60,15 @@ define (require) ->
       path = window.location.pathname
       if (path is '/user/' or path is '/user') \
          and not KomooNS?.isAuthenticated
+
+        url = window.location
+        if url.search and url.search.indexOf('next') > -1
+          # get search parameters into a object
+          queryString = {}
+          url.search.replace new RegExp("([^?=&]+)(=([^&]*))?", "g"),
+            ($0, $1, $2, $3) -> queryString[$1] = $3
+          next = queryString['next']
+          @loginView.updateUrls next
         @navigate 'login', {trigger: true}
 
     login: ->

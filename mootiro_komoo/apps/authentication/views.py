@@ -335,7 +335,10 @@ class LoginHandler(ResourceHandler):
             return JsonResponse({'errors': errors}, status_code=400)
         else:
             auth_login(request, user)
-            next_page = request.POST.get('next', '') or reverse('root')
+            # next_page = request.POST.get('next', '') or reverse('root')
+            next_page = json_data.get('next', '') or reverse('root')
+            if next_page.endswith('#'):
+                next_page = next_page[:-1]
 
             return JsonResponse({'redirect': next_page})
 

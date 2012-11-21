@@ -30,7 +30,7 @@ define (require) ->
     initialize: ->
       _.bindAll this, 'render'
       @className = @options.provider
-      @url = @options.url
+      @url = "#{@options.url}?next=#{@options.next or ''}"
       @image_url = @options.image_url
       @msg = @options.message
       @provider = @options.provider
@@ -86,9 +86,21 @@ define (require) ->
   # Form for Login, used internally on the LoginView
   class LoginForm extends reForm.Form
     fields: [
-      {name: 'email', widget: reForm.commonWidgets.TextWidget, label: 'Email:'}
-      {name: 'password', widget: reForm.commonWidgets.PasswordWidget, label:'Password:'}
-      {name: 'signup', widget: SignupWidget, label: ' '}
+      {
+        name: 'email',
+        widget: reForm.commonWidgets.TextWidget,
+        label: 'Email:'
+      }
+      {
+        name: 'password',
+        widget: reForm.commonWidgets.PasswordWidget,
+        label:'Password:'
+      }
+      {
+        name: 'signup',
+        widget: SignupWidget,
+        label: ' '
+      }
     ]
 
 
@@ -102,28 +114,16 @@ define (require) ->
     template: _.template login_tpl
 
     initialize: ->
-      _.bindAll this, 'render'
+      _.bindAll this, 'render', 'buildButtons', 'updateUrls'
 
-      googleButton =
-        provider: 'google',
-        url: dutils.urls.resolve 'login_google'
-        image_url: '/static/img/login-google.png'
-        message: 'Log In with Google'
+      next = @options?.next or ''
+      @buildButtons(next)
 
-      facebookButton =
-        provider: 'facebook',
-        url: dutils.urls.resolve 'login_facebook'
-        image_url: '/static/img/login-facebook.png'
-        message: 'Log In with Facebook'
-
-      @socialBtnsView = new SocialButtonsList
-        buttons: [googleButton, facebookButton]
-
-      loginModel = new models.LoginModel {}
+      @loginModel = new models.LoginModel {}
 
       @formView = new LoginForm
         formId: 'form_login'
-        model: loginModel
+        model: @loginModel
 
     render: ->
       renderedContent = @template {}
@@ -131,6 +131,31 @@ define (require) ->
       @$el.find('.social_buttons').append @socialBtnsView.render().el
       @$el.find('.login_form').append @formView.render().el
       this
+
+    buildButtons: (next='') ->
+      googleButton =
+        provider: 'google',
+        url: dutils.urls.resolve 'login_google'
+        next: next
+        image_url: '/static/img/login-google.png'
+        message: 'Log In with Google'
+
+      facebookButton =
+        provider: 'facebook',
+        url: dutils.urls.resolve 'login_facebook'
+        next: next
+        image_url: '/static/img/login-facebook.png'
+        message: 'Log In with Facebook'
+
+      @socialBtnsView = new SocialButtonsList
+        buttons: [googleButton, facebookButton]
+
+    updateUrls: (next='') ->
+      @loginModel.set {next: next}
+      @buildButtons(next)
+      @render()
+      this
+
 
   #
   # Register Form

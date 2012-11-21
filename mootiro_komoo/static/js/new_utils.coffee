@@ -35,6 +35,7 @@ define (require) ->
       renderedContent = @template @tpl_args
       @$el.html renderedContent
       $('body').append @el
+      $('#content').append @el
       @$el.find('.reveal-modal-content').append @content
       @modal = @$el.find "##{@tpl_args.modal_id}"
       if @width?

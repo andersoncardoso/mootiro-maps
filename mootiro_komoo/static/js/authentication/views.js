@@ -29,7 +29,7 @@
       SocialButton.prototype.initialize = function() {
         _.bindAll(this, 'render');
         this.className = this.options.provider;
-        this.url = this.options.url;
+        this.url = "" + this.options.url + "?next=" + (this.options.next || '');
         this.image_url = this.options.image_url;
         this.msg = this.options.message;
         return this.provider = this.options.provider;
@@ -139,27 +139,14 @@
       LoginView.prototype.template = _.template(login_tpl);
 
       LoginView.prototype.initialize = function() {
-        var facebookButton, googleButton, loginModel;
-        _.bindAll(this, 'render');
-        googleButton = {
-          provider: 'google',
-          url: dutils.urls.resolve('login_google'),
-          image_url: '/static/img/login-google.png',
-          message: 'Log In with Google'
-        };
-        facebookButton = {
-          provider: 'facebook',
-          url: dutils.urls.resolve('login_facebook'),
-          image_url: '/static/img/login-facebook.png',
-          message: 'Log In with Facebook'
-        };
-        this.socialBtnsView = new SocialButtonsList({
-          buttons: [googleButton, facebookButton]
-        });
-        loginModel = new models.LoginModel({});
+        var next, _ref;
+        _.bindAll(this, 'render', 'buildButtons', 'updateUrls');
+        next = ((_ref = this.options) != null ? _ref.next : void 0) || '';
+        this.buildButtons(next);
+        this.loginModel = new models.LoginModel({});
         return this.formView = new LoginForm({
           formId: 'form_login',
-          model: loginModel
+          model: this.loginModel
         });
       };
 
@@ -169,6 +156,38 @@
         this.$el.html(renderedContent);
         this.$el.find('.social_buttons').append(this.socialBtnsView.render().el);
         this.$el.find('.login_form').append(this.formView.render().el);
+        return this;
+      };
+
+      LoginView.prototype.buildButtons = function(next) {
+        var facebookButton, googleButton;
+        if (next == null) next = '';
+        googleButton = {
+          provider: 'google',
+          url: dutils.urls.resolve('login_google'),
+          next: next,
+          image_url: '/static/img/login-google.png',
+          message: 'Log In with Google'
+        };
+        facebookButton = {
+          provider: 'facebook',
+          url: dutils.urls.resolve('login_facebook'),
+          next: next,
+          image_url: '/static/img/login-facebook.png',
+          message: 'Log In with Facebook'
+        };
+        return this.socialBtnsView = new SocialButtonsList({
+          buttons: [googleButton, facebookButton]
+        });
+      };
+
+      LoginView.prototype.updateUrls = function(next) {
+        if (next == null) next = '';
+        this.loginModel.set({
+          next: next
+        });
+        this.buildButtons(next);
+        this.render();
         return this;
       };
 
