@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.conf.urls.defaults import url, patterns
-from .views import LoginHandler
+from .views import LoginHandler, UserHandler
 
 
 urlpatterns = patterns('authentication.views',
     # general urls
+    url(r'^/?$', UserHandler.dispatch, name='user'),
     url(r'^login/?$', LoginHandler.dispatch, name='user_login'),
     url(r'^logout/?$', 'logout', name='user_logout'),
 

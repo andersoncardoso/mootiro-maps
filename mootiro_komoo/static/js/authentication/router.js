@@ -76,7 +76,7 @@
       LoginApp.prototype.root = function() {
         var path;
         path = window.location.pathname;
-        if ((path === '/user/login/' || path === '/user/login') && !(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
+        if ((path === '/user/' || path === '/user') && !(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
           return this.navigate('login', {
             trigger: true
           });

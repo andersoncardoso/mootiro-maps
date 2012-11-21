@@ -1,0 +1,21 @@
+{% extends 'global.html' %}
+
+{% load komoo_tags %}
+
+{% block content %}
+  <div id="main-content"></div>
+{% endblock %}
+
+{% block page_scripts %}
+<script type="text/javascript">
+  if ( typeof KomooNS == 'undefined' || !KomooNS) {
+    KomooNS = {};
+  }
+  if ( typeof KomooNS.authentication == 'undefined' || !KomooNS.authentication) {
+    KomooNS.authentication = {};
+  }
+  KomooNS.authentication.error = {{error|jsonify|safe}};
+
+</script>
+{% endblock %}
+

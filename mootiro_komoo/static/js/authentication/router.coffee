@@ -57,9 +57,8 @@ define (require) ->
 
     root: ->
       path = window.location.pathname
-      if (path is '/user/login/' or path is '/user/login') \
+      if (path is '/user/' or path is '/user') \
          and not KomooNS?.isAuthenticated
-        # $('#main-content').append @loginView.render().el
         @navigate 'login', {trigger: true}
 
     login: ->

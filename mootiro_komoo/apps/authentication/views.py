@@ -94,7 +94,7 @@ def profile(request, id=''):
         if request.user.is_authenticated():
             user = request.user
         else:
-            return redirect(reverse('user_login'))
+            return redirect(reverse('user') + '#login')
     else:
         user = get_object_or_404(User, id=id)
     contributions = []
@@ -301,13 +301,14 @@ def user_verification(request, key=''):
 #
 
 
-class LoginHandler(ResourceHandler):
+class UserHandler(ResourceHandler):
 
-    @method_decorator(render_to('authentication/login.html'))
+    @method_decorator(render_to('authentication/user_root.html'))
     def get(self, request):
-        # next_page = request.GET.get('next', '')
         return {}
-        # return {'js_module': 'authentication/login'}
+
+
+class LoginHandler(ResourceHandler):
 
     def post(self, request):
         json_data = get_json_data(request)

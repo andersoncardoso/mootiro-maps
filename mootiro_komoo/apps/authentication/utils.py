@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext as _
-
-from main.utils import send_mail
 
 from .models import AnonymousUser
 from .models import User, SocialAuth
@@ -56,7 +53,7 @@ def login_required(func=None):
     def wrapped_func(request, *a, **kw):
         if not request.user.is_authenticated():
             next = request.get_full_path()
-            url = reverse('user_login') + '?next=' + next
+            url = reverse('user') + '?next=' + next + '#login'
             return redirect(url)
         else:
             return func(request, *a, **kw)
@@ -114,13 +111,14 @@ def connect_or_merge_user_by_credentials(logged_user, email, provider):
     credentials = SocialAuth.objects.filter(email=email, provider=provider)
 
     if not credentials:
-        credential = SocialAuth(email=email, provider=provider, user=logged_user)
+        credential = SocialAuth(email=email, provider=provider,
+                                user=logged_user)
         credential.save()
     else:
         credential = credentials[0]
         if credential.user == logged_user:
             return  # do nothing
-        
+
         # merge users
         pass
 

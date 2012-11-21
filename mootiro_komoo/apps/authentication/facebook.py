@@ -47,7 +47,7 @@ def login_facebook(request):
     return redirect(url)
 
 
-@render_to('authentication/login.html')
+@render_to('authentication/user_root.html')
 def facebook_authorized(request):
     '''
     Connect facebook account information to the current logged user or one with
@@ -60,7 +60,7 @@ def facebook_authorized(request):
     error = request.GET.get('error', None)
     if error:
         error_description = request.GET.get('error_description', None)
-        return dict(login_error='facebook', error_msg=error_description)
+        return {'error': {'type': 'facebook', 'msg': error_description}}
 
     # Step 2: Exchange the authorization code for an access_token
     redirect_uri = request.build_absolute_uri(reverse('facebook_authorized'))
