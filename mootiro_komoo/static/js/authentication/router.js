@@ -39,8 +39,10 @@
             evt.stopImmediatePropagation();
             evt.preventDefault();
             next = $(evt.target).attr("href");
-            if (next.charAt(0) === "#") next = document.location.pathname + next;
-            _this.loginView.updateUrls(next);
+            if ((next != null ? next.charAt(0) : void 0) === "#") {
+              next = document.location.pathname + next;
+            }
+            if (next) _this.loginView.updateUrls(next);
             _this.navigate('login', {
               trigger: true
             });

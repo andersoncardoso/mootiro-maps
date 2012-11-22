@@ -27,9 +27,10 @@ define (require) ->
           evt.stopImmediatePropagation()
           evt.preventDefault()
           next = $(evt.target).attr "href"
-          if (next.charAt(0) == "#")
+          if next?.charAt(0) is "#"
               next = document.location.pathname + next
-          @loginView.updateUrls next
+          if next
+            @loginView.updateUrls next
           @navigate 'login', {trigger: true}
           return false
 

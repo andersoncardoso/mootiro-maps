@@ -58,6 +58,10 @@ form input.error,
 form textarea.error {
   border: 1px solid #d84a38;
 }
+form input[type="checkbox"] {
+  display: inline-block;
+  margin-right: 10px;
+}
 form small.error {
   padding: 5px 10px;
   margin-bottom: 5px;

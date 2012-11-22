@@ -116,8 +116,7 @@
           label: 'Password:'
         }, {
           name: 'signup',
-          widget: SignupWidget,
-          label: ' '
+          widget: SignupWidget
         }
       ];
 
@@ -221,6 +220,17 @@
           widget: reForm.commonWidgets.PasswordWidget,
           label: 'Password Confirmation',
           container_class: 'half-box-right'
+        }, {
+          name: 'license',
+          widget: reForm.commonWidgets.CheckboxWidget,
+          args: {
+            choices: [
+              {
+                value: 'agree',
+                title: 'I\'ve read and accept the license terms.'
+              }
+            ]
+          }
         }
       ];
 

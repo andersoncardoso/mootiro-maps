@@ -99,7 +99,6 @@ define (require) ->
       {
         name: 'signup',
         widget: SignupWidget,
-        label: ' '
       }
     ]
 
@@ -162,26 +161,34 @@ define (require) ->
   class RegisterForm extends reForm.Form
     fields: [
       {
-        name: 'name',
-        widget: reForm.commonWidgets.TextWidget,
+        name: 'name'
+        widget: reForm.commonWidgets.TextWidget
         label: 'Name'
       }
       {
-        name: 'email',
-        widget: reForm.commonWidgets.TextWidget,
+        name: 'email'
+        widget: reForm.commonWidgets.TextWidget
         label: 'Email'
       }
       {
-        name: 'password',
-        widget: reForm.commonWidgets.PasswordWidget,
+        name: 'password'
+        widget: reForm.commonWidgets.PasswordWidget
         label: 'Password'
         container_class: 'half-box-left'
       }
       {
-        name: 'password_confirm',
-        widget: reForm.commonWidgets.PasswordWidget,
+        name: 'password_confirm'
+        widget: reForm.commonWidgets.PasswordWidget
         label: 'Password Confirmation'
         container_class: 'half-box-right'
+      }
+      {
+        name: 'license'
+        widget: reForm.commonWidgets.CheckboxWidget
+        args:
+          choices: [
+            {value: 'agree', title: 'I\'ve read and accept the license terms.' }
+          ]
       }
     ]
 
