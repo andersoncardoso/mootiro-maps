@@ -73,6 +73,21 @@ class User(GeoRefModel):
         """ pseudo-reverse query for retrieving Resource Files"""
         return UploadedFile.get_files_for(self)
 
+    def _social_auth_by_name(self, name):
+        """
+        Retrieve the SocialAuth entry for this User given a high level
+        social provider name.
+        """
+        credentials = self.socialauth_set.all()
+        l = filter(lambda s: s.provider == PROVIDERS[name], credentials)
+        return l[0] if l else None
+
+    def google(self):
+        return self._social_auth_by_name('google')
+
+    def facebook(self):
+        return self._social_auth_by_name('facebook')
+
     # The interface bellow is for django admin to work
     def is_staff(self):
         return self.is_admin
@@ -83,16 +98,42 @@ class User(GeoRefModel):
     def has_perm(self, perm):
         return self.is_admin
 
-    def _social_auth_by_name(self, name):
-        credentials = self.socialauth_set.all()
-        l = filter(lambda s: s.provider == PROVIDERS[name], credentials)
-        return l[0] if l else None
+    # utils
+    def from_dict(self, data):
+        for key, val in data.iteritems():
+            setattr(self, key, val)
 
-    def google(self):
-        return self._social_auth_by_name('google')
+    def to_dict(self):
+        return {attr: getattr(self, attr, None) for attr in [
+            'id', 'name', 'email',
+            # 'geometry',
+        ]}
 
-    def facebook(self):
-        return self._social_auth_by_name('facebook')
+    def is_valid(self):
+        self.errors = {}
+        valid = True
+
+        if not self.name:
+            valid, self.errors['name'] = False, 'Name is required'
+        if not self.email:
+            valid, self.errors['email'] = False, 'Email is required'
+        if not self.password:
+            valid, self.errors['password'] = False, 'Password is required'
+
+        if not self.id:
+            # new User
+            if SocialAuth.objects.filter(email=self.email).exists():
+                valid = False
+                self.errors['email'] = 'This email is registered on our '  \
+                    'system. Probably you\'ve logged before with a social '\
+                    'account (facebook or google). You can skip this step '\
+                    'and just login.'
+
+            if User.objects.filter(email=self.email).exists():
+                valid = False
+                self.errors['email'] = 'This email is already in use'
+
+        return valid
 
 
 class AnonymousUser(object):
@@ -128,3 +169,55 @@ class SocialAuth(models.Model):
     provider = models.CharField(max_length=32, choices=PROVIDERS_CHOICES)
     email = models.CharField(max_length=256)
     data = JSONField()  # provider specific data for user login
+
+
+class Login(object):
+    """
+    Dummy Model used only for form validation
+    """
+    def from_dict(self, data):
+        for key, val in data.iteritems():
+            setattr(self, key, val)
+
+    def to_dict(self):
+        return {attr: getattr(self, attr, None) for attr in [
+            'email', 'password'
+        ]}
+
+    def is_valid(self):
+        self.errors = {}
+        valid = True
+
+        if not self.email:
+            valid, self.errors['email'] = False, 'Email is required'
+        if not self.password:
+            valid, self.errors['password'] = False, 'Password is required'
+
+        if self.email and self.password:
+            self.passwd_hash = User.calc_hash(self.password)
+
+            if not User.objects.filter(email=self.email).exists():
+                valid = False
+                self.errors['email'] = 'Email not found'
+            q = User.objects.filter(
+                    email=self.email, password=self.passwd_hash)
+            if not q.exists():
+                valid = False
+                self.errors['password'] = 'Wrong password'
+            else:
+                self._user = q.get()
+                if not self._user.is_active:
+                    valid = False
+                    self.errors['email'] = 'User not active'
+
+        return valid
+
+    @property
+    def user(self):
+        if not hasattr(self, 'passwd_hash'):
+            self.passwd_hash = User.calc_hash(self.password)
+        _user = User.objects.filter(
+                    email=self.email, password=self.passwd_hash)
+        return _user.get() if _user.exists() else None
+
+

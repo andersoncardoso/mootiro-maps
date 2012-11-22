@@ -22,8 +22,8 @@ from main.utils import (create_geojson, send_mail, ResourceHandler,
         JsonResponse, get_json_data)
 from lib.locker.models import Locker
 
-from .models import User
-from .forms import FormProfile, FormUser
+from .models import User, Login
+from .forms import FormProfile
 from .utils import login_required
 from .utils import logout as auth_logout
 from .utils import login as auth_login
@@ -239,43 +239,6 @@ def signature_delete(request):
 #
 # ==================== Users ==================================================
 #
-@ajax_form('authentication/new.html', FormUser)
-def user_new(request):
-    '''Displays user creation form.'''
-
-    def on_get(request, form):
-        form.helper.form_action = reverse('user_new')
-        return form
-
-    def on_after_save(request, user):
-        user.is_active = False
-        user.set_password(request.POST['password'])
-
-        # Email verification
-        key = Locker.deposit(user.id)
-
-        send_mail(
-            title='Welcome to MootiroMaps',
-            receivers=[user.email],
-            message='''
-Hello, {name}.
-
-Before using our tool, please confirm your e-mail visiting the link below.
-{verification_url}
-
-Thanks,
-the IT3S team.
-'''.format(name=user.name, verification_url=request.build_absolute_uri(
-                                reverse('user_verification', args=(key,))))
-        )
-
-        user.save()
-        redirect_url = reverse('user_check_inbox')
-        return {'redirect': redirect_url}
-
-    return {'on_get': on_get, 'on_after_save': on_after_save}
-
-
 @render_to('authentication/verification.html')
 def user_verification(request, key=''):
     '''
@@ -302,44 +265,99 @@ def user_verification(request, key=''):
 
 
 class UserHandler(ResourceHandler):
+    """ /user """
 
     @method_decorator(render_to('authentication/user_root.html'))
     def get(self, request):
+        """
+        user_root is intended to only load a backbone router that
+        renders the diferent login/register pages
+        """
         return {}
+
+    def post(self, request):
+        """
+        Handles the RegisterForm from LoginView (authentication/views.coffee)
+        Responsible for creating a new User account.
+        """
+        json_data = get_json_data(request)
+        user = User()
+        user.from_dict(json_data)
+
+        # user model validations
+        form_validates = user.is_valid()
+
+        # form specific validations
+        if not json_data.get('password_confirm', None):
+            form_validates = False
+            user.errors['password_confirm'] = _(''
+                    'Password confirmation is required')
+
+        # if not json_data.get('license_agrement'):
+        #     form_validates = False
+        #     user.errors['password_confirm'] = _(''
+        #             'You must accept the license agrement')
+        if not json_data.get('password') == json_data.get('password_confirm'):
+            form_validates = False
+            user.errors['password_confirm'] = _(''
+                    'Passwords do not match')
+
+        # return errors or save
+        if not form_validates:
+            return JsonResponse({'errors': user.errors}, status_code=400)
+        else:
+            print json_data
+            # save data
+            return JsonResponse({})
+#     def on_after_save(request, user):
+#         user.is_active = False
+#         user.set_password(request.POST['password'])
+#
+#         # Email verification
+#         key = Locker.deposit(user.id)
+#
+#         send_mail(
+#             title='Welcome to MootiroMaps',
+#             receivers=[user.email],
+#             message='''
+# Hello, {name}.
+#
+# Before using our tool, please confirm your e-mail visiting the link below.
+# {verification_url}
+#
+# Thanks,
+# the IT3S team.
+# '''.format(name=user.name, verification_url=request.build_absolute_uri(
+#                                 reverse('user_verification', args=(key,))))
+#         )
+#
+#         user.save()
+#         redirect_url = reverse('user_check_inbox')
+#         return {'redirect': redirect_url}
 
 
 class LoginHandler(ResourceHandler):
+    """ /user/login """
 
     def post(self, request):
+        """
+        Resposible for handle the LoginForm from LoginView
+        (authentication/views.coffee)
+        """
         json_data = get_json_data(request)
         email, password = [json_data.get(data, '')
                             for data in ['email', 'password']]
 
-        errors = {}
-        if not email:
-            errors['email'] = 'email_required'
-        if not password:
-            errors['password'] = 'password_required'
-
-        if email and password:
-            password = User.calc_hash(password)
-            q = User.objects.filter(email=email, password=password)
-            if not q.exists():
-                errors['password'] = 'wrong_credentials'
-            else:
-                user = q.get()
-                if not user.is_active:
-                    errors['email'] = 'user_not_active'
-
-        if errors:
-            return JsonResponse({'errors': errors}, status_code=400)
+        login = Login()
+        login.from_dict({'email': email, 'password': password})
+        if not login.is_valid():
+            return JsonResponse({'errors': login.errors}, status_code=400)
         else:
+            user = login.user
             auth_login(request, user)
-            # next_page = request.POST.get('next', '') or reverse('root')
             next_page = json_data.get('next', '') or reverse('root')
             if next_page.endswith('#'):
                 next_page = next_page[:-1]
-
             return JsonResponse({'redirect': next_page})
 
 
@@ -347,13 +365,4 @@ def logout(request):
     next_page = request.GET.get('next', '/')
     auth_logout(request)
     return redirect(next_page)
-
-################ for testing ##################
-
-
-@render_to('authentication/secret.html')
-@login_required
-def secret(request):
-    return dict(user=request.user)
-
 

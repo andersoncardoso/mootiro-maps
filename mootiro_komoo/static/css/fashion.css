@@ -58,14 +58,6 @@ form input.error,
 form textarea.error {
   border: 1px solid #d84a38;
 }
-form .field-container.half-box-left {
-  display: inline-block;
-  width: 48%;
-}
-form .field-container.half-box-right {
-  width: 48%;
-  float: right;
-}
 form small.error {
   padding: 5px 10px;
   margin-bottom: 5px;
@@ -74,6 +66,20 @@ form small.error {
   border-radius: 3px;
   width: 100%;
   display: block;
+}
+form .field-container.half-box-left {
+  display: inline-block;
+  width: 48%;
+}
+form .field-container.half-box-left small.error {
+  width: 95%;
+}
+form .field-container.half-box-right {
+  width: 48%;
+  float: right;
+}
+form .field-container.half-box-right small.error {
+  width: 95%;
 }
 .upper_bar {
   background-color: #dceff4;

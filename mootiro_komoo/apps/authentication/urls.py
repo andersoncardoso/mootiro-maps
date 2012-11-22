@@ -12,7 +12,6 @@ urlpatterns = patterns('authentication.views',
     url(r'^logout/?$', 'logout', name='user_logout'),
 
     # user creation urls
-    url(r'^new/?$', 'user_new', name='user_new'),
     url(r'^verification/?$', 'user_verification', name='user_check_inbox'),
     url(r'^verification/(?P<key>\S+)/?$', 'user_verification',
             name='user_verification'),
