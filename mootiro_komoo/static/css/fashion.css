@@ -3,7 +3,7 @@ div.reveal-modal {
   background-color: #dceff4;
   background-image: none;
   z-index: 10000;
-  width: 650px;
+  width: 450px;
   box-shadow: 3px 3px 4px #bbbbbb, -3px -3px 4px #bbbbbb, 3px -3px 4px #bbbbbb, -3px 3px 4px #bbbbbb;
   -moz-box-shadow: 3px 3px 4px #bbbbbb, -3px -3px 4px #bbbbbb, 3px -3px 4px #bbbbbb, -3px 3px 4px #bbbbbb;
   -webkit-box-shadow: 3px 3px 4px #bbbbbb, -3px -3px 4px #bbbbbb, 3px -3px 4px #bbbbbb, -3px 3px 4px #bbbbbb;
@@ -110,7 +110,7 @@ form .field-container.half-box-right small.error {
   display: block;
 }
 #form_login {
-  width: 292.5px;
+  width: 202.5px;
 }
 #form_login input {
   width: 100%;
@@ -146,7 +146,7 @@ form .field-container.half-box-right small.error {
 }
 #login_box {
   background: #dceff4;
-  width: 650px;
+  width: 450px;
 }
 #login_box * {
   -webkit-box-sizing: border-box;
@@ -154,7 +154,7 @@ form .field-container.half-box-right small.error {
   box-sizing: border-box;
 }
 #login_box div#separator {
-  width: 65px;
+  width: 45px;
   height: 130px;
   text-align: center;
   line-height: 130px;
@@ -181,26 +181,23 @@ div#separator,
 form {
   float: left;
 }
-ul#external_providers,
-form {
-  padding: 10px;
-}
 ul#external_providers {
-  width: 292.5px;
+  width: 202.5px;
   margin-top: 8px;
 }
 ul#external_providers li {
-  margin: 15px 10px;
+  margin: 15px 5px;
 }
 ul#external_providers li button {
   width: 100%;
-  height: 32px;
-  padding: 3px 9px;
+  height: 31px;
+  padding: 3px;
   border: 0;
   border-radius: 5px;
   color: #fff;
   font-size: 13px;
-  margin-bottom: 15px;
+  margin-bottom: 17px;
+  margin-top: 1px;
 }
 ul#external_providers li button img {
   width: 22px;

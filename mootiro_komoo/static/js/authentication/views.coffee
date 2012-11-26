@@ -12,6 +12,7 @@ define (require) ->
   register_tpl = require 'text!templates/authentication/_register.html'
   social_btn_tpl = require 'text!templates/authentication/_social_button.html'
   signup_tpl = require 'text!templates/widgets/_signup.html'
+  signin_tpl = require 'text!templates/widgets/_signin.html'
 
 
   #
@@ -81,6 +82,11 @@ define (require) ->
   class SignupWidget extends reForm.Widget
     template: signup_tpl
 
+  #
+  # Simple widget for the Sign In link
+  # Used with reForm
+  class SigninWidget extends reForm.Widget
+    template: signin_tpl
 
   #
   # Form for Login, used internally on the LoginView
@@ -124,11 +130,18 @@ define (require) ->
         formId: 'form_login'
         model: @loginModel
 
+      @authRegisterCB = @options.authRegisterCB
+
     render: ->
       renderedContent = @template {}
       @$el.html renderedContent
       @$el.find('.social_buttons').append @socialBtnsView.render().el
       @$el.find('.login_form').append @formView.render().el
+
+      @$el.find('.auth-register').bind 'click', (evt) =>
+        evt.preventDefault()
+        @authRegisterCB?()
+        return false
       this
 
     buildButtons: (next='') ->
@@ -187,8 +200,12 @@ define (require) ->
         widget: reForm.commonWidgets.CheckboxWidget
         args:
           choices: [
-            {value: 'agree', title: 'I\'ve read and accept the license terms.' }
+            {value: 'agree', title: 'I\'ve read and accept the <a href="http://mootiro.org/terms">License Terms.</a>' }
           ]
+      }
+      {
+        name: 'signin'
+        widget: SigninWidget
       }
     ]
 
@@ -209,11 +226,18 @@ define (require) ->
         submit_label: 'Register'
         model: userModel
 
+      @authLoginCB = @options.authLoginCB
+
 
     render: ->
       renderedContent = @template {}
       @$el.html renderedContent
       @$el.find('.form-wrapper').append @registerForm.render().el
+
+      @$el.find('.auth-login').bind 'click', (evt) =>
+        evt.preventDefault()
+        @authLoginCB?()
+        return false
       this
 
 

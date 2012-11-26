@@ -56,8 +56,8 @@ define (require) ->
 
     show: ->
       @modal.reveal
-        animation: 'fadeAndPop'
-        animationspeed: 300
+        animation: 'fade'
+        animationspeed: 200
         closeonbackgroundclick: true
         dismissmodalclass: 'close-reveal-modal'
       @bindEvents()

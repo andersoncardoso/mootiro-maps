@@ -7,8 +7,21 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from jsonfield import JSONField
 
+from lib.locker.models import Locker
 from fileupload.models import UploadedFile
+from main.utils import send_mail_async
 from komoo_map.models import GeoRefModel, POINT
+
+
+CONFIRMATION_EMAIL_MSG = '''
+Hello, {name}.
+
+Before using our tool, please confirm your e-mail visiting the link below.
+{verification_url}
+
+Thanks,
+the IT3S team.
+'''
 
 
 class User(GeoRefModel):
@@ -78,9 +91,8 @@ class User(GeoRefModel):
         Retrieve the SocialAuth entry for this User given a high level
         social provider name.
         """
-        credentials = self.socialauth_set.all()
-        l = filter(lambda s: s.provider == PROVIDERS[name], credentials)
-        return l[0] if l else None
+        credentials = self.socialauth_set.filter(provider=PROVIDERS[name])
+        return credentials.get() if credentials.exists() else None
 
     def google(self):
         return self._social_auth_by_name('google')
@@ -88,7 +100,7 @@ class User(GeoRefModel):
     def facebook(self):
         return self._social_auth_by_name('facebook')
 
-    # The interface bellow is for django admin to work
+    # ==================== Interface for django admin ======================= #
     def is_staff(self):
         return self.is_admin
 
@@ -98,7 +110,7 @@ class User(GeoRefModel):
     def has_perm(self, perm):
         return self.is_admin
 
-    # utils
+    # ====================  utils =========================================== #
     def from_dict(self, data):
         for key, val in data.iteritems():
             setattr(self, key, val)
@@ -114,11 +126,11 @@ class User(GeoRefModel):
         valid = True
 
         if not self.name:
-            valid, self.errors['name'] = False, 'Name is required'
+            valid, self.errors['name'] = False, 'Required field'
         if not self.email:
-            valid, self.errors['email'] = False, 'Email is required'
+            valid, self.errors['email'] = False, 'Required field'
         if not self.password:
-            valid, self.errors['password'] = False, 'Password is required'
+            valid, self.errors['password'] = False, 'Required field'
 
         if not self.id:
             # new User
@@ -131,9 +143,21 @@ class User(GeoRefModel):
 
             if User.objects.filter(email=self.email).exists():
                 valid = False
-                self.errors['email'] = 'This email is already in use'
+                self.errors['email'] = 'Email address already in use'
 
         return valid
+
+    def send_confirmation_mail(self, request):
+        """ send async confirmation mail """
+        key = Locker.deposit(self.id)
+        verification_url = request.build_absolute_uri(
+                reverse('user_verification', args=(key,)))
+        send_mail_async(
+            title='Welcome to MootiroMaps',
+            receivers=[self.email],
+            message=CONFIRMATION_EMAIL_MSG.format(
+                name=self.name,
+                verification_url=verification_url))
 
 
 class AnonymousUser(object):

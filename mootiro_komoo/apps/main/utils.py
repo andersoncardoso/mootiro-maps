@@ -8,6 +8,7 @@ import simplejson
 import dateutil
 from string import letters, digits
 from random import choice
+from celery.decorators import task
 
 from django import forms
 from django.conf import settings
@@ -265,6 +266,15 @@ def send_mail(title='', message='', sender='', receivers=[]):
                 'to': receivers,
                 'subject': title,
                 'text': message})
+
+@task
+def _send_mail_task(title='', message='', sender='', receivers=[]):
+    """ celery taks for the async function below """
+    send_mail(title, message, sender, receivers)
+
+def send_mail_async(title='', message='', sender='', receivers=[]):
+    ''' send mails asynchronously '''
+    _send_mail_task.delay(title, message, sender, receivers)
 
 
 def parse_accept_header(request):

@@ -73,8 +73,8 @@
 
       ModalBox.prototype.show = function() {
         this.modal.reveal({
-          animation: 'fadeAndPop',
-          animationspeed: 300,
+          animation: 'fade',
+          animationspeed: 200,
           closeonbackgroundclick: true,
           dismissmodalclass: 'close-reveal-modal'
         });

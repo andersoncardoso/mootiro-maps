@@ -20,8 +20,10 @@
 
       LoginApp.prototype.initialize = function() {
         var _this = this;
-        _.bindAll(this, 'root', 'login');
-        this.loginView = new views.LoginView();
+        _.bindAll(this, 'root', 'login', 'authRegisterCB', 'authLoginCB');
+        this.loginView = new views.LoginView({
+          authRegisterCB: this.authRegisterCB
+        });
         this.loginBox = new new_utils.ModalBox({
           title: 'Login',
           content: this.loginView.render().el,
@@ -49,8 +51,10 @@
             return false;
           }
         });
-        this.registerView = new views.RegisterView();
-        this.registerBox = new new_utils.ModalBox({
+        this.registerView = new views.RegisterView({
+          authLoginCB: this.authLoginCB
+        });
+        return this.registerBox = new new_utils.ModalBox({
           title: 'Register',
           width: '450px',
           content: this.registerView.render().el,
@@ -61,15 +65,19 @@
             });
           }
         });
-        return this.loginView.$el.find('.auth-register').bind('click', function(evt) {
-          evt.stopPropagation();
-          evt.stopImmediatePropagation();
-          evt.preventDefault();
-          _this.loginBox.hide();
-          _this.navigate('register', {
-            trigger: true
-          });
-          return false;
+      };
+
+      LoginApp.prototype.authRegisterCB = function() {
+        this.loginBox.hide();
+        return this.navigate('register', {
+          trigger: true
+        });
+      };
+
+      LoginApp.prototype.authLoginCB = function() {
+        this.registerBox.hide();
+        return this.navigate('login', {
+          trigger: true
         });
       };
 

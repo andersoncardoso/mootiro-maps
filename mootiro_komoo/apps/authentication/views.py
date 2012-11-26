@@ -18,7 +18,7 @@ from reversion.models import Revision
 
 from signatures.models import Signature, DigestSignature
 from ajaxforms import ajax_form
-from main.utils import (create_geojson, send_mail, ResourceHandler,
+from main.utils import (create_geojson, ResourceHandler,
         JsonResponse, get_json_data)
 from lib.locker.models import Locker
 
@@ -290,50 +290,29 @@ class UserHandler(ResourceHandler):
         # form specific validations
         if not json_data.get('password_confirm', None):
             form_validates = False
-            user.errors['password_confirm'] = _(''
-                    'Password confirmation is required')
+            user.errors['password_confirm'] = _('Required field')
 
-        # if not json_data.get('license_agrement'):
-        #     form_validates = False
-        #     user.errors['password_confirm'] = _(''
-        #             'You must accept the license agrement')
+        license = json_data.get('license', '')
+        license = True if license == 'agree' else False
+        if not license:
+            form_validates = False
+            user.errors['license'] = _(''
+                'You must accept the license agrement')
         if not json_data.get('password') == json_data.get('password_confirm'):
             form_validates = False
             user.errors['password_confirm'] = _(''
-                    'Passwords do not match')
+                    'Passwords did not match')
 
         # return errors or save
         if not form_validates:
             return JsonResponse({'errors': user.errors}, status_code=400)
         else:
-            print json_data
-            # save data
-            return JsonResponse({})
-#     def on_after_save(request, user):
-#         user.is_active = False
-#         user.set_password(request.POST['password'])
-#
-#         # Email verification
-#         key = Locker.deposit(user.id)
-#
-#         send_mail(
-#             title='Welcome to MootiroMaps',
-#             receivers=[user.email],
-#             message='''
-# Hello, {name}.
-#
-# Before using our tool, please confirm your e-mail visiting the link below.
-# {verification_url}
-#
-# Thanks,
-# the IT3S team.
-# '''.format(name=user.name, verification_url=request.build_absolute_uri(
-#                                 reverse('user_verification', args=(key,))))
-#         )
-#
-#         user.save()
-#         redirect_url = reverse('user_check_inbox')
-#         return {'redirect': redirect_url}
+            user.is_active = False
+            user.set_password(json_data.get('password'))
+            user.send_confirmation_mail(request)
+            user.save()
+            redirect_url = reverse('user_check_inbox')
+            return JsonResponse({'redirect': redirect_url})
 
 
 class LoginHandler(ResourceHandler):

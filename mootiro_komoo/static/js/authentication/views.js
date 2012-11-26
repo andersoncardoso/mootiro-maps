@@ -3,7 +3,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var $, Backbone, LoginForm, LoginView, RegisterForm, RegisterView, SignupWidget, SocialButton, SocialButtonsList, login_tpl, models, new_utils, reForm, register_tpl, signup_tpl, social_btn_tpl, _;
+    var $, Backbone, LoginForm, LoginView, RegisterForm, RegisterView, SigninWidget, SignupWidget, SocialButton, SocialButtonsList, login_tpl, models, new_utils, reForm, register_tpl, signin_tpl, signup_tpl, social_btn_tpl, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
@@ -14,6 +14,7 @@
     register_tpl = require('text!templates/authentication/_register.html');
     social_btn_tpl = require('text!templates/authentication/_social_button.html');
     signup_tpl = require('text!templates/widgets/_signup.html');
+    signin_tpl = require('text!templates/widgets/_signin.html');
     SocialButton = (function(_super) {
 
       __extends(SocialButton, _super);
@@ -97,6 +98,19 @@
       return SignupWidget;
 
     })(reForm.Widget);
+    SigninWidget = (function(_super) {
+
+      __extends(SigninWidget, _super);
+
+      function SigninWidget() {
+        SigninWidget.__super__.constructor.apply(this, arguments);
+      }
+
+      SigninWidget.prototype.template = signin_tpl;
+
+      return SigninWidget;
+
+    })(reForm.Widget);
     LoginForm = (function(_super) {
 
       __extends(LoginForm, _super);
@@ -143,18 +157,25 @@
         next = ((_ref = this.options) != null ? _ref.next : void 0) || '';
         this.buildButtons(next);
         this.loginModel = new models.LoginModel({});
-        return this.formView = new LoginForm({
+        this.formView = new LoginForm({
           formId: 'form_login',
           model: this.loginModel
         });
+        return this.authRegisterCB = this.options.authRegisterCB;
       };
 
       LoginView.prototype.render = function() {
-        var renderedContent;
+        var renderedContent,
+          _this = this;
         renderedContent = this.template({});
         this.$el.html(renderedContent);
         this.$el.find('.social_buttons').append(this.socialBtnsView.render().el);
         this.$el.find('.login_form').append(this.formView.render().el);
+        this.$el.find('.auth-register').bind('click', function(evt) {
+          evt.preventDefault();
+          if (typeof _this.authRegisterCB === "function") _this.authRegisterCB();
+          return false;
+        });
         return this;
       };
 
@@ -227,10 +248,13 @@
             choices: [
               {
                 value: 'agree',
-                title: 'I\'ve read and accept the license terms.'
+                title: 'I\'ve read and accept the <a href="http://mootiro.org/terms">License Terms.</a>'
               }
             ]
           }
+        }, {
+          name: 'signin',
+          widget: SigninWidget
         }
       ];
 
@@ -255,18 +279,25 @@
         var userModel;
         _.bindAll(this);
         userModel = new models.User({});
-        return this.registerForm = new RegisterForm({
+        this.registerForm = new RegisterForm({
           formId: 'form_register',
           submit_label: 'Register',
           model: userModel
         });
+        return this.authLoginCB = this.options.authLoginCB;
       };
 
       RegisterView.prototype.render = function() {
-        var renderedContent;
+        var renderedContent,
+          _this = this;
         renderedContent = this.template({});
         this.$el.html(renderedContent);
         this.$el.find('.form-wrapper').append(this.registerForm.render().el);
+        this.$el.find('.auth-login').bind('click', function(evt) {
+          evt.preventDefault();
+          if (typeof _this.authLoginCB === "function") _this.authLoginCB();
+          return false;
+        });
         return this;
       };
 

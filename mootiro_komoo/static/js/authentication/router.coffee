@@ -10,10 +10,12 @@ define (require) ->
 
   class LoginApp extends Backbone.Router
     initialize: ->
-      _.bindAll this, 'root', 'login'
+      _.bindAll this, 'root', 'login', 'authRegisterCB', 'authLoginCB'
 
       # login
-      @loginView = new views.LoginView()
+      @loginView = new views.LoginView
+        authRegisterCB: @authRegisterCB
+
       @loginBox = new new_utils.ModalBox
         title: 'Login',
         content: @loginView.render().el,
@@ -35,7 +37,9 @@ define (require) ->
           return false
 
       # register
-      @registerView = new views.RegisterView()
+      @registerView = new views.RegisterView
+        authLoginCB: @authLoginCB
+
       @registerBox = new new_utils.ModalBox
         title: 'Register'
         width: '450px'
@@ -44,13 +48,13 @@ define (require) ->
         onClose: (evt) =>
           @navigate '', {trigger: true}
 
-      @loginView.$el.find('.auth-register').bind 'click', (evt) =>
-        evt.stopPropagation()
-        evt.stopImmediatePropagation()
-        evt.preventDefault()
-        @loginBox.hide()
-        @navigate 'register', {trigger: true}
-        return false
+    authRegisterCB: ->
+      @loginBox.hide()
+      @navigate 'register', {trigger: true}
+
+    authLoginCB: ->
+      @registerBox.hide()
+      @navigate 'login', {trigger: true}
 
     routes:
       '': 'root'
