@@ -3,18 +3,14 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var $, Backbone, LoginForm, LoginView, RegisterForm, RegisterView, SigninWidget, SignupWidget, SocialButton, SocialButtonsList, login_tpl, models, new_utils, reForm, register_tpl, signin_tpl, signup_tpl, social_btn_tpl, _;
-    $ = require('jquery');
+    var Backbone, LoginView, RegisterView, SocialButton, SocialButtonsList, forms, login_tpl, models, register_tpl, social_btn_tpl, _;
     _ = require('underscore');
     Backbone = require('backbone');
-    reForm = require('reForm');
     models = require('./models');
-    new_utils = require('new_utils');
+    forms = require('./forms');
     login_tpl = require('text!templates/authentication/_login.html');
     register_tpl = require('text!templates/authentication/_register.html');
     social_btn_tpl = require('text!templates/authentication/_social_button.html');
-    signup_tpl = require('text!templates/widgets/_signup.html');
-    signin_tpl = require('text!templates/widgets/_signin.html');
     SocialButton = (function(_super) {
 
       __extends(SocialButton, _super);
@@ -73,11 +69,11 @@
         var buttons,
           _this = this;
         buttons = this.buttons;
-        $(this.el).html('');
+        this.$el.html('');
         _.each(buttons, function(btn) {
           var btnView;
           btnView = new SocialButton(btn);
-          return $(_this.el).append(btnView.render().el);
+          return _this.$el.append(btnView.render().el);
         });
         return this;
       };
@@ -85,58 +81,6 @@
       return SocialButtonsList;
 
     })(Backbone.View);
-    SignupWidget = (function(_super) {
-
-      __extends(SignupWidget, _super);
-
-      function SignupWidget() {
-        SignupWidget.__super__.constructor.apply(this, arguments);
-      }
-
-      SignupWidget.prototype.template = signup_tpl;
-
-      return SignupWidget;
-
-    })(reForm.Widget);
-    SigninWidget = (function(_super) {
-
-      __extends(SigninWidget, _super);
-
-      function SigninWidget() {
-        SigninWidget.__super__.constructor.apply(this, arguments);
-      }
-
-      SigninWidget.prototype.template = signin_tpl;
-
-      return SigninWidget;
-
-    })(reForm.Widget);
-    LoginForm = (function(_super) {
-
-      __extends(LoginForm, _super);
-
-      function LoginForm() {
-        LoginForm.__super__.constructor.apply(this, arguments);
-      }
-
-      LoginForm.prototype.fields = [
-        {
-          name: 'email',
-          widget: reForm.commonWidgets.TextWidget,
-          label: 'Email:'
-        }, {
-          name: 'password',
-          widget: reForm.commonWidgets.PasswordWidget,
-          label: 'Password:'
-        }, {
-          name: 'signup',
-          widget: SignupWidget
-        }
-      ];
-
-      return LoginForm;
-
-    })(reForm.Form);
     LoginView = (function(_super) {
 
       __extends(LoginView, _super);
@@ -152,16 +96,18 @@
       LoginView.prototype.template = _.template(login_tpl);
 
       LoginView.prototype.initialize = function() {
-        var next, _ref;
+        var next, _ref, _ref2;
         _.bindAll(this, 'render', 'buildButtons', 'updateUrls');
         next = ((_ref = this.options) != null ? _ref.next : void 0) || '';
         this.buildButtons(next);
         this.loginModel = new models.LoginModel({});
-        this.formView = new LoginForm({
+        this.formView = new forms.LoginForm({
           formId: 'form_login',
           model: this.loginModel
         });
-        return this.authRegisterCB = this.options.authRegisterCB;
+        if ((_ref2 = this.options) != null ? _ref2.authRegisterCB : void 0) {
+          return this.authRegisterCB = this.options.authRegisterCB;
+        }
       };
 
       LoginView.prototype.render = function() {
@@ -214,53 +160,6 @@
       return LoginView;
 
     })(Backbone.View);
-    RegisterForm = (function(_super) {
-
-      __extends(RegisterForm, _super);
-
-      function RegisterForm() {
-        RegisterForm.__super__.constructor.apply(this, arguments);
-      }
-
-      RegisterForm.prototype.fields = [
-        {
-          name: 'name',
-          widget: reForm.commonWidgets.TextWidget,
-          label: 'Name'
-        }, {
-          name: 'email',
-          widget: reForm.commonWidgets.TextWidget,
-          label: 'Email'
-        }, {
-          name: 'password',
-          widget: reForm.commonWidgets.PasswordWidget,
-          label: 'Password',
-          container_class: 'half-box-left'
-        }, {
-          name: 'password_confirm',
-          widget: reForm.commonWidgets.PasswordWidget,
-          label: 'Password Confirmation',
-          container_class: 'half-box-right'
-        }, {
-          name: 'license',
-          widget: reForm.commonWidgets.CheckboxWidget,
-          args: {
-            choices: [
-              {
-                value: 'agree',
-                title: 'I\'ve read and accept the <a href="http://mootiro.org/terms">License Terms.</a>'
-              }
-            ]
-          }
-        }, {
-          name: 'signin',
-          widget: SigninWidget
-        }
-      ];
-
-      return RegisterForm;
-
-    })(reForm.Form);
     RegisterView = (function(_super) {
 
       __extends(RegisterView, _super);
@@ -279,12 +178,14 @@
         var userModel;
         _.bindAll(this);
         userModel = new models.User({});
-        this.registerForm = new RegisterForm({
+        this.registerForm = new forms.RegisterForm({
           formId: 'form_register',
           submit_label: 'Register',
           model: userModel
         });
-        return this.authLoginCB = this.options.authLoginCB;
+        if (this.options.authLoginCB) {
+          return this.authLoginCB = this.options.authLoginCB;
+        }
       };
 
       RegisterView.prototype.render = function() {

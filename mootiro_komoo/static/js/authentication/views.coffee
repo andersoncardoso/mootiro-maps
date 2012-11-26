@@ -1,18 +1,15 @@
 define (require) ->
 
-  $ = require 'jquery'
+  # $ = require 'jquery'
   _ = require 'underscore'
   Backbone = require 'backbone'
-  reForm = require 'reForm'
   models = require './models'
-  new_utils = require 'new_utils'
+  forms = require './forms'
 
   # underscore templates
   login_tpl = require 'text!templates/authentication/_login.html'
   register_tpl = require 'text!templates/authentication/_register.html'
   social_btn_tpl = require 'text!templates/authentication/_social_button.html'
-  signup_tpl = require 'text!templates/widgets/_signup.html'
-  signin_tpl = require 'text!templates/widgets/_signin.html'
 
 
   #
@@ -68,45 +65,12 @@ define (require) ->
 
     render: ->
       buttons = @buttons
-      $(@el).html ''
+      @$el.html ''
 
       _.each buttons, (btn) =>
         btnView = new SocialButton btn
-        $(@el).append btnView.render().el
+        @$el.append btnView.render().el
       this
-
-
-  #
-  # Simple widget for the Sign Up link
-  # Used with reForm
-  class SignupWidget extends reForm.Widget
-    template: signup_tpl
-
-  #
-  # Simple widget for the Sign In link
-  # Used with reForm
-  class SigninWidget extends reForm.Widget
-    template: signin_tpl
-
-  #
-  # Form for Login, used internally on the LoginView
-  class LoginForm extends reForm.Form
-    fields: [
-      {
-        name: 'email',
-        widget: reForm.commonWidgets.TextWidget,
-        label: 'Email:'
-      }
-      {
-        name: 'password',
-        widget: reForm.commonWidgets.PasswordWidget,
-        label:'Password:'
-      }
-      {
-        name: 'signup',
-        widget: SignupWidget,
-      }
-    ]
 
 
   #
@@ -126,11 +90,12 @@ define (require) ->
 
       @loginModel = new models.LoginModel {}
 
-      @formView = new LoginForm
+      @formView = new forms.LoginForm
         formId: 'form_login'
         model: @loginModel
 
-      @authRegisterCB = @options.authRegisterCB
+      if @options?.authRegisterCB
+        @authRegisterCB = @options.authRegisterCB
 
     render: ->
       renderedContent = @template {}
@@ -168,48 +133,6 @@ define (require) ->
       @render()
       this
 
-
-  #
-  # Register Form
-  class RegisterForm extends reForm.Form
-    fields: [
-      {
-        name: 'name'
-        widget: reForm.commonWidgets.TextWidget
-        label: 'Name'
-      }
-      {
-        name: 'email'
-        widget: reForm.commonWidgets.TextWidget
-        label: 'Email'
-      }
-      {
-        name: 'password'
-        widget: reForm.commonWidgets.PasswordWidget
-        label: 'Password'
-        container_class: 'half-box-left'
-      }
-      {
-        name: 'password_confirm'
-        widget: reForm.commonWidgets.PasswordWidget
-        label: 'Password Confirmation'
-        container_class: 'half-box-right'
-      }
-      {
-        name: 'license'
-        widget: reForm.commonWidgets.CheckboxWidget
-        args:
-          choices: [
-            {value: 'agree', title: 'I\'ve read and accept the <a href="http://mootiro.org/terms">License Terms.</a>' }
-          ]
-      }
-      {
-        name: 'signin'
-        widget: SigninWidget
-      }
-    ]
-
-
   #
   # RegisterView to be used with the LoginBox
   #
@@ -221,12 +144,13 @@ define (require) ->
     initialize: ->
       _.bindAll this
       userModel = new models.User {}
-      @registerForm = new RegisterForm
+      @registerForm = new forms.RegisterForm
         formId: 'form_register'
         submit_label: 'Register'
         model: userModel
 
-      @authLoginCB = @options.authLoginCB
+      if @options.authLoginCB
+        @authLoginCB = @options.authLoginCB
 
 
     render: ->
