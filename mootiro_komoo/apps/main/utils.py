@@ -375,7 +375,7 @@ class JsonResponse(HttpResponse):
             #some code
             return JsonResponse(my_errors_dict, status_code=400)
     """
-    def __init__(self, data, status_code=None):
+    def __init__(self, data={}, status_code=None):
         content = simplejson.dumps(data)
         super(JsonResponse, self).__init__(content=content,
                     mimetype='application/json')

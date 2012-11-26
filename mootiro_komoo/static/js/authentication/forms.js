@@ -103,6 +103,13 @@
         }
       ];
 
+      RegisterForm.prototype.initialize = function() {
+        RegisterForm.__super__.initialize.apply(this, arguments);
+        if (this.options.onSuccess) {
+          return this.on('success', this.options.onSuccess);
+        }
+      };
+
       return RegisterForm;
 
     })(reForm.Form);

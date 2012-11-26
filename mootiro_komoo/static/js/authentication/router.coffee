@@ -7,14 +7,26 @@ define (require) ->
   views = require './views'
   new_utils = require 'new_utils'
 
+  not_verif_tpl = require 'text!templates/authentication/_not_verified.html'
+  verif_tpl = require 'text!templates/authentication/_verified.html'
 
   class LoginApp extends Backbone.Router
-    initialize: ->
-      _.bindAll this, 'root', 'login', 'authRegisterCB', 'authLoginCB'
+    routes:
+      '': 'root'
+      'login': 'login'
+      'register': 'register'
+      'not-verified': 'not_verified'
+      'verified': 'verified'
 
-      # login
-      @loginView = new views.LoginView
-        authRegisterCB: @authRegisterCB
+    initialize: ->
+      _.bindAll this
+      @initializeLogin()
+      @initializeRegister()
+      @initializeConfirmation()
+
+    initializeLogin: ->
+      @loginView = new views.LoginView {}
+      @loginView.form.on 'register-link:click', @registerLinkCB
 
       @loginBox = new new_utils.ModalBox
         title: 'Login',
@@ -25,20 +37,18 @@ define (require) ->
 
       $("a.login-required").bind "click.loginrequired", (evt) =>
         if not KomooNS?.isAuthenticated
-          evt.stopPropagation()
-          evt.stopImmediatePropagation()
           evt.preventDefault()
           next = $(evt.target).attr "href"
-          if next?.charAt(0) is "#"
-              next = document.location.pathname + next
-          if next
-            @loginView.updateUrls next
+          next = (document.location.pathname + next) if next?.charAt(0) is '#'
+          @loginView.updateUrls(next) if next
           @navigate 'login', {trigger: true}
           return false
 
-      # register
-      @registerView = new views.RegisterView
-        authLoginCB: @authLoginCB
+    initializeRegister: ->
+      @registerView = new views.RegisterView {}
+
+      @registerView.form.on 'success', @registerFormOnSuccessCB
+      @registerView.form.on 'login-link:click', @loginLinkCB
 
       @registerBox = new new_utils.ModalBox
         title: 'Register'
@@ -48,19 +58,37 @@ define (require) ->
         onClose: (evt) =>
           @navigate '', {trigger: true}
 
-    authRegisterCB: ->
+    initializeConfirmation: ->
+      @notVerifiedView = new views.ConfirmationView
+        verified: false
+
+      @verifiedView = new views.ConfirmationView
+        verified: true
+
+      @notVerifiedBox = new new_utils.ModalBox
+        title: 'Confirmation',
+        content: @notVerifiedView.render().el,
+        modal_id: 'confirmation-modal-box'
+
+      @verifiedBox = new new_utils.ModalBox
+        title: 'Confirmation',
+        content: @verifiedView.render().el,
+        modal_id: 'confirmation-modal-box'
+
+    # ============ callbacks ======================
+    registerLinkCB: ->
       @loginBox.hide()
       @navigate 'register', {trigger: true}
 
-    authLoginCB: ->
+    loginLinkCB: ->
       @registerBox.hide()
       @navigate 'login', {trigger: true}
 
-    routes:
-      '': 'root'
-      'login': 'login'
-      'register': 'register'
+    registerFormOnSuccessCB: ->
+      @registerBox.hide()
+      @navigate 'not-verified', {trigger: true}
 
+    # =========== routes ===========================
     root: ->
       path = window.location.pathname
       if (path is '/user/' or path is '/user') \
@@ -87,6 +115,14 @@ define (require) ->
         @registerBox.show()
       else
         @navigate '', {trigger: true}
+
+    not_verified: ->
+      path = window.location.pathname
+      @notVerifiedBox.show()
+
+    verified: ->
+      path = window.location.pathname
+      @verifiedBox.show()
 
 
   return {

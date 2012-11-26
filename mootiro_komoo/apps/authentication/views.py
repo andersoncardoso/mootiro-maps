@@ -309,10 +309,9 @@ class UserHandler(ResourceHandler):
         else:
             user.is_active = False
             user.set_password(json_data.get('password'))
-            user.send_confirmation_mail(request)
             user.save()
-            redirect_url = reverse('user_check_inbox')
-            return JsonResponse({'redirect': redirect_url})
+            user.send_confirmation_mail(request)
+            return JsonResponse()
 
 
 class LoginHandler(ResourceHandler):

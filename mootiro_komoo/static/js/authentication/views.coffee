@@ -10,6 +10,8 @@ define (require) ->
   login_tpl = require 'text!templates/authentication/_login.html'
   register_tpl = require 'text!templates/authentication/_register.html'
   social_btn_tpl = require 'text!templates/authentication/_social_button.html'
+  not_verif_tpl = require 'text!templates/authentication/_not_verified.html'
+  verif_tpl = require 'text!templates/authentication/_verified.html'
 
 
   #
@@ -88,24 +90,21 @@ define (require) ->
       next = @options?.next or ''
       @buildButtons(next)
 
-      @loginModel = new models.LoginModel {}
+      @model = new models.LoginModel {}
 
-      @formView = new forms.LoginForm
+      @form = new forms.LoginForm
         formId: 'form_login'
-        model: @loginModel
-
-      if @options?.authRegisterCB
-        @authRegisterCB = @options.authRegisterCB
+        model: @model
 
     render: ->
       renderedContent = @template {}
       @$el.html renderedContent
       @$el.find('.social_buttons').append @socialBtnsView.render().el
-      @$el.find('.login_form').append @formView.render().el
+      @$el.find('.login_form').append @form.render().el
 
       @$el.find('.auth-register').bind 'click', (evt) =>
         evt.preventDefault()
-        @authRegisterCB?()
+        @form.trigger 'register-link:click'
         return false
       this
 
@@ -128,7 +127,7 @@ define (require) ->
         buttons: [googleButton, facebookButton]
 
     updateUrls: (next='') ->
-      @loginModel.set {next: next}
+      @model.set {next: next}
       @buildButtons(next)
       @render()
       this
@@ -143,31 +142,43 @@ define (require) ->
 
     initialize: ->
       _.bindAll this
-      userModel = new models.User {}
-      @registerForm = new forms.RegisterForm
+      user = new models.User {}
+
+      @form = new forms.RegisterForm
         formId: 'form_register'
         submit_label: 'Register'
-        model: userModel
-
-      if @options.authLoginCB
-        @authLoginCB = @options.authLoginCB
-
+        model: user
 
     render: ->
       renderedContent = @template {}
       @$el.html renderedContent
-      @$el.find('.form-wrapper').append @registerForm.render().el
+      @$el.find('.form-wrapper').append @form.render().el
 
       @$el.find('.auth-login').bind 'click', (evt) =>
         evt.preventDefault()
-        @authLoginCB?()
+        @form.trigger 'login-link:click'
         return false
       this
+
+  class ConfirmationView extends Backbone.View
+    initialize: ->
+      _.bindAll this
+      if @options.verified
+        @template = _.template verif_tpl
+      else
+        @template = _.template not_verif_tpl
+
+    render: ->
+      renderedContent = @template {}
+      @$el.html renderedContent
+      this
+
 
 
   return {
     LoginView: LoginView
     RegisterView: RegisterView
+    ConfirmationView: ConfirmationView
   }
 
 

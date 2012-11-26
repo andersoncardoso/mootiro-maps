@@ -78,6 +78,10 @@ define (require) ->
         widget: SigninWidget
       }
     ]
+    initialize: ->
+      super
+      if @options.onSuccess
+        @on 'success', @options.onSuccess
 
   return {
     LoginForm: LoginForm

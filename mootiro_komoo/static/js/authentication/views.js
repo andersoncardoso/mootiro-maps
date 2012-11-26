@@ -3,7 +3,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Backbone, LoginView, RegisterView, SocialButton, SocialButtonsList, forms, login_tpl, models, register_tpl, social_btn_tpl, _;
+    var Backbone, ConfirmationView, LoginView, RegisterView, SocialButton, SocialButtonsList, forms, login_tpl, models, not_verif_tpl, register_tpl, social_btn_tpl, verif_tpl, _;
     _ = require('underscore');
     Backbone = require('backbone');
     models = require('./models');
@@ -11,6 +11,8 @@
     login_tpl = require('text!templates/authentication/_login.html');
     register_tpl = require('text!templates/authentication/_register.html');
     social_btn_tpl = require('text!templates/authentication/_social_button.html');
+    not_verif_tpl = require('text!templates/authentication/_not_verified.html');
+    verif_tpl = require('text!templates/authentication/_verified.html');
     SocialButton = (function(_super) {
 
       __extends(SocialButton, _super);
@@ -96,18 +98,15 @@
       LoginView.prototype.template = _.template(login_tpl);
 
       LoginView.prototype.initialize = function() {
-        var next, _ref, _ref2;
+        var next, _ref;
         _.bindAll(this, 'render', 'buildButtons', 'updateUrls');
         next = ((_ref = this.options) != null ? _ref.next : void 0) || '';
         this.buildButtons(next);
-        this.loginModel = new models.LoginModel({});
-        this.formView = new forms.LoginForm({
+        this.model = new models.LoginModel({});
+        return this.form = new forms.LoginForm({
           formId: 'form_login',
-          model: this.loginModel
+          model: this.model
         });
-        if ((_ref2 = this.options) != null ? _ref2.authRegisterCB : void 0) {
-          return this.authRegisterCB = this.options.authRegisterCB;
-        }
       };
 
       LoginView.prototype.render = function() {
@@ -116,10 +115,10 @@
         renderedContent = this.template({});
         this.$el.html(renderedContent);
         this.$el.find('.social_buttons').append(this.socialBtnsView.render().el);
-        this.$el.find('.login_form').append(this.formView.render().el);
+        this.$el.find('.login_form').append(this.form.render().el);
         this.$el.find('.auth-register').bind('click', function(evt) {
           evt.preventDefault();
-          if (typeof _this.authRegisterCB === "function") _this.authRegisterCB();
+          _this.form.trigger('register-link:click');
           return false;
         });
         return this;
@@ -149,7 +148,7 @@
 
       LoginView.prototype.updateUrls = function(next) {
         if (next == null) next = '';
-        this.loginModel.set({
+        this.model.set({
           next: next
         });
         this.buildButtons(next);
@@ -175,17 +174,14 @@
       RegisterView.prototype.tagName = 'section';
 
       RegisterView.prototype.initialize = function() {
-        var userModel;
+        var user;
         _.bindAll(this);
-        userModel = new models.User({});
-        this.registerForm = new forms.RegisterForm({
+        user = new models.User({});
+        return this.form = new forms.RegisterForm({
           formId: 'form_register',
           submit_label: 'Register',
-          model: userModel
+          model: user
         });
-        if (this.options.authLoginCB) {
-          return this.authLoginCB = this.options.authLoginCB;
-        }
       };
 
       RegisterView.prototype.render = function() {
@@ -193,10 +189,10 @@
           _this = this;
         renderedContent = this.template({});
         this.$el.html(renderedContent);
-        this.$el.find('.form-wrapper').append(this.registerForm.render().el);
+        this.$el.find('.form-wrapper').append(this.form.render().el);
         this.$el.find('.auth-login').bind('click', function(evt) {
           evt.preventDefault();
-          if (typeof _this.authLoginCB === "function") _this.authLoginCB();
+          _this.form.trigger('login-link:click');
           return false;
         });
         return this;
@@ -205,9 +201,37 @@
       return RegisterView;
 
     })(Backbone.View);
+    ConfirmationView = (function(_super) {
+
+      __extends(ConfirmationView, _super);
+
+      function ConfirmationView() {
+        ConfirmationView.__super__.constructor.apply(this, arguments);
+      }
+
+      ConfirmationView.prototype.initialize = function() {
+        _.bindAll(this);
+        if (this.options.verified) {
+          return this.template = _.template(verif_tpl);
+        } else {
+          return this.template = _.template(not_verif_tpl);
+        }
+      };
+
+      ConfirmationView.prototype.render = function() {
+        var renderedContent;
+        renderedContent = this.template({});
+        this.$el.html(renderedContent);
+        return this;
+      };
+
+      return ConfirmationView;
+
+    })(Backbone.View);
     return {
       LoginView: LoginView,
-      RegisterView: RegisterView
+      RegisterView: RegisterView,
+      ConfirmationView: ConfirmationView
     };
   });
 
