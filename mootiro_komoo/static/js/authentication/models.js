@@ -15,7 +15,7 @@
         LoginModel.__super__.constructor.apply(this, arguments);
       }
 
-      LoginModel.prototype.urlRoot = '/user/login/';
+      LoginModel.prototype.urlRoot = '/api/user/login/';
 
       return LoginModel;
 
@@ -28,7 +28,7 @@
         User.__super__.constructor.apply(this, arguments);
       }
 
-      User.prototype.urlRoot = '/user/';
+      User.prototype.urlRoot = '/api/user/';
 
       return User;
 

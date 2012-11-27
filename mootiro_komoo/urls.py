@@ -29,7 +29,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     # user
-    url(r'^user/', include('authentication.urls')),
+    url(r'', include('authentication.urls')),
 
     # 3rd party apps
     url(r'^markitup/', include('markitup.urls')),

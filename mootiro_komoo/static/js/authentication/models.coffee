@@ -5,10 +5,10 @@ define (require) ->
   Backbone = require 'backbone'
 
   class LoginModel extends Backbone.Model
-    urlRoot: '/user/login/'
+    urlRoot: '/api/user/login/'
 
   class User extends Backbone.Model
-    urlRoot: '/user/'
+    urlRoot: '/api/user/'
 
   return {
     LoginModel: LoginModel
