@@ -27,21 +27,21 @@
     border-left:   @lighter;
 }
 
-.box-shadow (inset, @x:0, @y:0, @blur:5px, @spread:3px, @color:#999) when not (iscolor(@spread)) {
+.box-shadow (inset, @x:0, @y:0, @blur:5px, @spread:3px, @color:@shadow-color) when not (iscolor(@spread)) {
     @shadow: inset @x @y @blur @spread @color;
     -moz-box-shadow:    @shadow;
     -webkit-box-shadow: @shadow;
     box-shadow:         @shadow;
 }
 
-.box-shadow (@x:0, @y:0, @blur:5px, @spread:3px, @color:#999) when not (iscolor(@spread)) {
+.box-shadow (@x:0, @y:0, @blur:5px, @spread:3px, @color:@shadow-color) when not (iscolor(@spread)) {
     @shadow: @x @y @blur @spread @color;
     -moz-box-shadow:    @shadow;
     -webkit-box-shadow: @shadow;
     box-shadow:         @shadow;
 }
 
-.box-shadow (inset, @x:0, @y:0, @blur:5px, @color:#999) when (iscolor(@color)) {
+.box-shadow (inset, @x:0, @y:0, @blur:5px, @color:@shadow-color) when (iscolor(@color)) {
     .box-shadow (inset, @x, @y, @blur, 0,  @color);
     @shadow: inset @x @y @blur @color;
     -moz-box-shadow:    @shadow;
@@ -49,7 +49,7 @@
     box-shadow:         @shadow;
 
 }
-.box-shadow (@x:0, @y:0, @blur:5px, @color:#999) when (iscolor(@color)) {
+.box-shadow (@x:0, @y:0, @blur:5px, @color:@shadow-color) when (iscolor(@color)) {
     @shadow: @x @y @blur @color;
     -moz-box-shadow:    @shadow;
     -webkit-box-shadow: @shadow;
@@ -148,7 +148,7 @@
 
 .button (@color:@button-bg) {
     @padding: 10px;
-    @button-border-color: darken(@color, 5%);
+    @button-border-color: darken(@color, 1%);
     @button-shadow-color: darken(@color, 3%);
     .clickable;
     .gradient(vertical, @color);

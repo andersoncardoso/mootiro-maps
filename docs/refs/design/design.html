@@ -19,8 +19,7 @@
           </ul>
         </section>
 
-        <div class="logo">
-        </div>
+        <h1 class="logo"><a href="#" title="Página principal">MootiroMaps</a></h1>
 
         <nav>
           <ul>
@@ -29,9 +28,10 @@
             <li class="active places has-submenu">
               <a href="#">Locais</a>
               <ul>
-                <li class="needs"><a href="#">Necessidades</a></li>
-                <li class="active organizations"><a href="#">Organizações</a></li>
+                <li class="active needs"><a href="#">Necessidades</a></li>
+                <li class="organizations"><a href="#">Organizações</a></li>
                 <li class="resources"><a href="#">Recursos</a></li>
+                <li class="investments"><a href="#">Investimentos</a></li>
               </ul>
             </li>
             <li class="projects"><a href="#">Projetos</a></li>
@@ -40,48 +40,90 @@
       </div>
     </header>
 
-    <div class="content">
 
-        <h1>Header 1</h1>
-        <h2>Header 2</h2>
-        <h3>Header 3</h3>
+    <div class="content-box">
+      <nav class="action-bar">
+        <ul>
+          <li><a class="edit" href="#" title="Editar">Editar</a></li>
+          <li><a class="active star" href="#" title="Adicionar estrela">Adicionar estrela</a></li>
+          <li><a class="discuss" href="#" title="Discutir">Discutir</a></li>
+          <li><a class="history" href="#" title="Ver histórico">Ver histórico</a></li>
+          <li><a class="report" href="#" title="Denunciar">Denunciar</a></li>
+          <li><a class="delete" href="#" title="Remover">Remover</a></li>
+        </ul>
+      </nav>
+
+      <section class="sidebar">
+        <article class="box map">
+          <div class="placeholder">Localização não definida. <a href="#">Adicione um local no mapa.</a></div>
+        </article>
+        <article class="box">
+          <h1>Título da caixa</h1>
+          Usar tag article para caixas com conteúdo realmente da página.
+        </article>
+        <aside class="box">
+          <h1>Título da caixa</h1>
+          Usar tag aside para caixas com conteúdo relacionado.
+        </aside>
+        <aside class="box tags">
+          <h1>Palavras-chave</h1>
+          <a href="#">tagtag1</a>
+          <a href="#">tagtag2</a>
+        </aside>
+      </section>
+
+      <div class="main">
+        <section class="content">
+
+          <h1 class="title">Título principal da página</h1>
+
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In fringilla, tellus molestie dictum ornare, ligula neque hendrerit tellus, vel tempor nibh nunc vel dui. Cras congue mi sit amet ipsum dapibus ut tempus nibh sodales. Pellentesque eros massa, eleifend in volutpat nec, bibendum at ante. Duis scelerisque nunc eget ligula pellentesque a scelerisque diam rhoncus. Aenean vel congue erat. Proin id faucibus libero. Curabitur pulvinar, arcu a varius venenatis, risus lacus bibendum risus, sit amet condimentum urna justo nec ipsum.</p>
+
+          <p>Donec luctus porttitor erat quis tincidunt. Sed posuere consectetur scelerisque. Donec laoreet mauris in velit viverra sollicitudin. Phasellus sed sem lorem. Proin eu enim id odio pharetra vehicula condimentum a erat. Sed id enim eget mi rutrum facilisis. Nullam eleifend suscipit eros vestibulum faucibus. Duis ultricies ante ac leo mattis vel varius ante accumsan. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec tortor quis enim laoreet ornare vitae et ipsum. Aenean euismod, est at consectetur venenatis, purus dui tempus nulla, sit amet condimentum ante leo et sem. Fusce scelerisque mattis urna vel eleifend.</p>
+
+          <h1>Header 1</h1>
+          <h2>Header 2</h2>
+          <h3>Header 3</h3>
+
+        <br /><br />
+
+          <a href="#">Link normal</a>
+          <a href="#" class="hover">Link hover</a>
+          <a href="#" class="visited">Link visited</a>
+
+        <br /><br />
+
+          <a class="button" href="#">Link como botão</a>
+          <br />
+          <input type="button" value="Input do tipo botão" />
+          <br />
+          <button>Botão</button>
+          <br />
+          <a class="button communities" href="#">Botão com contexto que possui ícone</a>
+          <br />
+          <input type="submit" value="Input do tipo submit" />
+          <br />
+          <a class="button default" href="#">Link como botão com classe default</a>
+          <br />
+
+        <br /><br />
+
+        </section>
+      </div>
+
+      <article class="dialog">
+        <header>
+          <button class="close">Fechar</button>
+          <h1>Título do dialog</h1>
+        </header>
+        <section class="content">
+          Conteúdo
+        </section>
+      </article>
 
       <br /><br />
-
-        <a href="#">Link normal</a>
-        <a href="#" class="hover">Link hover</a>
-        <a href="#" class="visited">Link visited</a>
-
-      <br /><br />
-
-        <a class="button" href="#">Link como botão</a>
-        <br />
-        <input type="button" value="Input do tipo botão" />
-        <br />
-        <button>Botão</button>
-        <br />
-        <a class="button communities" href="#">Botão com contexto que possui ícone</a>
-        <br />
-        <input type="submit" value="Input do tipo submit" />
-        <br />
-        <a class="button default" href="#">Link como botão com classe default</a>
-        <br />
-
-      <br /><br />
-
-        <div class="dialog">
-          <header>
-            <div class="close">Fechar</div>
-            <h1>Título</h1>
-          </header>
-          <section class="content">
-            Conteúdo
-          </section>
-        </div>
-
-      <br /><br />
-
       &nbsp;
+      <br /><br />
     </div>
   </body>
 </html>

@@ -79,28 +79,59 @@ a {
 
 header.main {
     .top-box;
+
+    margin-bottom: 50px;
+
+    > .content {
+        background: @main-bg;
+    }
+
     .logo {
         .image;
-        display: inline-block;
-        width: 105px;
-        height: 45px;
-        margin: 15px 15px 5px;
+        overflow: hidden;
+        margin: 15px 7px 5px;
+
+        &,
+        > a {
+            display: inline-block;
+            width: 105px;
+            height: 45px;
+        }
+
+        a,
+        a:hover,
+        a:visited,
+        a:active {
+            color: transparent;
+            background-color: transparent;
+        }
     }
+
     nav {
         text-align: center;
+
+        @item-width: 180px;
+
+        a {
+            background-color: transparent;
+
+            &:hover {
+                background-color: transparent;
+             }
+        }
+
         > ul > li {
             .border-radius(10px, 10px, 0px, 0px);
             @size: 24px;
             display: inline-block;
             > a {
+                .transition(all, 0s);
                 .icon('', @size);
-                .transition(all, 0.1s);
                 color: @menu-fg;
-                background-color: @main-bg;
                 text-decoration: none;
                 line-height: @size;
                 padding: 9px 20px;
-                min-width: 120px;
+                min-width: (@item-width - 40);
                 outline: none;
 
                 &:active {
@@ -108,11 +139,21 @@ header.main {
                 }
             }
 
+             &:hover > a {
+                .icon('aaa', @size);
+                text-shadow: 0px 0px 8px @text-shadow-color;
+                color: @menu-hover-fg;
+            }
+
+
             &.active {
+                &:hover > a,
                 > a {
                     color: @menu-active-fg;
-                    background-color: transparent;
+                    text-shadow: 0px 0px 0px transparent;
                 }
+
+                /* Creates the bottom arrow */
                 &:after {
                     @size: 5px;
                     content: '';
@@ -125,24 +166,22 @@ header.main {
                     z-index: 2;
                     position: relative;
                 }
+
+                /* Collapsed submenu */
+                > ul {
+                    height: 30px;
+                }
+
             }
 
-             &:hover > a {
-                .transition(all, 0.1s);
-                color: @menu-active-fg;
-                background-color: transparent;
-            }
-
-
-            &.active > ul {
-                height: 30px;
-            }
-
+            /* Submenu */
+            @close-delay: 1s;
             > ul {
-                .transition(height, 0.2s, ease, 2s);
+                .box-shadow(0px, 0px, 10px, -2px);
+                .transition(height, 0.2s, ease, @close-delay);
                 .border-radius(0px, 0px, 10px, 10px);
                 background: @submenu-bg;
-                min-width: 140px;
+                min-width: (@item-width - 20);
                 padding: 0px 10px;
                 position: absolute;
                 overflow: hidden;
@@ -150,7 +189,7 @@ header.main {
                 z-index: 10;
 
                 > li {
-                    .transition(all, 1s, ease, 2s);
+                    .transition(all, 1s, ease, @close-delay);
                     text-align: left;
                     opacity: 0;
                     height: 0;
@@ -160,8 +199,12 @@ header.main {
                         margin: 2px 0;
                         width: 100%;
                         text-decoration: none;
+                        &:hover {
+                            text-shadow: 0px 0px 8px @text-shadow-color;
+                        }
                     }
 
+                    /* Submenu items */
                     &.needs a {
                         .icon('', 16px);
                     }
@@ -171,9 +214,14 @@ header.main {
                     &.resources a {
                         .icon('', 16px);
                     }
+                    &.investments a {
+                        .icon('', 16px);
+                    }
 
                 }
             }
+
+            @n: 4; /* Number of submenu items */
 
             &.active > ul > li.active,
             &:hover > ul > li {
@@ -182,21 +230,21 @@ header.main {
                 height: 30px;
             }
 
+            &.active > ul > li {
+                text-align: center;
+            }
+
             &:hover > ul {
                 .transition(height, 0.2s);
-                height: 100px;
+                height: (@n * 30px + 10px);
                 display: block;
             }
 
-            &.has-submenu{
+            &.has-submenu {
                 &:hover > ul {
                     /* Add delay to items with submenus to prevent issue with
                     the delay when submenu vanish */
                     .transition(height, 0.2s, ease, 0.1s);
-                }
-
-                > a {
-                    .transition(all, 0.2s, ease, 1.5s);
                 }
 
                 &:after {
@@ -207,43 +255,163 @@ header.main {
         }
 
 
+        /* Active items */
         @percent: 10%;
         .map {
             @color:@map-color;
-            .gradient(vertical, @color);
-            a:active {
-                .gradient(vertical, darken(@color, @percent));
+            &.active {
+                .gradient(vertical, @color);
             }
         }
         .communities {
             @color: @communities-color;
-            .gradient(vertical, @color);
-            a:active {
-                .gradient(vertical, darken(@color, @percent));
+            &.active {
+                .gradient(vertical, @color);
             }
         }
         .places {
             @color: @places-color;
-            .gradient(vertical, @color);
-            a:active {
-                .gradient(vertical, darken(@color, @percent));
+            &.active {
+                .gradient(vertical, @color);
             }
         }
         .projects {
             @color: @projects-color;
-            .gradient(vertical, @color);
-            a:active {
-                .gradient(vertical, darken(@color, @percent));
+            &.active {
+                .gradient(vertical, @color);
             }
         }
     }
 }
 
 header.main .content,
-body > .content {
+body > .content-box {
     .clearfix;
     width: @content-width;
-    margin: 0 auto;
+    margin: 0 auto 10px;
+
+    > .action-bar {
+        .column(1);
+        @size: 20px;
+
+        ul {
+            padding: 0px;
+            text-align: center;
+        }
+
+        a {
+            .border-radius();
+            color: transparent;
+            padding: 5px;
+            margin: 1px 0px;
+            width: @size;
+            height: @size;
+            display: block;
+            overflow: hidden;
+
+            &.active {
+                background-color: @action-active-bg;
+            }
+        }
+
+        .edit {
+            .clickable;
+            .icon('', @size);
+        }
+
+        .star {
+            .clickable;
+            .icon('', @size);
+        }
+
+        .discuss {
+            .clickable;
+            .icon('', @size);
+        }
+
+        .history {
+            .clickable;
+            .icon('', @size);
+        }
+
+        .report {
+            .clickable;
+            .icon('', @size);
+        }
+
+        .delete {
+            .clickable;
+            .icon('', @size);
+        }
+    }
+
+    > .sidebar {
+        .column(5);
+
+        /* Little hack to force the empty sidebar width */
+        &:after {
+            content: ".";
+            color: transparent;
+        }
+
+    }
+
+    > .main {
+        .column(16);
+
+        > .content {
+            padding-left: 10px;
+
+            h1.title {
+                margin-top: 0px;
+            }
+        }
+    }
+}
+
+.box {
+    .border-radius;
+    background-color: @main-bg;
+    padding: 5px;
+    margin-bottom: 25px;
+
+    h1 {
+        .h3-font;
+        padding: 0px;
+        margin: 5px 0px;
+    }
+
+    &.map {
+        @height: 150px;
+        .border-radius(0px);
+        background-color: transparent;
+        border: solid 1px @main-bg;
+        height: @height;
+
+        > .placeholder {
+            .border-radius;
+            background: @map-placeholder-bg;
+            width: 55%;
+            padding: 15px;
+            margin: ((@height - 85) / 2) auto;
+
+            a:hover {
+                background-color: darken(@map-placeholder-bg, 5%);
+            }
+        }
+    }
+
+    &.tags {
+        background-color: transparent;
+    }
+}
+
+.tags a,
+a.tag {
+    font-family: @mono;
+    font-size: 12px;
+    color: @tags-fg;
+    background-color: @tags-bg;
 }
 
 form.search {
@@ -280,9 +448,9 @@ form.search {
 .dialog {
     @padding: 15px;
     @column-width: 5px;
-    .column(8);
-    .pull(2);
-    .push(2);
+    .column(14);
+    .pull(4);
+    .push(4);
     .border-radius(10px);
     .box-shadow(0px, 0px, 10px, 2px);
     background: @main-bg;
@@ -290,6 +458,7 @@ form.search {
     header {
         margin: @padding;
         h1 {
+            .h2-font;
             margin: 0px;
             text-align: center;
         }
@@ -304,6 +473,8 @@ form.search {
             color: transparent;
             float: right;
             margin: (-@padding + 5);
+            padding: 0px;
+            border: none;
             overflow: hidden;
         }
     }
@@ -312,3 +483,4 @@ form.search {
         margin: @padding;
     }
 }
+
