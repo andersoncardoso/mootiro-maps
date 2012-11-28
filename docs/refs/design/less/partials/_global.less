@@ -4,13 +4,14 @@ body {
     padding: 0px;
     margin: 0px;
     background-color: @content-bg;
+    min-width: @min-width;
 }
 
 h1 { .h1-font; }
 h2 { .h2-font; }
 h3 { .h3-font; }
 
-nav ul,
+nav > ul,
 ul.nav { .nav-list; }
 
 input[type=submit],
@@ -87,48 +88,124 @@ header.main {
     }
     nav {
         text-align: center;
-        li {
+        > ul > li {
             .border-radius(10px, 10px, 0px, 0px);
             @size: 24px;
             display: inline-block;
-            a {
+            > a {
                 .icon('', @size);
-                .transition(~'color, background');
+                .transition(all, 0.1s);
                 color: @menu-fg;
                 background-color: @main-bg;
                 text-decoration: none;
                 line-height: @size;
                 padding: 9px 20px;
                 min-width: 120px;
+                outline: none;
 
-                &:hover {
-                    color: @menu-active-fg;
-                    background-color: transparent;
-                }
                 &:active {
                     .border-radius(10px, 10px, 0px, 0px);
                 }
             }
-        }
 
-        .active {
-            a {
+            &.active {
+                > a {
+                    color: @menu-active-fg;
+                    background-color: transparent;
+                }
+                &:after {
+                    @size: 5px;
+                    content: '';
+                    display: block;
+                    border: @size solid transparent;
+                    border-bottom-color: @content-bg;
+                    width: 0px;
+                    height: 0px;
+                    margin: (-@size * 2) auto 0px;
+                    z-index: 2;
+                    position: relative;
+                }
+            }
+
+             &:hover > a {
+                .transition(all, 0.1s);
                 color: @menu-active-fg;
                 background-color: transparent;
             }
-            &:after {
-                @size: 5px;
-                content: '';
-                display: block;
-                border: @size solid transparent;
-                border-bottom-color: @content-bg;
-                width: 0px;
-                height: 0px;
-                margin: (-@size * 2) auto 0px;
-                z-index: 2;
-                position: relative;
+
+
+            &.active > ul {
+                height: 30px;
             }
+
+            > ul {
+                .transition(height, 0.2s, ease, 2s);
+                .border-radius(0px, 0px, 10px, 10px);
+                background: @submenu-bg;
+                min-width: 140px;
+                padding: 0px 10px;
+                position: absolute;
+                overflow: hidden;
+                height: 0;
+                z-index: 10;
+
+                > li {
+                    .transition(all, 1s, ease, 2s);
+                    text-align: left;
+                    opacity: 0;
+                    height: 0;
+                    list-style: none;
+                    a {
+                        padding: 3px 0 7px;
+                        margin: 2px 0;
+                        width: 100%;
+                        text-decoration: none;
+                    }
+
+                    &.needs a {
+                        .icon('', 16px);
+                    }
+                    &.organizations a {
+                        .icon('', 16px);
+                    }
+                    &.resources a {
+                        .icon('', 16px);
+                    }
+
+                }
+            }
+
+            &.active > ul > li.active,
+            &:hover > ul > li {
+                .transition(all, 0.2s, ease, 0.1s);
+                opacity: 1;
+                height: 30px;
+            }
+
+            &:hover > ul {
+                .transition(height, 0.2s);
+                height: 100px;
+                display: block;
+            }
+
+            &.has-submenu{
+                &:hover > ul {
+                    /* Add delay to items with submenus to prevent issue with
+                    the delay when submenu vanish */
+                    .transition(height, 0.2s, ease, 0.1s);
+                }
+
+                > a {
+                    .transition(all, 0.2s, ease, 1.5s);
+                }
+
+                &:after {
+                    border-bottom-color: @submenu-bg;
+                }
+            }
+
         }
+
 
         @percent: 10%;
         .map {
@@ -162,6 +239,13 @@ header.main {
     }
 }
 
+header.main .content,
+body > .content {
+    .clearfix;
+    width: @content-width;
+    margin: 0 auto;
+}
+
 form.search {
     @form-width: 350px;
     @button-size: 24px;
@@ -190,5 +274,41 @@ form.search {
         color: transparent;
         padding: 0px;
         margin: 0px;
+    }
+}
+
+.dialog {
+    @padding: 15px;
+    @column-width: 5px;
+    .column(8);
+    .pull(2);
+    .push(2);
+    .border-radius(10px);
+    .box-shadow(0px, 0px, 10px, 2px);
+    background: @main-bg;
+
+    header {
+        margin: @padding;
+        h1 {
+            margin: 0px;
+            text-align: center;
+        }
+
+        .close {
+            @size: 20px;
+            .clickable;
+            .icon('', @size);
+            display: inline-block;
+            width: @size;
+            height: @size;
+            color: transparent;
+            float: right;
+            margin: (-@padding + 5);
+            overflow: hidden;
+        }
+    }
+
+    .content {
+        margin: @padding;
     }
 }

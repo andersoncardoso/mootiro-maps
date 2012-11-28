@@ -76,6 +76,14 @@
     .gradient(vertical, lighten(@color, @percent), darken(@color, @percent));
 }
 
+.border-fake (@size, @color, @bg:@content-bg) {
+    // Create a fake barder to be used with ".column" mixin
+    @shadow: 0 0 0 @size @color, 0 0 0 @bg;
+    -moz-box-shadow:    @shadow;
+    -webkit-box-shadow: @shadow;
+    box-shadow:         @shadow;
+}
+
 .image () {
     background-color: @menu-fg;  // temporary
 }
@@ -114,7 +122,6 @@
 
 .top-box() {
     background-color: @main-bg;
-    width: @total-width;
 }
 
 .fg-from-bg (@bg) when (lightness(@bg) >= 70%) {
@@ -130,17 +137,18 @@
     margin: 0px;
     padding: 0px 10px;
 
-    li {
+    > li {
         display: inline;
 
-        a {
+        > a {
             padding: 3px 15px;
         }
     }
 }
 
 .button (@color:@button-bg) {
-    @button-border-color: darken(@color, 8%);
+    @padding: 10px;
+    @button-border-color: darken(@color, 5%);
     @button-shadow-color: darken(@color, 3%);
     .clickable;
     .gradient(vertical, @color);
@@ -148,19 +156,32 @@
     .box-shadow(1px, 1px, 5px, -1px, @button-shadow-color);
     .fg-from-bg(@color);
     display: inline-block;
-    font-size: @font-size + 2;
-    line-height: @font-size + 10;
+    font-size: @font-size;
+    font-weight: bold;
+    font-family: @sans;
     text-align: center;
     text-decoration: none;
-    padding: 5px 20px;
+    padding: @padding (2 * @padding);
+    margin: 3px;
     border: solid 1px @button-border-color;
+    outline: none;
 
     &:hover {
         .gradient(vertical, lighten(@color, 5%));
         .fg-from-bg(@color);
     }
 
+    &:visited {
+        .fg-from-bg(@color);
+    }
+
     &:active {
         .gradient(vertical, @color);
+    }
+
+    &:before {
+        // Fix the size of buttons with icon
+        margin-top: (-@padding);
+        margin-bottom: (-@padding);
     }
 }
