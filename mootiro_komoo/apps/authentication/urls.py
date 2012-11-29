@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.conf.urls.defaults import url, patterns
-from .api import LoginHandler, UserHandler
+from .api import LoginHandler, LogoutHandler, UserHandler
 
 
 #
@@ -10,7 +10,6 @@ from .api import LoginHandler, UserHandler
 urlpatterns = patterns('authentication.views',
     # general urls
     url(r'^user/?$', 'user_root', name='user_root'),
-    url(r'^user/logout/?$', 'logout', name='user_logout'),
 
     # user creation urls
     url(r'^user/verification/(?P<key>\S+)/?$', 'user_verification',
@@ -43,20 +42,21 @@ urlpatterns = patterns('authentication.views',
 urlpatterns += patterns('authentication.api',
         url(r'^api/user/?$', UserHandler.dispatch, name='user_api'),
         url(r'^api/user/login/?$', LoginHandler.dispatch, name='login_api'),
+        url(r'^api/user/logout/?$', LogoutHandler.dispatch, name='logout_api'),
 )
 
 #
 # Provider urls
 urlpatterns += patterns('authentication',
     # Facebook
-    url(r'^login/facebook?$', 'facebook.login_facebook',
+    url(r'^user/login/facebook?$', 'facebook.login_facebook',
                 name="login_facebook"),
-    url(r'^login/facebook/authorized/?$', 'facebook.facebook_authorized',
+    url(r'^user/login/facebook/authorized/?$', 'facebook.facebook_authorized',
                 name="facebook_authorized"),
 
     # Google
-    url(r'^login/google?$', 'google.login_google',
+    url(r'^user/login/google?$', 'google.login_google',
                 name="login_google"),
-    url(r'^login/google/authorized/?$', 'google.google_authorized',
+    url(r'^user/login/google/authorized/?$', 'google.google_authorized',
                 name="google_authorized"),
 )

@@ -9,7 +9,7 @@ from jsonfield import JSONField
 
 from lib.locker.models import Locker
 from fileupload.models import UploadedFile
-from main.utils import send_mail_async
+from main.utils import send_mail_async, BaseDAOMixin
 from komoo_map.models import GeoRefModel, POINT
 
 
@@ -24,7 +24,7 @@ the IT3S team.
 '''
 
 
-class User(GeoRefModel):
+class User(GeoRefModel, BaseDAOMixin):
     """
     User model. Replaces django.contrib.auth, CAS and social_auth
     with our own unified solution.
@@ -158,16 +158,6 @@ class User(GeoRefModel):
             message=CONFIRMATION_EMAIL_MSG.format(
                 name=self.name,
                 verification_url=verification_url))
-
-    # =================== DAO methods ======================================= #
-    @classmethod
-    def get_by_id(cls, id):
-        # TODO move this to a general abstract DAO class
-        try:
-            obj = cls.objects.get(pk=id)
-        except Exception:
-            obj = None
-        return obj
 
 
 class AnonymousUser(object):

@@ -579,3 +579,21 @@ class ViewGeojsonMixin(object):
         context['geojson'] = geojson
 
         return context
+
+
+class BaseDAOMixin(object):
+    """ Common Basic Queries for abstracting the ORM """
+
+    @classmethod
+    def get_by_id(cls, id):
+        """ Get entry by ID or return None """
+        try:
+            obj = cls.objects.get(pk=id)
+        except Exception:
+            obj = None
+        return obj
+
+    @classmethod
+    def filter_by(cls, **kwargs):
+        """ filter by keyword arguments """
+        return cls.objects.filter(**kwargs)

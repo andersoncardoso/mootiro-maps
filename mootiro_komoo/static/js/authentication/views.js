@@ -3,7 +3,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Backbone, LoginView, RegisterView, SocialButton, SocialButtonsList, VerificationView, forms, login_tpl, models, not_verif_tpl, register_tpl, social_btn_tpl, verif_tpl, _;
+    var Backbone, LoginView, LogoutView, RegisterView, SocialButton, SocialButtonsList, VerificationView, forms, login_tpl, models, not_verif_tpl, register_tpl, social_btn_tpl, verif_tpl, _;
     _ = require('underscore');
     Backbone = require('backbone');
     models = require('./models');
@@ -153,6 +153,36 @@
       return LoginView;
 
     })(Backbone.View);
+    LogoutView = (function(_super) {
+
+      __extends(LogoutView, _super);
+
+      function LogoutView() {
+        LogoutView.__super__.constructor.apply(this, arguments);
+      }
+
+      LogoutView.prototype.initialize = function() {
+        _.bindAll(this);
+        return this.model = new models.LogoutModel({});
+      };
+
+      LogoutView.prototype.bindLogoutButton = function() {
+        var _this = this;
+        return $('.logout-btn').click(function(evt) {
+          var next;
+          evt.preventDefault();
+          next = $(evt.target).attr("href");
+          if ((next != null ? next.charAt(0) : void 0) === '#') {
+            next = document.location.pathname + next;
+          }
+          _this.model.doLogout(next);
+          return false;
+        });
+      };
+
+      return LogoutView;
+
+    })(Backbone.View);
     RegisterView = (function(_super) {
 
       __extends(RegisterView, _super);
@@ -231,6 +261,7 @@
     })(Backbone.View);
     return {
       LoginView: LoginView,
+      LogoutView: LogoutView,
       RegisterView: RegisterView,
       VerificationView: VerificationView
     };

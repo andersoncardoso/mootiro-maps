@@ -12,7 +12,6 @@ from django.utils import simplejson
 from django.forms.models import model_to_dict
 
 from annoying.decorators import render_to, ajax_request
-from annoying.functions import get_object_or_None
 from reversion.models import Revision
 
 from signatures.models import Signature, DigestSignature
@@ -23,7 +22,6 @@ from lib.locker.models import Locker
 from .models import User
 from .forms import FormProfile
 from .utils import login_required
-from .utils import logout as auth_logout
 
 
 logger = logging.getLogger(__name__)
@@ -234,8 +232,19 @@ def signature_delete(request):
 
 
 #
-# ==================== Users ==================================================
+# ======================== NEW STUFF ===================================== #
 #
+
+
+@render_to('authentication/user_root.html')
+def user_root(request):
+        """
+        user_root is intended to only load a backbone router that
+        renders the diferent login/register pages
+        """
+        return {}
+
+
 def user_verification(request, key=''):
     '''
     Displays verification needed message if no key provided, or try to verify
@@ -252,26 +261,4 @@ def user_verification(request, key=''):
     if not user.is_active:
         user.is_active = True
         user.save()
-        print 'activating user'
     return redirect(user_root_url + '#verified')
-
-
-#
-# ======================== NEW STUFF ===================================== #
-#
-
-
-@render_to('authentication/user_root.html')
-def user_root(request):
-        """
-        user_root is intended to only load a backbone router that
-        renders the diferent login/register pages
-        """
-        return {}
-
-
-def logout(request):
-    next_page = request.GET.get('next', '/')
-    auth_logout(request)
-    return redirect(next_page)
-

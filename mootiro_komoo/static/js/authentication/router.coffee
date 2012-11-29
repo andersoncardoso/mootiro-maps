@@ -21,6 +21,7 @@ define (require) ->
     initialize: ->
       _.bindAll this
       @initializeLogin()
+      @initializeLogout()
       @initializeRegister()
       @initializeVerification()
 
@@ -43,6 +44,10 @@ define (require) ->
           @loginView.updateUrls(next) if next
           @navigate 'login', {trigger: true}
           return false
+
+    initializeLogout: ->
+      @logoutView = new views.LogoutView {}
+      @logoutView.bindLogoutButton()
 
     initializeRegister: ->
       @registerView = new views.RegisterView {}

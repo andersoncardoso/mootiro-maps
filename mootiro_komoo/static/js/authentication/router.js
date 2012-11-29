@@ -31,6 +31,7 @@
       LoginApp.prototype.initialize = function() {
         _.bindAll(this);
         this.initializeLogin();
+        this.initializeLogout();
         this.initializeRegister();
         return this.initializeVerification();
       };
@@ -62,6 +63,11 @@
             return false;
           }
         });
+      };
+
+      LoginApp.prototype.initializeLogout = function() {
+        this.logoutView = new views.LogoutView({});
+        return this.logoutView.bindLogoutButton();
       };
 
       LoginApp.prototype.initializeRegister = function() {

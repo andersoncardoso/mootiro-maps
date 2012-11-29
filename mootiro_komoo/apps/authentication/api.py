@@ -10,6 +10,7 @@ from main.utils import ResourceHandler, JsonResponse, get_json_data
 
 from .models import User, Login
 from .utils import login as auth_login
+from .utils import logout as auth_logout
 
 
 logger = logging.getLogger(__name__)
@@ -80,3 +81,15 @@ class LoginHandler(ResourceHandler):
             if next_page.endswith('#'):
                 next_page = next_page[:-1]
             return JsonResponse({'redirect': next_page})
+
+
+class LogoutHandler(ResourceHandler):
+    """ /user/logout """
+
+    def get(self, request):
+        next_page = request.GET.get('next', '') or reverse('root')
+        if next_page.endswith('#'):
+            next_page = next_page[:-1]
+        auth_logout(request)
+        print {'redirect': next_page}
+        return JsonResponse({'redirect': next_page})

@@ -5,6 +5,7 @@ from django.conf import settings
 from lib.taggit.managers import TaggableManager
 from komoo_map.models import GeoRefModel
 from authentication.models import User
+from main.utils import BaseDAOMixin
 
 
 class CommonDataMixin(models.Model):
@@ -28,7 +29,7 @@ class CommonDataMixin(models.Model):
         abstract = True
 
 
-class CommonObject(GeoRefModel):
+class CommonObject(GeoRefModel, BaseDAOMixin):
     """
     All mapped objects inherit from this object so then can be
     inter-changeable. This model holds the 'true PK'' for a mapped
