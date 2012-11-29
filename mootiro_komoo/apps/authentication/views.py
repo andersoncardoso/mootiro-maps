@@ -236,24 +236,24 @@ def signature_delete(request):
 #
 # ==================== Users ==================================================
 #
-@render_to('authentication/verification.html')
 def user_verification(request, key=''):
     '''
     Displays verification needed message if no key provided, or try to verify
     the user by the given key.
     '''
+    user_root_url = reverse('user_root')
     if not key:
-        return dict(message='check_email')
+        return redirect(user_root_url + '#no-verified')
     user_id = Locker.withdraw(key=key)
-    user = get_object_or_None(User, id=user_id)
+    user = User.get_by_id(user_id)
     if not user:
         # invalid key => invalid link
         raise Http404
-    if user.is_active:
-        return dict(message='already_verified')
-    user.is_active = True
-    user.save()
-    return dict(message='activated')
+    if not user.is_active:
+        user.is_active = True
+        user.save()
+        print 'activating user'
+    return redirect(user_root_url + '#verified')
 
 
 #

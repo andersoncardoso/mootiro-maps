@@ -56,6 +56,17 @@
         }
       ];
 
+      LoginForm.prototype.render = function() {
+        var _this = this;
+        LoginForm.__super__.render.apply(this, arguments);
+        this.$el.find('.auth-register').bind('click', function(evt) {
+          evt.preventDefault();
+          _this.trigger('register-link:click');
+          return false;
+        });
+        return this;
+      };
+
       return LoginForm;
 
     })(reForm.Form);
@@ -103,11 +114,15 @@
         }
       ];
 
-      RegisterForm.prototype.initialize = function() {
-        RegisterForm.__super__.initialize.apply(this, arguments);
-        if (this.options.onSuccess) {
-          return this.on('success', this.options.onSuccess);
-        }
+      RegisterForm.prototype.render = function() {
+        var _this = this;
+        RegisterForm.__super__.render.apply(this, arguments);
+        this.$el.find('.auth-login').bind('click', function(evt) {
+          evt.preventDefault();
+          _this.trigger('login-link:click');
+          return false;
+        });
+        return this;
       };
 
       return RegisterForm;

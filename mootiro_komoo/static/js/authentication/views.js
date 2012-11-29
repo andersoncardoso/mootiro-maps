@@ -3,7 +3,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Backbone, ConfirmationView, LoginView, RegisterView, SocialButton, SocialButtonsList, forms, login_tpl, models, not_verif_tpl, register_tpl, social_btn_tpl, verif_tpl, _;
+    var Backbone, LoginView, RegisterView, SocialButton, SocialButtonsList, VerificationView, forms, login_tpl, models, not_verif_tpl, register_tpl, social_btn_tpl, verif_tpl, _;
     _ = require('underscore');
     Backbone = require('backbone');
     models = require('./models');
@@ -110,17 +110,11 @@
       };
 
       LoginView.prototype.render = function() {
-        var renderedContent,
-          _this = this;
+        var renderedContent;
         renderedContent = this.template({});
         this.$el.html(renderedContent);
         this.$el.find('.social_buttons').append(this.socialBtnsView.render().el);
         this.$el.find('.login_form').append(this.form.render().el);
-        this.$el.find('.auth-register').bind('click', function(evt) {
-          evt.preventDefault();
-          _this.form.trigger('register-link:click');
-          return false;
-        });
         return this;
       };
 
@@ -185,53 +179,60 @@
       };
 
       RegisterView.prototype.render = function() {
-        var renderedContent,
-          _this = this;
+        var renderedContent;
         renderedContent = this.template({});
         this.$el.html(renderedContent);
         this.$el.find('.form-wrapper').append(this.form.render().el);
-        this.$el.find('.auth-login').bind('click', function(evt) {
-          evt.preventDefault();
-          _this.form.trigger('login-link:click');
-          return false;
-        });
         return this;
       };
 
       return RegisterView;
 
     })(Backbone.View);
-    ConfirmationView = (function(_super) {
+    VerificationView = (function(_super) {
 
-      __extends(ConfirmationView, _super);
+      __extends(VerificationView, _super);
 
-      function ConfirmationView() {
-        ConfirmationView.__super__.constructor.apply(this, arguments);
+      function VerificationView() {
+        VerificationView.__super__.constructor.apply(this, arguments);
       }
 
-      ConfirmationView.prototype.initialize = function() {
+      VerificationView.prototype.initialize = function() {
         _.bindAll(this);
-        if (this.options.verified) {
-          return this.template = _.template(verif_tpl);
+        this.verified = this.options.verified;
+        if (this.verified) {
+          this.template = _.template(verif_tpl);
+          this.tpl_args = {
+            msg_verif: 'Your email was successfully verified.',
+            msg_login: 'Please login.'
+          };
+          this.loginModel = new models.LoginModel();
+          return this.loginForm = new forms.LoginForm({
+            model: this.loginModel
+          });
         } else {
-          return this.template = _.template(not_verif_tpl);
+          this.template = _.template(not_verif_tpl);
+          return this.tpl_args = {};
         }
       };
 
-      ConfirmationView.prototype.render = function() {
+      VerificationView.prototype.render = function() {
         var renderedContent;
-        renderedContent = this.template({});
+        renderedContent = this.template(this.tpl_args);
         this.$el.html(renderedContent);
+        if (this.verified) {
+          this.$el.find('.login-form-box').append(this.loginForm.render().el);
+        }
         return this;
       };
 
-      return ConfirmationView;
+      return VerificationView;
 
     })(Backbone.View);
     return {
       LoginView: LoginView,
       RegisterView: RegisterView,
-      ConfirmationView: ConfirmationView
+      VerificationView: VerificationView
     };
   });
 

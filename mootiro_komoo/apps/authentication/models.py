@@ -159,6 +159,16 @@ class User(GeoRefModel):
                 name=self.name,
                 verification_url=verification_url))
 
+    # =================== DAO methods ======================================= #
+    @classmethod
+    def get_by_id(cls, id):
+        # TODO move this to a general abstract DAO class
+        try:
+            obj = cls.objects.get(pk=id)
+        except Exception:
+            obj = None
+        return obj
+
 
 class AnonymousUser(object):
     '''Dummy Class to integrate with other django apps.'''

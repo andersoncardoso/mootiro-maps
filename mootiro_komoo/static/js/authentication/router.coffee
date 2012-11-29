@@ -22,7 +22,7 @@ define (require) ->
       _.bindAll this
       @initializeLogin()
       @initializeRegister()
-      @initializeConfirmation()
+      @initializeVerification()
 
     initializeLogin: ->
       @loginView = new views.LoginView {}
@@ -32,8 +32,8 @@ define (require) ->
         title: 'Login',
         content: @loginView.render().el,
         modal_id: 'login-modal-box'
-        onClose: (evt) =>
-          @navigate '', {trigger: true}
+        onClose: =>
+          @navigate '', {}
 
       $("a.login-required").bind "click.loginrequired", (evt) =>
         if not KomooNS?.isAuthenticated
@@ -55,37 +55,39 @@ define (require) ->
         width: '450px'
         content: @registerView.render().el
         modal_id: 'register-modal-box'
-        onClose: (evt) =>
-          @navigate '', {trigger: true}
+        onClose: =>
+          @navigate '', {}
 
-    initializeConfirmation: ->
-      @notVerifiedView = new views.ConfirmationView
+    initializeVerification: ->
+      @notVerifiedView = new views.VerificationView
         verified: false
 
-      @verifiedView = new views.ConfirmationView
+      @verifiedView = new views.VerificationView
         verified: true
+      @verifiedView.loginForm.on 'register-link:click', @registerLinkCB
 
       @notVerifiedBox = new new_utils.ModalBox
-        title: 'Confirmation',
+        title: 'Verification',
         content: @notVerifiedView.render().el,
-        modal_id: 'confirmation-modal-box'
+        modal_id: 'verification-modal-box'
+        onClose: =>
+          @navigate '', {}
 
       @verifiedBox = new new_utils.ModalBox
-        title: 'Confirmation',
+        title: 'Verification',
         content: @verifiedView.render().el,
-        modal_id: 'confirmation-modal-box'
+        modal_id: 'verification-modal-box'
+        onClose: =>
+          @navigate '', {}
 
     # ============ callbacks ======================
     registerLinkCB: ->
-      @loginBox.hide()
       @navigate 'register', {trigger: true}
 
     loginLinkCB: ->
-      @registerBox.hide()
       @navigate 'login', {trigger: true}
 
     registerFormOnSuccessCB: ->
-      @registerBox.hide()
       @navigate 'not-verified', {trigger: true}
 
     # =========== routes ===========================
@@ -105,24 +107,34 @@ define (require) ->
         @navigate 'login', {trigger: true}
 
     login: ->
+      @closeModals 'login'
       if not KomooNS?.isAuthenticated
         @loginBox.show()
       else
         @navigate '', {trigger: true}
 
     register: ->
+      @closeModals 'register'
       if not KomooNS?.isAuthenticated
         @registerBox.show()
       else
         @navigate '', {trigger: true}
 
     not_verified: ->
+      @closeModals 'not-verified'
       path = window.location.pathname
       @notVerifiedBox.show()
 
     verified: ->
+      @closeModals 'verified'
       path = window.location.pathname
       @verifiedBox.show()
+
+    # ============= utils ==============================
+    closeModals: (navigation_target)->
+      modal.hide() for modal in [
+        @loginBox, @registerBox, @verifiedBox, @notVerifiedBox]
+      @navigate navigation_target
 
 
   return {

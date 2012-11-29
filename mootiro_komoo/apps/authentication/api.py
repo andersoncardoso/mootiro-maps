@@ -4,9 +4,7 @@ import logging
 
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
-from django.utils.decorators import method_decorator
 
-from annoying.decorators import render_to
 
 from main.utils import ResourceHandler, JsonResponse, get_json_data
 
@@ -19,14 +17,6 @@ logger = logging.getLogger(__name__)
 
 class UserHandler(ResourceHandler):
     """ /user """
-
-    @method_decorator(render_to('authentication/user_root.html'))
-    def get(self, request):
-        """
-        user_root is intended to only load a backbone router that
-        renders the diferent login/register pages
-        """
-        return {}
 
     def post(self, request):
         """

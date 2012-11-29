@@ -71,15 +71,14 @@
     .vertical_line.top { top: 0 }
     .vertical_line.bottom { bottom: 0 }
   }
+  form {
+    float: left;
+  }
 }
 
-ul#external_providers, div#separator, form {
+ul#external_providers, div#separator {
   float: left;
 }
-
-// ul#external_providers, form {
-//   padding: 10px;
-// }
 
 ul#external_providers {
   width: (@login_box_width * 0.45);
@@ -138,6 +137,10 @@ ul#external_providers {
           color: #fff;
           .gradient(#1e9c5b, darken(#1e9c5b, 15%));
         }
+        input[type=submit]:disabled {
+          background-image: none;
+          background-color: #ccc;
+        }
 
         span {
           margin-bottom: 5px;
@@ -166,31 +169,41 @@ ul#external_providers {
         }
     }
 }
-
-#user_verification {
-  width: 700px;
-  height: 400px;
-  position: relative;
-
-  h1, p {
-    font-size: 28px;
-    line-height: 28px;
-    margin-bottom: 20px;
-    // text-align: center;
-  }
-
-  .check_email .right {
-    margin-top: 100px;
-    width: 320px;
-  }
-
-  .verified .left {
-    margin-top: 100px;
-    margin-left: 30px;
-    width: 320px;
-  }
-
-  .verified .right {
-    margin-top: 60px;
-  }
+.auth-verified {
+    .half-box-left {
+        display: inline-block;
+        width: 46%;
+    }
+    .half-box-right {
+        width: 46%;
+        float:right;
+    }
+    .login-form-box {
+        input[type=submit] {
+            width: 100%;
+            height: 32px;
+            padding: 3px 6px;
+            border: 0;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 120%;
+            color: #fff;
+            .gradient(#1e9c5b, darken(#1e9c5b, 15%));
+        }
+        input {
+            width: 95%;
+            height: 22px;
+        }
+        small.error {
+            width: 90%;
+        }
+    }
+    .verified-msg p {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #777777;
+        line-height: 1.2em;
+    }
 }
+
+

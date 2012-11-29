@@ -32,7 +32,7 @@
         _.bindAll(this);
         this.initializeLogin();
         this.initializeRegister();
-        return this.initializeConfirmation();
+        return this.initializeVerification();
       };
 
       LoginApp.prototype.initializeLogin = function() {
@@ -43,10 +43,8 @@
           title: 'Login',
           content: this.loginView.render().el,
           modal_id: 'login-modal-box',
-          onClose: function(evt) {
-            return _this.navigate('', {
-              trigger: true
-            });
+          onClose: function() {
+            return _this.navigate('', {});
           }
         });
         return $("a.login-required").bind("click.loginrequired", function(evt) {
@@ -76,49 +74,52 @@
           width: '450px',
           content: this.registerView.render().el,
           modal_id: 'register-modal-box',
-          onClose: function(evt) {
-            return _this.navigate('', {
-              trigger: true
-            });
+          onClose: function() {
+            return _this.navigate('', {});
           }
         });
       };
 
-      LoginApp.prototype.initializeConfirmation = function() {
-        this.notVerifiedView = new views.ConfirmationView({
+      LoginApp.prototype.initializeVerification = function() {
+        var _this = this;
+        this.notVerifiedView = new views.VerificationView({
           verified: false
         });
-        this.verifiedView = new views.ConfirmationView({
+        this.verifiedView = new views.VerificationView({
           verified: true
         });
+        this.verifiedView.loginForm.on('register-link:click', this.registerLinkCB);
         this.notVerifiedBox = new new_utils.ModalBox({
-          title: 'Confirmation',
+          title: 'Verification',
           content: this.notVerifiedView.render().el,
-          modal_id: 'confirmation-modal-box'
+          modal_id: 'verification-modal-box',
+          onClose: function() {
+            return _this.navigate('', {});
+          }
         });
         return this.verifiedBox = new new_utils.ModalBox({
-          title: 'Confirmation',
+          title: 'Verification',
           content: this.verifiedView.render().el,
-          modal_id: 'confirmation-modal-box'
+          modal_id: 'verification-modal-box',
+          onClose: function() {
+            return _this.navigate('', {});
+          }
         });
       };
 
       LoginApp.prototype.registerLinkCB = function() {
-        this.loginBox.hide();
         return this.navigate('register', {
           trigger: true
         });
       };
 
       LoginApp.prototype.loginLinkCB = function() {
-        this.registerBox.hide();
         return this.navigate('login', {
           trigger: true
         });
       };
 
       LoginApp.prototype.registerFormOnSuccessCB = function() {
-        this.registerBox.hide();
         return this.navigate('not-verified', {
           trigger: true
         });
@@ -144,6 +145,7 @@
       };
 
       LoginApp.prototype.login = function() {
+        this.closeModals('login');
         if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
           return this.loginBox.show();
         } else {
@@ -154,6 +156,7 @@
       };
 
       LoginApp.prototype.register = function() {
+        this.closeModals('register');
         if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
           return this.registerBox.show();
         } else {
@@ -165,14 +168,26 @@
 
       LoginApp.prototype.not_verified = function() {
         var path;
+        this.closeModals('not-verified');
         path = window.location.pathname;
         return this.notVerifiedBox.show();
       };
 
       LoginApp.prototype.verified = function() {
         var path;
+        this.closeModals('verified');
         path = window.location.pathname;
         return this.verifiedBox.show();
+      };
+
+      LoginApp.prototype.closeModals = function(navigation_target) {
+        var modal, _i, _len, _ref;
+        _ref = [this.loginBox, this.registerBox, this.verifiedBox, this.notVerifiedBox];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          modal = _ref[_i];
+          modal.hide();
+        }
+        return this.navigate(navigation_target);
       };
 
       return LoginApp;

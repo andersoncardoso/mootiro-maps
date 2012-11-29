@@ -101,11 +101,6 @@ define (require) ->
       @$el.html renderedContent
       @$el.find('.social_buttons').append @socialBtnsView.render().el
       @$el.find('.login_form').append @form.render().el
-
-      @$el.find('.auth-register').bind 'click', (evt) =>
-        evt.preventDefault()
-        @form.trigger 'register-link:click'
-        return false
       this
 
     buildButtons: (next='') ->
@@ -153,24 +148,29 @@ define (require) ->
       renderedContent = @template {}
       @$el.html renderedContent
       @$el.find('.form-wrapper').append @form.render().el
-
-      @$el.find('.auth-login').bind 'click', (evt) =>
-        evt.preventDefault()
-        @form.trigger 'login-link:click'
-        return false
       this
 
-  class ConfirmationView extends Backbone.View
+  class VerificationView extends Backbone.View
     initialize: ->
       _.bindAll this
-      if @options.verified
+      @verified = @options.verified
+      if @verified
         @template = _.template verif_tpl
+        @tpl_args =
+          msg_verif: 'Your email was successfully verified.'
+          msg_login: 'Please login.'
+        @loginModel = new models.LoginModel()
+        @loginForm = new forms.LoginForm
+          model: @loginModel
       else
         @template = _.template not_verif_tpl
+        @tpl_args = {}
 
     render: ->
-      renderedContent = @template {}
+      renderedContent = @template @tpl_args
       @$el.html renderedContent
+      if @verified
+        @$el.find('.login-form-box').append @loginForm.render().el
       this
 
 
@@ -178,7 +178,7 @@ define (require) ->
   return {
     LoginView: LoginView
     RegisterView: RegisterView
-    ConfirmationView: ConfirmationView
+    VerificationView: VerificationView
   }
 
 

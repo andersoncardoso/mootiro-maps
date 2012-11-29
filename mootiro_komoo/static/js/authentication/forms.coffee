@@ -38,6 +38,13 @@ define (require) ->
         widget: SignupWidget,
       }
     ]
+    render: ->
+      super
+      @$el.find('.auth-register').bind 'click', (evt) =>
+        evt.preventDefault()
+        @trigger 'register-link:click'
+        return false
+      this
 
   #
   # Register Form
@@ -78,10 +85,13 @@ define (require) ->
         widget: SigninWidget
       }
     ]
-    initialize: ->
+    render: ->
       super
-      if @options.onSuccess
-        @on 'success', @options.onSuccess
+      @$el.find('.auth-login').bind 'click', (evt) =>
+        evt.preventDefault()
+        @trigger 'login-link:click'
+        return false
+      this
 
   return {
     LoginForm: LoginForm
