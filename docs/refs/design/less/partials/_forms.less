@@ -1,0 +1,73 @@
+/** Forms **/
+
+/* Search form */
+form.search {
+    .input;
+
+    @form-width: 350px;
+    @button-size: 24px;
+
+    width: @form-width;
+
+    input {
+        height: @button-size;
+        border: none;
+        background-color: transparent;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    input[type=text] {
+        width: (@form-width - @button-size - 10);
+    }
+
+    input[type=submit] {
+        .clickable;
+        .image;
+        .remove-box-shadow;
+
+        width: @button-size;
+        margin: 0px;
+        padding: 0px;
+        color: transparent;
+        background: none;
+    }
+}
+
+/* Submit and default buttons */
+input[type=submit],
+button.default,
+a.button.default {
+    .button(@button-default-bg);
+}
+
+/* Buttons */
+input[type=button],
+button,
+a.button {
+    .button;
+
+    /* Buttons with context */
+    &.map {
+        .icon('', 24px);
+        .button(@map-color);
+    }
+    &.community,
+    &.communities {
+        .icon('', 24px);
+        .button(@communities-color);
+    }
+    &.place,
+    &.places {
+        .icon('', 24px);
+        .button(@places-color);
+    }
+    &.project,
+    &.projects {
+        .icon('', 24px);
+        .button(@projects-color);
+    }
+}
+

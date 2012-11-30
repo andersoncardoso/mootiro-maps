@@ -27,33 +27,26 @@
     border-left:   @lighter;
 }
 
-.box-shadow (inset, @x:0, @y:0, @blur:5px, @spread:3px, @color:@shadow-color) when not (iscolor(@spread)) {
-    @shadow: inset @x @y @blur @spread @color;
+._box-shadow (@shadow) {
     -moz-box-shadow:    @shadow;
     -webkit-box-shadow: @shadow;
     box-shadow:         @shadow;
+}
+
+.box-shadow (inset, @x:0, @y:0, @blur:5px, @spread:3px, @color:@shadow-color) when not (iscolor(@spread)) {
+    ._box-shadow(inset @x @y @blur @spread @color);
 }
 
 .box-shadow (@x:0, @y:0, @blur:5px, @spread:3px, @color:@shadow-color) when not (iscolor(@spread)) {
-    @shadow: @x @y @blur @spread @color;
-    -moz-box-shadow:    @shadow;
-    -webkit-box-shadow: @shadow;
-    box-shadow:         @shadow;
+    ._box-shadow(@x @y @blur @spread @color);
 }
 
 .box-shadow (inset, @x:0, @y:0, @blur:5px, @color:@shadow-color) when (iscolor(@color)) {
-    .box-shadow (inset, @x, @y, @blur, 0,  @color);
-    @shadow: inset @x @y @blur @color;
-    -moz-box-shadow:    @shadow;
-    -webkit-box-shadow: @shadow;
-    box-shadow:         @shadow;
+    ._box-shadow(inset @x @y @blur @color);
 
 }
 .box-shadow (@x:0, @y:0, @blur:5px, @color:@shadow-color) when (iscolor(@color)) {
-    @shadow: @x @y @blur @color;
-    -moz-box-shadow:    @shadow;
-    -webkit-box-shadow: @shadow;
-    box-shadow:         @shadow;
+    ._box-shadow(@x @y @blur @color);
 }
 
 .remove-box-shadow () {
@@ -77,11 +70,8 @@
 }
 
 .border-fake (@size, @color, @bg:@content-bg) {
-    // Create a fake barder to be used with ".column" mixin
-    @shadow: 0 0 0 @size @color, 0 0 0 @bg;
-    -moz-box-shadow:    @shadow;
-    -webkit-box-shadow: @shadow;
-    box-shadow:         @shadow;
+    /* Create a fake barder to be used with ".column" mixin */
+    ._box-shadow(0 0 0 @size @color, 0 0 0 @bg);
 }
 
 .image () {
@@ -91,6 +81,7 @@
 .input () {
     .inset-border(@input-border-color, 1px);
     .box-shadow(inset,-1px, 1px, 8px, -1px, @input-border-color);
+
     background-color: @input-bg;
     color: @input-fg;
 }
@@ -101,9 +92,9 @@
     &:before {
         .image;
         content: '';
+        display: inline-block;
         width: @size;
         height: @size;
-        display: inline-block;
         margin-right: 5px;
         vertical-align: middle;
     }
@@ -133,9 +124,9 @@
 }
 
 .nav-list () {
-    list-style-type: none;
     margin: 0px;
     padding: 0px 10px;
+    list-style-type: none;
 
     > li {
         display: inline;
@@ -150,21 +141,23 @@
     @padding: 10px;
     @button-border-color: darken(@color, 1%);
     @button-shadow-color: darken(@color, 3%);
+
     .clickable;
     .gradient(vertical, @color);
     .border-radius();
     .box-shadow(1px, 1px, 5px, -1px, @button-shadow-color);
     .fg-from-bg(@color);
+
     display: inline-block;
+    margin: 3px;
+    padding: @padding (2 * @padding);
+    border: solid 1px @button-border-color;
+    outline: none;
     font-size: @font-size;
     font-weight: bold;
     font-family: @sans;
     text-align: center;
     text-decoration: none;
-    padding: @padding (2 * @padding);
-    margin: 3px;
-    border: solid 1px @button-border-color;
-    outline: none;
 
     &:hover {
         .gradient(vertical, lighten(@color, 5%));
@@ -180,20 +173,20 @@
     }
 
     &:before {
-        // Fix the size of buttons with icon
+        /* Fix the size of buttons with icon */
         margin-top: (-@padding);
         margin-bottom: (-@padding);
     }
 
     &.multiline:before {
-        // Icon vertical alignment for buttons with 2 lines
+        /* Icon vertical alignment for buttons with 2 lines */
         position: relative;
         top: 7px;
     }
 
     &.fixed {
         &:before {
-            // Set the button icon fixed
+            /* Set the button icon fixed */
             float: left;
             position: relative;
             top: 7px;
