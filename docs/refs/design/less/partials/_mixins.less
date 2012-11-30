@@ -184,4 +184,23 @@
         margin-top: (-@padding);
         margin-bottom: (-@padding);
     }
+
+    &.multiline:before {
+        // Icon vertical alignment for buttons with 2 lines
+        position: relative;
+        top: 7px;
+    }
+
+    &.fixed {
+        &:before {
+            // Set the button icon fixed
+            float: left;
+            position: relative;
+            top: 7px;
+        }
+
+        &.multiline:before {
+            top: 14px;
+        }
+    }
 }
