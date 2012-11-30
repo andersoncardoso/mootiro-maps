@@ -65,17 +65,11 @@
     <script type="text/javascript" data-main="app" src="{{STATIC_URL}}lib/require.js"></script>
     <!-- Main libs -->
     <script type="text/javascript" src="{{STATIC_URL}}lib/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}lib/jquery-ui-1.8.16/jquery-ui-1.8.16.min.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}lib/bootstrap.min.js"></script>
 
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/utils.js"></script>
 
-    {{ form.media.js }}
-
     {% include 'main/upper_bar.html' %}
-
-    <div id="flash-message"><span class="message"></span></div>
 
     <div id="root">
       <div id="top">
@@ -111,19 +105,15 @@
 
     {% block page_scripts %}{% endblock %}
     <script type="text/javascript"
-      src="{{ STATIC_URL }}js/i18n/translations.js"></script>
-    <script type="text/javascript"
-      src="{{ STATIC_URL }}js/i18n/i18n.js"></script>
-    <script type="text/javascript"
-      src="{{ STATIC_URL }}js/authentication/login.js"></script>
+      src="{{ STATIC_URL }}js/i18n.js"></script>
 
-    {% if js_module %}
     <script type="text/javascript">
       // Loads the page specific module
       require(['common'], function (common) {
-        require(['{{ js_module }}']);
+          require(['backbone', '{{ js_module }}'], function(Backbone) {
+            Backbone.history.start();
+          });
       });
     </script>
-    {% endif %}
   </body>
 </html>

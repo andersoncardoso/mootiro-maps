@@ -1,6 +1,7 @@
 (function() {
+  var trans;
 
-  window.MootiroTranslations = {
+  trans = {
     'send': {
       'pt-br': 'enviar'
     },
@@ -57,6 +58,16 @@
     },
     'Please go check your mail box': {
       'pt-br': 'Por favor, vá checar sua caixa postal'
+    }
+  };
+
+  window.i18n = function(str) {
+    var lang, _ref;
+    lang = KomooNS.lang;
+    if ((_ref = trans[str]) != null ? _ref[lang] : void 0) {
+      return trans[str][lang];
+    } else {
+      return str;
     }
   };
 

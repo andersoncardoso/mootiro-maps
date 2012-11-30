@@ -1,7 +1,7 @@
 (function() {
 
-  define([], function() {
-    return requirejs.onError = function(err) {
+  define(['jquery', 'authentication/router'], function($, auth_router) {
+    requirejs.onError = function(err) {
       if (err.requireType === 'timeout') {
         return require(['utils'], function() {
           errorMessage('Timeout', "Ocorreu uma falha ao carregar alguns serviços externos. Partes do Mootiro Maps poderão não funcionar corretamente.");
@@ -11,6 +11,10 @@
         throw err;
       }
     };
+    return $(function() {
+      var loginApp;
+      return loginApp = new auth_router.LoginApp({});
+    });
   });
 
 }).call(this);

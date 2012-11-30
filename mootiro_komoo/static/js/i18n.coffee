@@ -1,4 +1,4 @@
-window.MootiroTranslations =
+trans =
   'send':
     'pt-br': 'enviar'
 
@@ -55,4 +55,9 @@ window.MootiroTranslations =
 
   'Please go check your mail box':
     'pt-br': 'Por favor, vá checar sua caixa postal'
+
+window.i18n = (str) ->
+  lang = KomooNS.lang
+  if trans[str]?[lang] then trans[str][lang] else str
+
 

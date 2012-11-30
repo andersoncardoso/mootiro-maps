@@ -44,7 +44,7 @@
  Global Variables
 ----------------------------*/
       var modal = $(this),
-          topMeasure = parseInt(modal.css('top')),
+          topMeasure = parseInt(modal.css('top'), radix=10),
 				  topOffset = modal.height() + topMeasure,
           locked = false,
 				  modalBG = $('.reveal-modal-bg');
@@ -153,6 +153,6 @@
 			}
 
         });//each call
-    }//orbit plugin call
-})(jQuery);
+    };//orbit plugin call
+}(jQuery));
 
