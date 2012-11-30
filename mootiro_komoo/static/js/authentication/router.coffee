@@ -30,8 +30,8 @@ define (require) ->
       @loginView.form.on 'register-link:click', @registerLinkCB
 
       @loginBox = new new_utils.ModalBox
-        title: 'Login',
-        content: @loginView.render().el,
+        title: i18n 'Login'
+        content: @loginView.render().el
         modal_id: 'login-modal-box'
         onClose: =>
           @navigate '', {}
@@ -56,7 +56,7 @@ define (require) ->
       @registerView.form.on 'login-link:click', @loginLinkCB
 
       @registerBox = new new_utils.ModalBox
-        title: 'Register'
+        title: i18n 'Register'
         width: '450px'
         content: @registerView.render().el
         modal_id: 'register-modal-box'
@@ -65,22 +65,23 @@ define (require) ->
 
     initializeVerification: ->
       @notVerifiedView = new views.VerificationView
-        verified: false
+        verified: no
 
       @verifiedView = new views.VerificationView
-        verified: true
+        verified: yes
+
       @verifiedView.loginForm.on 'register-link:click', @registerLinkCB
 
       @notVerifiedBox = new new_utils.ModalBox
-        title: 'Verification',
-        content: @notVerifiedView.render().el,
+        title: i18n 'Verification'
+        content: @notVerifiedView.render().el
         modal_id: 'verification-modal-box'
         onClose: =>
           @navigate '', {}
 
       @verifiedBox = new new_utils.ModalBox
-        title: 'Verification',
-        content: @verifiedView.render().el,
+        title: i18n 'Verification'
+        content: @verifiedView.render().el
         modal_id: 'verification-modal-box'
         onClose: =>
           @navigate '', {}

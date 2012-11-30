@@ -109,14 +109,14 @@ define (require) ->
         url: dutils.urls.resolve 'login_google'
         next: next
         image_url: '/static/img/login-google.png'
-        message: 'Log In with Google'
+        message: i18n 'Log In with Google'
 
       facebookButton =
         provider: 'facebook',
         url: dutils.urls.resolve 'login_facebook'
         next: next
         image_url: '/static/img/login-facebook.png'
-        message: 'Log In with Facebook'
+        message: i18n 'Log In with Facebook'
 
       @socialBtnsView = new SocialButtonsList
         buttons: [googleButton, facebookButton]
@@ -156,7 +156,7 @@ define (require) ->
 
       @form = new forms.RegisterForm
         formId: 'form_register'
-        submit_label: 'Register'
+        submit_label: i18n 'Register'
         model: user
 
     render: ->
@@ -165,24 +165,28 @@ define (require) ->
       @$el.find('.form-wrapper').append @form.render().el
       this
 
+  #
+  # Verification view for user email confirmation
+  # can receive a `verified` boolean that determines which template
+  # it renders.
+  # usage:
+  #     verifiedView = new VerificationView({verified: true})
+  #     notVerifiedView = new VerificationView({verified: false})
+  #
   class VerificationView extends Backbone.View
     initialize: ->
       _.bindAll this
       @verified = @options.verified
       if @verified
         @template = _.template verif_tpl
-        @tpl_args =
-          msg_verif: 'Your email was successfully verified.'
-          msg_login: 'Please login.'
         @loginModel = new models.LoginModel()
         @loginForm = new forms.LoginForm
           model: @loginModel
       else
         @template = _.template not_verif_tpl
-        @tpl_args = {}
 
     render: ->
-      renderedContent = @template @tpl_args
+      renderedContent = @template {}
       @$el.html renderedContent
       if @verified
         @$el.find('.login-form-box').append @loginForm.render().el

@@ -111,6 +111,10 @@
 
     {% block page_scripts %}{% endblock %}
     <script type="text/javascript"
+      src="{{ STATIC_URL }}js/i18n/translations.js"></script>
+    <script type="text/javascript"
+      src="{{ STATIC_URL }}js/i18n/i18n.js"></script>
+    <script type="text/javascript"
       src="{{ STATIC_URL }}js/authentication/login.js"></script>
 
     {% if js_module %}

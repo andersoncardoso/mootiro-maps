@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MootiroMap 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-06 10:43-0200\n"
+"POT-Creation-Date: 2012-11-30 13:51-0200\n"
 "PO-Revision-Date: 2012-10-18 17:15-0300\n"
 "Last-Translator: Luiz Armesto <luiz.armesto@it3s.org>\n"
 "Language-Team: it3s team <LL@li.org>\n"
@@ -22,56 +22,48 @@ msgstr ""
 msgid "Are you sure you want to delete this file?"
 msgstr "Você deseja realmente apagar este arquivo?"
 
-#: static/js/komoo_search.js:16 static/js.build/komoo_search.js:1
+#: static/js/komoo_search.js:17 static/js.build/komoo_search.js:1
 msgid "Communities"
 msgstr "Comunidades"
 
-#: static/js/komoo_search.js:17 static/js.build/komoo_search.js:1
+#: static/js/komoo_search.js:18 static/js.build/komoo_search.js:1
 msgid "Needs"
 msgstr "Necessidades"
 
-#: static/js/komoo_search.js:18 static/js.build/komoo_search.js:1
+#: static/js/komoo_search.js:19 static/js.build/komoo_search.js:1
 msgid "Organizations"
 msgstr "Organizações"
 
-#: static/js/komoo_search.js:19 static/js.build/komoo_search.js:1
+#: static/js/komoo_search.js:20 static/js.build/komoo_search.js:1
 msgid "Resources"
 msgstr "Recursos"
 
-#: static/js/komoo_search.js:20 static/js.build/komoo_search.js:1
+#: static/js/komoo_search.js:21 static/js.build/komoo_search.js:1
 msgid "Investments"
 msgstr "Investimentos"
 
-#: static/js/komoo_search.js:21 static/js.build/komoo_search.js:1
+#: static/js/komoo_search.js:22 static/js.build/komoo_search.js:1
 msgid "Google Results"
 msgstr "Resultados do Google"
 
-#: static/js/komoo_search.js:22 static/js.build/komoo_search.js:1
+#: static/js/komoo_search.js:23 static/js.build/komoo_search.js:1
 msgid "User"
 msgstr "Usuário"
 
-#: static/js/komoo_search.js:23 static/js.build/komoo_search.js:1
+#: static/js/komoo_search.js:24 static/js.build/komoo_search.js:1
 msgid "Project"
 msgstr "Projeto"
 
-#: static/js/komoo_search.js:96
+#: static/js/komoo_search.js:97 static/js.build/komoo_search.js:1
 #, perl-format
 msgid "%s result"
 msgid_plural "%s results"
 msgstr[0] "%s resultado"
 msgstr[1] "%s resultados"
 
-#: static/js/komoo_search.js:109
+#: static/js/komoo_search.js:110 static/js.build/komoo_search.js:1
 msgid "No results found!"
 msgstr "Nenhum resultado encontrado!"
-
-#: static/js/komoo_utils.js:386 static/js.build/komoo_utils.js:1
-msgid "Yes"
-msgstr "Sim"
-
-#: static/js/komoo_utils.js:391 static/js.build/komoo_utils.js:1
-msgid "No"
-msgstr "Não"
 
 #: static/js/related_items_panel.js:75
 #: static/js.build/related_items_panel.js:1
@@ -113,52 +105,73 @@ msgid_plural "%s contributors"
 msgstr[0] "%s contribuidor"
 msgstr[1] "%s contribuidores"
 
+#: static/js/utils.js:363 static/js.build/utils.js:1
+msgid "Yes"
+msgstr "Sim"
+
+#: static/js/utils.js:368 static/js.build/utils.js:1
+msgid "No"
+msgstr "Não"
+
+#: static/js.build/common.js:48 static/js.build/map/controls.js:1
+#: static/js/map/controls.js:9
+msgid "Next Step"
+msgstr "Avançar"
+
+#: static/js.build/common.js:48 static/js.build/map/controls.js:1
+#: static/js/map/controls.js:10
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: static/js.build/common.js:48 static/js.build/map/controls.js:1
+#: static/js/map/controls.js:11
+msgid "Close"
+msgstr "Fechar"
+
+#: static/js.build/common.js:48 static/js.build/map/controls.js:1
+#: static/js/map/controls.js:12
+msgid "Add shape"
+msgstr "Adicionar área"
+
+#: static/js.build/common.js:48 static/js.build/map/controls.js:1
+#: static/js/map/controls.js:13
+msgid "Add line"
+msgstr "Adicionar linha"
+
+#: static/js.build/common.js:48 static/js.build/map/controls.js:1
+#: static/js/map/controls.js:14
+msgid "Add point"
+msgstr "Adicionar ponto"
+
+#: static/js.build/common.js:48 static/js.build/map/controls.js:1
+#: static/js/map/controls.js:15
+msgid "Sum"
+msgstr "Somar"
+
+#: static/js.build/common.js:48 static/js.build/map/controls.js:1
+#: static/js/map/controls.js:16
+msgid "Cut out"
+msgstr "Cortar"
+
+#: static/js.build/common.js:48 static/js.build/map/controls.js:1
+#: static/js/map/controls.js:17
+msgid "Loading..."
+msgstr "Carregando..."
+
 #: static/js.build/authentication/profile_update.js:1
 #: static/js/authentication/profile_update.js:25
 msgid "Are you sure you want to delete your signature for this object?"
 msgstr "Você tem certeza que deseja deletar sua assinatura para este objeto?"
 
 #: static/js.build/authentication/profile_update.js:1
-#: static/js/authentication/profile_update.js:120
+#: static/js/authentication/profile_update.js:121
 msgid "Seus dados públicos foram salvos com sucesso!"
 msgstr "Seus dados públicos foram salvos com sucesso!"
 
 #: static/js.build/authentication/profile_update.js:1
-#: static/js/authentication/profile_update.js:144
+#: static/js/authentication/profile_update.js:145
 msgid "Seus dados pessoais foram salvos com sucesso!"
 msgstr "Seus dados pessoais foram salvos com sucesso!"
-
-#: static/js.build/map/controls.js:1 static/js/map/controls.js:9
-msgid "Next Step"
-msgstr "Avançar"
-
-#: static/js.build/map/controls.js:1 static/js/map/controls.js:10
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: static/js.build/map/controls.js:1 static/js/map/controls.js:11
-msgid "Close"
-msgstr "Fechar"
-
-#: static/js.build/map/controls.js:1 static/js/map/controls.js:12
-msgid "Add shape"
-msgstr "Adicionar área"
-
-#: static/js.build/map/controls.js:1 static/js/map/controls.js:14
-msgid "Add point"
-msgstr "Adicionar ponto"
-
-#: static/js.build/map/controls.js:1 static/js/map/controls.js:15
-msgid "Sum"
-msgstr "Somar"
-
-#: static/js.build/map/controls.js:1 static/js/map/controls.js:16
-msgid "Cut out"
-msgstr "Cortar"
-
-#: static/js.build/map/controls.js:1 static/js/map/controls.js:17
-msgid "Loading..."
-msgstr "Carregando..."
 
 #: static/js.build/map/maptypes.js:1 static/js/map/maptypes.js:60
 msgid "Clean"
@@ -208,8 +221,8 @@ msgstr ""
 "Parabéns, você concluiu o processo de adição de uma organização/unidade."
 
 #: static/js.build/organization/organization_new.js:1
-#: static/js/organization/organization_new.js:41
-#: static/js/organization/organization_new.js:90
+#: static/js/organization/organization_new.js:42
+#: static/js/organization/organization_new.js:91
 msgid ""
 "Provide the organization name so we can verify if it's already registered on "
 "our system"
@@ -257,6 +270,37 @@ msgid_plural "Supported %s needs"
 msgstr[0] "%s necessidade apoiada"
 msgstr[1] "%s necessidades apoiadas"
 
+#: static/js/authentication/forms.js:48
+msgid "Email:"
+msgstr "E-mail"
+
+#: static/js/authentication/forms.js:52
+msgid "Password:"
+msgstr "Senha"
+
+#: static/js/authentication/forms.js:85
+msgid "Name"
+msgstr "Nome"
+
+#: static/js/authentication/forms.js:89
+msgid "Email"
+msgstr "E-mail"
+
+#: static/js/authentication/forms.js:93
+msgid "Password"
+msgstr "Senha"
+
+#: static/js/authentication/forms.js:98
+msgid "Password Confirmation"
+msgstr "Confirmação de Senha"
+
+#: static/js/authentication/forms.js:107
+msgid ""
+"I've read and accept the <a href=\"http://mootiro.org/terms\">License Terms."
+"</a>"
+msgstr ""
+"Eu li e aceito os <a href=\"http://mootiro.org/terms\">Termos de Uso.</a>"
+
 #: static/js/authentication/profile.js:34
 #: static/js/authentication/profile.js:35
 msgid "Organization"
@@ -278,22 +322,26 @@ msgstr "Recurso"
 msgid "at"
 msgstr "em"
 
-#: static/js/map/controls.js:13
-msgid "Add line"
-msgstr "Adicionar linha"
+#: static/js/authentication/views.js:236
+msgid "Your email was successfully verified."
+msgstr "Seu email foi verificado com sucesso."
 
-#: static/js/map/controls.js:762
+#: static/js/authentication/views.js:237
+msgid "Please login."
+msgstr "Por favor, faça o login ao lado."
+
+#: static/js/map/controls.js:797
 #, perl-format
 msgid "%s Community"
 msgid_plural "%s Communities"
 msgstr[0] "%s Comunidade"
 msgstr[1] "%s Comunidades"
 
-#: static/js/organization/organization_new.js:54
+#: static/js/organization/organization_new.js:55
 msgid "This organization already exists. Do you want to add a branch?"
 msgstr "Essa organização já existe. Deseja adicionar uma unidade (filial) ?"
 
-#: static/js/organization/organization_new.js:61
+#: static/js/organization/organization_new.js:62
 msgid ""
 "This organization is not registered yet. Do you want to add this "
 "organization?"
@@ -301,11 +349,11 @@ msgstr ""
 "Esta organização não foi cadastrada ainda. Você deseja adicionar esta "
 "organização?"
 
-#: static/js/organization/organization_new.js:73
+#: static/js/organization/organization_new.js:74
 msgid "Enter with the data from the branch you have marked on map"
 msgstr "Entre com os dados para a unidade que você marcou no mapa"
 
-#: static/js/organization/organization_new.js:81
+#: static/js/organization/organization_new.js:82
 msgid ""
 "Enter with the data from the Organization which owns the branch you have "
 "marked on map."
@@ -313,7 +361,7 @@ msgstr ""
 "Entre com os dados para a Organização a qual pertence a unidade que você "
 "marcou no mapa"
 
-#: static/js/organization/organization_new.js:104
+#: static/js/organization/organization_new.js:105
 msgid ""
 "Congratulations, your organization was successfully saved. Please, now add "
 "the data from the branch you have marked on the map"
@@ -371,9 +419,6 @@ msgstr ""
 
 #~ msgid "Filter"
 #~ msgstr "Filtrar"
-
-#~ msgid "Please log in."
-#~ msgstr "Por favor, entre no sistema."
 
 #~ msgid "%s resident"
 #~ msgid_plural "%s residents"

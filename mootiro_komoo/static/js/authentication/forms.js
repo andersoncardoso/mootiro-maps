@@ -45,11 +45,11 @@
         {
           name: 'email',
           widget: reForm.commonWidgets.TextWidget,
-          label: 'Email:'
+          label: i18n('Email')
         }, {
           name: 'password',
           widget: reForm.commonWidgets.PasswordWidget,
-          label: 'Password:'
+          label: i18n('Password')
         }, {
           name: 'signup',
           widget: SignupWidget
@@ -82,20 +82,20 @@
         {
           name: 'name',
           widget: reForm.commonWidgets.TextWidget,
-          label: 'Name'
+          label: i18n('Name')
         }, {
           name: 'email',
           widget: reForm.commonWidgets.TextWidget,
-          label: 'Email'
+          label: i18n('Email')
         }, {
           name: 'password',
           widget: reForm.commonWidgets.PasswordWidget,
-          label: 'Password',
+          label: i18n('Password'),
           container_class: 'half-box-left'
         }, {
           name: 'password_confirm',
           widget: reForm.commonWidgets.PasswordWidget,
-          label: 'Password Confirmation',
+          label: i18n('Password Confirmation'),
           container_class: 'half-box-right'
         }, {
           name: 'license',
@@ -104,7 +104,7 @@
             choices: [
               {
                 value: 'agree',
-                title: 'I\'ve read and accept the <a href="http://mootiro.org/terms">License Terms.</a>'
+                title: i18n('I\'ve read and accept the <a href="http://mootiro.org/terms">License Terms.</a>')
               }
             ]
           }

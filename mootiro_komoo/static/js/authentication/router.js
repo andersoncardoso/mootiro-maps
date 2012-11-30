@@ -41,7 +41,7 @@
         this.loginView = new views.LoginView({});
         this.loginView.form.on('register-link:click', this.registerLinkCB);
         this.loginBox = new new_utils.ModalBox({
-          title: 'Login',
+          title: i18n('Login'),
           content: this.loginView.render().el,
           modal_id: 'login-modal-box',
           onClose: function() {
@@ -76,7 +76,7 @@
         this.registerView.form.on('success', this.registerFormOnSuccessCB);
         this.registerView.form.on('login-link:click', this.loginLinkCB);
         return this.registerBox = new new_utils.ModalBox({
-          title: 'Register',
+          title: i18n('Register'),
           width: '450px',
           content: this.registerView.render().el,
           modal_id: 'register-modal-box',
@@ -96,7 +96,7 @@
         });
         this.verifiedView.loginForm.on('register-link:click', this.registerLinkCB);
         this.notVerifiedBox = new new_utils.ModalBox({
-          title: 'Verification',
+          title: i18n('Verification'),
           content: this.notVerifiedView.render().el,
           modal_id: 'verification-modal-box',
           onClose: function() {
@@ -104,7 +104,7 @@
           }
         });
         return this.verifiedBox = new new_utils.ModalBox({
-          title: 'Verification',
+          title: i18n('Verification'),
           content: this.verifiedView.render().el,
           modal_id: 'verification-modal-box',
           onClose: function() {

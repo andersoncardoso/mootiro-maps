@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mootiro Maps\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-06 10:43-0200\n"
+"POT-Creation-Date: 2012-11-30 13:51-0200\n"
 "PO-Revision-Date: 2012-10-18 17:41-0300\n"
 "Last-Translator: André Casimiro <andre.casimiro@it3s.org>\n"
 "Language-Team: it3s <LL@li.org>\n"
@@ -18,100 +18,53 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 "X-Poedit-Basepath: ../../../\n"
 
-#: apps/authentication/forms.py:28
+#: apps/authentication/api.py:37
+msgid "Required field"
+msgstr "Campo obrigatório"
+
+#: apps/authentication/api.py:43
+msgid "You must accept the license agrement"
+msgstr "Você deve aceitar os Termos de Uso"
+
+#: apps/authentication/api.py:47 apps/authentication/views.py:177
+msgid "Passwords did not match"
+msgstr "As senha não coincidem"
+
+#: apps/authentication/forms.py:27
 msgid "Full Name"
 msgstr "Nome Completo"
 
-#: apps/authentication/forms.py:29 templates/authentication/profile.html:33
+#: apps/authentication/forms.py:28 templates/authentication/profile.html:33
 msgid "Public Contact"
 msgstr "Contato Público"
 
-#: apps/authentication/forms.py:30
+#: apps/authentication/forms.py:29
 msgid "Photo"
 msgstr "Foto"
 
-#: apps/authentication/forms.py:31
+#: apps/authentication/forms.py:30
 msgid "Location"
 msgstr "Localização"
 
-#: apps/authentication/forms.py:57 apps/community/forms.py:25
-#: apps/main/templatetags/komoo_tags.py:324
-#: apps/main/templatetags/komoo_tags.py:325 apps/organization/forms.py:63
+#: apps/authentication/views.py:172
+msgid "You must provide a valid password"
+msgstr "Você deve fornecer uma senha válida"
+
+#: apps/authentication/views.py:192
+msgid "Wrong password!"
+msgstr "Senha incorreta!"
+
+#: apps/authentication/views.py:196
+msgid "Failed to save data"
+msgstr "Houve uma falha ao tentar salvar os dados"
+
+#: apps/community/forms.py:25 apps/main/templatetags/komoo_tags.py:326
+#: apps/main/templatetags/komoo_tags.py:327 apps/organization/forms.py:63
 #: apps/projects/forms.py:50 apps/resources/forms.py:40
 #: lib/taggit/models.py:10 templates/organization/branch_form.html:13
 #: templates/organization/new_frommap.html:35
 msgid "Name"
 msgstr "Nome"
-
-#: apps/authentication/forms.py:58
-msgid "Email"
-msgstr "Email"
-
-#: apps/authentication/forms.py:59
-msgid "Password"
-msgstr "Senha"
-
-#: apps/authentication/forms.py:60
-msgid "Confirm your Password"
-msgstr "Confirme a sua senha"
-
-#: apps/authentication/forms.py:81
-msgid "This email is already in use."
-msgstr "Este email já está em uso."
-
-#: apps/authentication/forms.py:84
-msgid ""
-"This email is registered on our system. Probably you've logged before with a "
-"social account (facebook or google). You can skip this step and just login."
-msgstr ""
-"Este email já está registrado no nosso sistema. Provavelmente você já entrou "
-"anteriormente usando uma conta externa (facebook ou google). Você pode pular "
-"esta etapa e simplesmente entrar."
-
-#: apps/authentication/forms.py:90
-msgid "Passwords did not match."
-msgstr "As senha não coincidem."
-
-#: apps/authentication/views.py:173
-msgid "You must provide a valid password"
-msgstr "Você deve fornecer uma senha válida"
-
-#: apps/authentication/views.py:178
-msgid "Passwords did not match"
-msgstr "As senha não coincidem"
-
-#: apps/authentication/views.py:193
-msgid "Wrong password!"
-msgstr "Senha incorreta!"
-
-#: apps/authentication/views.py:197
-msgid "Failed to save data"
-msgstr "Houve uma falha ao tentar salvar os dados"
-
-#: apps/authentication/views.py:257
-msgid "Welcome to MootiroMaps"
-msgstr "Bem-vindo ao MootiroMaps"
-
-#: apps/authentication/views.py:259
-msgid ""
-"\n"
-"Hello, {name}.\n"
-"\n"
-"Before using our tool, please confirm your e-mail visiting the link below.\n"
-"{verification_url}\n"
-"\n"
-"Thanks,\n"
-"the IT3S team.\n"
-msgstr ""
-"\n"
-"Olá, {name}.\n"
-"\n"
-"Antes de usar nossa ferramenta, por favor confirme seu e-mail visitando o "
-"link abaixo.\n"
-"{verification_url}\n"
-"\n"
-"Obrigado,\n"
-"a equipe IT3S.\n"
 
 #: apps/community/forms.py:26 apps/investment/forms.py:32
 #: apps/need/forms.py:26 apps/organization/forms.py:64
@@ -126,7 +79,7 @@ msgid "Population"
 msgstr "População"
 
 #: apps/community/forms.py:28 apps/investment/forms.py:42
-#: apps/main/templatetags/komoo_tags.py:323 apps/need/forms.py:29
+#: apps/main/templatetags/komoo_tags.py:325 apps/need/forms.py:29
 #: apps/organization/forms.py:67 apps/projects/forms.py:52
 #: apps/resources/forms.py:44 lib/taggit/managers.py:39
 #: lib/taggit/models.py:57 templates/main/templatetags/taglist.html:5
@@ -137,9 +90,9 @@ msgstr "Palavras-Chave"
 msgid " "
 msgstr " "
 
-#: apps/community/models.py:38 apps/community/models.py:105
+#: apps/community/models.py:42 apps/community/models.py:125
 #: apps/main/templatetags/komoo_tags.py:228
-#: apps/main/templatetags/komoo_tags.py:327 apps/need/forms.py:24
+#: apps/main/templatetags/komoo_tags.py:329 apps/need/forms.py:24
 #: apps/organization/forms.py:65 apps/organization/forms.py:125
 #: apps/organization/templatetags/organization_tags.py:19
 #: apps/projects/forms.py:56 apps/resources/forms.py:45
@@ -175,7 +128,7 @@ msgstr "Investidor"
 msgid "Over period"
 msgstr "Por um período"
 
-#: apps/investment/forms.py:38 apps/main/templatetags/komoo_tags.py:326
+#: apps/investment/forms.py:38 apps/main/templatetags/komoo_tags.py:328
 #: templates/investment/view.html:42
 msgid "Date"
 msgstr "Data"
@@ -253,15 +206,15 @@ msgstr "Adicionar linha"
 msgid "Add point"
 msgstr "Adicionar ponto"
 
-#: apps/main/utils.py:116
+#: apps/main/utils.py:123
 msgid "Submit"
 msgstr "Enviar"
 
-#: apps/main/utils.py:237 apps/resources/forms.py:76
+#: apps/main/utils.py:244 apps/resources/forms.py:76
 msgid "invalid field data"
 msgstr "campo com dados inválidos"
 
-#: apps/main/views.py:304
+#: apps/main/views.py:244
 msgid ""
 "\n"
 "Url: {0}\n"
@@ -277,7 +230,7 @@ msgstr ""
 "Mensagem: {5}\n"
 "    "
 
-#: apps/main/views.py:312
+#: apps/main/views.py:252
 msgid "Error report"
 msgstr "Relatório de erro"
 
@@ -364,11 +317,11 @@ msgstr "Proposta"
 msgid "Investment"
 msgstr "Investimento"
 
-#: apps/main/templatetags/komoo_tags.py:328
+#: apps/main/templatetags/komoo_tags.py:330
 msgid "Need categories"
 msgstr "Áreas"
 
-#: apps/main/templatetags/komoo_tags.py:329 apps/need/forms.py:28
+#: apps/main/templatetags/komoo_tags.py:331 apps/need/forms.py:28
 #: templates/need/list.html:58 templates/need/view.html:39
 msgid "Target audiences"
 msgstr "Públicos alvo"
@@ -527,7 +480,7 @@ msgstr "Segurança"
 
 #: apps/organization/forms.py:66 apps/projects/forms.py:54
 #: apps/resources/forms.py:43 templates/organization/show.html:207
-#: templates/project/view.html:258 templates/resource/show.html:93
+#: templates/project/view.html:258 templates/resource/view.html:95
 msgid "Contact"
 msgstr "Contato"
 
@@ -579,7 +532,7 @@ msgstr "Acesso para editar este projeto"
 msgid "Access to this project's discussion page"
 msgstr "Acesso a página de discussão deste projeto"
 
-#: apps/projects/views.py:96
+#: apps/projects/views.py:88
 msgid "Unnamed"
 msgstr "Sem nome"
 
@@ -719,7 +672,7 @@ msgstr "Entre a legenda para essa imagem"
 msgid "Delete"
 msgstr "Apagar"
 
-#: lib/fileupload/forms.py:131 templates/authentication/login_box.html:41
+#: lib/fileupload/forms.py:131
 msgid "or"
 msgstr "ou"
 
@@ -940,46 +893,13 @@ msgstr "Ajuda"
 msgid "Ops!"
 msgstr "Ops!"
 
-#: templates/global.html:83
+#: templates/global.html:89
 msgid "See Results"
 msgstr "Ver Resultados"
 
 #: templates/not_anymore.html:7
 msgid "This content does not exists anymore."
 msgstr "Este conteúdo não existe mais."
-
-#: templates/authentication/komoo_login_form.html:10
-msgid "Don't have an account?"
-msgstr "Não possui uma conta? Registre-se!"
-
-#: templates/authentication/komoo_login_form.html:12
-#: templates/authentication/login_box.html:4
-msgid "Log in"
-msgstr "Entre"
-
-#: templates/authentication/login_box.html:9
-msgid "An error ocurred."
-msgstr "Um erro ocorreu."
-
-#: templates/authentication/login_box.html:11
-msgid "You provided wrong credentials."
-msgstr "Usuário e senha inválidos."
-
-#: templates/authentication/login_box.html:14
-msgid "You have not verified your email yet."
-msgstr "Você ainda não verificou seu email."
-
-#: templates/authentication/login_box.html:25
-msgid "Log in with Google"
-msgstr "Entre com Google"
-
-#: templates/authentication/login_box.html:33
-msgid "Log in with Facebook"
-msgstr "Entre com Facebook"
-
-#: templates/authentication/new.html:8
-msgid "New User"
-msgstr "Novo Usuário"
 
 #: templates/authentication/profile.html:37
 msgid "Information Not Provided!"
@@ -1114,28 +1034,6 @@ msgstr "Salvar mudanças"
 msgid "Close"
 msgstr "Fechar"
 
-#: templates/authentication/verification.html:15
-msgid "Your account was created!"
-msgstr "Sua conta foi criada!"
-
-#: templates/authentication/verification.html:16
-msgid "But before using you need to confirm your e-mail. Go check your inbox!"
-msgstr ""
-"Mas antes de começar a usar, você precisa confirmar seu email. Vá checar sua "
-"caixa postal!"
-
-#: templates/authentication/verification.html:24
-msgid "Your email was succesfully verified!"
-msgstr "Seu email foi verificado com sucesso!"
-
-#: templates/authentication/verification.html:27
-msgid "Your email had already been verified!"
-msgstr "Seu email já foi verificado!"
-
-#: templates/authentication/verification.html:30
-msgid "Now, do login!"
-msgstr "Agora, faça login!"
-
 #: templates/comments/comment.html:8 templates/comments/comment.html.py:20
 #, python-format
 msgid "%(num)s answer"
@@ -1184,8 +1082,8 @@ msgid "population:"
 msgstr "população:"
 
 #: templates/community/view.html:43 templates/investment/view.html:56
-#: templates/need/view.html:59 templates/organization/show.html:200
-#: templates/project/view.html:235 templates/resource/show.html:62
+#: templates/need/view.html:61 templates/organization/show.html:200
+#: templates/project/view.html:235 templates/resource/view.html:64
 msgid "see on map"
 msgstr "ver no mapa"
 
@@ -1427,12 +1325,12 @@ msgid "next"
 msgstr "próxima"
 
 #: templates/main/templatetags/pagination.html:30
-#: templates/organization/show.html:125
+#: templates/organization/show.html:123
 msgid "first"
 msgstr "primeira"
 
 #: templates/main/templatetags/pagination.html:100
-#: templates/organization/show.html:132
+#: templates/organization/show.html:130
 msgid "last"
 msgstr "última"
 
@@ -1527,7 +1425,7 @@ msgid "New need"
 msgstr "Nova necessidade"
 
 #: templates/need/list.html:39 templates/resource/list.html:40
-#: templates/resource/show.html:79
+#: templates/resource/view.html:81
 msgid "at"
 msgstr "em"
 
@@ -1541,27 +1439,27 @@ msgstr "criado por"
 msgid "on"
 msgstr "em"
 
-#: templates/need/view.html:62
+#: templates/need/view.html:64
 msgid "Proposals"
 msgstr "Propostas"
 
-#: templates/need/view.html:68 templates/proposal/view.html:58
+#: templates/need/view.html:70 templates/proposal/view.html:58
 msgid "New proposal"
 msgstr "Nova proposta"
 
-#: templates/need/view.html:76
+#: templates/need/view.html:78
 msgid "Related needs"
 msgstr "Necessidades relacionadas"
 
-#: templates/need/view.html:93
+#: templates/need/view.html:95
 msgid "No related needs."
 msgstr "Nenhuma necessidade relacionada."
 
-#: templates/need/view.html:96 templates/organization/show.html:90
+#: templates/need/view.html:98 templates/organization/show.html:88
 msgid "see all"
 msgstr "ver todos"
 
-#: templates/need/view.html:97
+#: templates/need/view.html:99
 msgid "see less"
 msgstr "ver menos"
 
@@ -1607,46 +1505,46 @@ msgstr "Concluir"
 msgid "Objects related to"
 msgstr "Objetos relacionados a"
 
-#: templates/organization/show.html:42 templates/project/view.html:52
+#: templates/organization/show.html:40 templates/project/view.html:52
 msgid "See all objects on map"
 msgstr "Ver todos os objetos no mapa"
 
-#: templates/organization/show.html:47
+#: templates/organization/show.html:45
 #, python-format
 msgid "%(num)s point on map"
 msgid_plural "%(num)s points on map"
 msgstr[0] "%(num)s ponto no mapa"
 msgstr[1] "%(num)s pontos no mapa"
 
-#: templates/organization/show.html:53
+#: templates/organization/show.html:51
 #, python-format
 msgid "Supported %(num)s organization"
 msgid_plural "Supported %(num)s organizations"
 msgstr[0] "Apoiou %(num)s organização"
 msgstr[1] "Apoiou %(num)s organizações"
 
-#: templates/organization/show.html:59
+#: templates/organization/show.html:57
 #, python-format
 msgid "On %(num)s community"
 msgid_plural "On %(num)s communities"
 msgstr[0] "Presente em %(num)s comunidade"
 msgstr[1] "Presente em %(num)s comunidades"
 
-#: templates/organization/show.html:65
+#: templates/organization/show.html:63
 #, python-format
 msgid "Supported %(num)s proposal"
 msgid_plural "Supported %(num)s proposals"
 msgstr[0] "Apoiou %(num)s proposta"
 msgstr[1] "Apoiou %(num)s propostas"
 
-#: templates/organization/show.html:71
+#: templates/organization/show.html:69
 #, python-format
 msgid "Supported %(num)s resource"
 msgid_plural "Supported %(num)s resources"
 msgstr[0] "Apoiou %(num)s recurso"
 msgstr[1] "Apoiou %(num)s recursos"
 
-#: templates/organization/show.html:77
+#: templates/organization/show.html:75
 #, python-format
 msgid ""
 "Realized %(num)s investment\n"
@@ -1655,7 +1553,7 @@ msgid_plural "Realized %(num)s investments"
 msgstr[0] "Realizou %(num)s investimento"
 msgstr[1] "Realizou %(num)s investimentos"
 
-#: templates/organization/show.html:80
+#: templates/organization/show.html:78
 #, python-format
 msgid ""
 "Received %(num)s investment\n"
@@ -1664,28 +1562,28 @@ msgid_plural "Received %(num)s investments"
 msgstr[0] "Recebeu %(num)s investimento"
 msgstr[1] "Recebeu %(num)s investimentos"
 
-#: templates/organization/show.html:146
+#: templates/organization/show.html:144
 msgid "No organizations supported."
 msgstr "Nenhuma organização apoiada."
 
-#: templates/organization/show.html:156
+#: templates/organization/show.html:154
 msgid "No communities bound to this organization"
 msgstr "Nenhuma comunidade vínculada a esta organização"
 
-#: templates/organization/show.html:166
+#: templates/organization/show.html:164
 msgid "No proposals supported."
 msgstr "Nenhuma proposta apoiada."
 
-#: templates/organization/show.html:176
+#: templates/organization/show.html:174
 msgid "No resources supported."
 msgstr "Nenhum recurso apoiado."
 
-#: templates/organization/show.html:183 templates/organization/show.html:203
-#: templates/resource/show.html:65
+#: templates/organization/show.html:181 templates/organization/show.html:203
+#: templates/resource/view.html:67
 msgid "New Investment"
 msgstr "Novo Investimento"
 
-#: templates/organization/show.html:211 templates/resource/show.html:98
+#: templates/organization/show.html:211 templates/resource/view.html:100
 msgid "No contact info provided"
 msgstr "Informações de contato não fornecidas"
 
@@ -1717,7 +1615,7 @@ msgstr "Editar Associações do Projeto"
 msgid "Deleted marked associations"
 msgstr "Apagar associações marcadas"
 
-#: templates/project/edit.html:96
+#: templates/project/edit.html:97
 msgid "creator"
 msgstr "creator"
 
@@ -1796,11 +1694,11 @@ msgstr "Novo Recurso"
 msgid "Kind:"
 msgstr "Tipo:"
 
-#: templates/resource/show.html:38
+#: templates/resource/view.html:38
 msgid "type:"
 msgstr "tipo:"
 
-#: templates/resource/show.html:72
+#: templates/resource/view.html:74
 msgid "Related resources"
 msgstr "Recursos relacionados"
 
@@ -1877,6 +1775,96 @@ msgstr "por"
 #: templates/update/frontpage.html:155
 msgid "News"
 msgstr "Notícias"
+
+#~ msgid "Email"
+#~ msgstr "Email"
+
+#~ msgid "Password"
+#~ msgstr "Senha"
+
+#~ msgid "Confirm your Password"
+#~ msgstr "Confirme a sua senha"
+
+#~ msgid "This email is already in use."
+#~ msgstr "Este email já está em uso."
+
+#~ msgid ""
+#~ "This email is registered on our system. Probably you've logged before "
+#~ "with a social account (facebook or google). You can skip this step and "
+#~ "just login."
+#~ msgstr ""
+#~ "Este email já está registrado no nosso sistema. Provavelmente você já "
+#~ "entrou anteriormente usando uma conta externa (facebook ou google). Você "
+#~ "pode pular esta etapa e simplesmente entrar."
+
+#~ msgid "Passwords did not match."
+#~ msgstr "As senha não coincidem."
+
+#~ msgid "Welcome to MootiroMaps"
+#~ msgstr "Bem-vindo ao MootiroMaps"
+
+#~ msgid ""
+#~ "\n"
+#~ "Hello, {name}.\n"
+#~ "\n"
+#~ "Before using our tool, please confirm your e-mail visiting the link "
+#~ "below.\n"
+#~ "{verification_url}\n"
+#~ "\n"
+#~ "Thanks,\n"
+#~ "the IT3S team.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Olá, {name}.\n"
+#~ "\n"
+#~ "Antes de usar nossa ferramenta, por favor confirme seu e-mail visitando o "
+#~ "link abaixo.\n"
+#~ "{verification_url}\n"
+#~ "\n"
+#~ "Obrigado,\n"
+#~ "a equipe IT3S.\n"
+
+#~ msgid "Don't have an account?"
+#~ msgstr "Não possui uma conta? Registre-se!"
+
+#~ msgid "Log in"
+#~ msgstr "Entre"
+
+#~ msgid "An error ocurred."
+#~ msgstr "Um erro ocorreu."
+
+#~ msgid "You provided wrong credentials."
+#~ msgstr "Usuário e senha inválidos."
+
+#~ msgid "You have not verified your email yet."
+#~ msgstr "Você ainda não verificou seu email."
+
+#~ msgid "Log in with Google"
+#~ msgstr "Entre com Google"
+
+#~ msgid "Log in with Facebook"
+#~ msgstr "Entre com Facebook"
+
+#~ msgid "New User"
+#~ msgstr "Novo Usuário"
+
+#~ msgid "Your account was created!"
+#~ msgstr "Sua conta foi criada!"
+
+#~ msgid ""
+#~ "But before using you need to confirm your e-mail. Go check your inbox!"
+#~ msgstr ""
+#~ "Mas antes de começar a usar, você precisa confirmar seu email. Vá checar "
+#~ "sua caixa postal!"
+
+#~ msgid "Your email was succesfully verified!"
+#~ msgstr "Seu email foi verificado com sucesso!"
+
+#~ msgid "Your email had already been verified!"
+#~ msgstr "Seu email já foi verificado!"
+
+#~ msgid "Now, do login!"
+#~ msgstr "Agora, faça login!"
 
 #~ msgid "Geometric data not available"
 #~ msgstr "Informação geométrica não disponível"

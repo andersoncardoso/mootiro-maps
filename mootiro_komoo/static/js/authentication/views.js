@@ -126,14 +126,14 @@
           url: dutils.urls.resolve('login_google'),
           next: next,
           image_url: '/static/img/login-google.png',
-          message: 'Log In with Google'
+          message: i18n('Log In with Google')
         };
         facebookButton = {
           provider: 'facebook',
           url: dutils.urls.resolve('login_facebook'),
           next: next,
           image_url: '/static/img/login-facebook.png',
-          message: 'Log In with Facebook'
+          message: i18n('Log In with Facebook')
         };
         return this.socialBtnsView = new SocialButtonsList({
           buttons: [googleButton, facebookButton]
@@ -203,7 +203,7 @@
         user = new models.User({});
         return this.form = new forms.RegisterForm({
           formId: 'form_register',
-          submit_label: 'Register',
+          submit_label: i18n('Register'),
           model: user
         });
       };
@@ -232,23 +232,18 @@
         this.verified = this.options.verified;
         if (this.verified) {
           this.template = _.template(verif_tpl);
-          this.tpl_args = {
-            msg_verif: 'Your email was successfully verified.',
-            msg_login: 'Please login.'
-          };
           this.loginModel = new models.LoginModel();
           return this.loginForm = new forms.LoginForm({
             model: this.loginModel
           });
         } else {
-          this.template = _.template(not_verif_tpl);
-          return this.tpl_args = {};
+          return this.template = _.template(not_verif_tpl);
         }
       };
 
       VerificationView.prototype.render = function() {
         var renderedContent;
-        renderedContent = this.template(this.tpl_args);
+        renderedContent = this.template({});
         this.$el.html(renderedContent);
         if (this.verified) {
           this.$el.find('.login-form-box').append(this.loginForm.render().el);
