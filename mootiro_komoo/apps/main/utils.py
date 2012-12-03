@@ -325,7 +325,7 @@ class ResourceHandler:
         return cls.dispatch
 
     def _get_handler_method(self, request_handler, http_method):
-        """Utility function for the Resource Class dispacther."""
+        """ Utility function for the Resource Class dispacther."""
         try:
             handler_method = getattr(request_handler, http_method.lower())
             if callable(handler_method):

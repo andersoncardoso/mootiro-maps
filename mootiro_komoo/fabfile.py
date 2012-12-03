@@ -10,26 +10,30 @@ logging.basicConfig(format='>> %(message)s', level=logging.DEBUG)
 django_settings = {
     'dev': '--settings=settings.development',
     'stage': '--settings=settings.staging',
-    'prod': '--settings=settings.production'
+    'prod': '--settings=settings.production',
+    'testing': '--settings=settings.testing',
 }
 env_ = 'dev'
 
 
-def _set_env(type_):
+def set_env(type_):
     global env_
     env_ = type_
 
 
 def dev():
-    _set_env('dev')
+    set_env('dev')
 
 
 def stage():
-    _set_env('stage')
+    set_env('stage')
 
 
 def prod():
-    _set_env('prod')
+    set_env('prod')
+
+def testing():
+    set_env('testing')
 
 
 def setup_django():
@@ -40,7 +44,8 @@ def setup_django():
     sys.path.append(PROJ_DIR)
     sys.path.append(SITE_ROOT)
     from django.core.management import setup_environ
-    env_name = {'dev': 'development', 'stage': 'staging', 'prod': 'production'}
+    env_name = {'dev': 'development', 'stage': 'staging', 'prod': 'production',
+                'testing': 'testing'}
     environ = None
     exec 'from settings import {} as environ'.format(env_name[env_])
     setup_environ(environ)
@@ -83,8 +88,11 @@ def update_reForm():
           'https://raw.github.com/it3s/reform/master/src/reForm.js')
 
 
-def kill_background_tasks():
-    for task in ['coffee', 'less_watcher']:
+def kill_tasks(*tasks):
+    """ Kill background tasks given a list o task names """
+    if not tasks:
+        tasks = ['coffee', 'less_watcher', 'manage.py']
+    for task in tasks:
         local(
             "ps -eo pid,args | grep %s | grep -v grep | "
             "cut -c1-6 | xargs kill" % task)
@@ -113,24 +121,30 @@ def collectstatic():
     local("python manage.py collectstatic {}".format(django_settings[env_]))
 
 
-def kill_manage_tasks():
-    """kill all manage.py background tasks"""
-    local('ps -eo pid,args | grep manage.py | grep -v grep | cut -c1-6 | '
-          'xargs kill')
+# def test(
+#         apps=" ".join([
+#             'community', 'need', 'organization', 'proposal', 'resources',
+#             'investment', 'main', 'authentication', 'moderation']),
+#         recreate_db=False):
+#     """Run application tests"""
+#     if recreate_db:
+#         local('dropdb test_mootiro_komoo')
+#     else:
+#         logging.info("Reusing old last test DB...")
+#     local('REUSE_DB=1 python manage.py test {} {} --verbosity=1'
+#             .format(apps, django_settings[env_]))
+def test(*test_types):
+    if not test_types:
+        test_types=['unit','integration']
+    if 'unit' in test_types:
+        local('nosetests tests/unit/')
+    if 'integration' in test_types:
+        local('python manage.py runserver --insecure 8001 {} &'
+              .format(django_settings['testing']))
+        import time
+        time.sleep(3)
+        local('nosetests tests/integration/')
 
-
-def test(
-        apps=" ".join([
-            'community', 'need', 'organization', 'proposal', 'resources',
-            'investment', 'main', 'authentication', 'moderation']),
-        recreate_db=False):
-    """Run application tests"""
-    if recreate_db:
-        local('dropdb test_mootiro_komoo')
-    else:
-        logging.info("Reusing old last test DB...")
-    local('REUSE_DB=1 python manage.py test {} {} --verbosity=1'
-            .format(apps, django_settings[env_]))
 
 
 def test_js(
@@ -269,10 +283,11 @@ def sync_all(data_fixtures='fixtures/backupdb.json'):
     recreate_db()
     syncdb()
     fix_contenttypes()
-    if data_fixtures == "test":
-        load_fixtures(data_fixtures)
-    else:
-        loaddata(data_fixtures)
+    if env_ != 'testing':
+        if data_fixtures == "test":
+            load_fixtures(data_fixtures)
+        else:
+            loaddata(data_fixtures)
     loaddata('fixtures/contenttypes_fixtures.json')
 
 

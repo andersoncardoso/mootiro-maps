@@ -305,8 +305,12 @@ def get_geojson_from_hashlink(request):
 
 
 if settings.TESTING:
+    from django.views.decorators.csrf import csrf_exempt
+    from django.utils.decorators import method_decorator
+
     class TestResourceHandler(ResourceHandler):
         """This is only a dummy handler used for testing"""
+
         def get(self, request):
             return HttpResponse('Resource::GET')
 
