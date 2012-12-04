@@ -107,7 +107,7 @@ def run_celery():
 def run(port=8001):
     """Runs django's development server"""
     run_celery()
-    if env_ != 'dev':
+    if not env_ in ['dev', 'testing']:
         local(
             'python manage.py run_gunicorn --workers=2 '
             '--bind=127.0.0.1:{} {}'.format(port, django_settings[env_]))
@@ -135,15 +135,12 @@ def collectstatic():
 #             .format(apps, django_settings[env_]))
 def test(*test_types):
     if not test_types:
-        test_types=['unit','integration']
-    if 'unit' in test_types:
-        local('nosetests tests/unit/')
+        test_types=['unit']
     if 'integration' in test_types:
-        local('python manage.py runserver --insecure 8001 {} &'
-              .format(django_settings['testing']))
-        import time
-        time.sleep(3)
-        local('nosetests tests/integration/')
+        logging.info('To perform integration tests, rememeber to start de '
+                     'testing server: fab testing run')
+    for test in test_types:
+        local('nosetests tests/{}/'.format(test))
 
 
 

@@ -33,6 +33,11 @@ def setup_django():
     setup_environ(environ)
 
 
+def ensure_empty_db():
+    # TODO
+    pass
+
+
 class Client(object):
     url = 'http://localhost:8001'
 

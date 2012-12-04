@@ -5,6 +5,7 @@ from hashlib import sha1
 from django.conf import settings
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 from jsonfield import JSONField
 
 from lib.locker.models import Locker
@@ -13,7 +14,7 @@ from main.utils import send_mail_async, BaseDAOMixin
 from komoo_map.models import GeoRefModel, POINT
 
 
-CONFIRMATION_EMAIL_MSG = '''
+CONFIRMATION_EMAIL_MSG = _('''
 Hello, {name}.
 
 Before using our tool, please confirm your e-mail visiting the link below.
@@ -21,7 +22,7 @@ Before using our tool, please confirm your e-mail visiting the link below.
 
 Thanks,
 the IT3S team.
-'''
+''')
 
 
 class User(GeoRefModel, BaseDAOMixin):
@@ -126,24 +127,24 @@ class User(GeoRefModel, BaseDAOMixin):
         valid = True
 
         if not self.name:
-            valid, self.errors['name'] = False, 'Required field'
+            valid, self.errors['name'] = False, _('Required field')
         if not self.email:
-            valid, self.errors['email'] = False, 'Required field'
+            valid, self.errors['email'] = False, _('Required field')
         if not self.password:
-            valid, self.errors['password'] = False, 'Required field'
+            valid, self.errors['password'] = False, _('Required field')
 
         if not self.id:
             # new User
             if SocialAuth.objects.filter(email=self.email).exists():
                 valid = False
-                self.errors['email'] = 'This email is registered on our '  \
-                    'system. Probably you\'ve logged before with a social '\
-                    'account (facebook or google). You can skip this step '\
-                    'and just login.'
+                self.errors['email'] = _('This email is registered on our '
+                    'system. Probably you\'ve logged before with a social '
+                    'account (facebook or google). You can skip this step '
+                    'and just login.')
 
             if User.objects.filter(email=self.email).exists():
                 valid = False
-                self.errors['email'] = 'Email address already in use'
+                self.errors['email'] = _('Email address already in use')
 
         return valid
 
@@ -153,7 +154,7 @@ class User(GeoRefModel, BaseDAOMixin):
         verification_url = request.build_absolute_uri(
                 reverse('user_verification', args=(key,)))
         send_mail_async(
-            title='Welcome to MootiroMaps',
+            title=_('Welcome to MootiroMaps'),
             receivers=[self.email],
             message=CONFIRMATION_EMAIL_MSG.format(
                 name=self.name,
@@ -213,26 +214,26 @@ class Login(object):
         valid = True
 
         if not self.email:
-            valid, self.errors['email'] = False, 'Email is required'
+            valid, self.errors['email'] = False, _('Email is required')
         if not self.password:
-            valid, self.errors['password'] = False, 'Password is required'
+            valid, self.errors['password'] = False, _('Password is required')
 
         if self.email and self.password:
             self.passwd_hash = User.calc_hash(self.password)
 
             if not User.objects.filter(email=self.email).exists():
                 valid = False
-                self.errors['email'] = 'Email not found'
+                self.errors['email'] = _('Email not found')
             q = User.objects.filter(
                     email=self.email, password=self.passwd_hash)
             if not q.exists():
                 valid = False
-                self.errors['password'] = 'Wrong password'
+                self.errors['password'] = _('Wrong password')
             else:
                 self._user = q.get()
                 if not self._user.is_active:
                     valid = False
-                    self.errors['email'] = 'User not active'
+                    self.errors['email'] = _('User not active')
 
         return valid
 
