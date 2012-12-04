@@ -1,6 +1,5 @@
 {% extends 'global.html' %}
 
-{% load crispy_forms_tags %}
 
 {% block content %}
 
@@ -9,7 +8,7 @@
         <h3>Upload POC</h3>
 
 
-        {% crispy form_poc %}
+        {{ form_poc }}
     </div>
     </div>
 

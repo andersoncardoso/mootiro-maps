@@ -10,7 +10,6 @@ from django.shortcuts import redirect
 import logging
 from annoying.decorators import render_to, ajax_request
 from annoying.functions import get_object_or_None
-from ajaxforms import ajax_form
 
 from authentication.utils import login_required
 from .models import Discussion
@@ -55,7 +54,6 @@ def view_discussion(request, identifier=''):
 
 
 @login_required
-@ajax_form('discussion/edit.html', DiscussionForm)
 def edit_discussion(request, identifier='', *args, **kwargs):
     logger.debug('acessing discussion > edit_discussion : identifier={}'
         ''.format(identifier))

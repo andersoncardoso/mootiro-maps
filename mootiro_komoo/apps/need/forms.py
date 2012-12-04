@@ -7,12 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 from markitup.widgets import MarkItUpWidget
 from fileupload.forms import FileuploadField
 from fileupload.models import UploadedFile
-from ajaxforms import AjaxModelForm
-from crispy_forms.layout import Layout, Fieldset
 
-from main.utils import MooHelper
 from main.widgets import Tagsinput, TaggitWidget, ImageSwitchMultiple
-from ajax_select.fields import AutoCompleteSelectMultipleField
 from need.models import Need, NeedCategory, TargetAudience
 from signatures.signals import notify_on_update
 
@@ -31,7 +27,7 @@ need_form_field_labels = {
 }
 
 
-class NeedForm(AjaxModelForm):
+class NeedForm(forms.ModelForm):
     class Meta:
         model = Need
         fields = need_form_fields
@@ -40,9 +36,6 @@ class NeedForm(AjaxModelForm):
 
     class Media:
         js = ('lib/jquery.imagetick-original.js',)
-
-    community = AutoCompleteSelectMultipleField('community', help_text='',
-        required=False)
 
     description = forms.CharField(widget=MarkItUpWidget())
 
@@ -67,9 +60,6 @@ class NeedForm(AjaxModelForm):
 
     files = FileuploadField(required=False)
 
-    def __init__(self, *a, **kw):
-        self.helper = MooHelper(form_id="need_form")
-        return super(NeedForm, self).__init__(*a, **kw)
 
     @notify_on_update
     def save(self, *args, **kwargs):

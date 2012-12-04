@@ -19,9 +19,6 @@
 
     {{ form.media.css }}
     <link rel="shortcut icon" HREF="{{STATIC_URL}}/img/favicon.png" />
-    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}lib/jquery-ui-1.8.16/jquery-ui-1.8.16.css" />
-
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/styles.css" />
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/fashion.css" />
 
@@ -58,7 +55,7 @@
     {% block css %}{% endblock %}
 
   </head>
-  <body class="{% if community %}community{% endif %}">
+  <body>
     {# Loading these scripts inside body to prevent issues loading google maps #}
     <!-- RequireJS stuffs -->
     <script type="text/javascript" src="{{STATIC_URL}}js/config.js"></script>

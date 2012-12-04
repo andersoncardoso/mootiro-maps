@@ -8,7 +8,6 @@ from django.shortcuts import get_object_or_404
 from django.utils import simplejson
 from django.utils.decorators import method_decorator
 
-from ajaxforms import ajax_form
 from annoying.decorators import render_to
 
 from authentication.utils import login_required
@@ -47,7 +46,6 @@ class AboutView(NeedView, ViewDetailsMixin, ViewGeojsonMixin):
 
 class EditView(NeedView, AllMethodsMixin):
     @method_decorator(login_required)
-    @method_decorator(ajax_form('need/edit.html', NeedFormGeoRef))
     def all(self, request, id='', *arg, **kwargs):
         need = get_object_or_404(Need, pk=id)
 
@@ -71,7 +69,6 @@ class EditView(NeedView, AllMethodsMixin):
 
 class NewView(NeedView, AllMethodsMixin):
     @method_decorator(login_required)
-    @method_decorator(ajax_form('need/edit.html', NeedForm))
     def all(self, request, *arg, **kwargs):
         geojson = {}
         need = None
@@ -90,7 +87,6 @@ class NewView(NeedView, AllMethodsMixin):
 
 class NewFromMapView(NeedView, AllMethodsMixin):
     @method_decorator(login_required)
-    @method_decorator(ajax_form('need/edit_ajax.html', NeedFormGeoRef))
     def all(self, request, *arg, **kwargs):
         geojson, need = {}, None
 

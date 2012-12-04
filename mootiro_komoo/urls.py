@@ -34,7 +34,6 @@ urlpatterns = patterns('',
     # 3rd party apps
     url(r'^markitup/', include('markitup.urls')),
     url(r'^upload/', include('fileupload.urls')),
-    url(r'^lookups/', include('ajax_select.urls')),
     url(r'^jsi18n/$', javascript_catalog, js_info_dict,
         name='javascript_catalog'),
 

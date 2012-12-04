@@ -6,10 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from annoying.decorators import autostrip
 from markitup.widgets import MarkItUpWidget
-from crispy_forms.layout import *
-from ajaxforms import AjaxModelForm
 
-from main.utils import MooHelper
 from investment.models import Investment, Investor
 from organization.models import Organization
 
@@ -19,7 +16,7 @@ from signatures.signals import notify_on_update
 
 
 @autostrip
-class InvestmentForm(AjaxModelForm):
+class InvestmentForm(forms.ModelForm):
 
     class Meta:
         model = Investment
@@ -88,33 +85,6 @@ class InvestmentForm(AjaxModelForm):
 
     # TODO: value just validates if currency is set
 
-    def __init__(self, *a, **kw):
-        # Crispy forms configuration
-        self.helper = MooHelper(form_id="investment_form")
-        self.helper.layout = Layout(
-            "id",
-            "title",
-            "description",
-            "investor_type",
-            "anonymous_investor",
-            Div(
-                "investor_organization",
-                "investor_person",
-                css_class="investor_fields"
-            ),
-            "over_period",
-            Row(
-                "date",
-                "end_date",
-            ),
-            Row(
-                "currency",
-                "value",
-            ),
-            "tags",
-        )
-
-        return super(InvestmentForm, self).__init__(*a, **kw)
 
     def clean_end_date(self):
         data = self.cleaned_data['end_date']

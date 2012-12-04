@@ -1,11 +1,12 @@
 from django.contrib import admin
-from reversion import VersionAdmin
 from organization.models import Organization, OrganizationBranch
 
-class OrganizationBranchAdmin(VersionAdmin):
+
+class OrganizationBranchAdmin(admin.ModelAdmin):
     pass
 
-class OrganizationAdmin(VersionAdmin):
+
+class OrganizationAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(OrganizationBranch, OrganizationBranchAdmin)

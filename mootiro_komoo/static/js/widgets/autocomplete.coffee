@@ -3,7 +3,6 @@ define [
     'underscore',
     'backbone',
     'text!templates/widgets/_autocomplete.html',
-    'jquery-ui'
 ], ($, _, Backbone, tplt) ->
     AutocompleteView = Backbone.View.extend
         className: 'autocomplete'

@@ -11,7 +11,6 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.decorators import method_decorator
 
 from lib.taggit.models import TaggedItem
-from ajaxforms.forms import ajax_form
 from annoying.decorators import render_to, ajax_request
 from main.utils import create_geojson
 from main.utils import (BaseView, ViewDetailsMixin, ViewGeojsonMixin,
@@ -95,7 +94,6 @@ def project_map(request, id=''):
 
 
 @login_required
-@ajax_form('project/edit.html', FormProject)
 def project_new(request):
 
     def on_get(request, form):
@@ -109,7 +107,6 @@ def project_new(request):
 
 
 @login_required
-@ajax_form('project/edit.html', FormProject)
 def project_edit(request, id='', *arg, **kwargs):
     project = get_object_or_404(Project, pk=id)
 

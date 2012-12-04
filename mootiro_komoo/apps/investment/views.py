@@ -9,7 +9,6 @@ from django.utils import simplejson
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 from lib.taggit.models import TaggedItem
-from ajaxforms import ajax_form
 
 from authentication.utils import login_required
 
@@ -45,7 +44,6 @@ def prepare_investment_objects(grantee_type='', grantee_id=None,
 
 
 @login_required
-@ajax_form('investment/edit.html', form_class=InvestmentForm)
 def edit(request, id=None):
     grantee_type = request.GET.get('type', None)
     grantee_id = request.GET.get('obj', None)

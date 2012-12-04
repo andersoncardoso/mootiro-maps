@@ -7,7 +7,6 @@ from django.shortcuts import redirect
 from django.utils import simplejson
 from django.utils.decorators import method_decorator
 
-from ajaxforms import ajax_form
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
@@ -49,8 +48,6 @@ class AboutView(ResourceView, ViewDetailsMixin, ViewGeojsonMixin):
 
 class EditView(ResourceView, AllMethodsMixin):
     @method_decorator(login_required)
-    @method_decorator(ajax_form('resource/edit.html', FormResourceGeoRef,
-        'form_resource'))
     def all(self, request, id='', *arg, **kwargs):
         resource = get_object_or_None(Resource, pk=id)
         geojson = create_geojson([resource], convert=False)
@@ -75,8 +72,6 @@ class EditView(ResourceView, AllMethodsMixin):
 
 class NewView(ResourceView, AllMethodsMixin):
     @method_decorator(login_required)
-    @method_decorator(ajax_form('resource/new.html', FormResource,
-        'form_resource'))
     def all(self, request, *arg, **kwargs):
         def on_get(request, form_resource):
             form_resource.helper.form_action = reverse('new_resource')
@@ -90,8 +85,6 @@ class NewView(ResourceView, AllMethodsMixin):
 
 class NewFromMapView(ResourceView, AllMethodsMixin):
     @method_decorator(login_required)
-    @method_decorator(ajax_form('resource/new_frommap.html',
-        FormResourceGeoRef, 'form_resource'))
     def all(self, request, *arg, **kwargs):
         def on_get(request, form_resource):
             form_resource.helper.form_action = reverse('new_resource_from_map')

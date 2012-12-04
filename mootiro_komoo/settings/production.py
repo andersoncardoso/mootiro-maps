@@ -3,6 +3,7 @@ from common import *
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+TESTING = False
 
 # DATABASES = {
 #     'default': {

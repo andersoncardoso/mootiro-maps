@@ -8,7 +8,6 @@ from django.core.urlresolvers import reverse
 
 from authentication.models import User
 
-import reversion
 
 
 class Discussion(models.Model):
@@ -26,6 +25,3 @@ class Discussion(models.Model):
         verbose_name = "discussion"
         verbose_name_plural = "discussions"
 
-
-if not reversion.is_registered(Discussion):
-    reversion.register(Discussion)

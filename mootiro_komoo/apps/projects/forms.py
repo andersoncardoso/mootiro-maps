@@ -8,11 +8,9 @@ from django.utils.translation import ugettext_lazy as _
 from markitup.widgets import MarkItUpWidget
 from fileupload.forms import FileuploadField, SingleFileUploadWidget
 from fileupload.models import UploadedFile
-from ajax_select.fields import AutoCompleteSelectMultipleField
-from ajaxforms import AjaxModelForm
 from django.template.defaultfilters import slugify
 from django.db.models.query_utils import Q
-from main.utils import MooHelper, clean_autocomplete_field
+from main.utils import clean_autocomplete_field
 from main.widgets import TaggitWidget
 from .models import Project
 
@@ -25,15 +23,11 @@ PUBLIC_CHOICES = (
 )
 
 
-class FormProject(AjaxModelForm):
+class FormProject(forms.ModelForm):
     description = forms.CharField(widget=MarkItUpWidget())
     contact = forms.CharField(required=False, widget=MarkItUpWidget())
     tags = forms.Field(required=False, widget=TaggitWidget(
         autocomplete_url="/project/search_tags/"))
-    community = AutoCompleteSelectMultipleField('community', help_text='',
-        required=False)
-    contributors = AutoCompleteSelectMultipleField('user', help_text='',
-        required=False)
     logo = FileuploadField(required=False, widget=SingleFileUploadWidget)
     partners_logo = FileuploadField(required=False)
     public = forms.ChoiceField(choices=PUBLIC_CHOICES,
@@ -60,7 +54,6 @@ class FormProject(AjaxModelForm):
     }
 
     def __init__(self, *a, **kw):
-        self.helper = MooHelper(form_id='form_project')
         inst = kw.get('instance', None)
         if inst:
             public = 'publ' if inst.public else 'priv'

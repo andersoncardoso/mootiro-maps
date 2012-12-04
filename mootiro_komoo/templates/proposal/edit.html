@@ -1,5 +1,4 @@
 {% extends "global.html" %}
-{% load crispy_forms_tags %}
 {% load komoo_tags %}
 {% load i18n %}
 
@@ -20,20 +19,9 @@
             Os campos com asterisco (<strong>*</strong>) são obrigatórios!
         </div>
     </div>
-    {% crispy form form.helper %}
+    {{ form }}
   </div>
 </div>
 
 {% endblock %}
 
-{% block page_scripts %}
-    <script type="text/javascript">
-      require(['jquery', 'utils', 'ajaxforms'], function ($) {
-        $(function(){
-            $('#proposal_form').ajaxform();
-
-            $('#proposal_form').komooFormHintBoxes();
-        });
-      });
-    </script>
-{% endblock %}

@@ -6,9 +6,7 @@
     dir: '.build/min',
 
     paths: {
-        'ajaxforms': 'empty:',
         'jquery': 'empty:',
-        'jquery-ui': 'empty:',
         'underscore': 'empty:',
         'backbone': 'empty:',
         'bootstrap': 'empty:',

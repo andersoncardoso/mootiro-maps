@@ -11,7 +11,6 @@ from django.template.defaultfilters import slugify
 
 from lib.taggit.managers import TaggableManager
 from fileupload.models import UploadedFile
-import reversion
 
 from authentication.models import User
 from community.models import Community
@@ -137,7 +136,4 @@ class Project(models.Model):
     def json(self):
         return simplejson.dumps(self.as_dict)
 
-
-if not reversion.is_registered(Project):
-    reversion.register(Project)
 

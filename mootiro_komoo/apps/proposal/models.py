@@ -5,7 +5,6 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes import generic
 
-import reversion
 
 from authentication.models import User
 from need.models import Need
@@ -93,5 +92,3 @@ class Proposal(models.Model):
     def perm_id(self):
         return 'p%d' % self.id
 
-if not reversion.is_registered(Need):
-    reversion.register(Proposal)

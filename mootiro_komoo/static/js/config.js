@@ -11,9 +11,7 @@
       'text': '../lib/requirejs/text',
       'templates': '../templates',
       'ad-gallery': '../ad_gallery/jquery.ad-gallery.min',
-      'ajaxforms': '../js/ajaxforms',
       'jquery': '../lib/jquery-1.7.1.min',
-      'jquery-ui': '../lib/jquery-ui-1.8.16/jquery-ui-1.8.16.min',
       'reveal': '../lib/reveal/jquery.reveal',
       'bootstrap': '../lib/bootstrap.min',
       'underscore': '../lib/underscore-min',
@@ -35,12 +33,6 @@
         deps: ['jquery']
       },
       'utils': {
-        deps: ['jquery']
-      },
-      'ajaxforms': {
-        deps: ['jquery']
-      },
-      'jquery-ui': {
         deps: ['jquery']
       },
       'bootstrap': {

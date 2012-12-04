@@ -9,16 +9,14 @@ from django.template.defaultfilters import slugify
 from django.db.models.query_utils import Q
 
 from markitup.widgets import MarkItUpWidget
-from ajax_select.fields import AutoCompleteSelectMultipleField
 
-from main.utils import MooHelper, clean_autocomplete_field
+from main.utils import clean_autocomplete_field
 from main.widgets import Tagsinput, TaggitWidget
 from organization.models import (Organization, OrganizationBranch,
                 OrganizationCategory, OrganizationCategoryTranslation)
 from need.models import TargetAudience
 from fileupload.forms import FileuploadField, LogoField
 from fileupload.models import UploadedFile
-from ajaxforms import AjaxModelForm
 from signatures.signals import notify_on_update
 
 if settings.LANGUAGE_CODE == 'en-us':
@@ -33,10 +31,8 @@ else:
 logger = logging.getLogger(__name__)
 
 
-class FormOrganization(AjaxModelForm):
+class FormOrganization(forms.ModelForm):
     description = forms.CharField(required=False, widget=MarkItUpWidget())
-    community = AutoCompleteSelectMultipleField('community', help_text='',
-        required=False)
     contact = forms.CharField(required=False, widget=MarkItUpWidget())
     target_audiences = forms.Field(required=False,
         widget=Tagsinput(
@@ -71,10 +67,6 @@ class FormOrganization(AjaxModelForm):
         'logo': _('Logo')
     }
 
-    def __init__(self, *args, **kwargs):
-        self.helper = MooHelper(form_id='form_organization')
-        return super(FormOrganization, self).__init__(*args, **kwargs)
-
     def clean(self):
         super(FormOrganization, self).clean()
         try:
@@ -106,12 +98,10 @@ class FormOrganization(AjaxModelForm):
                                         OrganizationCategory)
 
 
-class FormBranch(AjaxModelForm):
+class FormBranch(forms.ModelForm):
     name = forms.CharField()
     geometry = forms.CharField(required=False, widget=forms.HiddenInput())
     info = forms.CharField(required=False, widget=MarkItUpWidget())
-    community = AutoCompleteSelectMultipleField('community', help_text='',
-        required=False)
     organization = forms.CharField(widget=forms.HiddenInput())
 
     class Meta:
@@ -125,10 +115,6 @@ class FormBranch(AjaxModelForm):
         'community': _('Community'),
         'organization': _(' ')
     }
-
-    def __init__(self, *args, **kwargs):
-        self.helper = MooHelper(form_id='form_branch')
-        return super(FormBranch, self).__init__(*args, **kwargs)
 
     def clean_organization(self):
         return clean_autocomplete_field(

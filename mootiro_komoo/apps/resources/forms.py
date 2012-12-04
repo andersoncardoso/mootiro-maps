@@ -8,18 +8,15 @@ from django.utils.translation import ugettext_lazy as _
 from markitup.widgets import MarkItUpWidget
 from fileupload.forms import FileuploadField
 from fileupload.models import UploadedFile
-from ajaxforms import AjaxModelForm
 
-from main.utils import MooHelper
 from main.widgets import TaggitWidget, AutocompleteWithFavorites
-from ajax_select.fields import AutoCompleteSelectMultipleField
 from resources.models import Resource, ResourceKind
 from signatures.signals import notify_on_update
 
 logger = logging.getLogger(__name__)
 
 
-class FormResource(AjaxModelForm):
+class FormResource(forms.ModelForm):
     description = forms.CharField(widget=MarkItUpWidget())
     kind = forms.CharField(required=False, widget=AutocompleteWithFavorites(
             ResourceKind, '/resource/search_by_kind/',
@@ -27,8 +24,6 @@ class FormResource(AjaxModelForm):
     contact = forms.CharField(required=False, widget=MarkItUpWidget())
     tags = forms.Field(required=False, widget=TaggitWidget(
             autocomplete_url="/resource/search_tags/"))
-    community = AutoCompleteSelectMultipleField('community', help_text='',
-        required=False)
     files = FileuploadField(required=False)
 
     class Meta:
@@ -46,7 +41,6 @@ class FormResource(AjaxModelForm):
         'files': _('Images'), }
 
     def __init__(self, *args, **kwargs):
-        self.helper = MooHelper(form_id='form_resource')
         r = super(FormResource, self).__init__(*args, **kwargs)
         self.fields['name'].initial = ''
         return r

@@ -55,7 +55,6 @@ MIDDLEWARE_CLASSES = [
     'authentication.utils.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
-    'lib.reversion.middleware.RevisionMiddleware',
 ]
 
 CONTEXT_PROCESSORS = (
@@ -105,14 +104,9 @@ INSTALLED_APPS = [
     # 3rd party apps
     'taggit',
     'django_js_utils',
-    'crispy_forms',
-    'lib.reversion',
     'markitup',
-    'lib.ajax_select',
     'fileupload',
     'gunicorn',
-    'django_nose',
-    'ajaxforms',
     'djcelery',
 
     # our apps
@@ -150,27 +144,6 @@ KOMOO_COMMENTS_WIDTH = 3
 KOMOO_COMMENTS_HEIGHT = 20
 KOMOO_DISABLE_MAP = False
 DELETE_HOURS = 24
-
-# ========== Ajax-select ======================================================
-AJAX_LOOKUP_CHANNELS = {
-    'community': ('community.lookups', 'CommunityLookup'),
-    'organizationcategory': ('organization.lookups',
-                             'OrganizationCategoryLookup'),
-    'user': ('authentication.lookups', 'UserLookup'),
-}
-AJAX_SELECT_BOOTSTRAP = False
-AJAX_SELECT_INLINES = False
-
-# ========== Tests config =====================================================
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-NOSE_ARGS = ['--rednose', '--nocapture']
-if 'test' in sys.argv:
-    import logging
-    logging.disable(logging.CRITICAL)
-    FIXTURE_DIRS = ('fixtures/test/',)
-    TESTING = True
-else:
-    TESTING = False
 
 # ========== Mailgun ==========================================================
 MAILGUN_API_URL = 'https://api.mailgun.net/v2/it3s.mailgun.org/messages'

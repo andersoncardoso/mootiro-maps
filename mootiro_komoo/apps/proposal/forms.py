@@ -2,20 +2,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals  # unicode by default
 
+from django import forms
 from django.forms import CharField, HiddenInput
 from django.utils.translation import ugettext_lazy as _
 from annoying.decorators import autostrip
 from markitup.widgets import MarkItUpWidget
-from ajaxforms import AjaxModelForm
 
-from main.utils import MooHelper, clean_autocomplete_field
+from main.utils import clean_autocomplete_field
 from proposal.models import Proposal
 from need.models import Need
 from signatures.signals import notify_on_update
 
 
 @autostrip
-class ProposalForm(AjaxModelForm):
+class ProposalForm(forms.ModelForm):
     description = CharField(widget=MarkItUpWidget())
     need = CharField(widget=HiddenInput())
 
@@ -29,11 +29,6 @@ class ProposalForm(AjaxModelForm):
         'cost': _('Cost'),
         'need': ' '
     }
-
-    def __init__(self, *a, **kw):
-        # Crispy forms configuration
-        self.helper = MooHelper(form_id="proposal_form")
-        return super(ProposalForm, self).__init__(*a, **kw)
 
     @notify_on_update
     def save(self, *a, **kw):

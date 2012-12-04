@@ -7,15 +7,13 @@ from django.utils.translation import ugettext_lazy as _
 from markitup.widgets import MarkItUpWidget
 from fileupload.forms import FileuploadField
 from fileupload.models import UploadedFile
-from ajaxforms import AjaxModelForm
 
-from main.utils import MooHelper
 from main.widgets import TaggitWidget
 from community.models import Community
 from signatures.signals import notify_on_update
 
 
-class CommunityForm(AjaxModelForm):
+class CommunityForm(forms.ModelForm):
     class Meta:
         model = Community
         fields = ('name', 'population', 'description', 'tags', 'geometry',
@@ -35,10 +33,6 @@ class CommunityForm(AjaxModelForm):
     tags = forms.Field(
         widget=TaggitWidget(autocomplete_url="/community/search_tags/"),
         required=False)
-
-    def __init__(self, *a, **kw):
-        self.helper = MooHelper(form_id="community_form")
-        return super(CommunityForm, self).__init__(*a, **kw)
 
     @notify_on_update
     def save(self, *args, **kwargs):

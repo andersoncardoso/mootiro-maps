@@ -7,7 +7,6 @@ from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 
 from annoying.decorators import render_to
-from ajaxforms import ajax_form
 
 from authentication.utils import login_required
 from need.models import Need
@@ -35,7 +34,6 @@ def prepare_proposal_objects(need_id='', proposal_id=''):
 
 
 @login_required
-@ajax_form('proposal/edit.html', ProposalForm)
 def edit(request, id=""):
     need_id = request.GET.get('need', '')
     proposal, need = prepare_proposal_objects(need_id, id)

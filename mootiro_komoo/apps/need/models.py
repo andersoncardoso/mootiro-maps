@@ -6,7 +6,6 @@ from django.contrib.gis.db import models
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
-import reversion
 from lib.taggit.managers import TaggableManager
 
 from authentication.models import User
@@ -141,10 +140,6 @@ class Need(GeoRefModel):
     @property
     def perm_id(self):
         return 'n%d' % self.id
-
-
-if not reversion.is_registered(Need):
-    reversion.register(Need)
 
 
 ## ==================== New implementation ================================= ##

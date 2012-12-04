@@ -20,9 +20,6 @@ from django.http import Http404, HttpResponseNotAllowed, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
-
 
 try:
     from functools import wraps
@@ -99,13 +96,17 @@ def create_geojson(objects, type_='FeatureCollection', convert=True,
                 }
             }
             if hasattr(obj, 'categories'):
-                feature['properties']['categories'] = [{'name': c.name, 'image': c.image} for c in obj.categories.all()]
+                feature['properties']['categories'] = [
+                        {'name': c.name, 'image': c.image}
+                        for c in obj.categories.all()]
             if hasattr(obj, 'population'):
                 feature['properties']['population'] = obj.population
 
             if type_ == 'OrganizationBranch':
-                feature['properties']['organization_name'] = obj.organization.name
-                feature['properties']['last_update'] = obj.organization.last_update.isoformat(b' ')
+                feature['properties']['organization_name'
+                        ] = obj.organization.name
+                feature['properties']['last_update'
+                        ] = obj.organization.last_update.isoformat(b' ')
 
             geojson['features'].append(feature)
 
@@ -113,15 +114,6 @@ def create_geojson(objects, type_='FeatureCollection', convert=True,
         return json.dumps(geojson)
 
     return geojson
-
-
-class MooHelper(FormHelper):
-    def __init__(self, form_id=None, *a, **kw):
-        r = super(MooHelper, self).__init__(*a, **kw)
-        if form_id:
-            self.form_id = form_id
-        self.add_input(Submit('submit', _('Submit'), css_class='button'))
-        return r
 
 
 def paginated_query(query, request=None, page=None, size=None):
@@ -267,10 +259,12 @@ def send_mail(title='', message='', sender='', receivers=[]):
                 'subject': title,
                 'text': message})
 
+
 @task
 def _send_mail_task(title='', message='', sender='', receivers=[]):
     """ celery taks for the async function below """
     send_mail(title, message, sender, receivers)
+
 
 def send_mail_async(title='', message='', sender='', receivers=[]):
     ''' send mails asynchronously '''

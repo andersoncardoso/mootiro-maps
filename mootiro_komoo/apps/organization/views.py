@@ -17,7 +17,6 @@ from annoying.decorators import render_to, ajax_request
 from annoying.functions import get_object_or_None
 from fileupload.models import UploadedFile
 from lib.taggit.models import TaggedItem
-from ajaxforms import ajax_form
 from authentication.utils import login_required
 
 from organization.models import Organization, OrganizationBranch
@@ -64,7 +63,6 @@ def related_items(request, id=''):
 
 
 @login_required
-@ajax_form('organization/new.html', FormOrganization, 'form_organization')
 def new_organization(request, *arg, **kwargs):
 
     def on_get(request, form):
@@ -95,7 +93,6 @@ def new_organization_from_map(request, *args, **kwargs):
 
 
 @login_required
-@ajax_form('organization/edit.html', FormOrganization, 'form_organization')
 def edit_organization(request, id='', *arg, **kwargs):
     organization = get_object_or_None(Organization, pk=id) or Organization()
 
@@ -119,13 +116,11 @@ def edit_organization(request, id='', *arg, **kwargs):
 
 
 @login_required
-@ajax_form(form_class=FormBranch)
 def add_branch_from_map(request):
     return {}
 
 
 @login_required
-@ajax_form(form_class=FormOrganization)
 def add_org_from_map(request):
     return {}
 

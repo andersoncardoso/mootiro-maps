@@ -1,6 +1,20 @@
 
 common.js
 ----------------
+authentication/models.js
+text.js
+text!templates/widgets/_signup.html
+text!templates/widgets/_signin.html
+authentication/forms.js
+text!templates/authentication/_login.html
+text!templates/authentication/_register.html
+text!templates/authentication/_social_button.html
+text!templates/authentication/_not_verified.html
+text!templates/authentication/_verified.html
+authentication/views.js
+text!templates/widgets/_modal_box.html
+new_utils.js
+authentication/router.js
 common.js
 async.js
 propertyParser.js
@@ -15,7 +29,6 @@ map/multimarker.js
 map/multipolyline.js
 map/geometries.js
 map/utils.js
-text.js
 text!templates/map/_searchbox.html
 map/views.js
 map/controls.js

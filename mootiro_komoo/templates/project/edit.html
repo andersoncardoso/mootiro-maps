@@ -1,7 +1,6 @@
 {% extends 'global.html'%}
 {% load komoo_tags %}
 {% load i18n %}
-{% load crispy_forms_tags %}
 {% load upload_tags %}
 
 {% block menu %} {% menu "project" %} {% endblock %}
@@ -24,7 +23,7 @@
                 </div>
             </div>
 
-            {% crispy form form.helper %}
+            {{ form }}
 
             {% if project and project.related_objects.count %}
                 <hr/>
@@ -47,8 +46,6 @@
 
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="/static/css/ajax_select.css" />
-    <script type="text/javascript" src="/static/js/ajax_select.js"></script>
     <style type="text/css">
         .contributors_deck_project_creator{
             margin-left: 15px;
@@ -66,7 +63,7 @@
     {% load_files project %}
 
     <script type="text/javascript" charset="utf-8">
-      require(['jquery', 'utils', 'ajaxforms'], function ($) {
+      require(['jquery', 'utils'], function ($) {
         // "providential workaround" for the contributors widget ;)
         $(function(){
             var clean_contributors = function(){
@@ -83,12 +80,6 @@
 
 
             $form = $('#form_project');
-            $form.ajaxform({
-                onSubmit: function(){
-                    clean_contributors();
-                }
-            });
-            $form.komooFormHintBoxes({});
 
             {% if project %}
             $('#id_contributors_on_deck.results_on_deck').prepend(

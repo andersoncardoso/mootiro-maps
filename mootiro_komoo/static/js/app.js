@@ -5,7 +5,7 @@
       analytics.init();
       return facebook.init(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.facebookAppId : void 0);
     });
-    require(['moderation/moderation', 'lib/shortcut', 'ajaxforms', 'komoo_search', 'utils', 'no-ie'], function() {});
+    require(['moderation/moderation', 'lib/shortcut', 'komoo_search', 'utils', 'no-ie'], function() {});
     return {};
   });
 

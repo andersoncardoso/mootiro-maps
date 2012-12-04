@@ -8,7 +8,6 @@ from django.shortcuts import get_object_or_404
 from django.utils import simplejson
 from django.utils.decorators import method_decorator
 
-from ajaxforms import ajax_form
 from annoying.decorators import render_to, ajax_request
 
 from authentication.utils import login_required
@@ -60,7 +59,6 @@ class MapView(CommunityView, ViewDetailsMixin, ViewGeojsonMixin):
 
 class EditView(CommunityView, AllMethodsMixin):
     @method_decorator(login_required)
-    @method_decorator(ajax_form('community/edit.html', CommunityForm))
     def all(self, request, id=None, *args, **kwargs):
         community = get_object_or_404(Community, pk=id) if id else Community()
 
@@ -81,7 +79,6 @@ class EditView(CommunityView, AllMethodsMixin):
 
 class NewView(CommunityView, AllMethodsMixin):
     @method_decorator(login_required)
-    @method_decorator(ajax_form('community/edit_ajax.html', CommunityForm))
     def all(self, request, *args, **kwargs):
         def on_get(request, form_community):
             form_community.helper.form_action = reverse('new_community')
@@ -94,7 +91,6 @@ class NewView(CommunityView, AllMethodsMixin):
 
 
 class ProjectsView(CommunityView, ViewObjectMixin):
-    @method_decorator(ajax_request)
     def get_json(self, request, id):
         obj = self.get_object(id)
         ct = ContentType.objects.get_for_model(obj)

@@ -1,6 +1,6 @@
 (function() {
 
-  define(['jquery', 'underscore', 'backbone', 'text!templates/widgets/_autocomplete.html', 'jquery-ui'], function($, _, Backbone, tplt) {
+  define(['jquery', 'underscore', 'backbone', 'text!templates/widgets/_autocomplete.html'], function($, _, Backbone, tplt) {
     var AutocompleteView;
     AutocompleteView = Backbone.View.extend({
       className: 'autocomplete',
