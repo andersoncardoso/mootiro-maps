@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mootiro Maps\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-30 13:51-0200\n"
+"POT-Creation-Date: 2012-12-04 13:36-0200\n"
 "PO-Revision-Date: 2012-10-18 17:41-0300\n"
 "Last-Translator: André Casimiro <andre.casimiro@it3s.org>\n"
 "Language-Team: it3s <LL@li.org>\n"
@@ -18,7 +18,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 "X-Poedit-Basepath: ../../../\n"
 
-#: apps/authentication/api.py:37
+#: apps/authentication/api.py:37 apps/authentication/models.py:130
+#: apps/authentication/models.py:132 apps/authentication/models.py:134
 msgid "Required field"
 msgstr "Campo obrigatório"
 
@@ -45,6 +46,64 @@ msgstr "Foto"
 #: apps/authentication/forms.py:30
 msgid "Location"
 msgstr "Localização"
+
+#: apps/authentication/models.py:17
+msgid ""
+"\n"
+"Hello, {name}.\n"
+"\n"
+"Before using our tool, please confirm your e-mail visiting the link below.\n"
+"{verification_url}\n"
+"\n"
+"Thanks,\n"
+"the IT3S team.\n"
+msgstr ""
+"\n"
+"Olá, {name}.\n"
+"\n"
+"Antes de usar nossa ferramenta, por favor confirme seu e-mail visitando o "
+"link abaixo.\n"
+"{verification_url}\n"
+"\n"
+"Obrigado,\n"
+"a equipe IT3S.\n"
+
+#: apps/authentication/models.py:140
+msgid ""
+"This email is registered on our system. Probably you've logged before with a "
+"social account (facebook or google). You can skip this step and just login."
+msgstr ""
+"Este email já está registrado no nosso sistema. Provavelmente você já entrou "
+"anteriormente usando uma conta externa (facebook ou google). Você pode pular "
+"esta etapa e simplesmente entrar."
+
+#: apps/authentication/models.py:147
+msgid "Email address already in use"
+msgstr "Este email já está em uso."
+
+#: apps/authentication/models.py:157
+msgid "Welcome to MootiroMaps"
+msgstr "Bem-vindo ao MootiroMaps"
+
+#: apps/authentication/models.py:217
+msgid "Email is required"
+msgstr "Email é obrigatório"
+
+#: apps/authentication/models.py:219
+msgid "Password is required"
+msgstr "Senha é obrigatório"
+
+#: apps/authentication/models.py:226
+msgid "Email not found"
+msgstr "Email não encontrado"
+
+#: apps/authentication/models.py:231
+msgid "Wrong password"
+msgstr "Senha incorreta"
+
+#: apps/authentication/models.py:236
+msgid "User not active"
+msgstr "Usuário não ativo"
 
 #: apps/authentication/views.py:172
 msgid "You must provide a valid password"
@@ -893,7 +952,7 @@ msgstr "Ajuda"
 msgid "Ops!"
 msgstr "Ops!"
 
-#: templates/global.html:89
+#: templates/global.html:83
 msgid "See Results"
 msgstr "Ver Resultados"
 
@@ -1785,44 +1844,8 @@ msgstr "Notícias"
 #~ msgid "Confirm your Password"
 #~ msgstr "Confirme a sua senha"
 
-#~ msgid "This email is already in use."
-#~ msgstr "Este email já está em uso."
-
-#~ msgid ""
-#~ "This email is registered on our system. Probably you've logged before "
-#~ "with a social account (facebook or google). You can skip this step and "
-#~ "just login."
-#~ msgstr ""
-#~ "Este email já está registrado no nosso sistema. Provavelmente você já "
-#~ "entrou anteriormente usando uma conta externa (facebook ou google). Você "
-#~ "pode pular esta etapa e simplesmente entrar."
-
 #~ msgid "Passwords did not match."
 #~ msgstr "As senha não coincidem."
-
-#~ msgid "Welcome to MootiroMaps"
-#~ msgstr "Bem-vindo ao MootiroMaps"
-
-#~ msgid ""
-#~ "\n"
-#~ "Hello, {name}.\n"
-#~ "\n"
-#~ "Before using our tool, please confirm your e-mail visiting the link "
-#~ "below.\n"
-#~ "{verification_url}\n"
-#~ "\n"
-#~ "Thanks,\n"
-#~ "the IT3S team.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Olá, {name}.\n"
-#~ "\n"
-#~ "Antes de usar nossa ferramenta, por favor confirme seu e-mail visitando o "
-#~ "link abaixo.\n"
-#~ "{verification_url}\n"
-#~ "\n"
-#~ "Obrigado,\n"
-#~ "a equipe IT3S.\n"
 
 #~ msgid "Don't have an account?"
 #~ msgstr "Não possui uma conta? Registre-se!"
