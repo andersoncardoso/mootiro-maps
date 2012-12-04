@@ -20,7 +20,7 @@ A_POLYGON_GEOMETRY = '''
 '''
 
 
-def setup_django():
+def setup_env():
     # fix path
     pth = os.path
     PROJ_DIR = pth.abspath(pth.join(pth.dirname(__file__), '..'))
@@ -28,9 +28,15 @@ def setup_django():
     sys.path.append(PROJ_DIR)
     sys.path.append(SITE_ROOT)
 
+    APPS_DIR = pth.abspath(pth.join(PROJ_DIR, 'apps'))
+    LIB_DIR = pth.abspath(pth.join(PROJ_DIR, 'lib'))
+    sys.path.append(APPS_DIR)
+    sys.path.append(LIB_DIR)
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings.testing'
+
     # config environment
-    from settings import testing as environ
-    setup_environ(environ)
+    # from settings import testing as environ
+    # setup_environ(environ)
 
 
 def ensure_empty_db():

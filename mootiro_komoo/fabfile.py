@@ -140,7 +140,7 @@ def test(*test_types):
         logging.info('To perform integration tests, rememeber to start de '
                      'testing server: fab testing run')
     for test in test_types:
-        local('nosetests tests/{}/'.format(test))
+        local('nosetests --nocapture tests/{}/'.format(test))
 
 
 

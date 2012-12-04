@@ -8,31 +8,29 @@ from .api import LoginHandler, LogoutHandler, UserHandler
 #
 # views urls
 urlpatterns = patterns('authentication.views',
-    # general urls
     url(r'^user/?$', 'user_root', name='user_root'),
 
-    # user creation urls
     url(r'^user/verification/(?P<key>\S+)/?$', 'user_verification',
             name='user_verification'),
 
-    # per user urls
-    url(r'^user/(?P<id>\d+)/?$', 'profile', name='user_profile'),
+    # # per user urls
+    # url(r'^user/(?P<id>\d+)/?$', 'profile', name='user_profile'),
 
-    url(r'^user/edit/?$', 'profile_update', name='profile_update'),
+    # url(r'^user/edit/?$', 'profile_update', name='profile_update'),
 
-    url(r'^user/edit/public_settings/?$',
-            'profile_update_public_settings',
-            name='profile_update_public_settings'),
+    # url(r'^user/edit/public_settings/?$',
+    #         'profile_update_public_settings',
+    #         name='profile_update_public_settings'),
 
-    url(r'^user/edit/personal_settings/?$',
-            'profile_update_personal_settings',
-            name='profile_update_personal_settings'),
+    # url(r'^user/edit/personal_settings/?$',
+    #         'profile_update_personal_settings',
+    #         name='profile_update_personal_settings'),
 
-    url(r'^user/edit/digest_settings/?$', 'digest_update',
-            name='digest_update'),
+    # url(r'^user/edit/digest_settings/?$', 'digest_update',
+    #         name='digest_update'),
 
-    url(r'^user/edit/signature_delete/?$', 'signature_delete',
-            name='signature_delete'),
+    # url(r'^user/edit/signature_delete/?$', 'signature_delete',
+    #         name='signature_delete'),
 
 )
 
