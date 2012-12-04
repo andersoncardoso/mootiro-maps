@@ -322,7 +322,7 @@ function nestCollection(model, attributeName, nestedCollection) {
 }
 
 /* Komoo style tooltips. Based on bootstrap tooltip plugin. */
-require(['jquery', 'bootstrap'], function($){
+require(['jquery'], function($){
     $.fn.komooTooltip = function() {
         var $target = $(this);
         $target.tooltip({

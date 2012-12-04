@@ -1,18 +1,11 @@
 (function() {
 
-  define(['jquery', 'canvasloader', 'utils', 'bootstrap'], function($, CanvasLoader) {
+  define(['jquery', 'utils'], function($) {
     return $(function() {
-      var cl, csrftoken, form_search, hash, search_field, showPopover, showResults, titles, _ref;
+      var csrftoken, form_search, hash, search_field, showPopover, showResults, titles, _ref;
       form_search = $('#search');
       search_field = $('#search-bar');
       csrftoken = getCookie('csrftoken') || window.csrf_token;
-      cl = new CanvasLoader('search-canvasloader-container');
-      cl.setColor('#3ebac2');
-      cl.setShape('rect');
-      cl.setDiameter(22);
-      cl.setDensity(43);
-      cl.setRange(1.2);
-      cl.setFPS(22);
       titles = {
         'community': gettext('Communities'),
         'need': gettext('Needs'),
@@ -111,8 +104,7 @@
         }
         $('#search-results-box').data('popover').options.title = "" + results_count + " Results <span id=\"search-box-close\" >x</span>";
         $('#search-results-box').data('popover').options.content = results_list;
-        showPopover();
-        return cl != null ? cl.hide() : void 0;
+        return showPopover();
       };
       form_search.submit(function(evt) {
         var previous_search, search_term;
@@ -120,7 +112,6 @@
         search_term = search_field.val();
         previous_search = localStorageGet('komoo_search');
         if (!search_term) return;
-        if (cl != null) cl.show();
         if ((previous_search != null ? previous_search.term : void 0) === search_term) {
           return showResults(previous_search.results);
         } else {

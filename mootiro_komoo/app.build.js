@@ -9,7 +9,6 @@
         'jquery': 'empty:',
         'underscore': 'empty:',
         'backbone': 'empty:',
-        'bootstrap': 'empty:',
         'reveal': 'empty:',
         'reForm': 'empty:',
         'async': '../static/lib/requirejs/async',

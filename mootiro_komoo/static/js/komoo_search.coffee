@@ -1,18 +1,9 @@
-define ['jquery', 'canvasloader', 'utils', 'bootstrap'], ($, CanvasLoader) ->
+define ['jquery', 'utils'], ($) ->
     $ () ->
 
         form_search = $ '#search'
         search_field = $ '#search-bar'
         csrftoken = getCookie('csrftoken') or  window.csrf_token
-
-        # canvas loader for user feedback
-        cl = new CanvasLoader 'search-canvasloader-container'
-        cl.setColor '#3ebac2'
-        cl.setShape 'rect'
-        cl.setDiameter 22
-        cl.setDensity 43
-        cl.setRange 1.2
-        cl.setFPS 22
 
         titles =
             'community': gettext 'Communities'
@@ -172,7 +163,6 @@ define ['jquery', 'canvasloader', 'utils', 'bootstrap'], ($, CanvasLoader) ->
             """
             $('#search-results-box').data('popover').options.content = results_list
             showPopover()
-            cl?.hide()
 
 
         form_search.submit (evt) ->
@@ -184,7 +174,6 @@ define ['jquery', 'canvasloader', 'utils', 'bootstrap'], ($, CanvasLoader) ->
             if not search_term
                 return
 
-            cl?.show()
 
             if previous_search?.term is search_term
                 showResults previous_search.results

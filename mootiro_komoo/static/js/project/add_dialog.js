@@ -1,6 +1,6 @@
 (function() {
 
-  define(['jquery', 'underscore', 'backbone', 'project/model', 'widgets/autocomplete', 'text!templates/project/_add_dialog.html', 'bootstrap'], function($, _, Backbone, Model, AutocompleteView, tplt) {
+  define(['jquery', 'underscore', 'backbone', 'project/model', 'widgets/autocomplete', 'text!templates/project/_add_dialog.html'], function($, _, Backbone, Model, AutocompleteView, tplt) {
     'use strict';
     var AddDialogView, ProjectAutocompleteView;
     ProjectAutocompleteView = AutocompleteView.extend({

@@ -5,7 +5,6 @@ define [
     'project/model',
     'widgets/autocomplete',
     'text!templates/project/_add_dialog.html',
-    'bootstrap'
 ], ($, _, Backbone, Model, AutocompleteView, tplt) ->
     'use strict'
 

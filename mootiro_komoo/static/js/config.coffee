@@ -10,7 +10,6 @@ config =
         'ad-gallery': '../ad_gallery/jquery.ad-gallery.min'
         'jquery': '../lib/jquery-1.7.1.min'
         'reveal': '../lib/reveal/jquery.reveal'
-        'bootstrap': '../lib/bootstrap.min'
         'underscore': '../lib/underscore-min'
         'backbone': '../lib/backbone-min'
         'reForm': '../lib/reForm'
@@ -19,7 +18,6 @@ config =
         'propertyParser': '../lib/requirejs/propertyParser'
         'infobox': 'vendor/infobox_packed'
         'markerclusterer': 'vendor/markerclusterer_packed'
-        'canvasloader': '../lib/heartcode-canvasloader-min'
         'sinon': '../lib/sinon-1.5.0'
     shim:
         'reveal':
@@ -27,8 +25,6 @@ config =
         'ad-gallery':
             deps: ['jquery']
         'utils':
-            deps: ['jquery']
-        'bootstrap':
             deps: ['jquery']
         'underscore':
             exports: '_'
@@ -44,8 +40,6 @@ config =
         'markerclusterer':
             deps: ['googlemaps']
             exports: 'MarkerClusterer'
-        'canvasloader':
-            exports: 'CanvasLoader'
         'sinon':
             exports: 'sinon'
     deps: [
