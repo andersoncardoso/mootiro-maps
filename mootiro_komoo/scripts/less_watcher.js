@@ -17,7 +17,7 @@ var compileLess = function() {
     var cmd = 'lessc static/css/fashion.less > static/css/fashion.css',
         now = new Date();
 
-    console.log('Compiling: ' + formatedDate(now));
+    console.log('[less] ' + formatedDate(now) + ' : fashion.less');
     exec(cmd, function(error, stdout, stderr){
         if (stdout) {
           console.log(stdout);

@@ -76,7 +76,7 @@ def compile_less():
 def work():
     """Start watchers"""
     # compilers
-    local('coffee -cw static/js/ &')
+    local('./scripts/coffee_watcher.js &')
     local('./scripts/less_watcher.js &')
 
     # test runners go here!
@@ -91,7 +91,7 @@ def update_reForm():
 def kill_tasks(*tasks):
     """ Kill background tasks given a list o task names """
     if not tasks:
-        tasks = ['coffee', 'less_watcher', 'manage.py']
+        tasks = ['coffee_watcher', 'less_watcher', 'manage.py']
     for task in tasks:
         local(
             "ps -eo pid,args | grep %s | grep -v grep | "
