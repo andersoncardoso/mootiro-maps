@@ -3,7 +3,7 @@ define ['common'], () ->
     analytics.init()
     facebook.init KomooNS?.facebookAppId
 
-  require ['moderation/moderation', 'lib/shortcut', 'komoo_search', 'utils', 'no-ie'], () ->
+  require ['moderation/moderation', 'lib/shortcut', 'utils'], () ->
     # loads scripts not refactored yet
 
   {}
