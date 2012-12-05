@@ -12,7 +12,6 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 from django.template.defaultfilters import slugify
-from lib.taggit.managers import TaggableManager
 from komoo_map.models import GeoRefModel, POLYGON
 from authentication.models import User
 
@@ -32,7 +31,7 @@ class Community(GeoRefModel):
                                     blank=True)
     last_update = models.DateTimeField(auto_now=True)
 
-    tags = TaggableManager()
+    # tags = TaggableManager()
 
     def __unicode__(self):
         return self.name

@@ -1,14 +1,14 @@
 {% extends "global.html" %}
 {% load i18n %}
-{% load komoo_filters %}
-{% load komoo_tags %}
-{% load komoo_map_tags %}
-{% load comment_tags %}
+{#% load komoo_filters %#}
+{#% load komoo_tags %#}
+{#% load komoo_map_tags %#}
+{#% load comment_tags %#}
 {% load humanize %}
 
 
 {% block content %}
-{% komoo_map_tooltip %}
+{#% komoo_map_tooltip %#}
 <div id="updates-header">
   <img alt="" src="{{STATIC_URL}}img/updates-page/novidades.png"/>
 
@@ -83,7 +83,7 @@
 
       <div id="last-updates-panel" class="panel">
           <div class="view-list-pagination">
-            {% pagination updates %}
+            {#% pagination updates %#}
           </div>
           <ul class="updates">
             {% for u in updates.object_list %}
@@ -95,7 +95,7 @@
               <div class="update-info">
                 <h3>
                   {% if u.type == "D" %}
-                    {% users_list u.users %}
+                    {#% users_list u.users %#}
                     {% blocktrans count num=shown|length %}
                       discussed
                     {% plural %}
@@ -114,15 +114,15 @@
                   <a href="#" class="preview-on-map-ajax" data-app-name="{{ u.object_app_name }}" data-model-name="{{ u.object_type }}" data-object-id="{{ u.object_id }}"><i class="icon-see-on-map"></i></a>
                 </div>
                 <div class="clear-both"></div>
-                {% communities_list u.communities %}
+                {# communities_list u.communities %#}
                 <div class="clear-both"></div>
                 <div class="update-message left">
-                  <strong>{{ u.readable_type|capfirst }}</strong> {{ u.date|naturaltime }}
+                  <strong>{{ u.readable_type|capfirst }}</strong> {{ u.date }} {#|naturaltime }#}
 
                   {### Users aggregated list ###}
                   {% if u.type == "A" or u.type == "E" %}
                     {% trans "by" %}
-                    {% users_list u.users %}
+                    {#% users_list u.users %#}
                   {% endif %}
                 </div>
                 <div class="update-social right">
@@ -135,7 +135,7 @@
             {% endfor %}
           </ul>
           <div class="view-list-pagination">
-            {% pagination updates %}
+            {#% pagination updates %#}
           </div>
       </div>
     </div>

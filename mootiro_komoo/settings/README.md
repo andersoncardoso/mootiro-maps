@@ -1,4 +1,4 @@
-Whe use Django settings by calling a specific settings file ('development.py',
+ Whe use Django settings by calling a specific settings file ('development.py',
 'staging.py' or 'production.py'). These files first import everything from
 common.py, which holds general configurations, then specializes it by type, and
 finaly import the local_settings.py (which is not tracked) whith passwords

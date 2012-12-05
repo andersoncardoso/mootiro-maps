@@ -174,6 +174,10 @@ class AnonymousUser(object):
 
     id = None
 
+    # dummy fix for django weirdness =/
+    def get_and_delete_messages(self):
+        pass
+
 
 PROVIDERS = {
     # 'provider label': 'db info'

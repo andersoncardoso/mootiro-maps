@@ -3,11 +3,8 @@ from __future__ import unicode_literals  # unicode by default
 
 from django.conf import settings
 from django.conf.urls.defaults import patterns, include, url
-from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.i18n import javascript_catalog
-
-admin.autodiscover()
 
 # Some URL fragments to be reused throughout the application
 SLUG = r'(?P<slug>[a-zA-Z0-9-]+)'
@@ -24,15 +21,10 @@ def prepare_regex(regex):
     return regex.replace('SLUG', SLUG).replace('ID', ID).replace('PK', PK)
 
 urlpatterns = patterns('',
-    # admin stuff
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^admin/', include(admin.site.urls)),
-
     # user
     url(r'', include('authentication.urls')),
 
     # 3rd party apps
-    url(r'^markitup/', include('markitup.urls')),
     url(r'^upload/', include('fileupload.urls')),
     url(r'^jsi18n/$', javascript_catalog, js_info_dict,
         name='javascript_catalog'),

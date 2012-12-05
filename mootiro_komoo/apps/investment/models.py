@@ -10,7 +10,6 @@ from django.core.urlresolvers import reverse
 from annoying.functions import get_object_or_None
 
 from authentication.models import User
-from lib.taggit.managers import TaggableManager
 from django.template.defaultfilters import slugify
 
 
@@ -151,7 +150,7 @@ class Investment(models.Model):
     grantee_object_id = models.PositiveIntegerField(editable=False)
     grantee = generic.GenericForeignKey('grantee_content_type', 'grantee_object_id')
 
-    tags = TaggableManager()
+    # tags = TaggableManager()
 
     def __unicode__(self):
         return unicode(self.title)

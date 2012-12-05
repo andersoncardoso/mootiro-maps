@@ -37,12 +37,10 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'public')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, 'static'),)
 
-ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 
@@ -51,9 +49,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    # 'django.contrib.auth.middleware.AuthenticationMiddleware',
     'authentication.utils.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
 ]
 
@@ -65,7 +61,6 @@ CONTEXT_PROCESSORS = (
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
 )
 TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, 'templates'), )
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -75,7 +70,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.static",
     "django.core.context_processors.request",
-    "django.contrib.messages.context_processors.messages",
     "main.context_processors.social_keys",
 
 )
@@ -91,20 +85,15 @@ ROOT_URLCONF = 'mootiro_komoo.urls'
 
 INSTALLED_APPS = [
     # django apps
-    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.admin',
     'django.contrib.gis',
     'django.contrib.markup',
     'django.contrib.humanize',
 
     # 3rd party apps
-    'taggit',
     'django_js_utils',
-    'markitup',
     'fileupload',
     'gunicorn',
     'djcelery',
@@ -130,14 +119,6 @@ INSTALLED_APPS = [
 ]
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
-
-# ==========  markiItUp =======================================================
-
-MARKITUP_SET = 'markitup/sets/markdown_pt_BR'
-MARKITUP_FILTER = ('main.utils.render_markup', {})
-MARKITUP_AUTO_PREVIEW = True
-JQUERY_URL = 'dummy.js'
-
 
 # ========== Komoo ============================================================
 KOMOO_COMMENTS_WIDTH = 3

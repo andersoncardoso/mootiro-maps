@@ -6,7 +6,6 @@ from django.contrib.gis.db import models
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
-from lib.taggit.managers import TaggableManager
 
 from authentication.models import User
 from community.models import Community
@@ -82,7 +81,7 @@ class Need(GeoRefModel):
     categories = models.ManyToManyField(NeedCategory)
     target_audiences = models.ManyToManyField(TargetAudience, blank=False)
 
-    tags = TaggableManager()
+    # tags = TaggableManager()
 
     class Map:
         title = _('Need')

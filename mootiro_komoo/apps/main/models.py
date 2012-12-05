@@ -2,7 +2,6 @@
 from django.db import models
 from django.conf import settings
 
-from lib.taggit.managers import TaggableManager
 from komoo_map.models import GeoRefModel
 from authentication.models import User
 from main.utils import BaseDAOMixin
@@ -20,7 +19,7 @@ class CommonDataMixin(models.Model):
                         blank=True, related_name='last_edited_%(class)s')
     last_update = models.DateTimeField(auto_now=True)
 
-    tags = TaggableManager()
+    # tags = TaggableManager()
 
     def __unicode__(self):
         return unicode(self.name)

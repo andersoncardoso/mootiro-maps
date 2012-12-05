@@ -9,7 +9,6 @@ from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 
-from lib.taggit.managers import TaggableManager
 from fileupload.models import UploadedFile
 
 from authentication.models import User
@@ -30,7 +29,7 @@ class Project(models.Model):
     name = models.CharField(max_length=1024)
     slug = models.SlugField(max_length=1024)
     description = models.TextField()
-    tags = TaggableManager()
+    # tags = TaggableManager()
 
     contributors = models.ManyToManyField(User, null=True, blank=True,
             related_name='project_contributors')

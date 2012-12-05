@@ -18,7 +18,6 @@ from proposal.models import Proposal
 from resources.models import Resource
 from investment.models import Investment, Investor
 from fileupload.models import UploadedFile
-from lib.taggit.managers import TaggableManager
 
 
 LOGO_CHOICES = (
@@ -55,7 +54,7 @@ class Organization(models.Model):
     target_audiences = models.ManyToManyField(TargetAudience, null=True,
                         blank=True)
 
-    tags = TaggableManager()
+    # tags = TaggableManager()
 
     investments = generic.GenericRelation(Investment,
                         content_type_field='grantee_content_type',

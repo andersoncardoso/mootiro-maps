@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals  # unicode by default
 from django.conf.urls.defaults import url, patterns
@@ -6,6 +5,7 @@ from django.conf import settings
 
 
 urlpatterns = patterns('main.views',
+    url(r'^$', 'root', name='root'),
     url(r'^map/$', 'map', name='map'),
     url(r'^get_geojson$', 'get_geojson', name='get_geojson'),
     url(r'^radial_search$', 'radial_search', name='radial_search'),

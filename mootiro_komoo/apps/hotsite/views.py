@@ -8,7 +8,7 @@ from annoying.decorators import render_to
 def root(request):
     return dict()
 
-@render_to('hotsite/about.html')
-def about(request):
-    return dict()
-
+# @render_to('hotsite/about.html')
+# def about(request):
+#     return dict()
+# 

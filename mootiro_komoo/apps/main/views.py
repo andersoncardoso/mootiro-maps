@@ -56,6 +56,9 @@ def map(request):
         'geojson': {}
     }
 
+@render_to('main/root.html')
+def root(request):
+    return {}
 
 def _fetch_geo_objects(Q, zoom):
     ret = {}

@@ -7,8 +7,6 @@ from django.db.models import Count
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
-from lib.taggit.managers import TaggableManager
-
 from authentication.models import User
 from community.models import Community
 from komoo_map.models import GeoRefModel, POLYGON, LINESTRING, POINT
@@ -44,7 +42,7 @@ class Resource(GeoRefModel):
     contact = models.TextField(null=True, blank=True)
     community = models.ManyToManyField(Community, related_name='resources',
             null=True, blank=True)
-    tags = TaggableManager()
+    # tags = TaggableManager()
 
     investments = generic.GenericRelation(Investment,
                         content_type_field='grantee_content_type',

@@ -13,7 +13,7 @@
     <title>{% block title %}Mootiro Maps{% endblock %}</title>
 
     <!-- Facebook sharing tags -->
-    <!--meta property="og:title" content="title" /-->
+    {#<meta property="og:title" content="title" />#}
     <meta property="og:description" content="MootiroMaps é uma ferramenta open source que promove a colaboração entre atores engajados no desenvolvimento de um território ou uma comunidade."/>
     <meta property="og:image" content="{{STATIC_URL}}img/logo.png"/>
 
@@ -81,9 +81,9 @@
           </form>
           <div id="search-results-box"></div>
 
-          {#% block menu %#}
-              {#% menu "" %#}
-          {#% endblock %#}
+          {% block menu %}
+              {% menu "" %}
+          {% endblock %}
 
         </div>
 
@@ -96,7 +96,7 @@
           {% include "main/footer.html" %}
         {% endblock %}
       </div>
-      {#% include "main/error_box.html" %#}
+      {% include "main/error_box.html" %}
     </div>
 
     {% block page_scripts %}{% endblock %}

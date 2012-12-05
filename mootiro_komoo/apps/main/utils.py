@@ -421,27 +421,27 @@ class BaseView(ResourceHandler):
             pass
 
 
-class SearchTagsBaseView(BaseView):
-    """ Base class for "search tags" views
-    usage:
-
-      on views.py
-      class SearchSomeTagsView(SearchTagsBaseView):
-          model = SomeModel
-    """
-    limit = 10
-
-    def get(self, request):
-        # Import here to prevent a strange issue
-        from lib.taggit.models import TaggedItem
-        term = request.GET['term']
-        qset = TaggedItem.tags_for(self.model
-                ).filter(name__istartswith=term
-                ).annotate(count=Count('taggit_taggeditem_items__id')
-                ).order_by('-count', 'slug')[:self.limit]
-        tags = [t.name for t in qset]
-        return HttpResponse(simplejson.dumps(tags),
-                mimetype='application/json')
+# class SearchTagsBaseView(BaseView):
+#     """ Base class for "search tags" views
+#     usage:
+#
+#       on views.py
+#       class SearchSomeTagsView(SearchTagsBaseView):
+#           model = SomeModel
+#     """
+#     limit = 10
+#
+#     def get(self, request):
+#         # Import here to prevent a strange issue
+#         from lib.taggit.models import TaggedItem
+#         term = request.GET['term']
+#         qset = TaggedItem.tags_for(self.model
+#                 ).filter(name__istartswith=term
+#                 ).annotate(count=Count('taggit_taggeditem_items__id')
+#                 ).order_by('-count', 'slug')[:self.limit]
+#         tags = [t.name for t in qset]
+#         return HttpResponse(simplejson.dumps(tags),
+#                 mimetype='application/json')
 
 
 class SearchByBaseView(BaseView):
