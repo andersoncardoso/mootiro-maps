@@ -15,7 +15,7 @@ from annoying.functions import get_config
 class ImageSwitch(forms.CheckboxInput):
 
     class Media:
-        js = ('lib/jquery.imagetick.js',)
+        js = ('lib/jquery-plugins/imagetick/jquery.imagetick.js',)
 
     def __init__(self, image_tick, image_no_tick, attrs=None, prefix='', *a, **kw):
         super(ImageSwitch, self).__init__(attrs, *a, **kw)
@@ -57,7 +57,7 @@ class ImageSwitch(forms.CheckboxInput):
 class ImageSwitchMultiple(forms.CheckboxSelectMultiple):
 
     class Media:
-        js = ('lib/jquery.imagetick.js',)
+        js = ('lib/jquery-plugins/imagetick/jquery.imagetick.js',)
 
     def __init__(self, get_image_tick, get_image_no_tick, show_names=False,
             prefix='', i18n=True, *a, **kw):

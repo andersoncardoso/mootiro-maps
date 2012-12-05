@@ -19,8 +19,8 @@
 #     """
 # 
 #     class Media:
-#         css = {'all': ('lib/tagsinput/jquery.tagsinput.css',)}
-#         js = ('lib/tagsinput/jquery.tagsinput.min.js',)
+#         css = {'all': ('lib/jquery-plugins/tagsinput/jquery.tagsinput.css',)}
+#         js = ('lib/jquery-plugins/tagsinput/jquery.tagsinput.min.js',)
 # 
 #     def __init__(self, autocomplete_url="", options={}, attrs={}):
 #         """Constructs the widget.
