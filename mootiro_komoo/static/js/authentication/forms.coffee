@@ -7,19 +7,18 @@ define (require) ->
   signin_tpl = require 'text!templates/widgets/_signin.html'
 
 
-  #
   # Simple widget for the Sign Up link
   # Used with reForm
   class SignupWidget extends reForm.Widget
     template: signup_tpl
 
-  #
+
   # Simple widget for the Sign In link
   # Used with reForm
   class SigninWidget extends reForm.Widget
     template: signin_tpl
 
-  #
+
   # Form for Login, used internally on the LoginView
   class LoginForm extends reForm.Form
     fields: [
@@ -45,6 +44,7 @@ define (require) ->
         @trigger 'register-link:click'
         return false
       this
+
 
   #
   # Register Form
@@ -92,6 +92,7 @@ define (require) ->
         @trigger 'login-link:click'
         return false
       this
+
 
   return {
     LoginForm: LoginForm

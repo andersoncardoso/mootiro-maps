@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 var exec       = require('child_process').exec,
-    fs_watcher = require('.fs_watcher');
+    fs_watcher = require('./fs_watcher');
 
 var baseDir = 'static/css/';
 

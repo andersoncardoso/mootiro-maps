@@ -326,8 +326,3 @@ ul#external_providers li button.twitter:hover {
   color: #777777;
   line-height: 1.2em;
 }
-#ie-warning {
-  padding: 5px 50px 5px 50px;
-  background-color: #ffe5af;
-  color: #353535;
-}
