@@ -28,43 +28,15 @@
     <script type="text/javascript" src="{{STATIC_URL}}lib/django-js-utils/dutils.conf.urls.js"></script>
 
     <script type="text/javascript">
-      var KomooNS = (function (KomooNS) {
-        KomooNS.isAuthenticated = {{ user.is_authenticated|lower }};
-        KomooNS.lang = '{{ LANGUAGE_CODE }}';
-        KomooNS.facebookAppId = '{{ FACEBOOK_APP_ID }}';
-        {% if not debug %}
-        // Loads optimized scripts
-        KomooNS.require_baseUrl = '{{STATIC_URL}}js.build';
-        {% else %}
-        KomooNS.require_baseUrl = '{{STATIC_URL}}js';
-        {% endif %}
-
-        {% if object %}
-        KomooNS.object = {{ object.json|safe|default:'{}' }};
-        {% endif %}
-
-        return KomooNS;
-      }(KomooNS || {}));
-
-      {% if csrf_token %}
-      window.csrf_token = '{{ csrf_token }}';
-      {% endif %}
-
+      var KomooNS = {{ KomooNS|jsonify|safe }};
+      //OBS this is temporary and will change, we should always use KomooNS
+      window.csrf_token = KomooNS.csrf_token;
     </script>
 
     {% block css %}{% endblock %}
 
   </head>
   <body>
-    {# Loading these scripts inside body to prevent issues loading google maps #}
-    <!-- RequireJS stuffs -->
-    <script type="text/javascript" src="{{STATIC_URL}}js/config.js"></script>
-    <script type="text/javascript" data-main="app" src="{{STATIC_URL}}lib/require.js"></script>
-    <!-- Main libs -->
-    <script type="text/javascript" src="{{STATIC_URL}}lib/jquery-1.7.1.min.js"></script>
-
-    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/utils.js"></script>
 
     {% include 'main/upper_bar.html' %}
 
@@ -99,10 +71,21 @@
       {#% include "main/error_box.html" %#}
     </div>
 
-    {% block page_scripts %}{% endblock %}
-    <script type="text/javascript"
-      src="{{ STATIC_URL }}js/i18n.js"></script>
+    {# Loading these scripts inside body to prevent issues loading google maps #}
+    <!-- RequireJS stuffs -->
+    <script type="text/javascript" src="{{STATIC_URL}}js/config.js"></script>
+    <script type="text/javascript" data-main="app" src="{{STATIC_URL}}lib/require.js"></script>
+    <!-- Main libs -->
+    <script type="text/javascript" src="{{STATIC_URL}}lib/jquery-1.7.1.min.js"></script>
 
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/utils.js"></script>
+
+
+    {% block js %}{% endblock %}
+
+
+    <script type="text/javascript" src="{{ STATIC_URL }}js/i18n.js"></script>
     <script type="text/javascript">
       // Loads the page specific module
       require(['common'], function (common) {
