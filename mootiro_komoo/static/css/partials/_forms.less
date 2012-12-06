@@ -1,0 +1,151 @@
+/** Forms **/
+
+form {
+    label.error {
+        color: @error_color;
+    }
+    input {
+        background: white;
+        box-shadow: none;
+        border: 1px solid #bcbebf;
+        display: block;
+        width: 100%;
+
+        .transition(border, 1s);
+        .transition(box-shadow, 1s);
+
+        &:focus {
+            border: 1px solid rgb(0, 156, 180);
+            .box-shadow(1px, 1px, 2px, rgb(0, 156, 180));
+        }
+    }
+    input.error, textarea.error  {
+        border: 1px solid @error_color;
+        // .box-halo(1px, 1px, 1px, @error_color);
+
+    }
+    input[type=checkbox] {
+        display: inline-block;
+        margin-right: 10px;
+        width: auto;
+    }
+    small.error {
+        padding: 5px 10px;
+        margin-bottom: 5px;
+        background-color: lighten(@error_color, 30%);
+        color: darken(@error_color, 20%);
+        border-radius: 3px;
+        width: 100%;
+        display: block;
+
+    }
+    .field-container.half-box-left {
+        display: inline-block;
+        width: 48%;
+
+        small.error {
+            width: 95%;
+        }
+    }
+    .field-container.half-box-right {
+        width: 48%;
+        float: right;
+
+        small.error {
+            width: 95%;
+        }
+    }
+}
+
+/* Search form */
+form.search {
+    .input;
+
+    @form-width: 350px;
+    @button-size: 24px;
+
+    width: @form-width;
+
+    input {
+        height: @button-size;
+        border: none;
+        background-color: transparent;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    input[type=text] {
+        display: inline !important;
+        width: (@form-width - @button-size - 10);
+    }
+
+    input[type=submit] {
+        .clickable;
+        .image;
+        .remove-box-shadow;
+
+        width: @button-size;
+        margin: 0px;
+        padding: 0px;
+        color: transparent;
+        background: none;
+    }
+}
+
+/* Submit and default buttons */
+input[type=submit],
+button.default,
+a.button.default {
+    .button(@button-default-bg);
+}
+
+/* Buttons */
+input[type=button],
+button,
+a.button {
+    .button;
+
+    /* Buttons with context */
+    &.map {
+        .icon('', 24px);
+        .button(@map-color);
+    }
+    &.community,
+    &.communities {
+        .icon('', 24px);
+        .button(@communities-color);
+    }
+    &.place,
+    &.places {
+        .icon('', 24px);
+        .button(@places-color);
+    }
+    &.project,
+    &.projects {
+        .icon('', 24px);
+        .button(@projects-color);
+    }
+
+
+    &.google {
+        .icon('login-google.png', 22px);
+        .button(@google-bg);
+    }
+    &.facebook {
+        .icon('login-facebook.png', 22px);
+        .button(@facebook-bg);
+    }
+    &.twitter {
+        .icon('login-twitter.png', 22px);
+        .button(@twitter-bg);
+    }
+    &.google, &.facebook, &.twitter {
+        display: block;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+}
+

@@ -70,7 +70,7 @@ def compile_coffee():
 
 def compile_less():
     """Compiles less to css"""
-    local('lessc static/css/fashion.less > static/css/fashion.css')
+    local('lessc static/css/style.less > static/css/style.css')
 
 
 def work():

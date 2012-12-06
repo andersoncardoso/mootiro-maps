@@ -18,9 +18,8 @@
     <meta property="og:image" content="{{STATIC_URL}}img/logo.png"/>
 
     {{ form.media.css }}
-    <link rel="shortcut icon" HREF="{{STATIC_URL}}/img/favicon.png" />
-    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/styles.css" />
-    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/fashion.css" />
+    <link rel="shortcut icon" HREF="{{STATIC_URL}}img/favicon.png" />
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css" />
 
     <!-- Django utilities -->
     <script type="text/javascript" src="{% url javascript_catalog %}"></script>
@@ -38,38 +37,84 @@
   </head>
   <body>
 
-    {% include 'main/upper_bar.html' %}
+    <!-- Site Header -->
+    <header class="main">
 
-    <div id="root">
-      <div id="top">
-        <div id="logo">
-          <a href="{% url root %}"><img src='{{STATIC_URL}}img/logo.png' alt='Mootiro Maps'/></a>
-        </div>
-        <div id="navigation">
+      <div class="content">
 
-          <form id="search" action=".">
-            <input type="text" id="search-bar"/>
-            <input type="submit" id="search-button" class="button" value="{% trans 'See Results' %}"/>
-          </form>
-          <div id="search-results-box"></div>
+       {% include 'main/upper_bar.html' %}
 
-          {#% block menu %#}
-              {#% menu "" %#}
-          {#% endblock %#}
+        <h1 class="logo"><a href="/" title="Página principal">MootiroMaps</a></h1>
 
-        </div>
+        <nav>
+          <ul>
+            <li class="map"><a href="#">Mapa</a></li>
+            <li class="communities"><a href="#">Comunidades</a></li>
+            <li class="places has-submenu">
+              <a href="#">Locais</a>
+              <ul>
+                <li class="needs"><a href="#">Necessidades</a></li>
+                <li class="organizations"><a href="#">Organizações</a></li>
+                <li class="resources"><a href="#">Recursos</a></li>
+                <li class="investments"><a href="#">Investimentos</a></li>
+              </ul>
+            </li>
+            <li class="projects"><a href="#">Projetos</a></li>
+          </ul>
+        </nav>
 
       </div>
-      <div id="content">
-        {% block content %}{% endblock %}
-      </div>
-      <div id="footer">
-        {% block footer %}
-          {% include "main/footer.html" %}
+
+    </header>
+    <!-- /Site Header -->
+
+    <!-- Main Block -->
+    <div class="content-box">
+
+      <!-- Action Bar -->
+      <nav class="action-bar">
+        <!--
+        <ul>
+          <li><a class="edit" href="#" title="Editar">Editar</a></li>
+          <li><a class="active star" href="#" title="Adicionar estrela">Adicionar estrela</a></li>
+          <li><a class="discuss" href="#" title="Discutir">Discutir</a></li>
+          <li><a class="history" href="#" title="Ver histórico">Ver histórico</a></li>
+          <li><a class="report" href="#" title="Denunciar">Denunciar</a></li>
+          <li><a class="delete" href="#" title="Remover">Remover</a></li>
+        </ul>
+        -->
+      </nav>
+      <!-- /Action Bar -->
+
+      <!-- Content -->
+      <div class="main">
+        {% block content %}
+        <section class="content" id="main-content">
+        </section>
         {% endblock %}
       </div>
-      {#% include "main/error_box.html" %#}
+      <!-- /Content -->
+
+      <!-- Sidebar -->
+      {% block sidebar %}
+      <section class="sidebar">
+      </section>
+      {% endblock %}
+      <!-- /Sidebar -->
+
     </div>
+    <!-- /Main Block -->
+
+    <!-- Footer -->
+    <section class="footer">
+      {% block footer %}
+        {% include "main/footer.html" %}
+      {% endblock %}
+    </section>
+    <!-- /Footer -->
+
+
+    {#% include "main/error_box.html" %#}
 
     {# Loading these scripts inside body to prevent issues loading google maps #}
     <!-- RequireJS stuffs -->

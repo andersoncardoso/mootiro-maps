@@ -51,7 +51,7 @@
         renderedContent = this.template(this.tpl_args);
         this.$el.html(renderedContent);
         this.$el.find('.reveal-modal').css('visibility', 'hidden');
-        $('#content').append(this.el);
+        $('#main-content').append(this.el);
         this.$el.find('.reveal-modal-content').append(this.content);
         this.modal = this.$el.find("#" + this.tpl_args.modal_id);
         if (this.width != null) this.modal.css('width', this.width);
