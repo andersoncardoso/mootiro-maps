@@ -1,0 +1,82 @@
+/** Dialog **/
+
+.dialog {
+    .border-radius(10px);
+    .box-shadow(0px, 0px, 10px, 2px);
+    background: @main-bg;
+
+    margin: 0 auto;
+    display: block;
+    padding: 15px;
+
+    min-width: 300px;
+    min-height: 150px;
+    width: 500px;
+
+    position: relative;
+    z-index: 10000;
+
+    header {
+        h1 {
+            .h2-font;
+            margin: 0px 0px 25px;
+            text-align: center;
+        }
+
+        .close {
+            @size: 20px;
+            .clickable;
+            .icon('', @size);
+            display: inline-block;
+            width: @size;
+            height: @size;
+            color: transparent;
+            float: right;
+            padding: 0px;
+            border: none;
+            overflow: hidden;
+            margin: -10px;
+        }
+    }
+
+    .content {
+        .clearfix;
+
+        margin: 10px;
+    }
+
+}
+
+/* Dialog modal wrapper */
+.modal,
+.modal-bg {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 9999;
+}
+
+.modal-bg {
+    .clickable;
+
+    background: @modal-bg;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+    zoom: 1;
+}
+
+.modal {
+    display: table;
+
+    > .dialog-container {
+        display: table-cell;
+        vertical-align: middle;
+        width: 100%;
+        height: 100%;
+        padding-bottom: 10%;
+    }
+}
+
+

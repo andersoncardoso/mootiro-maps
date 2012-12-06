@@ -25,6 +25,9 @@ define (require) ->
       @initializeRegister()
       @initializeVerification()
 
+    _onClose: ->
+      @navigate '', {}
+
     initializeLogin: ->
       @loginView = new views.LoginView {}
       @loginView.form.on 'register-link:click', @registerLinkCB
@@ -33,8 +36,7 @@ define (require) ->
         title: i18n 'Login'
         content: @loginView.render().el
         modal_id: 'login-modal-box'
-        onClose: =>
-          @navigate '', {}
+      @loginBox.on 'close', @_onClose
 
       $("a.login-required").bind "click.loginrequired", (evt) =>
         if not KomooNS?.isAuthenticated
@@ -60,8 +62,7 @@ define (require) ->
         width: '450px'
         content: @registerView.render().el
         modal_id: 'register-modal-box'
-        onClose: =>
-          @navigate '', {}
+      @registerBox.on 'close', @_onClose
 
     initializeVerification: ->
       @notVerifiedView = new views.VerificationView
@@ -76,15 +77,13 @@ define (require) ->
         title: i18n 'Verification'
         content: @notVerifiedView.render().el
         modal_id: 'verification-modal-box'
-        onClose: =>
-          @navigate '', {}
+      @notVerifiedBox.on 'close', @_onClose
 
       @verifiedBox = new new_utils.ModalBox
         title: i18n 'Verification'
         content: @verifiedView.render().el
         modal_id: 'verification-modal-box'
-        onClose: =>
-          @navigate '', {}
+      @verifiedBox.on 'close', @_onClose
 
     # ============ callbacks ======================
     registerLinkCB: ->
@@ -115,30 +114,30 @@ define (require) ->
     login: ->
       @closeModals 'login'
       if not KomooNS?.isAuthenticated
-        @loginBox.show()
+        @loginBox.open()
       else
         @navigate '', {trigger: true}
 
     register: ->
       @closeModals 'register'
       if not KomooNS?.isAuthenticated
-        @registerBox.show()
+        @registerBox.open()
       else
         @navigate '', {trigger: true}
 
     not_verified: ->
       @closeModals 'not-verified'
       path = window.location.pathname
-      @notVerifiedBox.show()
+      @notVerifiedBox.open()
 
     verified: ->
       @closeModals 'verified'
       path = window.location.pathname
-      @verifiedBox.show()
+      @verifiedBox.open()
 
     # ============= utils ==============================
     closeModals: (navigation_target)->
-      modal.hide() for modal in [
+      modal.close() for modal in [
         @loginBox, @registerBox, @verifiedBox, @notVerifiedBox]
       @navigate navigation_target
 

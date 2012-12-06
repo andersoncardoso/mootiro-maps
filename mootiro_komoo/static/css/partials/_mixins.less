@@ -78,10 +78,12 @@
 
 .image () {
     background-color: @menu-fg;  // temporary
+    text-indent: 10000px;
 }
 
 .image (@url, @col:0, @row:0, @grid-size:0px) {
     background: /* @menu-fg */ url(~'@{img-path}@{url}') no-repeat (-1 * @grid-size * @col) (-1 * @grid-size * @row);
+    text-indent: 10000px;
 }
 
 .input () {

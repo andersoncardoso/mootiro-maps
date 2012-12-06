@@ -1,4 +1,4 @@
-baseUrl = KomooNS?.require_baseUrl or '/static/js'
+baseUrl = KomooNS?.require_baseUrl ? '/static/js'
 
 config =
     baseUrl: baseUrl
@@ -9,7 +9,6 @@ config =
         'templates': '../templates'
         'ad-gallery': '../ad_gallery/jquery.ad-gallery.min'
         'jquery': '../lib/jquery-1.7.1.min'
-        'reveal': '../lib/reveal/jquery.reveal'
         'underscore': '../lib/underscore-min'
         'backbone': '../lib/backbone-min'
         'reForm': '../lib/reForm'
@@ -20,8 +19,6 @@ config =
         'markerclusterer': 'vendor/markerclusterer_packed'
         'sinon': '../lib/sinon-1.5.0'
     shim:
-        'reveal':
-            deps: ['jquery']
         'ad-gallery':
             deps: ['jquery']
         'utils':
@@ -48,4 +45,4 @@ config =
     ]
 
 requirejs?.config config
-window.require ?= config
+require ?= config

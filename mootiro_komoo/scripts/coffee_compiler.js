@@ -12,7 +12,7 @@ var formatedDate = function(date){
 };
 
 var compileCoffee = function(filepath) {
-    var cmd = 'coffee -c ' + filepath,
+    var cmd = 'coffee -b -c ' + filepath,
         now = new Date();
 
     console.log('[coffee] ' + formatedDate(now) + ' : ' + filepath);

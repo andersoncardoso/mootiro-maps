@@ -1,1 +1,1 @@
-(function(){require(["jquery","backbone","authentication/router"],function(e,t,n){return e(function(){var e;return e=new n.LoginApp({}),t.history.start()})})}).call(this)
+require(["jquery","backbone","authentication/router"],function(e,t,n){return e(function(){var e;return e=new n.LoginApp({}),t.history.start()})})

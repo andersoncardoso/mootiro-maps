@@ -3,7 +3,6 @@ define (require) ->
   $ = require 'jquery'
   _ = require 'underscore'
   Backbone = require 'backbone'
-  reveal = require 'reveal'
   modal_box = require 'text!templates/widgets/_modal_box.html'
 
   loadCss = (url) ->
@@ -18,13 +17,18 @@ define (require) ->
 
   class ModalBox extends Backbone.View
     template: _.template modal_box
+
+    events: {
+      'click .close': 'close'
+      'click .modal-bg': 'close'
+    }
+
     initialize: ->
       _.bindAll this
       @tpl_args = _.extend {tile: '', modal_id: 'modal-box'}, @options
-      @content = @options.content or ''
+      @content = @options.content ? ''
       if @options.width
         @width = @options.width
-      loadCss('/static/lib/reveal/reveal.css')
       if @options.onClose
         @onClose = @options.onClose
       if @options.onOpen
@@ -34,39 +38,37 @@ define (require) ->
     render: ->
       renderedContent = @template @tpl_args
       @$el.html renderedContent
-      @$el.find('.reveal-modal').css 'visibility', 'hidden'
-      # $('body').append @el
-      $('#main-content').append @el
-      @$el.find('.reveal-modal-content').append @content
+
+      $('body').append @el
+      @$el.find('.content').append @content
+
       @modal = @$el.find "##{@tpl_args.modal_id}"
+
       if @width?
-        @modal.css('width', @width)
+        @modal.find('.dialog').css('width', @width)
       this
 
-    bindEvents: ->
-      if @onOpen?
-        @modal.bind 'reveal:open', @onOpen
-      if @onClose?
-        @modal.bind 'reveal:close', @onClose
+    open: ->
+      @modal.show()
+      @trigger 'open'
+      @onOpen?()
+      this
 
-    unbindEvents: ->
-      if @onOpen?
-        @modal.unbind 'reveal:open', @onOpen
-      if @onClose?
-        @modal.unbind 'reveal:close', @onClose
+    close: ->
+      @modal.hide()
+      @trigger 'close'
+      @onClose?()
+      this
 
     show: ->
-      @modal.reveal
-        animation: 'fade'
-        animationspeed: 200
-        closeonbackgroundclick: true
-        dismissmodalclass: 'close-reveal-modal'
-      @bindEvents()
-      this
+      debugger;
+      console?.warn 'method show() is deprecated. Use open().'
+      @open()
+
     hide: ->
-      @modal.trigger 'reveal:close'
-      @unbindEvents()
-      this
+      console?.warn 'method hide() is deprecated. Use close().'
+      @close()
+
 
   return {
     loadCss: loadCss

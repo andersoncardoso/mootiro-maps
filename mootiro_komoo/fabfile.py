@@ -65,7 +65,7 @@ def build_environment():
 
 def compile_coffee():
     """Compiles coffeescript to javascript"""
-    local('coffee -c static/')
+    local('coffee -b -c static/')
 
 
 def compile_less():

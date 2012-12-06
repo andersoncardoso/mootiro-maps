@@ -1,101 +1,98 @@
-(function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+var __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-  define(function(require) {
-    var $, Backbone, ModalBox, loadCss, modal_box, reveal, _;
-    $ = require('jquery');
-    _ = require('underscore');
-    Backbone = require('backbone');
-    reveal = require('reveal');
-    modal_box = require('text!templates/widgets/_modal_box.html');
-    loadCss = function(url) {
-      var link;
-      if (!$("link[href=\"" + url + "\"]").length) {
-        if (typeof console !== "undefined" && console !== null) {
-          if (typeof console.log === "function") console.log('Loading css: ', url);
-        }
-        link = document.createElement("link");
-        link.type = "text/css";
-        link.rel = "stylesheet";
-        link.href = url;
-        return document.getElementsByTagName("head")[0].appendChild(link);
+define(function(require) {
+  var $, Backbone, ModalBox, loadCss, modal_box, _;
+  $ = require('jquery');
+  _ = require('underscore');
+  Backbone = require('backbone');
+  modal_box = require('text!templates/widgets/_modal_box.html');
+  loadCss = function(url) {
+    var link;
+    if (!$("link[href=\"" + url + "\"]").length) {
+      if (typeof console !== "undefined" && console !== null) {
+        if (typeof console.log === "function") console.log('Loading css: ', url);
       }
+      link = document.createElement("link");
+      link.type = "text/css";
+      link.rel = "stylesheet";
+      link.href = url;
+      return document.getElementsByTagName("head")[0].appendChild(link);
+    }
+  };
+  ModalBox = (function(_super) {
+
+    __extends(ModalBox, _super);
+
+    function ModalBox() {
+      ModalBox.__super__.constructor.apply(this, arguments);
+    }
+
+    ModalBox.prototype.template = _.template(modal_box);
+
+    ModalBox.prototype.events = {
+      'click .close': 'close',
+      'click .modal-bg': 'close'
     };
-    ModalBox = (function(_super) {
 
-      __extends(ModalBox, _super);
+    ModalBox.prototype.initialize = function() {
+      var _ref;
+      _.bindAll(this);
+      this.tpl_args = _.extend({
+        tile: '',
+        modal_id: 'modal-box'
+      }, this.options);
+      this.content = (_ref = this.options.content) != null ? _ref : '';
+      if (this.options.width) this.width = this.options.width;
+      if (this.options.onClose) this.onClose = this.options.onClose;
+      if (this.options.onOpen) this.onOpen = this.options.onOpen;
+      return this.render();
+    };
 
-      function ModalBox() {
-        ModalBox.__super__.constructor.apply(this, arguments);
+    ModalBox.prototype.render = function() {
+      var renderedContent;
+      renderedContent = this.template(this.tpl_args);
+      this.$el.html(renderedContent);
+      $('body').append(this.el);
+      this.$el.find('.content').append(this.content);
+      this.modal = this.$el.find("#" + this.tpl_args.modal_id);
+      if (this.width != null) this.modal.find('.dialog').css('width', this.width);
+      return this;
+    };
+
+    ModalBox.prototype.open = function() {
+      this.modal.show();
+      this.trigger('open');
+      if (typeof this.onOpen === "function") this.onOpen();
+      return this;
+    };
+
+    ModalBox.prototype.close = function() {
+      this.modal.hide();
+      this.trigger('close');
+      if (typeof this.onClose === "function") this.onClose();
+      return this;
+    };
+
+    ModalBox.prototype.show = function() {
+      debugger;      if (typeof console !== "undefined" && console !== null) {
+        console.warn('method show() is deprecated. Use open().');
       }
-
-      ModalBox.prototype.template = _.template(modal_box);
-
-      ModalBox.prototype.initialize = function() {
-        _.bindAll(this);
-        this.tpl_args = _.extend({
-          tile: '',
-          modal_id: 'modal-box'
-        }, this.options);
-        this.content = this.options.content || '';
-        if (this.options.width) this.width = this.options.width;
-        loadCss('/static/lib/reveal/reveal.css');
-        if (this.options.onClose) this.onClose = this.options.onClose;
-        if (this.options.onOpen) this.onOpen = this.options.onOpen;
-        return this.render();
-      };
-
-      ModalBox.prototype.render = function() {
-        var renderedContent;
-        renderedContent = this.template(this.tpl_args);
-        this.$el.html(renderedContent);
-        this.$el.find('.reveal-modal').css('visibility', 'hidden');
-        $('#main-content').append(this.el);
-        this.$el.find('.reveal-modal-content').append(this.content);
-        this.modal = this.$el.find("#" + this.tpl_args.modal_id);
-        if (this.width != null) this.modal.css('width', this.width);
-        return this;
-      };
-
-      ModalBox.prototype.bindEvents = function() {
-        if (this.onOpen != null) this.modal.bind('reveal:open', this.onOpen);
-        if (this.onClose != null) {
-          return this.modal.bind('reveal:close', this.onClose);
-        }
-      };
-
-      ModalBox.prototype.unbindEvents = function() {
-        if (this.onOpen != null) this.modal.unbind('reveal:open', this.onOpen);
-        if (this.onClose != null) {
-          return this.modal.unbind('reveal:close', this.onClose);
-        }
-      };
-
-      ModalBox.prototype.show = function() {
-        this.modal.reveal({
-          animation: 'fade',
-          animationspeed: 200,
-          closeonbackgroundclick: true,
-          dismissmodalclass: 'close-reveal-modal'
-        });
-        this.bindEvents();
-        return this;
-      };
-
-      ModalBox.prototype.hide = function() {
-        this.modal.trigger('reveal:close');
-        this.unbindEvents();
-        return this;
-      };
-
-      return ModalBox;
-
-    })(Backbone.View);
-    return {
-      loadCss: loadCss,
-      ModalBox: ModalBox
+      return this.open();
     };
-  });
 
-}).call(this);
+    ModalBox.prototype.hide = function() {
+      if (typeof console !== "undefined" && console !== null) {
+        console.warn('method hide() is deprecated. Use close().');
+      }
+      return this.close();
+    };
+
+    return ModalBox;
+
+  })(Backbone.View);
+  return {
+    loadCss: loadCss,
+    ModalBox: ModalBox
+  };
+});

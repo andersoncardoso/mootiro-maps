@@ -1,20 +1,17 @@
-(function() {
 
-  define([], function() {
-    'use strict';    return {
-      geometries: {
-        types: {
-          EMPTY: 'Empty',
-          POINT: 'Point',
-          MULTIPOINT: 'MultiPoint',
-          POLYGON: 'Polygon',
-          POLYLINE: 'LineString',
-          LINESTRING: 'LineString',
-          MULTIPOLYLINE: 'MultiLineString',
-          MULTILINESTRING: 'MultiLineString'
-        }
+define([], function() {
+  'use strict';  return {
+    geometries: {
+      types: {
+        EMPTY: 'Empty',
+        POINT: 'Point',
+        MULTIPOINT: 'MultiPoint',
+        POLYGON: 'Polygon',
+        POLYLINE: 'LineString',
+        LINESTRING: 'LineString',
+        MULTIPOLYLINE: 'MultiLineString',
+        MULTILINESTRING: 'MultiLineString'
       }
-    };
-  });
-
-}).call(this);
+    }
+  };
+});

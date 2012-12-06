@@ -9,8 +9,8 @@ def komoo_namespace(request):
             'lang': getattr(request, 'LANGUAGE_CODE', None) or
                     settings.LANGUAGE_CODE,
             'facebookAppId': settings.FACEBOOK_APP_ID,
-            'require_baseUrl': settings.STATIC_URL + ('js.build'
-                                    if settings.DEBUG else 'js'),
+            'require_baseUrl': settings.STATIC_URL + ('js'
+                                    if settings.DEBUG else 'js.build'),
             'csrf_token': get_token(request)
         }
     }

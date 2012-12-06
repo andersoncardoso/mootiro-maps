@@ -25,6 +25,7 @@
     <script type="text/javascript" src="{% url javascript_catalog %}"></script>
     <script type="text/javascript" src="{{STATIC_URL}}lib/django-js-utils/dutils.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}lib/django-js-utils/dutils.conf.urls.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/i18n.js"></script>
 
     <script type="text/javascript">
       var KomooNS = {{ KomooNS|jsonify|safe }};
@@ -119,7 +120,7 @@
     {# Loading these scripts inside body to prevent issues loading google maps #}
     <!-- RequireJS stuffs -->
     <script type="text/javascript" src="{{STATIC_URL}}js/config.js"></script>
-    <script type="text/javascript" data-main="app" src="{{STATIC_URL}}lib/require.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}lib/require.js"></script>
     <!-- Main libs -->
     <script type="text/javascript" src="{{STATIC_URL}}lib/jquery-1.7.1.min.js"></script>
 
@@ -130,13 +131,10 @@
     {% block js %}{% endblock %}
 
 
-    <script type="text/javascript" src="{{ STATIC_URL }}js/i18n.js"></script>
     <script type="text/javascript">
       // Loads the page specific module
-      require(['common'], function (common) {
-          require(['backbone', '{{ js_module }}'], function(Backbone) {
-            Backbone.history.start();
-          });
+      require(['common', 'app'], function (common, app) {
+          app.start('{{ js_module }}');
       });
     </script>
   </body>

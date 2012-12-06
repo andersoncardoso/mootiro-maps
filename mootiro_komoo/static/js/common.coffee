@@ -1,4 +1,4 @@
-define ['jquery', 'authentication/router'], ($, auth_router) ->
+define [], ($, auth_router) ->
   requirejs.onError =  (err) ->
     if err.requireType == 'timeout'
         require ['utils'], () ->
@@ -7,7 +7,3 @@ define ['jquery', 'authentication/router'], ($, auth_router) ->
             console?.error err
     else
         throw err
-
-  $ ->
-    loginApp = new  auth_router.LoginApp {}
-
