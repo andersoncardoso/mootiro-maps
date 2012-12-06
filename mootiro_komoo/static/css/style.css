@@ -852,60 +852,6 @@ div.reveal-modal-bg {
   z-index: 1500;
   background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.65);
 }
-form label.error {
-  color: #d84a38;
-}
-form input {
-  background: white;
-  box-shadow: none;
-  border: 1px solid #bcbebf;
-  display: block;
-  width: 100%;
-  transition: border 1s ease 0s;
-  -moz-transition: border 1s ease 0s;
-  -webkit-transition: border 1s ease 0s;
-  transition: box-shadow 1s ease 0s;
-  -moz-transition: box-shadow 1s ease 0s;
-  -webkit-transition: box-shadow 1s ease 0s;
-}
-form input:focus {
-  border: 1px solid #009cb4;
-  -moz-box-shadow: 1px 1px 2px #009cb4;
-  -webkit-box-shadow: 1px 1px 2px #009cb4;
-  box-shadow: 1px 1px 2px #009cb4;
-}
-form input.error,
-form textarea.error {
-  border: 1px solid #d84a38;
-}
-form input[type=checkbox] {
-  display: inline-block;
-  margin-right: 10px;
-  width: auto;
-}
-form small.error {
-  padding: 5px 10px;
-  margin-bottom: 5px;
-  background-color: #f1beb8;
-  color: #8e291c;
-  border-radius: 3px;
-  width: 100%;
-  display: block;
-}
-form .field-container.half-box-left {
-  display: inline-block;
-  width: 48%;
-}
-form .field-container.half-box-left small.error {
-  width: 95%;
-}
-form .field-container.half-box-right {
-  width: 48%;
-  float: right;
-}
-form .field-container.half-box-right small.error {
-  width: 95%;
-}
 /** Upper bar whit search bar, login links, config link, etc **/
 .upper-bar {
   float: right;

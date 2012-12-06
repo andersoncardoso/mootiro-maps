@@ -160,6 +160,10 @@ class User(GeoRefModel, BaseDAOMixin):
                 name=self.name,
                 verification_url=verification_url))
 
+    # dummy fix for django weirdness =/
+    def get_and_delete_messages(self):
+        pass
+
 
 class AnonymousUser(object):
     '''Dummy Class to integrate with other django apps.'''

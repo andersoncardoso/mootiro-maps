@@ -544,10 +544,6 @@ a.see-on-map {
 
 /*** Old _globa.less ***/
 
-@mootiro_blue: rgb(220, 239, 244);
-@mootiro_blue_dark: rgb(0, 156, 180);
-@error_color: rgb(216, 74, 56);
-
 div.reveal-modal {
     top: 200px;
     background-color: @mootiro_blue;
@@ -574,59 +570,3 @@ div.reveal-modal-bg {
     background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.65);
 }
 
-form {
-    label.error {
-        color: @error_color;
-    }
-    input {
-        background: white;
-        box-shadow: none;
-        border: 1px solid #bcbebf;
-        display: block;
-        width: 100%;
-
-        .transition(border, 1s);
-        .transition(box-shadow, 1s);
-
-        &:focus {
-            border: 1px solid rgb(0, 156, 180);
-            .box-shadow(1px, 1px, 2px, rgb(0, 156, 180));
-        }
-    }
-    input.error, textarea.error  {
-        border: 1px solid @error_color;
-        // .box-halo(1px, 1px, 1px, @error_color);
-
-    }
-    input[type=checkbox] {
-        display: inline-block;
-        margin-right: 10px;
-        width: auto;
-    }
-    small.error {
-        padding: 5px 10px;
-        margin-bottom: 5px;
-        background-color: lighten(@error_color, 30%);
-        color: darken(@error_color, 20%);
-        border-radius: 3px;
-        width: 100%;
-        display: block;
-
-    }
-    .field-container.half-box-left {
-        display: inline-block;
-        width: 48%;
-
-        small.error {
-            width: 95%;
-        }
-    }
-    .field-container.half-box-right {
-        width: 48%;
-        float: right;
-
-        small.error {
-            width: 95%;
-        }
-    }
-}
