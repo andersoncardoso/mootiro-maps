@@ -268,8 +268,8 @@ body > .content-box > .main > .content article {
   margin-bottom: 15px !important;
 }
 body > .content-box > .main > .content article h1 {
-  font-size: 129%;
-  font-family: Calibri, "Trebuchet MS", Verdana, sans-serif;
+  font-size: 171%;
+  font-family: Cambria, Georgia, serif;
   font-weight: bold;
   margin: 10px 0px 10px;
 }
@@ -312,28 +312,6 @@ body > .content-box > .main > .content > .contact-info > li:after,
 body > .content-box > .main > .content > .contact-info > .contact:after {
   clear: both;
 }
-body > .content-box > .main > .content > .user-info,
-body > .content-box > .main > .content > .user-updates {
-  display: block;
-  width: 102.08333333333333%;
-  margin: 0 -1.0416666666666665%;
-  *zoom: 1;
-  display: inline;
-  float: left;
-  width: 47.91666666666667%;
-  margin: 0 1.0416666666666665%;
-}
-body > .content-box > .main > .content > .user-info:before,
-body > .content-box > .main > .content > .user-updates:before,
-body > .content-box > .main > .content > .user-info:after,
-body > .content-box > .main > .content > .user-updates:after {
-  content: "";
-  display: table;
-}
-body > .content-box > .main > .content > .user-info:after,
-body > .content-box > .main > .content > .user-updates:after {
-  clear: both;
-}
 body > .content-box > .main > .content > .user-updates {
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
@@ -343,10 +321,10 @@ body > .content-box > .main > .content > .user-updates {
   -moz-box-shadow: 0 0 0 1px #dceff4, 0 0 0 #ffffff;
   -webkit-box-shadow: 0 0 0 1px #dceff4, 0 0 0 #ffffff;
   box-shadow: 0 0 0 1px #dceff4, 0 0 0 #ffffff;
+  padding: 5px 0px;
 }
 body > .content-box > .main > .content > .user-updates h1 {
-  margin-left: 10px;
-  margin-bottom: 0px;
+  margin: 5px 10px;
 }
 /** Misc **/
 .contact-info > li.phone,
@@ -514,6 +492,9 @@ body > .content-box > .main > .content > .user-updates h1 {
 .list-container ul.list > li > a {
   padding: 5px;
 }
+.list-container ul.list > li > a:hover {
+  background-color: transparent;
+}
 .list-container ul.list > li > i {
   padding-left: 5px;
 }
@@ -526,17 +507,46 @@ body > .content-box > .main > .content > .user-updates h1 {
 }
 ul.updates > li > i {
   display: inline-block;
-  width: 40px;
+  width: 32px;
 }
 ul.updates > li > i:before {
   background: /* @menu-fg */ url(../img/blank.png) no-repeat 0px 0px;
   text-indent: 10000px;
   content: '';
   display: inline-block !important;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   margin-right: 5px;
   vertical-align: middle;
+}
+ul.updates > li a.label {
+  font-size: 129%;
+  font-family: Calibri, "Trebuchet MS", Verdana, sans-serif;
+  font-weight: bold;
+  padding-top: 15px;
+  text-decoration: none;
+}
+ul.updates > li .info {
+  display: inline-block;
+  display: block;
+  font-size: 60%;
+  font-weight: normal;
+}
+ul.updates > li .info:before {
+  background: /* @menu-fg */ url(../img/) no-repeat 0px 0px;
+  text-indent: 10000px;
+  content: '';
+  display: inline-block !important;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+ul.updates > li .info:before {
+  background-color: silver;
+}
+ul.updates > li:hover {
+  background-color: #dceff4;
 }
 a.see-on-map {
   display: inline-block;
@@ -716,7 +726,6 @@ a.see-on-map:hover:before {
   text-decoration: none;
 }
 .multilist > .list-container > .list > li > a.label:hover {
-  background-color: transparent;
   color: #000000;
 }
 .multilist > .list-container > .list > li:hover {
