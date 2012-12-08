@@ -23,16 +23,16 @@ a {
     background-color: @link-bg;
     text-decoration: underline;
 
-    &.hover,
-    &:hover {
-        color: @link-hover-fg;
-        background-color: @link-hover-bg;
-    }
-
     &.visited,
     &:visited {
         color: @link-visited-fg;
         background-color: @link-visited-bg;
+    }
+
+    &.hover,
+    &:hover {
+        color: @link-hover-fg;
+        background-color: @link-hover-bg;
     }
 }
 
@@ -91,21 +91,27 @@ body > .content-box {
         /* Actions */
         .edit {
             .icon('', @size);
+            &:before {background-color: silver;} // TODO: Remove me
         }
         .star {
             .icon('', @size);
+            &:before {background-color: silver;} // TODO: Remove me
         }
         .discuss {
             .icon('', @size);
+            &:before {background-color: silver;} // TODO: Remove me
         }
         .history {
             .icon('', @size);
+            &:before {background-color: silver;} // TODO: Remove me
         }
         .report {
             .icon('', @size);
+            &:before {background-color: silver;} // TODO: Remove me
         }
         .delete {
             .icon('', @size);
+            &:before {background-color: silver;} // TODO: Remove me
         }
     }
 
@@ -128,7 +134,7 @@ body > .content-box {
 
         > .button {
             display: block;
-
+            margin: 15px 0;
         }
 
     }
@@ -143,8 +149,27 @@ body > .content-box {
         > .content {
             padding-left: 10px;
 
+            > p {
+                clear: both;
+            }
+
             h1.title {
                 margin-top: 0px;
+            }
+
+            article {
+                margin-top: 15px !important;
+                margin-bottom: 15px !important;
+
+                h1 {
+                    .h3-font;
+
+                    margin: 10px 0px 10px;
+                }
+
+                > .content {
+                    margin: 0px;
+                }
             }
 
             > .contact-info {
@@ -153,9 +178,12 @@ body > .content-box {
                 margin: 0px;
                 padding: 0px;
 
+                > li,
                 > .contact {
                     .row(16);
                     .column(5, 16);
+
+                    margin: 0px 15px 5px 0px;
                 }
             }
 
@@ -164,11 +192,252 @@ body > .content-box {
                 .row(16);
                 .column(8, 16);
             }
+
+            > .user-updates {
+                .border-radius(10px);
+                .border-fake(1px, @main-bg);
+
+                h1 {
+                    margin-left: 10px;
+                    margin-bottom: 0px;
+                }
+
+            }
         }
 
     }
 }
 
+/** Misc **/
+
+.contact-info > li,
+.contact {
+    @size: 16px;
+
+    &.phone {
+        .icon('', @size);
+        &:before {background-color: silver;} // TODO: Remove me
+    }
+    &.address {
+        .icon('', @size);
+        &:before {background-color: silver;} // TODO: Remove me
+    }
+    &.email {
+        .icon('', @size);
+        &:before {background-color: silver;} // TODO: Remove me
+    }
+    &.facebook {
+        .icon('', @size);
+        &:before {background-color: silver;} // TODO: Remove me
+    }
+    &.twitter {
+        .icon('', @size);
+        &:before {background-color: silver;} // TODO: Remove me
+    }
+    &.skype {
+        .icon('', @size);
+        &:before {background-color: silver;} // TODO: Remove me
+    }
+    &.site {
+        .icon('', @size);
+        &:before {background-color: silver;} // TODO: Remove me
+    }
+
+
+}
+
+
+.list-container {
+    ul.list {
+
+        margin: 0px;
+        padding: 0px;
+
+        > li {
+            .clearfix;
+
+            display: table;
+            width: 100%;
+            padding: 5px 0;
+            list-style: none;
+            border-top: solid 1px @main-bg;
+
+            &:first-child {
+                border-top: none;
+            }
+
+            > a,
+            > i {
+                display: table-cell !important;
+                vertical-align: middle;
+                height: 100%;
+            }
+            > a {
+                padding: 5px;
+            }
+            > i {
+                padding-left: 5px;
+                &:before {background-color: silver;} // TODO: Remove me
+            }
+        }
+    }
+
+    .pagination {
+        margin: 10px;
+        font-size: 80%;
+    }
+}
+
+
+ul.updates {
+    > li > i {
+        .icon('', 40px);
+        width: 40px;
+    }
+}
+
+a.see-on-map {
+    .icon('menu/sprite.png', 20px, 0, 0);
+
+    width: 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 60%;
+    line-height: 90%;
+    color: @inactive-icon-color;
+
+    &:hover {
+        .icon('menu/sprite.png', 20px, 0, 1);
+
+        color: @pin-color;
+        background: transparent;
+    }
+}
+
+.pagination {
+    a,
+    span {
+        padding: 2px;
+
+        &.page {
+            padding: 2px 5px;
+        }
+    }
+
+    .first:before {
+        content: '<< ';
+    }
+    .previous:before {
+        content: '< ';
+    }
+    .next:after {
+        content: ' >';
+    }
+    .last:after {
+        content: ' >>';
+    }
+}
+
+
+.multilist {
+    .clearfix;
+
+    > .sections {
+        .row(16);
+        .column(5, 16);
+
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        > .tab {
+            display: table;
+            width: 95%;
+            margin-right: 15px;
+
+            > .a {
+                text-align: left;
+
+            }
+            > i {
+                .icon('', 24px);
+                width: 24px;
+                &:before {background-color: silver;} // TODO: Remove me
+            }
+            > a,
+            > i {
+                display: table-cell !important;
+                vertical-align: middle;
+                height: 100%;
+            }
+            &.active {
+                margin-left: 15px;
+                margin-right: 0;
+            }
+        }
+
+    }
+
+    > .list-container {
+        .row(16);
+        .column(11, 16);
+        .border-radius;
+
+        background-color: @main-bg;
+        margin-top: 5px;
+
+        > .list {
+            margin: 10px;
+
+            > li {
+                .border-radius;
+
+                margin: 5px 0;
+                background-color: lighten(@main-bg, 5%);
+
+                > a.label {
+                    text-decoration: none;
+
+                    &:hover {
+                        background-color: transparent;
+                        color: @multilist-hover-fg;
+                    }
+                }
+
+                &:hover {
+                    background-color: darken(@main-bg, 5%);
+                }
+            }
+        }
+    }
+}
+
+
+.tab {
+    .border-radius;
+
+    display: block;
+    margin: 5px;
+    background-color: @tab-bg;
+
+    a {
+        text-decoration: none;
+
+        &,
+        &:visited,
+        &:hover {
+            background-color: transparent;
+        }
+    }
+
+    &:hover {
+        background-color: darken(@tab-bg, 5%);
+    }
+
+    > i {
+        padding: 10px;
+    }
+}
 
 /** Boxes **/
 .box {

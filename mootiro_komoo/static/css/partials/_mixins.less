@@ -73,7 +73,7 @@
 
 .border-fake (@size, @color, @bg:@content-bg) {
     /* Create a fake barder to be used with ".column" mixin */
-    ._box-shadow(0 0 0 @size @color, 0 0 0 @bg);
+    ._box-shadow(~'0 0 0 @{size}px @{color}, 0 0 0 @{bg}');
 }
 
 .image () {
@@ -81,7 +81,7 @@
 }
 
 .image (@url, @col:0, @row:0, @grid-size:0px) {
-    background: url(~'@{img-path}@{url}') no-repeat (-1 * @grid-size * @col) (-1 * @grid-size * @row);
+    background: /* @menu-fg */ url(~'@{img-path}@{url}') no-repeat (-1 * @grid-size * @col) (-1 * @grid-size * @row);
 }
 
 .input () {
@@ -92,13 +92,13 @@
     color: @input-fg;
 }
 
-.icon (@image, @size:24px, @col:0, @row:0, @grid-size:0) {
+.icon (@image, @size, @grid-size, @col:0, @row:0) {
     display: inline-block;
 
     &:before {
         .image(@image, @col, @row, @grid-size);
         content: '';
-        display: inline-block;
+        display: inline-block !important;
         width: @size;
         height: @size;
         margin-right: 5px;
@@ -107,7 +107,7 @@
 }
 
 .icon (@image, @size:24px, @col:0, @row:0) {
-    .icon (@image, @size, @col, @row, @size);
+    .icon (@image, @size, @size, @col, @row);
 }
 
 .clickable () {
