@@ -10,10 +10,10 @@ var formatedDate = function(date){
 };
 
 var compileLess = function() {
-    var cmd = 'lessc static/css/fashion.less > static/css/fashion.css',
+    var cmd = 'lessc static/css/style.less > static/css/style.css',
         now = new Date();
 
-    console.log('[less] ' + formatedDate(now) + ' : fashion.less');
+    console.log('[less] ' + formatedDate(now) + ' : style.less');
     exec(cmd, function(error, stdout, stderr){
         if (stdout) {
           console.log(stdout);

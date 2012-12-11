@@ -784,31 +784,6 @@ a.see-on-map:hover:before {
 .box.tags {
   background-color: transparent;
 }
-/*** Old _globa.less ***/
-div.reveal-modal {
-  top: 200px;
-  background-color: #dceff4;
-  background-image: none;
-  z-index: 10000;
-  width: 450px;
-  -moz-box-shadow: 0px 0px 6px 4px #999999;
-  -webkit-box-shadow: 0px 0px 6px 4px #999999;
-  box-shadow: 0px 0px 6px 4px #999999;
-}
-div.reveal-modal header h1 {
-  color: #555555;
-  font-size: 2em;
-  text-align: center;
-  margin-top: -20px;
-}
-div.reveal-modal header hr {
-  border-top: 1px solid #ababab;
-  border-bottom: 1px solid #efefef;
-}
-div.reveal-modal-bg {
-  z-index: 1500;
-  background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.65);
-}
 /** Upper bar whit search bar, login links, config link, etc **/
 .upper-bar {
   float: right;
@@ -1379,8 +1354,16 @@ header.main nav > ul > li.has-submenu:after {
   border-bottom-color: #fad7d7;
 }
 /** Forms **/
+form label {
+  color: #555555;
+  display: block;
+  margin-bottom: 5px;
+}
 form label.error {
   color: #d84a38;
+}
+form .field-container {
+  margin-bottom: 10px;
 }
 form input {
   background: white;
@@ -1388,18 +1371,18 @@ form input {
   border: 1px solid #bcbebf;
   display: block;
   width: 100%;
+  height: 28px;
+  padding: 4px 0 3px 4px;
+  color: #555555;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   transition: border 1s ease 0s;
   -moz-transition: border 1s ease 0s;
   -webkit-transition: border 1s ease 0s;
-  transition: box-shadow 1s ease 0s;
-  -moz-transition: box-shadow 1s ease 0s;
-  -webkit-transition: box-shadow 1s ease 0s;
 }
 form input:focus {
   border: 1px solid #009cb4;
-  -moz-box-shadow: 1px 1px 2px #009cb4;
-  -webkit-box-shadow: 1px 1px 2px #009cb4;
-  box-shadow: 1px 1px 2px #009cb4;
 }
 form input.error,
 form textarea.error {
@@ -1410,13 +1393,24 @@ form input[type=checkbox] {
   margin-right: 10px;
   width: auto;
 }
+form input[type=submit] {
+  width: 100%;
+  padding: 3px 6px;
+  border: 0;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 120%;
+}
+form .small {
+  font-size: 0.9em;
+}
 form small.error {
-  padding: 5px 10px;
-  margin-bottom: 5px;
+  padding: 10px;
+  margin: 5px 0;
   background-color: #f1beb8;
   color: #8e291c;
   border-radius: 3px;
-  width: 100%;
+  width: 97%;
   display: block;
 }
 form .field-container.half-box-left {
@@ -1424,14 +1418,14 @@ form .field-container.half-box-left {
   width: 48%;
 }
 form .field-container.half-box-left small.error {
-  width: 95%;
+  width: 94%;
 }
 form .field-container.half-box-right {
   width: 48%;
   float: right;
 }
 form .field-container.half-box-right small.error {
-  width: 95%;
+  width: 94%;
 }
 /* Search form */
 form.search {
@@ -2555,47 +2549,11 @@ body > .footer .license {
   width: 410px;
   margin: 10px 0 0 260px;
 }
-#main-content > #login_box {
-  display: block;
+.login_box {
+  width: 470px;
 }
-#form_login {
-  width: 202.5px;
-}
-#form_login input {
-  width: 100%;
-  height: 32px;
-}
-#form_login input[type=submit] {
-  width: 100%;
-  padding: 3px 6px;
-  border: 0;
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 120%;
-  color: #fff;
-  background-image: linear-gradient(top, #1e9c5b, #125c36);
-  background-image: -o-linear-gradient(top, #1e9c5b, #125c36);
-  background-image: -ms-linear-gradient(top, #1e9c5b, #125c36);
-  background-image: -moz-linear-gradient(top, #1e9c5b, #125c36);
-  background-image: -webkit-linear-gradient(top, #1e9c5b, #125c36);
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #1e9c5b), color-stop(1, #125c36));
-  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#1e9c5b, endColorstr=#125c36)";
-}
-#form_login span {
-  margin-bottom: 5px;
-  display: block;
-}
-#login_box {
-  background: #dceff4;
-  width: 450px;
-}
-#login_box * {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-#login_box div#separator {
-  width: 45px;
+.login_box .separator {
+  width: 47px;
   height: 130px;
   text-align: center;
   line-height: 130px;
@@ -2604,61 +2562,50 @@ body > .footer .license {
   margin-top: 15px;
   position: relative;
 }
-#login_box div#separator .vertical_line {
+.login_box .separator .vertical_line {
   position: absolute;
   left: 50%;
   height: 45.5px;
   border-left: 1px solid #333;
   width: 1px;
 }
-#login_box div#separator .vertical_line.top {
+.login_box .separator .vertical_line.top {
   top: 0;
 }
-#login_box div#separator .vertical_line.bottom {
+.login_box .separator .vertical_line.bottom {
   bottom: 0;
 }
-#login_box form {
+.social_buttons,
+.external_providers,
+.separator {
   float: left;
 }
-ul#external_providers,
-div#separator {
-  float: left;
-}
-ul#external_providers {
-  width: 202.5px;
+.external_providers {
+  width: 211.5px;
   list-style: none;
   margin: 8px 0px 0px;
   padding: 0px;
 }
-ul#external_providers li {
-  margin: 15px 5px;
+.external_providers li {
+  margin: 15px 5px 34px;
 }
-.register #form_register {
-  width: 100%;
+.login_form {
+  width: 211.5px;
+  float: right;
 }
-.register #form_register input[type=text],
-.register #form_register input[type=password] {
-  width: 100%;
-  height: 28px;
+.login_form input {
+  height: 32px;
 }
-.register #form_register input[type=submit] {
-  width: 50%;
-}
-.register #form_register input[type=submit]:disabled {
-  background-image: none;
-  background-color: #ccc;
-}
-.register #form_register span {
-  margin-bottom: 5px;
-  display: block;
+.login_form small.error {
+  width: 94%;
 }
 .auth-not-verified img {
-  max-width: 202.5px;
+  max-width: 211.5px;
   display: inline-block;
 }
 .auth-not-verified article {
   display: inline-block;
-  max-width: 202.5px;
+  max-width: 211.5px;
   float: right;
   margin-top: 40px;
 }
@@ -2676,18 +2623,8 @@ ul#external_providers li {
   width: 46%;
   float: right;
 }
-.auth-verified .login-form-box input[type=submit] {
-  width: 100%;
-}
-.auth-verified .login-form-box input {
-  width: 95%;
-  height: 22px;
-}
-.auth-verified .login-form-box small.error {
-  width: 90%;
-}
 .auth-verified .verified-msg p {
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-weight: bold;
   color: #777777;
   line-height: 1.2em;

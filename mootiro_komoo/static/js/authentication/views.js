@@ -59,7 +59,7 @@ define(function(require) {
 
     SocialButtonsList.prototype.tagName = 'ul';
 
-    SocialButtonsList.prototype.id = 'external_providers';
+    SocialButtonsList.prototype.className = 'external_providers';
 
     SocialButtonsList.prototype.initialize = function() {
       _.bindAll(this, 'render');
@@ -90,7 +90,7 @@ define(function(require) {
       LoginView.__super__.constructor.apply(this, arguments);
     }
 
-    LoginView.prototype.id = 'login_box';
+    LoginView.prototype.className = 'login_box';
 
     LoginView.prototype.tagName = 'section';
 
@@ -98,7 +98,7 @@ define(function(require) {
 
     LoginView.prototype.initialize = function() {
       var next, _ref;
-      _.bindAll(this, 'render', 'buildButtons', 'updateUrls');
+      _.bindAll(this);
       next = ((_ref = this.options) != null ? _ref.next : void 0) || '';
       this.buildButtons(next);
       this.model = new models.LoginModel({});
@@ -167,7 +167,7 @@ define(function(require) {
 
     LogoutView.prototype.bindLogoutButton = function() {
       var _this = this;
-      return $('.logout-btn').click(function(evt) {
+      return $('.logout').click(function(evt) {
         var next;
         evt.preventDefault();
         next = $(evt.target).attr("href");

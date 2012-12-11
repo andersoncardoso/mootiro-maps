@@ -16,6 +16,10 @@ define(function(require) {
 
     SignupWidget.prototype.template = signup_tpl;
 
+    SignupWidget.prototype.get = function() {
+      return '';
+    };
+
     return SignupWidget;
 
   })(reForm.Widget);
@@ -28,6 +32,10 @@ define(function(require) {
     }
 
     SigninWidget.prototype.template = signin_tpl;
+
+    SigninWidget.prototype.get = function() {
+      return '';
+    };
 
     return SigninWidget;
 

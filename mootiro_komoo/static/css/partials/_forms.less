@@ -1,8 +1,16 @@
 /** Forms **/
 
 form {
+    label {
+        color: @label-color;
+        display: block;
+        margin-bottom: 5px;
+    }
     label.error {
-        color: @error_color;
+        color: @error-color;
+    }
+    .field-container {
+        margin-bottom: 10px;
     }
     input {
         background: white;
@@ -10,18 +18,22 @@ form {
         border: 1px solid #bcbebf;
         display: block;
         width: 100%;
+        height: 28px;
+        padding: 4px 0 3px 4px;
+        color: @label-color;
+        .border-radius;
 
         .transition(border, 1s);
-        .transition(box-shadow, 1s);
+        // .transition(box-shadow, 1s);
 
         &:focus {
             border: 1px solid rgb(0, 156, 180);
-            .box-shadow(1px, 1px, 2px, rgb(0, 156, 180));
+            // .box-shadow(1px, 1px, 2px, rgb(0, 156, 180));
         }
     }
     input.error, textarea.error  {
-        border: 1px solid @error_color;
-        // .box-halo(1px, 1px, 1px, @error_color);
+        border: 1px solid @error-color;
+        // .box-halo(1px, 1px, 1px, @error-color);
 
     }
     input[type=checkbox] {
@@ -29,13 +41,27 @@ form {
         margin-right: 10px;
         width: auto;
     }
+    input[type=submit] {
+    width: 100%;
+    padding: 3px 6px;
+    border: 0;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 120%;
+    // color: #fff;
+    // .gradient(vertical, #1e9c5b, darken(#1e9c5b, 15%));
+    }
+    .small {
+        font-size: 0.9em;
+
+    }
     small.error {
-        padding: 5px 10px;
-        margin-bottom: 5px;
-        background-color: lighten(@error_color, 30%);
-        color: darken(@error_color, 20%);
+        padding: 10px;
+        margin: 5px 0;
+        background-color: lighten(@error-color, 30%);
+        color: darken(@error-color, 20%);
         border-radius: 3px;
-        width: 100%;
+        width: 97%;
         display: block;
 
     }
@@ -44,7 +70,7 @@ form {
         width: 48%;
 
         small.error {
-            width: 95%;
+            width: 94%;
         }
     }
     .field-container.half-box-right {
@@ -52,7 +78,7 @@ form {
         float: right;
 
         small.error {
-            width: 95%;
+            width: 94%;
         }
     }
 }

@@ -29,10 +29,6 @@ define (require) ->
       @content = @options.content ? ''
       if @options.width
         @width = @options.width
-      if @options.onClose
-        @onClose = @options.onClose
-      if @options.onOpen
-        @onOpen = @options.onOpen
       @render()
 
     render: ->
@@ -49,25 +45,14 @@ define (require) ->
       this
 
     open: ->
-      @modal.show()
+      @modal.fadeIn()
       @trigger 'open'
-      @onOpen?()
       this
 
     close: ->
-      @modal.hide()
+      @modal.fadeOut()
       @trigger 'close'
-      @onClose?()
       this
-
-    show: ->
-      debugger;
-      console?.warn 'method show() is deprecated. Use open().'
-      @open()
-
-    hide: ->
-      console?.warn 'method hide() is deprecated. Use close().'
-      @close()
 
 
   return {

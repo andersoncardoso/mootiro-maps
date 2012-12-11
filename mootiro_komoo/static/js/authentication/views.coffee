@@ -59,7 +59,7 @@ define (require) ->
   #         ]
   class SocialButtonsList extends Backbone.View
     tagName: 'ul'
-    id: 'external_providers'
+    className: 'external_providers'
 
     initialize: ->
       _.bindAll this, 'render'
@@ -80,17 +80,17 @@ define (require) ->
   # Its intended to be rendered in a ModalBox, but works normally outside it.
   #
   class LoginView extends Backbone.View
-    id: 'login_box'
+    className: 'login_box'
     tagName: 'section'
     template: _.template login_tpl
 
     initialize: ->
-      _.bindAll this, 'render', 'buildButtons', 'updateUrls'
+      _.bindAll this #, 'render', 'buildButtons', 'updateUrls'
 
       next = @options?.next or ''
       @buildButtons(next)
 
-      @model = new models.LoginModel {}
+      @model = new models.LoginModel({})
 
       @form = new forms.LoginForm
         formId: 'form_login'
@@ -135,7 +135,7 @@ define (require) ->
       _.bindAll this
       @model = new models.LogoutModel {}
     bindLogoutButton: ->
-      $('.logout-btn').click (evt) =>
+      $('.logout').click (evt) =>
         evt.preventDefault()
         next = $(evt.target).attr "href"
         next = (document.location.pathname + next) if next?.charAt(0) is '#'

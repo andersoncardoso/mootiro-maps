@@ -69,6 +69,8 @@ class LoginHandler(ResourceHandler):
         json_data = get_json_data(request)
         email, password = [json_data.get(data, '')
                             for data in ['email', 'password']]
+        email = email.lower()
+        print 'json_data', json_data
 
         login = Login()
         login.from_dict({'email': email, 'password': password})

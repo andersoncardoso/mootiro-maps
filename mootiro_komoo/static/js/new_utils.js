@@ -44,8 +44,6 @@ define(function(require) {
       }, this.options);
       this.content = (_ref = this.options.content) != null ? _ref : '';
       if (this.options.width) this.width = this.options.width;
-      if (this.options.onClose) this.onClose = this.options.onClose;
-      if (this.options.onOpen) this.onOpen = this.options.onOpen;
       return this.render();
     };
 
@@ -61,31 +59,15 @@ define(function(require) {
     };
 
     ModalBox.prototype.open = function() {
-      this.modal.show();
+      this.modal.fadeIn();
       this.trigger('open');
-      if (typeof this.onOpen === "function") this.onOpen();
       return this;
     };
 
     ModalBox.prototype.close = function() {
-      this.modal.hide();
+      this.modal.fadeOut();
       this.trigger('close');
-      if (typeof this.onClose === "function") this.onClose();
       return this;
-    };
-
-    ModalBox.prototype.show = function() {
-      debugger;      if (typeof console !== "undefined" && console !== null) {
-        console.warn('method show() is deprecated. Use open().');
-      }
-      return this.open();
-    };
-
-    ModalBox.prototype.hide = function() {
-      if (typeof console !== "undefined" && console !== null) {
-        console.warn('method hide() is deprecated. Use close().');
-      }
-      return this.close();
     };
 
     return ModalBox;

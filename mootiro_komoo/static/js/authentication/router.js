@@ -35,10 +35,6 @@ define(function(require) {
       return this.initializeVerification();
     };
 
-    LoginApp.prototype._onClose = function() {
-      return this.navigate('', {});
-    };
-
     LoginApp.prototype.initializeLogin = function() {
       var _this = this;
       this.loginView = new views.LoginView({});
@@ -122,6 +118,10 @@ define(function(require) {
       return this.navigate('not-verified', {
         trigger: true
       });
+    };
+
+    LoginApp.prototype._onClose = function() {
+      return this.navigate('', {});
     };
 
     LoginApp.prototype.root = function() {

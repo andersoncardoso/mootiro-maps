@@ -11,12 +11,14 @@ define (require) ->
   # Used with reForm
   class SignupWidget extends reForm.Widget
     template: signup_tpl
+    get: -> ''
 
 
   # Simple widget for the Sign In link
   # Used with reForm
   class SigninWidget extends reForm.Widget
     template: signin_tpl
+    get: -> ''
 
 
   # Form for Login, used internally on the LoginView

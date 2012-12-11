@@ -25,9 +25,6 @@ define (require) ->
       @initializeRegister()
       @initializeVerification()
 
-    _onClose: ->
-      @navigate '', {}
-
     initializeLogin: ->
       @loginView = new views.LoginView {}
       @loginView.form.on 'register-link:click', @registerLinkCB
@@ -94,6 +91,9 @@ define (require) ->
 
     registerFormOnSuccessCB: ->
       @navigate 'not-verified', {trigger: true}
+
+    _onClose: ->
+      @navigate '', {}
 
     # =========== routes ===========================
     root: ->
