@@ -10,7 +10,7 @@ from jsonfield import JSONField
 
 from lib.locker.models import Locker
 from fileupload.models import UploadedFile
-from main.utils import send_mail_async, BaseDAOMixin
+from main.utils import send_mail_async, BaseDAOMixin, PermissionMixin
 from komoo_map.models import GeoRefModel, POINT
 
 
@@ -24,8 +24,7 @@ Thanks,
 the IT3S team.
 ''')
 
-
-class User(GeoRefModel, BaseDAOMixin):
+class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
     """
     User model. Replaces django.contrib.auth, CAS and social_auth
     with our own unified solution.
@@ -43,6 +42,10 @@ class User(GeoRefModel, BaseDAOMixin):
 
     # user management info
     is_active = models.BooleanField(default=False)
+
+    # Attributes used by PermissionMixin
+    private_fields = ['email']
+    internal_fields = ['password']
 
     class Map:
         editable = False
@@ -81,7 +84,13 @@ class User(GeoRefModel, BaseDAOMixin):
 
     @property
     def view_url(self):
-        return reverse('user_profile', kwargs={'id': self.id})
+        return 'FIXME'
+        # FIXME
+        #return reverse('user_profile', kwargs={'id': self.id})
+
+    @property
+    def url(self):
+        return self.view_url
 
     def files_set(self):
         """ pseudo-reverse query for retrieving Resource Files"""
@@ -116,11 +125,10 @@ class User(GeoRefModel, BaseDAOMixin):
         for key, val in data.iteritems():
             setattr(self, key, val)
 
-    def to_dict(self):
-        return {attr: getattr(self, attr, None) for attr in [
-            'id', 'name', 'email',
-            # 'geometry',
-        ]}
+    def to_dict(self, fields=None, user=None):
+        attrs = fields or ['id', 'url', 'name', 'email', 'contact', 'geometry']
+        return {attr: getattr(self, attr, None) for attr in attrs \
+                if hasattr(self, attr) and self.can_view_field(attr, user)}
 
     def is_valid(self):
         self.errors = {}
