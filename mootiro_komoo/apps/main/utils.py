@@ -6,6 +6,7 @@ from markdown import markdown
 import requests
 import simplejson
 import dateutil
+import datetime
 from string import letters, digits
 from random import choice
 from celery.decorators import task
@@ -14,7 +15,6 @@ from django import forms
 from django.conf import settings
 from django.core.mail import send_mail as django_send_mail
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Count
 from django.db.models.query_utils import Q
 from django.http import Http404, HttpResponseNotAllowed, HttpResponse
 from django.shortcuts import get_object_or_404
@@ -36,14 +36,14 @@ except ImportError:
 
 
 def datetime_to_iso(datetime_obj):
-    """parses a python datetime object to a ISO-8601 string"""
+    """ parses a python datetime object to a ISO-8601 string """
     if datetime_obj is None:
         return None
     return datetime_obj.isoformat()
 
 
 def iso_to_datetime(iso_string):
-    """parses a ISO-8601 string into a python datetime object"""
+    """ parses a ISO-8601 string into a python datetime object """
     if iso_string is None:
         return None
     return dateutil.parser.parse(iso_string)
@@ -357,6 +357,24 @@ def get_json_data(request):
     return simplejson.loads(request.raw_post_data)
 
 
+def to_json(obj):
+    """
+    Converts non default objects to json
+    usage:
+        simplejson.dumps(data, default=to_json)
+    """
+
+    # Geometries
+    if hasattr(obj, 'geojson'):
+        return simplejson.loads(obj.geojson)
+
+    # Datetime
+    if isinstance(obj, datetime.datetime):
+        return datetime_to_iso(obj)
+
+    raise TypeError(repr(obj) + ' is not JSON serializable')
+
+
 class JsonResponse(HttpResponse):
     """
     Creates a Json Response. The Http status code can be changed.
@@ -370,7 +388,7 @@ class JsonResponse(HttpResponse):
             return JsonResponse(my_errors_dict, status_code=400)
     """
     def __init__(self, data={}, status_code=None):
-        content = simplejson.dumps(data)
+        content = simplejson.dumps(data, default=to_json)
         super(JsonResponse, self).__init__(content=content,
                     mimetype='application/json')
         if status_code:
