@@ -1,1 +1,0 @@
-require(["jquery","backbone","authentication/router"],function(e,t,n){return e(function(){var e;return e=new n.LoginApp({}),t.history.start()})})
