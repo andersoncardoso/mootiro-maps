@@ -39,10 +39,6 @@ config =
             exports: 'MarkerClusterer'
         'sinon':
             exports: 'sinon'
-    deps: [
-        'map/compat',
-        'map/utils'
-    ]
 
 requirejs?.config config
 require ?= config

@@ -18,15 +18,26 @@ define (require) ->
       'not-verified': 'not_verified'
       'verified': 'verified'
 
-    initialize: ->
+    initialize: (@options) ->
       _.bindAll this
       @initializeLogin()
       @initializeLogout()
       @initializeRegister()
       @initializeVerification()
+      @bindExternalEvents()
 
     _onClose: ->
       @navigate '', {}
+
+    _loginRequired: (next)->
+      if not KomooNS?.isAuthenticated
+        @loginView.updateUrls(next) if next
+        @navigate 'login', {trigger: true}
+
+    bindExternalEvents: ->
+      @vent = @options.vent
+      @vent.on 'auth:loginRequired', @_loginRequired
+      @vent.on 'auth:logout', @logoutView.logout
 
     initializeLogin: ->
       @loginView = new views.LoginView {}
@@ -43,13 +54,12 @@ define (require) ->
           evt.preventDefault()
           next = $(evt.target).attr "href"
           next = (document.location.pathname + next) if next?.charAt(0) is '#'
-          @loginView.updateUrls(next) if next
-          @navigate 'login', {trigger: true}
+          @_loginRequired next
           return false
 
     initializeLogout: ->
       @logoutView = new views.LogoutView {}
-      @logoutView.bindLogoutButton()
+      #@logoutView.bindLogoutButton()
 
     initializeRegister: ->
       @registerView = new views.RegisterView {}

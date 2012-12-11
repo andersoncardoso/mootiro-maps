@@ -1,17 +1,32 @@
 
-define(['common'], function() {
-  require(['analytics', 'facebook-jssdk'], function(analytics, facebook) {
-    analytics.init();
-    return facebook.init(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.facebookAppId : void 0);
+define(function(require) {
+  var $, Backbone, Footer, Header, analytics, authRouter, facebook, footer, header, vent;
+  require('common');
+  $ = require('jquery');
+  Backbone = require('backbone');
+  vent = require('event_aggregator');
+  Header = require('main/header');
+  header = new Header({
+    el: '#header-container',
+    vent: vent
   });
-  require(['moderation/moderation', 'lib/shortcut', 'utils'], function() {});
-  require(['jquery', 'backbone', 'authentication/router'], function($, Backbone, auth_router) {
-    return $(function() {
-      var loginApp;
-      loginApp = new auth_router.LoginApp({});
-      return Backbone.history.start();
+  Footer = require('main/footer');
+  footer = new Footer({
+    el: '#footer-container',
+    vent: vent
+  });
+  authRouter = require('authentication/router');
+  $(function() {
+    var loginApp;
+    loginApp = new authRouter.LoginApp({
+      vent: vent
     });
+    return Backbone.history.start();
   });
+  analytics = require('analytics');
+  analytics.init();
+  facebook = require('facebook-jssdk');
+  facebook.init(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.facebookAppId : void 0);
   return {
     start: function(module) {
       if (module != null) return require([module]);

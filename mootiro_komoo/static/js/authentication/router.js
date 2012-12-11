@@ -27,16 +27,33 @@ define(function(require) {
       'verified': 'verified'
     };
 
-    LoginApp.prototype.initialize = function() {
+    LoginApp.prototype.initialize = function(options) {
+      this.options = options;
       _.bindAll(this);
       this.initializeLogin();
       this.initializeLogout();
       this.initializeRegister();
-      return this.initializeVerification();
+      this.initializeVerification();
+      return this.bindExternalEvents();
     };
 
     LoginApp.prototype._onClose = function() {
       return this.navigate('', {});
+    };
+
+    LoginApp.prototype._loginRequired = function(next) {
+      if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
+        if (next) this.loginView.updateUrls(next);
+        return this.navigate('login', {
+          trigger: true
+        });
+      }
+    };
+
+    LoginApp.prototype.bindExternalEvents = function() {
+      this.vent = this.options.vent;
+      this.vent.on('auth:loginRequired', this._loginRequired);
+      return this.vent.on('auth:logout', this.logoutView.logout);
     };
 
     LoginApp.prototype.initializeLogin = function() {
@@ -57,18 +74,14 @@ define(function(require) {
           if ((next != null ? next.charAt(0) : void 0) === '#') {
             next = document.location.pathname + next;
           }
-          if (next) _this.loginView.updateUrls(next);
-          _this.navigate('login', {
-            trigger: true
-          });
+          _this._loginRequired(next);
           return false;
         }
       });
     };
 
     LoginApp.prototype.initializeLogout = function() {
-      this.logoutView = new views.LogoutView({});
-      return this.logoutView.bindLogoutButton();
+      return this.logoutView = new views.LogoutView({});
     };
 
     LoginApp.prototype.initializeRegister = function() {

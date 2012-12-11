@@ -131,15 +131,19 @@ define (require) ->
   #
   # Logout View to bind the .logout-btn on upper-bar.html
   class LogoutView extends Backbone.View
-    initialize: ->
+    initialize: (@options) ->
       _.bindAll this
       @model = new models.LogoutModel {}
+
+    logout: (next) ->
+      @model.doLogout next
+
     bindLogoutButton: ->
       $('.logout-btn').click (evt) =>
         evt.preventDefault()
         next = $(evt.target).attr "href"
         next = (document.location.pathname + next) if next?.charAt(0) is '#'
-        @model.doLogout next
+        @logout next
         return false
 
   #
