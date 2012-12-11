@@ -5,6 +5,12 @@ trans =
   'Login':
     'pt-br': 'Entrar'
 
+  'Logout':
+    'pt-br': 'Sair'
+
+  'Help':
+    'pt-br': 'Ajuda'
+
   'Email':
     'pt-br': 'E-mail'
 
@@ -55,6 +61,28 @@ trans =
 
   'Please go check your mail box':
     'pt-br': 'Por favor, vá checar sua caixa postal'
+
+  'Search':
+    'pt-br': 'Procurar'
+
+  'See results':
+    'pt-br': 'Ver resultados'
+
+  'More about':
+    'pt-br': 'Saiba mais'
+
+  'About MootiroMaps':
+    'pt-br': 'Sobre o MootiroMaps'
+
+  'About Us':
+    'pt-br': 'Quem somos'
+
+  'Get involved':
+    'pt-br': 'Se envolva'
+
+  'Supporters':
+    'pt-br': 'Apoio institucional'
+
 
 window.i18n = (str) ->
   lang = KomooNS.lang

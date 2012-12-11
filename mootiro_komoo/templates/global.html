@@ -6,8 +6,12 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
+    {{ form.media.css }}
+    <link rel="shortcut icon" HREF="{{STATIC_URL}}img/favicon.png" />
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css" />
+
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="{{STATIC_URL}}lib/html5.js"></script>
 
 
     <title>{% block title %}Mootiro Maps{% endblock %}</title>
@@ -17,9 +21,6 @@
     <meta property="og:description" content="MootiroMaps é uma ferramenta open source que promove a colaboração entre atores engajados no desenvolvimento de um território ou uma comunidade."/>
     <meta property="og:image" content="{{STATIC_URL}}img/logo.png"/>
 
-    {{ form.media.css }}
-    <link rel="shortcut icon" HREF="{{STATIC_URL}}img/favicon.png" />
-    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css" />
 
     <!-- Django utilities -->
     <script type="text/javascript" src="{% url javascript_catalog %}"></script>
@@ -39,34 +40,7 @@
   <body>
 
     <!-- Site Header -->
-    <header class="main">
-
-      <div class="content">
-
-       {% include 'main/upper_bar.html' %}
-
-        <h1 class="logo"><a href="/" title="Página principal">MootiroMaps</a></h1>
-
-        <nav>
-          <ul>
-            <li class="map"><a href="#">Mapa</a></li>
-            <li class="communities"><a href="#">Comunidades</a></li>
-            <li class="places has-submenu">
-              <a href="#">Locais</a>
-              <ul>
-                <li class="needs"><a href="#">Necessidades</a></li>
-                <li class="organizations"><a href="#">Organizações</a></li>
-                <li class="resources"><a href="#">Recursos</a></li>
-                <li class="investments"><a href="#">Investimentos</a></li>
-              </ul>
-            </li>
-            <li class="projects"><a href="#">Projetos</a></li>
-          </ul>
-        </nav>
-
-      </div>
-
-    </header>
+    <div id="header-container"></div>
     <!-- /Site Header -->
 
     <!-- Main Block -->
@@ -107,11 +81,7 @@
     <!-- /Main Block -->
 
     <!-- Footer -->
-    <section class="footer">
-      {% block footer %}
-        {% include "main/footer.html" %}
-      {% endblock %}
-    </section>
+    <div id="footer-container"></div>
     <!-- /Footer -->
 
 

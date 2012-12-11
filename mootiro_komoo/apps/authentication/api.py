@@ -6,7 +6,8 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 
-from main.utils import ResourceHandler, JsonResponse, get_json_data
+from main.utils import (ResourceHandler, JsonResponse, JsonResponseNotFound,
+        get_json_data, get_fields_to_show)
 
 from .models import User, Login
 from .utils import login as auth_login
@@ -57,6 +58,25 @@ class UserHandler(ResourceHandler):
             user.save()
             user.send_confirmation_mail(request)
             return JsonResponse()
+
+
+class UsersHandler(ResourceHandler):
+    """ /users/[id_]/<action> """
+
+    def get(self, request, id_, action):
+        fields = get_fields_to_show(request)
+        user = request.user if id_ == 'me' else User.get_by_id(id_)
+
+        if not user:
+            return JsonResponseNotFound()
+
+        # /user/[id_]
+        if not action:
+            return JsonResponse(user.to_dict(fields=fields, user=request.user))
+
+        # /user/[id]/geojson
+        if action == 'geojson':
+            return JsonResponse(user.geojson)
 
 
 class LoginHandler(ResourceHandler):

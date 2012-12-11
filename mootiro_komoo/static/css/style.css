@@ -2516,36 +2516,45 @@ a.button.twitter {
   height: 100%;
   padding-bottom: 10%;
 }
-body > .footer {
+body > .footer,
+body > #footer-container > .footer {
   *zoom: 1;
   width: 1150px;
   margin: 0 auto 10px;
 }
 body > .footer:before,
-body > .footer:after {
+body > #footer-container > .footer:before,
+body > .footer:after,
+body > #footer-container > .footer:after {
   content: "";
   display: table;
 }
-body > .footer:after {
+body > .footer:after,
+body > #footer-container > .footer:after {
   clear: both;
 }
-body > .footer > div {
+body > .footer > div,
+body > #footer-container > .footer > div {
   display: inline-block;
   width: 260px;
   vertical-align: top;
 }
-body > .footer h3 {
+body > .footer h3,
+body > #footer-container > .footer h3 {
   font-size: 95%;
 }
-body > .footer .supporters h3 {
+body > .footer .supporters h3,
+body > #footer-container > .footer .supporters h3 {
   margin-left: 24px;
 }
-body > .footer .cea-logo {
+body > .footer .cea-logo,
+body > #footer-container > .footer .cea-logo {
   margin: 24px;
   /* 4*x, x=6 */
 
 }
-body > .footer .license {
+body > .footer .license,
+body > #footer-container > .footer .license {
   width: 410px;
   margin: 10px 0 0 260px;
 }

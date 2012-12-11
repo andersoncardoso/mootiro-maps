@@ -160,9 +160,14 @@ define(function(require) {
       LogoutView.__super__.constructor.apply(this, arguments);
     }
 
-    LogoutView.prototype.initialize = function() {
+    LogoutView.prototype.initialize = function(options) {
+      this.options = options;
       _.bindAll(this);
       return this.model = new models.LogoutModel({});
+    };
+
+    LogoutView.prototype.logout = function(next) {
+      return this.model.doLogout(next);
     };
 
     LogoutView.prototype.bindLogoutButton = function() {
@@ -174,7 +179,7 @@ define(function(require) {
         if ((next != null ? next.charAt(0) : void 0) === '#') {
           next = document.location.pathname + next;
         }
-        _this.model.doLogout(next);
+        _this.logout(next);
         return false;
       });
     };
@@ -231,7 +236,7 @@ define(function(require) {
       this.verified = this.options.verified;
       if (this.verified) {
         this.template = _.template(verif_tpl);
-        this.loginModel = new models.LoginModel();
+        this.loginModel = new models.LoginModel({});
         return this.loginForm = new forms.LoginForm({
           model: this.loginModel
         });

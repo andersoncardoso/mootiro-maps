@@ -45,10 +45,10 @@ class GeoRefModel(geomodels.Model):
     @property
     def geojson(self):
         geojson = create_geojson([self], convert=False)
-        if geojson and geojson.get('features'):
-            geojson['features'][0]['properties']['userCanEdit'] = True
-            geojson['features'][0]['properties']['alwaysVisible'] = True
-        return json.dumps(geojson)
+        #if geojson and geojson.get('features'):
+        #    geojson['features'][0]['properties']['userCanEdit'] = True
+        #    geojson['features'][0]['properties']['alwaysVisible'] = True
+        return geojson
 
     class Meta:
         abstract = True

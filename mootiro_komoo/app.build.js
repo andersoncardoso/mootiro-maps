@@ -25,6 +25,7 @@
         {
             name: 'common',
             include: [
+                'app',
                 'googlemaps',
                 'analytics',
                 'facebook-jssdk',

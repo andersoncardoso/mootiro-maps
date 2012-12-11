@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.conf.urls.defaults import url, patterns
-from .api import LoginHandler, LogoutHandler, UserHandler
+from .api import LoginHandler, LogoutHandler, UserHandler, UsersHandler
 
 
 #
@@ -19,6 +19,9 @@ urlpatterns += patterns('authentication.api',
         url(r'^api/user/?$', UserHandler.dispatch, name='user_api'),
         url(r'^api/user/login/?$', LoginHandler.dispatch, name='login_api'),
         url(r'^api/user/logout/?$', LogoutHandler.dispatch, name='logout_api'),
+
+        url(r'^api/users/(?P<id_>\S+)/(?P<action>\S+)?$', UsersHandler.dispatch,
+                name='user_info_api'),
 )
 
 #

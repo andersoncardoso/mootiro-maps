@@ -50,8 +50,7 @@ config = {
     'sinon': {
       exports: 'sinon'
     }
-  },
-  deps: ['map/compat', 'map/utils']
+  }
 };
 
 if (typeof requirejs !== "undefined" && requirejs !== null) {

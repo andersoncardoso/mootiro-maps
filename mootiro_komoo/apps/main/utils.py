@@ -6,6 +6,7 @@ from markdown import markdown
 import requests
 import simplejson
 import dateutil
+import datetime
 from string import letters, digits
 from random import choice
 from celery.decorators import task
@@ -14,7 +15,6 @@ from django import forms
 from django.conf import settings
 from django.core.mail import send_mail as django_send_mail
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Count
 from django.db.models.query_utils import Q
 from django.http import Http404, HttpResponseNotAllowed, HttpResponse
 from django.shortcuts import get_object_or_404
@@ -36,14 +36,14 @@ except ImportError:
 
 
 def datetime_to_iso(datetime_obj):
-    """parses a python datetime object to a ISO-8601 string"""
+    """ parses a python datetime object to a ISO-8601 string """
     if datetime_obj is None:
         return None
     return datetime_obj.isoformat()
 
 
 def iso_to_datetime(iso_string):
-    """parses a ISO-8601 string into a python datetime object"""
+    """ parses a ISO-8601 string into a python datetime object """
     if iso_string is None:
         return None
     return dateutil.parser.parse(iso_string)
@@ -349,12 +349,35 @@ class ResourceHandler:
             raise Http404
 
 
+def get_fields_to_show(request):
+    data = request.GET.get('fields', None)
+    return data.split(',') if data else None
+
+
 def get_json_data(request):
     """
     get raw json data from request.
     Usefull for requests from Backbone.sync
     """
     return simplejson.loads(request.raw_post_data)
+
+
+def to_json(obj):
+    """
+    Converts non default objects to json
+    usage:
+        simplejson.dumps(data, default=to_json)
+    """
+
+    # Geometries
+    if hasattr(obj, 'geojson'):
+        return simplejson.loads(obj.geojson)
+
+    # Datetime
+    if isinstance(obj, datetime.datetime):
+        return datetime_to_iso(obj)
+
+    raise TypeError(repr(obj) + ' is not JSON serializable')
 
 
 class JsonResponse(HttpResponse):
@@ -370,11 +393,20 @@ class JsonResponse(HttpResponse):
             return JsonResponse(my_errors_dict, status_code=400)
     """
     def __init__(self, data={}, status_code=None):
-        content = simplejson.dumps(data)
+        content = simplejson.dumps(data, default=to_json)
         super(JsonResponse, self).__init__(content=content,
                     mimetype='application/json')
         if status_code:
             self.status_code = status_code
+
+
+class JsonResponseNotFound(JsonResponse):
+    """ Json Response for 404 Not Found error """
+    def __init__(self, msg=''):
+        err = 'Not found'
+        super(JsonResponseNotFound, self).__init__(
+                {'error': err if not msg else '{}: {}'.format(err, msg)},
+                status_code=404)
 
 
 def randstr(l=10):
@@ -591,3 +623,36 @@ class BaseDAOMixin(object):
     def filter_by(cls, **kwargs):
         """ filter by keyword arguments """
         return cls.objects.filter(**kwargs)
+
+
+class PermissionMixin(object):
+    """ Mixin to verifie if user have permission to do some actions """
+
+    def can_edit(self, user):
+        """ Default edit permissions """
+        if not user or not user.is_authenticated():
+            return False
+
+        # superusers can edit everything
+        if user.is_superuser():
+            return True
+
+        # otherwise only the user can edit itself
+        if self.__class__.__name__ == 'User':
+            # use .__class__.__name__ is ugly, but we don't want circular
+            # dependencies
+            return user == self
+
+        # active users can edit every content
+        return user.is_active
+
+    def can_view_field(self, fieldname, user=None):
+        """ Default view permissions """
+        # Nobody can view internal fields
+        if fieldname in getattr(self, 'internal_fields', []):
+            return False
+
+        if self.can_edit(user):
+            return True
+
+        return not fieldname in getattr(self, 'private_fields', [])
