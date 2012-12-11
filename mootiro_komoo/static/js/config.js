@@ -50,7 +50,8 @@ config = {
     'sinon': {
       exports: 'sinon'
     }
-  }
+  },
+  deps: ['i18n']
 };
 
 if (typeof requirejs !== "undefined" && requirejs !== null) {

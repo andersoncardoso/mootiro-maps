@@ -9,7 +9,6 @@
         'jquery': 'empty:',
         'underscore': 'empty:',
         'backbone': 'empty:',
-        'reveal': 'empty:',
         'reForm': 'empty:',
         'async': '../static/lib/requirejs/async',
         'goog': '../static/lib/requirejs/goog',
@@ -25,6 +24,7 @@
         {
             name: 'common',
             include: [
+                'i18n',
                 'app',
                 'googlemaps',
                 'analytics',

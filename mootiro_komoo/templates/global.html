@@ -26,7 +26,6 @@
     <script type="text/javascript" src="{% url javascript_catalog %}"></script>
     <script type="text/javascript" src="{{STATIC_URL}}lib/django-js-utils/dutils.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}lib/django-js-utils/dutils.conf.urls.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/i18n.js"></script>
 
     <script type="text/javascript">
       var KomooNS = {{ KomooNS|jsonify|safe }};
@@ -103,8 +102,8 @@
 
     <script type="text/javascript">
       // Loads the page specific module
-      require(['common', 'app'], function (common, app) {
-          app.start('{{ js_module }}');
+      require(['common'], function () {
+          require(['app'], function (app) { app.start('{{ js_module }}'); });
       });
     </script>
   </body>

@@ -2,6 +2,7 @@
 common.js
 ----------------
 common.js
+i18n.js
 event_aggregator.js
 text.js
 text!templates/main/_header.html
