@@ -395,6 +395,15 @@ class JsonResponse(HttpResponse):
             self.status_code = status_code
 
 
+class JsonResponseNotFound(JsonResponse):
+    """ Json Response for 404 Not Found error """
+    def __init__(self, msg=''):
+        err = 'Not found'
+        super(JsonResponseNotFound, self).__init__(
+                {'error': err if not msg else '{}: {}'.format(err, msg)},
+                status_code=404)
+
+
 def randstr(l=10):
     chars = letters + digits
     s = ''
