@@ -349,6 +349,11 @@ class ResourceHandler:
             raise Http404
 
 
+def get_fields_to_show(request):
+    data = request.GET.get('fields', None)
+    return data.split(',') if data else None
+
+
 def get_json_data(request):
     """
     get raw json data from request.
@@ -618,3 +623,36 @@ class BaseDAOMixin(object):
     def filter_by(cls, **kwargs):
         """ filter by keyword arguments """
         return cls.objects.filter(**kwargs)
+
+
+class PermissionMixin(object):
+    """ Mixin to verifie if user have permission to do some actions """
+
+    def can_edit(self, user):
+        """ Default edit permissions """
+        if not user or not user.is_authenticated():
+            return False
+
+        # superusers can edit everything
+        if user.is_superuser():
+            return True
+
+        # otherwise only the user can edit itself
+        if self.__class__.__name__ == 'User':
+            # use .__class__.__name__ is ugly, but we don't want circular
+            # dependencies
+            return user == self
+
+        # active users can edit every content
+        return user.is_active
+
+    def can_view_field(self, fieldname, user=None):
+        """ Default view permissions """
+        # Nobody can view internal fields
+        if fieldname in getattr(self, 'internal_fields', []):
+            return False
+
+        if self.can_edit(user):
+            return True
+
+        return not fieldname in getattr(self, 'private_fields', [])
