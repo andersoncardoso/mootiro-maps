@@ -39,6 +39,9 @@ config =
             exports: 'MarkerClusterer'
         'sinon':
             exports: 'sinon'
+    deps: [
+        'i18n'
+    ]
 
 requirejs?.config config
 require ?= config

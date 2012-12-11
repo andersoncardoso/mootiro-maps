@@ -26,8 +26,6 @@ header.main {
     }
 
     .logo {
-        .image('logo.png');
-
         margin: 15px 7px 5px;
 
         &,
@@ -37,14 +35,17 @@ header.main {
             height: @logo-height;
             overflow: hidden;
         }
+        > a {
+            .image('logo.png');
 
-        a,
-        a:hover,
-        a:visited,
-        a:active {
-            /* Set logo box text invisible */
-            color: transparent;
-            background-color: transparent;
+            &,
+            &:hover,
+            &:visited,
+            &:active {
+                /* Set logo box text invisible */
+                color: transparent;
+                background-color: transparent;
+            }
         }
     }
 
@@ -211,16 +212,16 @@ header.main {
                     }
 
                     &.needs a {
-                        .icon('', 16px);
+                        .icon('blank.png', 16px);
                     }
                     &.organizations a {
-                        .icon('', 16px);
+                        .icon('blank.png', 16px);
                     }
                     &.resources a {
-                        .icon('', 16px);
+                        .icon('blank.png', 16px);
                     }
                     &.investments a {
-                        .icon('', 16px);
+                        .icon('blank.png', 16px);
                     }
 
                 }
