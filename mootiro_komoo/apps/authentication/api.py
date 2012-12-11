@@ -25,6 +25,7 @@ class UserHandler(ResourceHandler):
         Responsible for creating a new User account.
         """
         json_data = get_json_data(request)
+        json_data['email'] = json_data.get('email', '').lower()
         user = User()
         user.from_dict(json_data)
 
@@ -70,7 +71,6 @@ class LoginHandler(ResourceHandler):
         email, password = [json_data.get(data, '')
                             for data in ['email', 'password']]
         email = email.lower()
-        print 'json_data', json_data
 
         login = Login()
         login.from_dict({'email': email, 'password': password})
