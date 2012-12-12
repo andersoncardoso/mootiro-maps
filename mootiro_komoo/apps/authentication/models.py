@@ -9,7 +9,6 @@ from django.utils.translation import ugettext as _
 from jsonfield import JSONField
 
 from lib.locker.models import Locker
-from fileupload.models import UploadedFile
 from main.utils import send_mail_async, BaseDAOMixin, PermissionMixin
 from komoo_map.models import GeoRefModel, POINT
 
@@ -23,6 +22,7 @@ Before using our tool, please confirm your e-mail visiting the link below.
 Thanks,
 the IT3S team.
 ''')
+
 
 class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
     """
@@ -85,16 +85,10 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
     @property
     def view_url(self):
         return '/user/%s <FIXME>' % self.id
-        # FIXME
-        #return reverse('user_profile', kwargs={'id': self.id})
 
     @property
     def url(self):
         return self.view_url
-
-    def files_set(self):
-        """ pseudo-reverse query for retrieving Resource Files"""
-        return UploadedFile.get_files_for(self)
 
     def _social_auth_by_name(self, name):
         """
@@ -122,19 +116,34 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
 
     # ====================  utils =========================================== #
     def from_dict(self, data):
+        expected_keys = [
+            'id', 'name', 'email', 'password', 'contact', 'geojson', 'url',
+            'is_admin', 'is_active']
         for key, val in data.iteritems():
-            setattr(self, key, val)
+            if key in expected_keys:
+                if key == 'url':
+                    continue
+                else:
+                    setattr(self, key, val)
+            else:
+                raise Exception('Unexpected Key: {}'.format(key))
 
     def to_dict(self, fields=None, user=None):
-        attrs = fields or ['id', 'url', 'name', 'email', 'contact', 'geometry']
-        _dict= {}
-        for attr in attrs:
-            # if hasattr(self, attr) and self.can_view_field(attr, user):
-                if attr == 'geometry':
-                    _dict[attr] = self.geojson
-                else:
-                    _dict[attr] = getattr(self, attr, None)
-        return _dict
+        # attrs = fields or ['id', 'url', 'name', 'email', 'contact',
+        #                    'geometry']
+        # _dict = {}
+        # for attr in attrs:
+        #     # if hasattr(self, attr) and self.can_view_field(attr, user):
+        #         if attr == 'geometry':
+        #             _dict[attr] = self.geojson
+        #         else:
+        #             _dict[attr] = getattr(self, attr, None)
+        fields_and_defaults = [
+            ('id', None), ('name', None), ('email', None), ('contact', {}),
+            ('geojson', {}), ('url', self.view_url), ('password', None),
+            ('is_admin', False), ('is_active', False),
+        ]
+        return {v[0]: getattr(self, v[0], v[1]) for v in fields_and_defaults}
 
     def is_valid(self):
         self.errors = {}

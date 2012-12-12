@@ -1,4 +1,5 @@
 import json
+import simplejson
 from django.contrib.gis.db import models as geomodels
 from django.core.urlresolvers import reverse
 from collection_from import CollectionFrom
@@ -49,6 +50,15 @@ class GeoRefModel(geomodels.Model):
         #    geojson['features'][0]['properties']['userCanEdit'] = True
         #    geojson['features'][0]['properties']['alwaysVisible'] = True
         return geojson
+
+    @geojson.setter
+    def geojson(self, feature_collection):
+        geojson = {
+            "type": "GeometryCollection",
+            "geometries": [feature['geometry'] 
+                for feature in feature_collection['features']]
+        }
+        self.geometry = json.dumps(geojson)
 
     class Meta:
         abstract = True
