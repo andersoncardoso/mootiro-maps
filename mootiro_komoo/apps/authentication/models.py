@@ -36,11 +36,10 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
     name = models.CharField(max_length=256, null=False)
     email = models.CharField(max_length=512, null=False, unique=True)
     password = models.CharField(max_length=256, null=False)
-    contact = models.TextField(null=True)
+    contact = JSONField(null=True, blank=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
 
     is_admin = models.BooleanField(default=False)
-
-    # user management info
     is_active = models.BooleanField(default=False)
 
     # Attributes used by PermissionMixin
@@ -84,11 +83,12 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
 
     @property
     def view_url(self):
-        return '/user/%s <FIXME>' % self.id
+        # deprecated
+        return self.url
 
     @property
     def url(self):
-        return self.view_url
+        return '/user/%s <FIXME>' % self.id
 
     def _social_auth_by_name(self, name):
         """
@@ -129,18 +129,9 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
                 raise Exception('Unexpected Key: {}'.format(key))
 
     def to_dict(self, fields=None, user=None):
-        # attrs = fields or ['id', 'url', 'name', 'email', 'contact',
-        #                    'geometry']
-        # _dict = {}
-        # for attr in attrs:
-        #     # if hasattr(self, attr) and self.can_view_field(attr, user):
-        #         if attr == 'geometry':
-        #             _dict[attr] = self.geojson
-        #         else:
-        #             _dict[attr] = getattr(self, attr, None)
         fields_and_defaults = [
             ('id', None), ('name', None), ('email', None), ('contact', {}),
-            ('geojson', {}), ('url', self.view_url), ('password', None),
+            ('geojson', {}), ('url', ''), ('password', None),
             ('is_admin', False), ('is_active', False),
         ]
         return {v[0]: getattr(self, v[0], v[1]) for v in fields_and_defaults}
@@ -231,6 +222,12 @@ class Login(object):
     """
     Dummy Model used only for form validation
     """
+    def __init__(self, *args, **kwargs):
+        self.email, self.password = None, None
+        for k, v in kwargs.iteritems():
+            if k in ['email', 'password']:
+                setattr(self, k, v)
+
     def from_dict(self, data):
         for key, val in data.iteritems():
             setattr(self, key, val)
