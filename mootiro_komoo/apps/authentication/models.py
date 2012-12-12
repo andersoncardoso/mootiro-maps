@@ -64,8 +64,8 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
             salt = settings.USER_PASSWORD_SALT
         return unicode(sha1(salt + s).hexdigest())
 
-    def set_password(self, s):
-        self.password = self.calc_hash(s)
+    def set_password(self, s, salt=None):
+        self.password = self.calc_hash(s, salt=salt)
 
     def verify_password(self, s, salt=None):
         return self.password == self.calc_hash(s, salt)
@@ -84,7 +84,7 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
 
     @property
     def view_url(self):
-        return 'FIXME'
+        return '/user/%s <FIXME>' % self.id
         # FIXME
         #return reverse('user_profile', kwargs={'id': self.id})
 
@@ -127,8 +127,14 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
 
     def to_dict(self, fields=None, user=None):
         attrs = fields or ['id', 'url', 'name', 'email', 'contact', 'geometry']
-        return {attr: getattr(self, attr, None) for attr in attrs \
-                if hasattr(self, attr) and self.can_view_field(attr, user)}
+        _dict= {}
+        for attr in attrs:
+            # if hasattr(self, attr) and self.can_view_field(attr, user):
+                if attr == 'geometry':
+                    _dict[attr] = self.geojson
+                else:
+                    _dict[attr] = getattr(self, attr, None)
+        return _dict
 
     def is_valid(self):
         self.errors = {}
