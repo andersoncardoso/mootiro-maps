@@ -29,7 +29,7 @@ class UserTest(unittest.TestCase):
             'id': 1,
             'name': 'Test User',
             'email': 'test@user.com',
-            'url': '/user/1 <FIXME>',
+            'url': '/user/1',
             'geojson': {
                 'type': 'FeatureCollection',
                 'features': [
