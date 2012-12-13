@@ -5,7 +5,7 @@ define (require) ->
   Backbone = require 'backbone'
   reForm = require 'reForm'
   views = require './views'
-  new_utils = require 'new_utils'
+  utils = require 'utils'
 
   not_verif_tpl = require 'text!templates/authentication/_not_verified.html'
   verif_tpl = require 'text!templates/authentication/_verified.html'
@@ -30,7 +30,7 @@ define (require) ->
       @loginView = new views.LoginView {}
       @loginView.form.on 'register-link:click', @registerLinkCB
 
-      @loginBox = new new_utils.ModalBox
+      @loginBox = new utils.ModalBox
         title: i18n 'Login'
         content: @loginView.render().el
         modal_id: 'login-modal-box'
@@ -54,7 +54,7 @@ define (require) ->
       @registerView.form.on 'success', @registerFormOnSuccessCB
       @registerView.form.on 'login-link:click', @loginLinkCB
 
-      @registerBox = new new_utils.ModalBox
+      @registerBox = new utils.ModalBox
         title: i18n 'Register'
         width: '450px'
         content: @registerView.render().el
@@ -70,13 +70,13 @@ define (require) ->
 
       @verifiedView.loginForm.on 'register-link:click', @registerLinkCB
 
-      @notVerifiedBox = new new_utils.ModalBox
+      @notVerifiedBox = new utils.ModalBox
         title: i18n 'Verification'
         content: @notVerifiedView.render().el
         modal_id: 'verification-modal-box'
       @notVerifiedBox.on 'close', @_onClose
 
-      @verifiedBox = new new_utils.ModalBox
+      @verifiedBox = new utils.ModalBox
         title: i18n 'Verification'
         content: @verifiedView.render().el
         modal_id: 'verification-modal-box'

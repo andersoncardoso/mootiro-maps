@@ -25,5 +25,3 @@ def komoo_namespace(request):
     }
 
 
-# def social_keys(context):
-#     return {'FACEBOOK_APP_ID': settings.FACEBOOK_APP_ID}

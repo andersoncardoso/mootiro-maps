@@ -2,13 +2,13 @@ var __hasProp = Object.prototype.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
 define(function(require) {
-  var $, Backbone, LoginApp, new_utils, not_verif_tpl, reForm, verif_tpl, views, _;
+  var $, Backbone, LoginApp, not_verif_tpl, reForm, utils, verif_tpl, views, _;
   $ = require('jquery');
   _ = require('underscore');
   Backbone = require('backbone');
   reForm = require('reForm');
   views = require('./views');
-  new_utils = require('new_utils');
+  utils = require('utils');
   not_verif_tpl = require('text!templates/authentication/_not_verified.html');
   verif_tpl = require('text!templates/authentication/_verified.html');
   LoginApp = (function(_super) {
@@ -41,7 +41,7 @@ define(function(require) {
       var _this = this;
       this.loginView = new views.LoginView({});
       this.loginView.form.on('register-link:click', this.registerLinkCB);
-      this.loginBox = new new_utils.ModalBox({
+      this.loginBox = new utils.ModalBox({
         title: i18n('Login'),
         content: this.loginView.render().el,
         modal_id: 'login-modal-box'
@@ -69,7 +69,7 @@ define(function(require) {
       this.registerView = new views.RegisterView({});
       this.registerView.form.on('success', this.registerFormOnSuccessCB);
       this.registerView.form.on('login-link:click', this.loginLinkCB);
-      this.registerBox = new new_utils.ModalBox({
+      this.registerBox = new utils.ModalBox({
         title: i18n('Register'),
         width: '450px',
         content: this.registerView.render().el,
@@ -86,13 +86,13 @@ define(function(require) {
         verified: true
       });
       this.verifiedView.loginForm.on('register-link:click', this.registerLinkCB);
-      this.notVerifiedBox = new new_utils.ModalBox({
+      this.notVerifiedBox = new utils.ModalBox({
         title: i18n('Verification'),
         content: this.notVerifiedView.render().el,
         modal_id: 'verification-modal-box'
       });
       this.notVerifiedBox.on('close', this._onClose);
-      this.verifiedBox = new new_utils.ModalBox({
+      this.verifiedBox = new utils.ModalBox({
         title: i18n('Verification'),
         content: this.verifiedView.render().el,
         modal_id: 'verification-modal-box'
