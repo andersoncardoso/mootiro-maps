@@ -90,13 +90,14 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'it3sdev@gmail.com'
 EMAIL_HOST_PASSWORD = '...'  # password on local settings
 
+from local_settings import DATABASES as LOCAL_DB
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'mootiro_komoo_test',
-        'USER': 'anderson',
-        'PASSWORD': 'anderson',
+        'USER': LOCAL_DB['default']['USER'],
+        'PASSWORD': LOCAL_DB['default']['PASSWORD'],
         'HOST': '',
         'PORT': '',
     }

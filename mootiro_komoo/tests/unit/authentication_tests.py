@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import unittest
+from mock import MagicMock, patch
 from ..test_utils import setup_env
 setup_env()
 
@@ -44,28 +45,32 @@ class UserTest(unittest.TestCase):
                     }
                 ]},
             'contact': {'tel': '1234567890', 'skype': 'skype_from_test_user'},
-            'password': '9e80d19abef09197aa1e095b77534786c9ba08c0',
+            'password': 'eb5a9887586930f7f2e9c1c42bc937188afa689d',
             'is_admin': False,
             'is_active': False
         }
 
+    @patch('django.conf.settings.USER_PASSWORD_SALT', 'blablabla')
     def password_hash_test(self):
-        hashed_psswd = User.calc_hash('12345', salt='blablabla')
+        hashed_psswd = User.calc_hash('12345')
         expected_hash = u'eb5a9887586930f7f2e9c1c42bc937188afa689d'
         self.assertEqual(expected_hash, hashed_psswd)
 
+    @patch('django.conf.settings.USER_PASSWORD_SALT', 'blablabla')
     def verify_password_test(self):
         u = User()
         u.set_password('12345')
-        self.assertEqual('9e80d19abef09197aa1e095b77534786c9ba08c0',
+        self.assertEqual('eb5a9887586930f7f2e9c1c42bc937188afa689d',
                          u.password)
         self.assertTrue(u.verify_password('12345'))
 
+    @patch('django.conf.settings.USER_PASSWORD_SALT', 'blablabla')
     def to_dict_test(self):
         user = self._create_test_user()
         expected_dict = self._get_test_user_dict()
         self.assertDictEqual(expected_dict, user.to_dict())
 
+    @patch('django.conf.settings.USER_PASSWORD_SALT', 'blablabla')
     def from_dict_test(self):
         data_dict = self._get_test_user_dict()
         geojson = {
@@ -174,5 +179,3 @@ class LoginTest(unittest.TestCase):
         login = Login(**login_dict)
         self.assertTrue(login.user)
         self.assertEqual(self.user.id, login.user.id)
-
-
