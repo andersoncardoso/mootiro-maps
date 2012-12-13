@@ -13,7 +13,6 @@ define (require) ->
 
     initialize: ->
       @vent = @options.vent
-      console.log @vent
       _.bindAll this
       @render()
 

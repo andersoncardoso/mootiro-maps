@@ -4,12 +4,12 @@
     <input type="submit" value="<%= i18n('See results') %>" />
   </form>
   <ul class="nav">
+  <li><a href="http://pt.wikiboks.org/wiki/MootiroMaps" target="_blank" class="help"><%= i18n('Help') %></a></li>
   <% if (KomooNS.isAuthenticated) { %>
-    <li><a href="#" class="logout"><%= i18n('Logout') %></a></li>
     <li><a href="<%= KomooNS.user.url %>" class="user"><%= KomooNS.user.name %></a></li>
+    <li><a href="#" class="logout"><%= i18n('Logout') %></a></li>
   <% } else { %>
     <li><a href="#" class="login login-required" ><%= i18n('Login') %></a></li>
   <% } %>
-  <li><a href="http://pt.wikiboks.org/wiki/MootiroMaps" target="_blank" class="help"><%= i18n('Help') %></a></li>
   </ul>
 </section>

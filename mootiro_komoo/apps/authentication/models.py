@@ -192,6 +192,9 @@ class AnonymousUser(object):
 
     id = None
 
+    def to_dict(self):
+        return {}
+
     # dummy fix for django weirdness =/
     def get_and_delete_messages(self):
         pass

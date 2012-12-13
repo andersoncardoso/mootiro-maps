@@ -21,7 +21,6 @@ define(function(require) {
 
     Footer.prototype.initialize = function() {
       this.vent = this.options.vent;
-      console.log(this.vent);
       _.bindAll(this);
       return this.render();
     };
