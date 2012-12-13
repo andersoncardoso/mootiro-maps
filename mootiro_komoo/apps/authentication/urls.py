@@ -10,6 +10,8 @@ urlpatterns = patterns('authentication.views',
     url(r'^user/?$', 'user_root', name='user_root'),
     url(r'^user/verification/(?P<key>\S+)/?$', 'user_verification',
             name='user_verification'),
+    url(r'^user/(?P<id>\d+)/?$', 'user_view',
+            name='user_view'),
 )
 
 
@@ -20,7 +22,7 @@ urlpatterns += patterns('authentication.api',
         url(r'^api/user/login/?$', LoginHandler.dispatch, name='login_api'),
         url(r'^api/user/logout/?$', LogoutHandler.dispatch, name='logout_api'),
 
-        url(r'^api/users/(?P<id_>\S+)/(?P<action>\S+)?$', UsersHandler.dispatch,
+        url(r'^api/user/(?P<id_>\S+)/(?P<action>\S+)?$', UsersHandler.dispatch,
                 name='user_info_api'),
 )
 

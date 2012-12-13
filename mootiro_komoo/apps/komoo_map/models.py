@@ -55,7 +55,7 @@ class GeoRefModel(geomodels.Model):
     def geojson(self, feature_collection):
         geojson = {
             "type": "GeometryCollection",
-            "geometries": [feature['geometry'] 
+            "geometries": [feature['geometry']
                 for feature in feature_collection['features']]
         }
         self.geometry = json.dumps(geojson)

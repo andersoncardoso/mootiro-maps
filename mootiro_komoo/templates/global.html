@@ -28,7 +28,9 @@
     <script type="text/javascript" src="{{STATIC_URL}}lib/django-js-utils/dutils.conf.urls.js"></script>
 
     <script type="text/javascript">
-      var KomooNS = {{ KomooNS|jsonify|safe }};
+      var KomooNS = {{ KomooNS|to_json|safe }};
+      KomooNS.data = {% if KomooNS_data %} {{ KomooNS_data|to_json|safe }}
+                     {% else %} {} {% endif %};
       //OBS this is temporary and will change, we should always use KomooNS
       window.csrf_token = KomooNS.csrf_token;
     </script>

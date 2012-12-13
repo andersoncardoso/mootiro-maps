@@ -88,7 +88,7 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
 
     @property
     def url(self):
-        return '/user/%s <FIXME>' % self.id
+        return reverse('user_view', kwargs={'id': self.id})
 
     def _social_auth_by_name(self, name):
         """

@@ -171,14 +171,13 @@ def geo_objects_add(arg1='', arg2='', arg3=''):
 
 
 @register.filter
-def jsonify(object):
+def to_json(object):
     if isinstance(object, QuerySet):
         return serialize('json', object)
     if hasattr(object, 'json'):
         return object.json
     return simplejson.dumps(object, cls=DjangoJSONEncoder)
-    # return simplejson.dumps(object)
-# jsonify.is_safe = True
+# to_json.is_safe = True
 
 
 # @register.filter

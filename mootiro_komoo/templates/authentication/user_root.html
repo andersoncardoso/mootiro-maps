@@ -17,7 +17,7 @@
   if ( typeof KomooNS.authentication == 'undefined' || !KomooNS.authentication) {
     KomooNS.authentication = {};
   }
-  KomooNS.authentication.error = {{error|jsonify|safe}};
+  KomooNS.authentication.error = {{error|to_json|safe}};
 
 </script>
 {% endblock %}

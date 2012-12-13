@@ -20,7 +20,7 @@ def komoo_namespace(request):
             'require_baseUrl': settings.STATIC_URL + ('js'
                                     if settings.DEBUG else 'js.build'),
             'csrf_token': get_token(request),
-            'staticUrl': settings.STATIC_URL
+            'staticUrl': settings.STATIC_URL,
         }
     }
 

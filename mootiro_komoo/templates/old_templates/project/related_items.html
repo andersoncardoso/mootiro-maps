@@ -18,7 +18,7 @@
 
   <script type="text/javascript">
     if (typeof window.KomooNS === 'undefined') window.KomooNS = {};
-    KomooNS.obj = {{ project|jsonify|safe }};
+    KomooNS.obj = {{ project|to_json|safe }};
     require(['project/project_related_items']);
   </script>
 
