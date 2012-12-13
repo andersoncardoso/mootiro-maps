@@ -123,13 +123,39 @@ class UserTest(unittest.TestCase):
         fb_contact = 'http://facebook.com/test_user'
         user.contact['facebook'] = fb_contact
         user.save()
-        self.assertEqual(User.get_by_id(user.id).contact['facebook'], 
+        self.assertEqual(User.get_by_id(user.id).contact['facebook'],
                          fb_contact)
 
+    @patch('authentication.models.send_mail_async')
+    @patch('authentication.models.Locker')
+    def confirmation_mail_test(self, MockLocker, mock_send_mail):
+        user = self._create_test_user()
 
-    # def confirmation_mail_test(self):
-    #     # ???
-    #     pass
+        # Create the request mock and set the return value to all methods used
+        mock_request = MagicMock()
+        verification_url = 'http://absolute_uri/'
+        mock_request.build_absolute_uri.return_value = verification_url
+
+        # Set the return value to 'deposit' method from Locker mock
+        MockLocker.deposit.return_value = 3
+
+        # Call the method we are testing passing the request mock
+        user.send_confirmation_mail(mock_request)
+
+        # Verify if Locker.deposit was called with the correct args
+        MockLocker.deposit.assert_called_with(user.id)
+
+        # Verify if the send mail function was called containing the relevant
+        # info
+        mail_kwargs = mock_send_mail.call_args[1]
+        self.assertTrue(user.name in mail_kwargs['message'],
+                'The email body should mention the user name')
+        self.assertTrue(verification_url in mail_kwargs['message'],
+                'The email body should have the verification url')
+        self.assertTrue(user.email in  mail_kwargs['receivers'],
+                'The user should be an email receiver')
+        self.assertTrue('MootiroMaps' in  mail_kwargs['title'],
+                'The email subject should mention MootiroMaps')
 
 
 class LoginTest(unittest.TestCase):
