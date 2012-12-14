@@ -1,3 +1,4 @@
+# -*- no-wrap -*-
 baseUrl = KomooNS?.require_baseUrl ? '/static/js'
 
 config =

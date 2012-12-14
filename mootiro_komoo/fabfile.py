@@ -32,6 +32,7 @@ def stage():
 def prod():
     set_env('prod')
 
+
 def testing():
     set_env('testing')
 
@@ -64,8 +65,8 @@ def build_environment():
 
 
 def compile_coffee():
-    """Compiles coffeescript to javascript"""
-    local('coffee -b -c static/')
+    """Compiles all coffeescript files to javascript"""
+    local('./scripts/coffee_compiler --all')
 
 
 def compile_less():
@@ -74,7 +75,7 @@ def compile_less():
 
 
 def work():
-    """Start watchers"""
+    """Start watchers (coffee and less)"""
     # compilers
     local('./scripts/coffee_compiler.js &')
     local('./scripts/less_compiler.js &')
@@ -121,30 +122,17 @@ def collectstatic():
     local("python manage.py collectstatic {}".format(django_settings[env_]))
 
 
-# def test(
-#         apps=" ".join([
-#             'community', 'need', 'organization', 'proposal', 'resources',
-#             'investment', 'main', 'authentication', 'moderation']),
-#         recreate_db=False):
-#     """Run application tests"""
-#     if recreate_db:
-#         local('dropdb test_mootiro_komoo')
-#     else:
-#         logging.info("Reusing old last test DB...")
-#     local('REUSE_DB=1 python manage.py test {} {} --verbosity=1'
-#             .format(apps, django_settings[env_]))
 def test(*test_types):
     if not test_types:
-        test_types=['unit']
-    
+        test_types = ['unit']
     if 'all' in test_types:
         test_types = ['unit', 'integration']
+
     if 'integration' in test_types:
         logging.info('To perform integration tests, rememeber to start de '
                      'testing server: fab testing run')
     for test in test_types:
         local('nosetests --nocapture tests/{}/'.format(test))
-
 
 
 def test_js(
