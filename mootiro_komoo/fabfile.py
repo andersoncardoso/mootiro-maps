@@ -136,6 +136,9 @@ def collectstatic():
 def test(*test_types):
     if not test_types:
         test_types=['unit']
+    
+    if 'all' in test_types:
+        test_types = ['unit', 'integration']
     if 'integration' in test_types:
         logging.info('To perform integration tests, rememeber to start de '
                      'testing server: fab testing run')

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import unittest
+import datetime
 from mock import MagicMock, patch
 from ..test_utils import setup_env
 setup_env()
@@ -20,6 +21,8 @@ class UserTest(unittest.TestCase):
         user.email = 'test@user.com'
         user.set_password('12345')
         user.contact = {'tel': '1234567890', 'skype': 'skype_from_test_user'}
+        user.save()
+        user.creation_date = datetime.datetime(2012, 12, 14, 15, 23, 30, 0)
         user.save()
         return user
 
@@ -46,6 +49,7 @@ class UserTest(unittest.TestCase):
                 ]},
             'contact': {'tel': '1234567890', 'skype': 'skype_from_test_user'},
             'password': 'eb5a9887586930f7f2e9c1c42bc937188afa689d',
+            'creation_date': datetime.datetime(2012, 12, 14, 15, 23, 30, 0),
             'is_admin': False,
             'is_active': False
         }

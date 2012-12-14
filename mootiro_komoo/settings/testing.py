@@ -8,6 +8,9 @@ INTERNAL_IPS = ('127.0.0.1', )
 
 SECRET_KEY = 'superawesomeunicornninjapandasflyingintheskywithdoublerainbows'
 
+# disable csrf for testing
+MIDDLEWARE_CLASSES.remove('django.middleware.csrf.CsrfViewMiddleware')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,

@@ -9,7 +9,8 @@ from django.utils.translation import ugettext as _
 from jsonfield import JSONField
 
 from lib.locker.models import Locker
-from main.utils import send_mail_async, BaseDAOMixin, PermissionMixin
+from main.utils import send_mail_async, iso_to_datetime
+from main.utils import BaseDAOMixin, PermissionMixin
 from komoo_map.models import GeoRefModel, POINT
 
 
@@ -38,6 +39,7 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
     password = models.CharField(max_length=256, null=False)
     contact = JSONField(null=True, blank=True)
     creation_date = models.DateTimeField(auto_now_add=True)
+    # last_access = models.DateTimeField(null=True, blank=True)
 
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
@@ -118,23 +120,27 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
     def from_dict(self, data):
         expected_keys = [
             'id', 'name', 'email', 'password', 'contact', 'geojson', 'url',
-            'is_admin', 'is_active']
+            'creation_date', 'is_admin', 'is_active']
         for key, val in data.iteritems():
             if key in expected_keys:
                 if key == 'url':
                     continue
+                elif key == 'creation_date' and isinstance(val, basestring):
+                    self.creation_date = iso_to_datetime()
                 else:
                     setattr(self, key, val)
             else:
                 raise Exception('Unexpected Key: {}'.format(key))
 
-    def to_dict(self, fields=None, user=None):
+    def to_dict(self):
         fields_and_defaults = [
             ('id', None), ('name', None), ('email', None), ('contact', {}),
             ('geojson', {}), ('url', ''), ('password', None),
-            ('is_admin', False), ('is_active', False),
+            ('creation_date', None), ('is_admin', False), ('is_active', False),
         ]
-        return {v[0]: getattr(self, v[0], v[1]) for v in fields_and_defaults}
+        dict_ = {v[0]: getattr(self, v[0], v[1])
+                    for v in fields_and_defaults}
+        return dict_
 
     def is_valid(self):
         self.errors = {}
