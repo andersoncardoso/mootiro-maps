@@ -1,26 +1,21 @@
 
 define(function(require) {
-  var $, Backbone, Footer, Header, analytics, authRouter, facebook, footer, header, vent;
+  var $, Backbone, Footer, Header, analytics, authRouter, facebook, footer, header;
   require('common');
   $ = require('jquery');
   Backbone = require('backbone');
-  vent = require('event_aggregator');
   Header = require('main/header');
   header = new Header({
-    el: '#header-container',
-    vent: vent
+    el: '#header-container'
   });
   Footer = require('main/footer');
   footer = new Footer({
-    el: '#footer-container',
-    vent: vent
+    el: '#footer-container'
   });
   authRouter = require('authentication/router');
   $(function() {
     var loginApp;
-    loginApp = new authRouter.LoginApp({
-      vent: vent
-    });
+    loginApp = new authRouter.LoginApp({});
     return Backbone.history.start();
   });
   analytics = require('analytics');

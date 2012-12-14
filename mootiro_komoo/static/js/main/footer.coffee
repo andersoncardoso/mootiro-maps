@@ -12,7 +12,6 @@ define (require) ->
     }
 
     initialize: ->
-      @vent = @options.vent
       _.bindAll this
       @render()
 

@@ -22,10 +22,8 @@ define(function(require) {
       'click .logout': 'logout'
     };
 
-    UpperBar.prototype.initialize = function(options) {
-      this.options = options;
+    UpperBar.prototype.initialize = function() {
       _.bindAll(this);
-      this.vent = this.options.vent;
       return this.render();
     };
 
@@ -37,11 +35,11 @@ define(function(require) {
     };
 
     UpperBar.prototype.login = function() {
-      return this.vent.trigger('auth:loginRequired', window.location.href);
+      return Backbone.trigger('auth:loginRequired', window.location.href);
     };
 
     UpperBar.prototype.logout = function() {
-      return this.vent.trigger('auth:logout', window.location.href);
+      return Backbone.trigger('auth:logout', window.location.href);
     };
 
     return UpperBar;

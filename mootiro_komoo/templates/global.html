@@ -31,8 +31,6 @@
       var KomooNS = {{ KomooNS|to_json|safe }};
       KomooNS.data = {% if KomooNS_data %} {{ KomooNS_data|to_json|safe }}
                      {% else %} {} {% endif %};
-      //OBS this is temporary and will change, we should always use KomooNS
-      window.csrf_token = KomooNS.csrf_token;
     </script>
 
     {% block css %}{% endblock %}
@@ -89,12 +87,11 @@
     {#% include "main/error_box.html" %#}
 
     {# Loading these scripts inside body to prevent issues loading google maps #}
-    <!-- RequireJS stuffs -->
+    <!-- RequireJS stuff -->
     <script type="text/javascript" src="{{STATIC_URL}}js/config.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}lib/require.js"></script>
-    <!-- Main libs -->
-    <script type="text/javascript" src="{{STATIC_URL}}lib/jquery-1.7.1.min.js"></script>
 
+    <!-- Google api lib -->
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 
 

@@ -1,4 +1,7 @@
-define ->
+define ['require', 'jquery'], (require) ->
+
+  jQuery = require 'jquery'
+
   requirejs.onError = (err) ->
     if err.requireType == 'timeout'
       # TODO: i18n me

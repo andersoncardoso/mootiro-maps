@@ -18,7 +18,7 @@ define (require) ->
       'not-verified': 'not_verified'
       'verified': 'verified'
 
-    initialize: (@options) ->
+    initialize: () ->
       _.bindAll this
       @initializeLogin()
       @initializeLogout()
@@ -83,9 +83,8 @@ define (require) ->
       @verifiedBox.on 'close', @_onClose
 
     bindExternalEvents: ->
-      @vent = @options.vent
-      @vent.on 'auth:loginRequired', @_loginRequired
-      @vent.on 'auth:logout', @logoutView.logout
+      Backbone.on 'auth:loginRequired', @_loginRequired
+      Backbone.on 'auth:logout', @logoutView.logout
 
 
     # ============ callbacks ======================

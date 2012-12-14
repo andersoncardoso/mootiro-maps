@@ -20,7 +20,6 @@ define(function(require) {
     Footer.prototype.events = {};
 
     Footer.prototype.initialize = function() {
-      this.vent = this.options.vent;
       _.bindAll(this);
       return this.render();
     };

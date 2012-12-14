@@ -21,10 +21,8 @@ define(function(require) {
 
     Header.prototype.initialize = function() {
       var UpperBar;
-      this.vent = this.options.vent;
-      delete this.options.el;
       UpperBar = require('main/upper_bar');
-      this.upperBar = new UpperBar(this.options);
+      this.upperBar = new UpperBar();
       _.bindAll(this);
       return this.render();
     };

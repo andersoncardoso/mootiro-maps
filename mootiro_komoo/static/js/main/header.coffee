@@ -12,10 +12,9 @@ define (require) ->
     }
 
     initialize: ->
-      @vent = @options.vent
-      delete @options.el
+      # delete @options.el  # ?? why this
       UpperBar = require 'main/upper_bar'
-      @upperBar = new UpperBar @options
+      @upperBar = new UpperBar()
       _.bindAll this
       @render()
 

@@ -12,9 +12,8 @@ define (require) ->
       'click .logout': 'logout'
     }
 
-    initialize: (@options) ->
+    initialize: () ->
       _.bindAll this
-      @vent = @options.vent
       @render()
 
     render: ->
@@ -23,9 +22,9 @@ define (require) ->
       this
 
     login: ->
-      @vent.trigger 'auth:loginRequired', window.location.href
+      Backbone.trigger 'auth:loginRequired', window.location.href
 
     logout: ->
-      @vent.trigger 'auth:logout', window.location.href
+      Backbone.trigger 'auth:logout', window.location.href
 
   UpperBar

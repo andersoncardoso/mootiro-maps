@@ -1,5 +1,7 @@
 
-define(function() {
+define(['require', 'jquery'], function(require) {
+  var jQuery;
+  jQuery = require('jquery');
   requirejs.onError = function(err) {
     if (err.requireType === 'timeout') {
       alert('Timeout', "Ocorreu uma falha ao carregar alguns serviços externos. Partes do Mootiro Maps poderão não funcionar corretamente.");

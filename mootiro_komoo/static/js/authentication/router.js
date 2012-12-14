@@ -27,8 +27,7 @@ define(function(require) {
       'verified': 'verified'
     };
 
-    LoginApp.prototype.initialize = function(options) {
-      this.options = options;
+    LoginApp.prototype.initialize = function() {
       _.bindAll(this);
       this.initializeLogin();
       this.initializeLogout();
@@ -101,9 +100,8 @@ define(function(require) {
     };
 
     LoginApp.prototype.bindExternalEvents = function() {
-      this.vent = this.options.vent;
-      this.vent.on('auth:loginRequired', this._loginRequired);
-      return this.vent.on('auth:logout', this.logoutView.logout);
+      Backbone.on('auth:loginRequired', this._loginRequired);
+      return Backbone.on('auth:logout', this.logoutView.logout);
     };
 
     LoginApp.prototype.registerLinkCB = function() {
