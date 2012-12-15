@@ -126,7 +126,7 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
                 if key == 'url':
                     continue
                 elif key == 'creation_date' and isinstance(val, basestring):
-                    self.creation_date = iso_to_datetime()
+                    self.creation_date = iso_to_datetime(val)
                 else:
                     setattr(self, key, val)
             else:
