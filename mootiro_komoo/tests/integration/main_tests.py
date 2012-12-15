@@ -9,10 +9,10 @@ class UtilsTestCase(IntegrationTest):
         self.assertTrue(r.status_code, 200)
         self.assertIn(r.text, 'Resource::GET')
 
-    # def test_rest_resource_post(self):
-    #     r = self.client.post('/test_resource/')
-    #     self.assertTrue(r.status_code, 200)
-    #     self.assertIn(r.text, 'Resource::POST')
+    def test_rest_resource_post(self):
+        r = self.client.post('/test_resource/')
+        self.assertTrue(r.status_code, 200)
+        self.assertIn(r.text, 'Resource::POST')
 
     def test_rest_resource_put(self):
         r = self.client.put('/test_resource/')

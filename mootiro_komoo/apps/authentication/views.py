@@ -40,3 +40,16 @@ def user_verification(request, key=''):
         user.is_active = True
         user.save()
     return redirect(user_root_url + '#verified')
+
+
+@render_to('global.html')
+def user_view(request, id):
+    """
+    User page
+    """
+    user = User.get_by_id(id)
+    user_data =  user.to_dict()
+    # filter data
+    return {'KomooNS_data': {
+                'user': user_data
+           }}

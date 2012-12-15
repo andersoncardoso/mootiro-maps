@@ -87,10 +87,12 @@ class LoginHandler(ResourceHandler):
         Resposible for handle the LoginForm from LoginView
         (authentication/views.coffee)
         """
+        print 'REQ', request.raw_post_data
         json_data = get_json_data(request)
         email, password = [json_data.get(data, '')
                             for data in ['email', 'password']]
         email = email.lower()
+        print 'DATa:', email, password
 
         login = Login()
         login.from_dict({'email': email, 'password': password})

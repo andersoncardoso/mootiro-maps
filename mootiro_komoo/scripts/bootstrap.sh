@@ -14,6 +14,9 @@ sudo npm install -g coffee-script@1.2
 sudo npm install -g requirejs@2.1
 sudo npm install -g less@1.3.1
 
+# install local nodejs packages from package.json
+npm install
+
 # apply patch for django 1.3
 fab build_environment
 

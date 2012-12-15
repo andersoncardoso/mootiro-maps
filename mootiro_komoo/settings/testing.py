@@ -8,6 +8,9 @@ INTERNAL_IPS = ('127.0.0.1', )
 
 SECRET_KEY = 'superawesomeunicornninjapandasflyingintheskywithdoublerainbows'
 
+# disable csrf for testing
+MIDDLEWARE_CLASSES.remove('django.middleware.csrf.CsrfViewMiddleware')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -90,13 +93,14 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'it3sdev@gmail.com'
 EMAIL_HOST_PASSWORD = '...'  # password on local settings
 
+from local_settings import DATABASES as LOCAL_DB
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'mootiro_komoo_test',
-        'USER': 'anderson',
-        'PASSWORD': 'anderson',
+        'USER': LOCAL_DB['default']['USER'],
+        'PASSWORD': LOCAL_DB['default']['PASSWORD'],
         'HOST': '',
         'PORT': '',
     }

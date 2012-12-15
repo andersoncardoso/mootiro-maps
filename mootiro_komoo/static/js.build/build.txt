@@ -4,7 +4,6 @@ common.js
 common.js
 i18n.js
 event_aggregator.js
-text.js
 text!templates/main/_header.html
 text!templates/main/_upper_bar.html
 main/upper_bar.js
@@ -21,8 +20,6 @@ text!templates/authentication/_social_button.html
 text!templates/authentication/_not_verified.html
 text!templates/authentication/_verified.html
 authentication/views.js
-text!templates/widgets/_modal_box.html
-new_utils.js
 authentication/router.js
 analytics.js
 facebook-jssdk.js

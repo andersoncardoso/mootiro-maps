@@ -10,7 +10,7 @@
     <link rel="shortcut icon" HREF="{{STATIC_URL}}img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css" />
 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <script src="{{STATIC_URL}}lib/html5.js"></script>
 
 
@@ -28,9 +28,9 @@
     <script type="text/javascript" src="{{STATIC_URL}}lib/django-js-utils/dutils.conf.urls.js"></script>
 
     <script type="text/javascript">
-      var KomooNS = {{ KomooNS|jsonify|safe }};
-      //OBS this is temporary and will change, we should always use KomooNS
-      window.csrf_token = KomooNS.csrf_token;
+      var KomooNS = {{ KomooNS|to_json|safe }};
+      KomooNS.data = {% if KomooNS_data %} {{ KomooNS_data|to_json|safe }}
+                     {% else %} {} {% endif %};
     </script>
 
     {% block css %}{% endblock %}
@@ -87,14 +87,12 @@
     {#% include "main/error_box.html" %#}
 
     {# Loading these scripts inside body to prevent issues loading google maps #}
-    <!-- RequireJS stuffs -->
+    <!-- RequireJS stuff -->
     <script type="text/javascript" src="{{STATIC_URL}}js/config.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}lib/require.js"></script>
-    <!-- Main libs -->
-    <script type="text/javascript" src="{{STATIC_URL}}lib/jquery-1.7.1.min.js"></script>
 
+    <!-- Google api lib -->
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/utils.js"></script>
 
 
     {% block js %}{% endblock %}
