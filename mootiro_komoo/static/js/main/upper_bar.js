@@ -47,7 +47,7 @@
       };
 
       UpperBar.prototype.profile = function() {
-        Backbone.trigger('user::profile', 'me');
+        Backbone.trigger('user::profile', KomooNS.user.id);
         return false;
       };
 

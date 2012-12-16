@@ -30,7 +30,7 @@ define (require) ->
       return false
 
     profile: ->
-      Backbone.trigger 'user::profile', 'me'
+      Backbone.trigger 'user::profile', KomooNS.user.id
       return false
 
 
