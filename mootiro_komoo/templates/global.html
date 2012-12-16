@@ -7,33 +7,28 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
     {{ form.media.css }}
-    <link rel="shortcut icon" HREF="{{STATIC_URL}}img/favicon.png" />
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css" />
+    <link rel="shortcut icon" HREF="{{STATIC_URL}}img/favicon.png" />
 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <script src="{{STATIC_URL}}lib/html5.js"></script>
-
-
-    <title>{% block title %}Mootiro Maps{% endblock %}</title>
+    {% block css %}{% endblock %}
 
     <!-- Facebook sharing tags -->
     <!--meta property="og:title" content="title" /-->
     <meta property="og:description" content="MootiroMaps é uma ferramenta open source que promove a colaboração entre atores engajados no desenvolvimento de um território ou uma comunidade."/>
     <meta property="og:image" content="{{STATIC_URL}}img/logo.png"/>
 
+    <!--[if lt IE 9]>
+    {# Le HTML5 shim, for IE6-8 support of HTML5 elements #}
+    <script src="{{STATIC_URL}}lib/html5.js"></script>
+    <![endif]-->
 
-    <!-- Django utilities -->
-    <script type="text/javascript" src="{% url javascript_catalog %}"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}lib/django-js-utils/dutils.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}lib/django-js-utils/dutils.conf.urls.js"></script>
+    <title>{% block title %}Mootiro Maps{% endblock %}</title>
 
     <script type="text/javascript">
       var KomooNS = {{ KomooNS|to_json|safe }};
-      KomooNS.data = {% if KomooNS_data %} {{ KomooNS_data|to_json|safe }}
-                     {% else %} {} {% endif %};
+      KomooNS.data = {% if KomooNS_data %} {{ KomooNS_data|to_json|safe }};
+                     {% else %} {}; {% endif %}
     </script>
-
-    {% block css %}{% endblock %}
 
   </head>
   <body>
@@ -47,16 +42,6 @@
 
       <!-- Action Bar -->
       <nav id="action-bar" class="action-bar">
-        <!--
-        <ul>
-          <li><a class="edit" href="#" title="Editar">Editar</a></li>
-          <li><a class="active star" href="#" title="Adicionar estrela">Adicionar estrela</a></li>
-          <li><a class="discuss" href="#" title="Discutir">Discutir</a></li>
-          <li><a class="history" href="#" title="Ver histórico">Ver histórico</a></li>
-          <li><a class="report" href="#" title="Denunciar">Denunciar</a></li>
-          <li><a class="delete" href="#" title="Remover">Remover</a></li>
-        </ul>
-        -->
       </nav>
       <!-- /Action Bar -->
 
@@ -83,26 +68,13 @@
     <div id="footer-container"></div>
     <!-- /Footer -->
 
-
-    {#% include "main/error_box.html" %#}
-
     {# Loading these scripts inside body to prevent issues loading google maps #}
     <!-- RequireJS stuff -->
     <script type="text/javascript" src="{{STATIC_URL}}js/config.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}lib/require.js"></script>
-
-    <!-- Google api lib -->
-    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-
+    <script type="text/javascript" data-main="common" src="{{STATIC_URL}}lib/require.js"></script>
 
     {% block js %}{% endblock %}
 
-
-    <script type="text/javascript">
-      // Loads the page specific module
-      require(['common'], function () {
-          require(['app'], function (app) { app.start('{{ js_module }}'); });
-      });
     </script>
   </body>
 </html>

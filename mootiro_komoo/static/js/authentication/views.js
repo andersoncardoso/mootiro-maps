@@ -3,11 +3,12 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Backbone, LoginView, LogoutView, RegisterView, SocialButton, SocialButtonsList, VerificationView, forms, login_tpl, models, not_verif_tpl, register_tpl, social_btn_tpl, verif_tpl, _;
+    var Backbone, LoginView, LogoutView, RegisterView, SocialButton, SocialButtonsList, VerificationView, dutils, forms, login_tpl, models, not_verif_tpl, register_tpl, social_btn_tpl, verif_tpl, _;
     _ = require('underscore');
     Backbone = require('backbone');
     models = require('./models');
     forms = require('./forms');
+    dutils = require('urls');
     login_tpl = require('text!templates/authentication/_login.html');
     register_tpl = require('text!templates/authentication/_register.html');
     social_btn_tpl = require('text!templates/authentication/_social_button.html');

@@ -6,19 +6,33 @@
     dir: '.build/min',
 
     paths: {
-        'jquery': 'empty:',
-        'underscore': 'empty:',
-        'backbone': 'empty:',
-        'reForm': 'empty:',
+        'jquery': '../static/lib/jquery-1.7.1.min',
+        'underscore': '../static/lib/underscore-min',
+        'backbone': '../static/lib/backbone-min',
+        'reForm': '../static/lib/reForm',
         'async': '../static/lib/requirejs/async',
         'goog': '../static/lib/requirejs/goog',
         'propertyParser': '../static/lib/requirejs/propertyParser',
         'text': '../static/lib/requirejs/text',
         'templates': '../static/templates',
         'infobox': 'empty:',
-        'markerclusterer': 'empty:'
+        'markerclusterer': 'empty:',
+        'dutils': 'empty:',
+        'urls': 'empty:'
     },
-
+    shim: {
+        'underscore': {
+            exports: '_'
+        },
+        'backbone': {
+            deps: ['underscore', 'jquery'],
+            exports: 'Backbone'
+        },
+        'reForm': {
+            deps: ['jquery', 'underscore', 'backbone'],
+            exports: 'reForm'
+        }
+    },
     modules: [
         // Common dependencies used by the entire project
         {
@@ -39,7 +53,6 @@
                 'community/model'
             ],
             exclude: [
-                'utils'
             ]
         }
     ],

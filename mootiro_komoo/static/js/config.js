@@ -19,13 +19,12 @@ config = {
     'propertyParser': '../lib/requirejs/propertyParser',
     'infobox': 'vendor/infobox_packed',
     'markerclusterer': 'vendor/markerclusterer_packed',
-    'sinon': '../lib/sinon-1.5.0'
+    'sinon': '../lib/sinon-1.5.0',
+    'dutils': '../lib/django-js-utils/dutils',
+    'urls': '../lib/django-js-utils/dutils.conf.urls'
   },
   shim: {
     'ad-gallery': {
-      deps: ['jquery']
-    },
-    'utils': {
       deps: ['jquery']
     },
     'underscore': {
@@ -49,9 +48,15 @@ config = {
     },
     'sinon': {
       exports: 'sinon'
+    },
+    'dutils': {
+      exports: 'dutils'
+    },
+    'urls': {
+      deps: ['dutils'],
+      exports: 'dutils'
     }
-  },
-  deps: ['i18n']
+  }
 };
 
 if (typeof requirejs !== "undefined" && requirejs !== null) {

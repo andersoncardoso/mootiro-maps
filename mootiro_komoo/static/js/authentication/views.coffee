@@ -5,6 +5,7 @@ define (require) ->
   Backbone = require 'backbone'
   models = require './models'
   forms = require './forms'
+  dutils = require 'urls'
 
   # underscore templates
   login_tpl = require 'text!templates/authentication/_login.html'

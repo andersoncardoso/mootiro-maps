@@ -1,8 +1,11 @@
 
 common.js
 ----------------
-common.js
 i18n.js
+jquery.js
+underscore.js
+backbone.js
+text.js
 text!templates/main/_header.html
 text!templates/main/_upper_bar.html
 main/upper_bar.js
@@ -11,6 +14,7 @@ text!templates/main/_footer.html
 main/footer.js
 main/pages/root.js
 main/router.js
+reForm.js
 authentication/models.js
 text!templates/widgets/_signup.html
 text!templates/widgets/_signin.html
@@ -21,6 +25,8 @@ text!templates/authentication/_social_button.html
 text!templates/authentication/_not_verified.html
 text!templates/authentication/_verified.html
 authentication/views.js
+text!templates/widgets/_modal_box.html
+utils.js
 authentication/router.js
 update/models.js
 update/collections.js
@@ -36,6 +42,7 @@ user/router.js
 analytics.js
 facebook-jssdk.js
 app.js
+common.js
 async.js
 propertyParser.js
 goog.js

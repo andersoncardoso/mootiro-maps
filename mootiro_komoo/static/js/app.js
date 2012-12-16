@@ -1,31 +1,38 @@
 (function() {
 
   define(function(require) {
-    var $, Backbone, Footer, Header, analytics, authRouter, facebook, footer, header, mainRouter, userRouter;
-    require('common');
+    var $, Backbone, i18n;
+    i18n = require('i18n');
     $ = require('jquery');
     Backbone = require('backbone');
-    Header = require('main/header');
-    header = new Header({
-      el: '#header-container'
-    });
-    Footer = require('main/footer');
-    footer = new Footer({
-      el: '#footer-container'
-    });
-    mainRouter = require('main/router');
-    authRouter = require('authentication/router');
-    userRouter = require('user/router');
-    $(function() {
-      return Backbone.history.start({
-        pushState: true,
-        root: '/'
+    require(['main/header'], function(Header) {
+      var header;
+      return header = new Header({
+        el: '#header-container'
       });
     });
-    analytics = require('analytics');
-    analytics.init();
-    facebook = require('facebook-jssdk');
-    facebook.init(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.facebookAppId : void 0);
+    require(['main/footer'], function(Footer) {
+      var footer;
+      return footer = new Footer({
+        el: '#footer-container'
+      });
+    });
+    require(['main/router', 'authentication/router', 'user/router'], function() {
+      return $(function() {
+        return Backbone.history.start({
+          pushState: true,
+          root: '/'
+        });
+      });
+    });
+    $(function() {
+      return require(['analytics'], function(analytics) {
+        return analytics.init();
+      });
+    });
+    require(['facebook-jssdk'], function(facebook) {
+      return facebook.init(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.facebookAppId : void 0);
+    });
     Backbone.on('map::see-on-map', function(model) {
       return typeof console !== "undefined" && console !== null ? console.log('I should display this geojson on map:', model.get('geojson')) : void 0;
     });

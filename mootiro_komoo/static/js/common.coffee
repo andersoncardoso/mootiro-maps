@@ -1,5 +1,6 @@
-define ['require', 'jquery'], (require) ->
+define (require) ->
 
+  App = require 'app'
   jQuery = require 'jquery'
 
   requirejs.onError = (err) ->

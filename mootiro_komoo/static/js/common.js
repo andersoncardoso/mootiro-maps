@@ -1,7 +1,8 @@
 (function() {
 
-  define(['require', 'jquery'], function(require) {
-    var jQuery;
+  define(function(require) {
+    var App, jQuery;
+    App = require('app');
     jQuery = require('jquery');
     requirejs.onError = function(err) {
       if (err.requireType === 'timeout') {
