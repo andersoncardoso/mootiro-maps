@@ -18,7 +18,9 @@
 
       Header.prototype.template = _.template(header_tpl);
 
-      Header.prototype.events = {};
+      Header.prototype.events = {
+        'click .logo a': 'root'
+      };
 
       Header.prototype.initialize = function() {
         var UpperBar;
@@ -34,6 +36,11 @@
         this.$el.html(renderedContent);
         this.$el.find('#upper-bar-container').append(this.upperBar.$el);
         return this;
+      };
+
+      Header.prototype.root = function() {
+        Backbone.trigger('main::root');
+        return false;
       };
 
       return Header;

@@ -349,9 +349,9 @@ class ResourceHandler:
             raise Http404
 
 
-def get_fields_to_show(request):
+def get_fields_to_show(request, default=['all']):
     data = request.GET.get('fields', None)
-    return data.split(',') if data else None
+    return data.split(',') if data else default
 
 
 def get_json_data(request):
@@ -656,3 +656,8 @@ class PermissionMixin(object):
             return True
 
         return not fieldname in getattr(self, 'private_fields', [])
+
+    def to_cleaned_dict(self, fields=['all'], user=None):
+        return {key: val for key, val in self.to_dict().items() \
+                if (key in fields or 'all' in fields) and \
+                   self.can_view_field(key, user)}

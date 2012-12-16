@@ -88,6 +88,12 @@ body > .content-box {
             }
         }
 
+        /* Little hack to force action bar width */
+        &:after {
+            content: ".";
+            color: transparent;
+        }
+
         /* Actions */
         .edit {
             .icon('blank.png', @size);
@@ -172,7 +178,7 @@ body > .content-box {
                 }
             }
 
-            > .contact-info {
+            .contact-info {
                 .clearfix;
 
                 margin: 0px;
@@ -187,7 +193,7 @@ body > .content-box {
                 }
             }
 
-            > .user-updates {
+            .user-updates {
                 .border-radius(10px);
                 .border-fake(1px, @main-bg);
 

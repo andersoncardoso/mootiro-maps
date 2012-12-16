@@ -47,9 +47,15 @@ def user_view(request, id):
     """
     User page
     """
-    user = User.get_by_id(id)
-    user_data =  user.to_dict()
+    if id == 'me':
+        user = request.user
+    else:
+        user = User.get_by_id(id)
+    user_data =  user.to_cleaned_dict(user=request.user)
     # filter data
-    return {'KomooNS_data': {
-                'user': user_data
-           }}
+    return {
+                'KomooNS_data': {
+                    'user': user_data
+                },
+                'js_module': 'user/pages/profile'
+            }

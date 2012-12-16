@@ -10,8 +10,8 @@ urlpatterns = patterns('authentication.views',
     url(r'^user/?$', 'user_root', name='user_root'),
     url(r'^user/verification/(?P<key>\S+)/?$', 'user_verification',
             name='user_verification'),
-    url(r'^user/(?P<id>\d+)/?$', 'user_view',
-            name='user_view'),
+    url(r'^user/(?P<id>\d+)/?$', 'user_view', name='user_view'),
+    url(r'^user/(me)/?$', 'user_view', name='user_view_me'),
 )
 
 

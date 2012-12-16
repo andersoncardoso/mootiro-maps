@@ -92,6 +92,10 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
     def url(self):
         return reverse('user_view', kwargs={'id': self.id})
 
+    @property
+    def avatar(self):
+        return None
+
     def _social_auth_by_name(self, name):
         """
         Retrieve the SocialAuth entry for this User given a high level
@@ -120,7 +124,7 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
     def from_dict(self, data):
         expected_keys = [
             'id', 'name', 'email', 'password', 'contact', 'geojson', 'url',
-            'creation_date', 'is_admin', 'is_active']
+            'creation_date', 'is_admin', 'is_active', 'avatar', 'about_me']
         for key, val in data.iteritems():
             if key in expected_keys:
                 if key == 'url':
@@ -137,6 +141,7 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
             ('id', None), ('name', None), ('email', None), ('contact', {}),
             ('geojson', {}), ('url', ''), ('password', None),
             ('creation_date', None), ('is_admin', False), ('is_active', False),
+            ('avatar', None), ('about_me', '')
         ]
         dict_ = {v[0]: getattr(self, v[0], v[1])
                     for v in fields_and_defaults}

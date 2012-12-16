@@ -13,10 +13,11 @@ define (require) ->
     el: '#footer-container'
 
   # Start backbone routers
+  mainRouter = require 'main/router'
   authRouter = require 'authentication/router'
+  userRouter = require 'user/router'
   $ ->
-    loginApp = new authRouter.LoginApp {}
-    Backbone.history.start()
+    Backbone.history.start({pushState: true, root: '/'})
 
   # Init google analytics
   analytics = require 'analytics'
@@ -26,8 +27,13 @@ define (require) ->
   facebook = require 'facebook-jssdk'
   facebook.init KomooNS?.facebookAppId
 
+  #TODO: move to the correct module
+  Backbone.on 'map::see-on-map', (model) ->
+    console?.log 'I should display this geojson on map:', model.get('geojson')
+
   {
-    start: (module) ->
+    start: (module, arg) ->
       if module?
-        require [module]
+        require [module], (m) ->
+          m?.start?(arg)
   }

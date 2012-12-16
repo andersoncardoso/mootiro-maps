@@ -58,7 +58,7 @@ def map(request):
 
 @render_to('main/root.html')
 def root(request):
-    return {}
+    return {'js_module': 'main/pages/root'}
 
 def _fetch_geo_objects(Q, zoom):
     ret = {}
@@ -123,7 +123,7 @@ def radial_search(request):
 #     """
 #     logger.debug('Komoo_search: {}'.format(request.POST))
 #     term = request.POST.get('term', '')
-# 
+#
 #     result = {}
 #     # Google search
 #     google_results = requests.get(

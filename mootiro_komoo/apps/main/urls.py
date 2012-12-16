@@ -6,6 +6,10 @@ from django.conf import settings
 
 urlpatterns = patterns('main.views',
     url(r'^$', 'root', name='root'),
+    url(r'^register/?$', 'root', name='register'),
+    url(r'^login/?$', 'root', name='login'),
+    url(r'^not-verified/?$', 'root', name='not_verified'),
+    url(r'^verified/?$', 'root', name='verified'),
     url(r'^map/$', 'map', name='map'),
     url(r'^get_geojson$', 'get_geojson', name='get_geojson'),
     url(r'^radial_search$', 'radial_search', name='radial_search'),

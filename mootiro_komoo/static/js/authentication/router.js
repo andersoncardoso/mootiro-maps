@@ -46,7 +46,6 @@
           content: this.loginView.render().el,
           modal_id: 'login-modal-box'
         });
-        this.loginBox.on('close', this._onClose);
         return $("a.login-required").bind("click.loginrequired", function(evt) {
           var next;
           if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
@@ -69,13 +68,12 @@
         this.registerView = new views.RegisterView({});
         this.registerView.form.on('success', this.registerFormOnSuccessCB);
         this.registerView.form.on('login-link:click', this.loginLinkCB);
-        this.registerBox = new utils.ModalBox({
+        return this.registerBox = new utils.ModalBox({
           title: i18n('Register'),
           width: '450px',
           content: this.registerView.render().el,
           modal_id: 'register-modal-box'
         });
-        return this.registerBox.on('close', this._onClose);
       };
 
       LoginApp.prototype.initializeVerification = function() {
@@ -91,53 +89,41 @@
           content: this.notVerifiedView.render().el,
           modal_id: 'verification-modal-box'
         });
-        this.notVerifiedBox.on('close', this._onClose);
-        this.verifiedBox = new utils.ModalBox({
+        return this.verifiedBox = new utils.ModalBox({
           title: i18n('Verification'),
           content: this.verifiedView.render().el,
           modal_id: 'verification-modal-box'
         });
-        return this.verifiedBox.on('close', this._onClose);
       };
 
       LoginApp.prototype.bindExternalEvents = function() {
-        Backbone.on('auth:loginRequired', this._loginRequired);
-        return Backbone.on('auth:logout', this.logoutView.logout);
+        Backbone.on('auth::loginRequired', this._loginRequired);
+        return Backbone.on('auth::logout', this.logoutView.logout);
       };
 
       LoginApp.prototype.registerLinkCB = function() {
-        return this.navigate('register', {
-          trigger: true
-        });
+        return this.register();
       };
 
       LoginApp.prototype.loginLinkCB = function() {
-        return this.navigate('login', {
-          trigger: true
-        });
+        return this.login();
       };
 
       LoginApp.prototype.registerFormOnSuccessCB = function() {
-        return this.navigate('not-verified', {
-          trigger: true
-        });
-      };
-
-      LoginApp.prototype._onClose = function() {
-        return this.navigate('', {});
+        return this.not_verified();
       };
 
       LoginApp.prototype._loginRequired = function(next) {
         if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
           if (next) this.loginView.updateUrls(next);
-          return this.navigate('login', {
-            trigger: true
-          });
+          return this.login();
         }
       };
 
       LoginApp.prototype.root = function() {
         var next, path, queryString, url;
+        this.closeModals();
+        Backbone.trigger('main::root');
         path = window.location.pathname;
         if ((path === '/user/' || path === '/user') && !(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
           url = window.location;
@@ -149,63 +135,54 @@
             next = queryString['next'];
             this.loginView.updateUrls(next);
           }
-          return this.navigate('login', {
-            trigger: true
-          });
+          return this.login();
         }
       };
 
       LoginApp.prototype.login = function() {
-        this.closeModals('login');
+        this.closeModals();
         if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
           return this.loginBox.open();
-        } else {
-          return this.navigate('', {
-            trigger: true
-          });
         }
       };
 
       LoginApp.prototype.register = function() {
-        this.closeModals('register');
+        this.closeModals();
         if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
           return this.registerBox.open();
-        } else {
-          return this.navigate('', {
-            trigger: true
-          });
         }
       };
 
       LoginApp.prototype.not_verified = function() {
         var path;
-        this.closeModals('not-verified');
+        this.closeModals();
         path = window.location.pathname;
         return this.notVerifiedBox.open();
       };
 
       LoginApp.prototype.verified = function() {
         var path;
-        this.closeModals('verified');
+        this.closeModals();
         path = window.location.pathname;
         return this.verifiedBox.open();
       };
 
-      LoginApp.prototype.closeModals = function(navigation_target) {
-        var modal, _i, _len, _ref;
+      LoginApp.prototype.closeModals = function() {
+        var modal, _i, _len, _ref, _results;
         _ref = [this.loginBox, this.registerBox, this.verifiedBox, this.notVerifiedBox];
+        _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           modal = _ref[_i];
-          modal.close();
+          _results.push(modal.close());
         }
-        return this.navigate(navigation_target);
+        return _results;
       };
 
       return LoginApp;
 
     })(Backbone.Router);
     return {
-      LoginApp: LoginApp
+      loginApp: new LoginApp({})
     };
   });
 

@@ -34,7 +34,6 @@ define (require) ->
         title: i18n 'Login'
         content: @loginView.render().el
         modal_id: 'login-modal-box'
-      @loginBox.on 'close', @_onClose
 
       $("a.login-required").bind "click.loginrequired", (evt) =>
         if not KomooNS?.isAuthenticated
@@ -59,7 +58,6 @@ define (require) ->
         width: '450px'
         content: @registerView.render().el
         modal_id: 'register-modal-box'
-      @registerBox.on 'close', @_onClose
 
     initializeVerification: ->
       @notVerifiedView = new views.VerificationView
@@ -74,39 +72,36 @@ define (require) ->
         title: i18n 'Verification'
         content: @notVerifiedView.render().el
         modal_id: 'verification-modal-box'
-      @notVerifiedBox.on 'close', @_onClose
 
       @verifiedBox = new utils.ModalBox
         title: i18n 'Verification'
         content: @verifiedView.render().el
         modal_id: 'verification-modal-box'
-      @verifiedBox.on 'close', @_onClose
 
     bindExternalEvents: ->
-      Backbone.on 'auth:loginRequired', @_loginRequired
-      Backbone.on 'auth:logout', @logoutView.logout
+      Backbone.on 'auth::loginRequired', @_loginRequired
+      Backbone.on 'auth::logout', @logoutView.logout
 
 
     # ============ callbacks ======================
     registerLinkCB: ->
-      @navigate 'register', {trigger: true}
+      @register()
 
     loginLinkCB: ->
-      @navigate 'login', {trigger: true}
+      @login()
 
     registerFormOnSuccessCB: ->
-      @navigate 'not-verified', {trigger: true}
-
-    _onClose: ->
-      @navigate '', {}
+      @not_verified()
 
     _loginRequired: (next)->
       if not KomooNS?.isAuthenticated
         @loginView.updateUrls(next) if next
-        @navigate 'login', {trigger: true}
+        @login()
 
     # =========== routes ===========================
     root: ->
+      @closeModals()
+      Backbone.trigger 'main::root'
       path = window.location.pathname
       if (path is '/user/' or path is '/user') \
          and not KomooNS?.isAuthenticated
@@ -119,39 +114,34 @@ define (require) ->
             ($0, $1, $2, $3) -> queryString[$1] = $3
           next = queryString['next']
           @loginView.updateUrls next
-        @navigate 'login', {trigger: true}
+        @login()
 
     login: ->
-      @closeModals 'login'
+      @closeModals()
       if not KomooNS?.isAuthenticated
         @loginBox.open()
-      else
-        @navigate '', {trigger: true}
 
     register: ->
-      @closeModals 'register'
+      @closeModals()
       if not KomooNS?.isAuthenticated
         @registerBox.open()
-      else
-        @navigate '', {trigger: true}
 
     not_verified: ->
-      @closeModals 'not-verified'
+      @closeModals()
       path = window.location.pathname
       @notVerifiedBox.open()
 
     verified: ->
-      @closeModals 'verified'
+      @closeModals()
       path = window.location.pathname
       @verifiedBox.open()
 
     # ============= utils ==============================
-    closeModals: (navigation_target)->
+    closeModals: ->
       modal.close() for modal in [
         @loginBox, @registerBox, @verifiedBox, @notVerifiedBox]
-      @navigate navigation_target
 
 
   return {
-    LoginApp: LoginApp
+      loginApp: new LoginApp {}
   }

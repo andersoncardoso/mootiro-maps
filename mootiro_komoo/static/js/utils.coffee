@@ -62,11 +62,14 @@ define (require) ->
     open: ->
       @modal.fadeIn()
       @trigger 'open'
+      @isOpen = on
       this
 
-    close: ->
+    close: () ->
       @modal.fadeOut()
-      @trigger 'close'
+      if @isOpen
+        @isOpen = off
+        @trigger 'close'
       this
 
 

@@ -64,12 +64,16 @@
       ModalBox.prototype.open = function() {
         this.modal.fadeIn();
         this.trigger('open');
+        this.isOpen = true;
         return this;
       };
 
       ModalBox.prototype.close = function() {
         this.modal.fadeOut();
-        this.trigger('close');
+        if (this.isOpen) {
+          this.isOpen = false;
+          this.trigger('close');
+        }
         return this;
       };
 

@@ -108,6 +108,8 @@ body > .content-box > .action-bar {
   float: left;
   width: 3.0303030303030303%;
   margin: 0 0.7575757575757576%;
+  /* Little hack to force action bar width */
+
   /* Actions */
 
 }
@@ -131,6 +133,10 @@ body > .content-box > .action-bar a {
 }
 body > .content-box > .action-bar a.active {
   background-color: #259eb0;
+}
+body > .content-box > .action-bar:after {
+  content: ".";
+  color: transparent;
 }
 body > .content-box > .action-bar .edit {
   display: inline-block;
@@ -276,21 +282,21 @@ body > .content-box > .main > .content article h1 {
 body > .content-box > .main > .content article > .content {
   margin: 0px;
 }
-body > .content-box > .main > .content > .contact-info {
+body > .content-box > .main > .content .contact-info {
   *zoom: 1;
   margin: 0px;
   padding: 0px;
 }
-body > .content-box > .main > .content > .contact-info:before,
-body > .content-box > .main > .content > .contact-info:after {
+body > .content-box > .main > .content .contact-info:before,
+body > .content-box > .main > .content .contact-info:after {
   content: "";
   display: table;
 }
-body > .content-box > .main > .content > .contact-info:after {
+body > .content-box > .main > .content .contact-info:after {
   clear: both;
 }
-body > .content-box > .main > .content > .contact-info > li,
-body > .content-box > .main > .content > .contact-info > .contact {
+body > .content-box > .main > .content .contact-info > li,
+body > .content-box > .main > .content .contact-info > .contact {
   display: block;
   width: 102.08333333333333%;
   margin: 0 -1.0416666666666665%;
@@ -301,18 +307,18 @@ body > .content-box > .main > .content > .contact-info > .contact {
   margin: 0 1.0416666666666665%;
   margin: 0px 15px 5px 0px;
 }
-body > .content-box > .main > .content > .contact-info > li:before,
-body > .content-box > .main > .content > .contact-info > .contact:before,
-body > .content-box > .main > .content > .contact-info > li:after,
-body > .content-box > .main > .content > .contact-info > .contact:after {
+body > .content-box > .main > .content .contact-info > li:before,
+body > .content-box > .main > .content .contact-info > .contact:before,
+body > .content-box > .main > .content .contact-info > li:after,
+body > .content-box > .main > .content .contact-info > .contact:after {
   content: "";
   display: table;
 }
-body > .content-box > .main > .content > .contact-info > li:after,
-body > .content-box > .main > .content > .contact-info > .contact:after {
+body > .content-box > .main > .content .contact-info > li:after,
+body > .content-box > .main > .content .contact-info > .contact:after {
   clear: both;
 }
-body > .content-box > .main > .content > .user-updates {
+body > .content-box > .main > .content .user-updates {
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
@@ -323,7 +329,7 @@ body > .content-box > .main > .content > .user-updates {
   box-shadow: 0 0 0 1px #dceff4, 0 0 0 #ffffff;
   padding: 5px 0px;
 }
-body > .content-box > .main > .content > .user-updates h1 {
+body > .content-box > .main > .content .user-updates h1 {
   margin: 5px 10px;
 }
 /** Misc **/
@@ -533,7 +539,7 @@ ul.updates > li .info {
   font-weight: normal;
 }
 ul.updates > li .info:before {
-  background: /* @menu-fg */ url(../img/) no-repeat 0px 0px;
+  background: /* @menu-fg */ url(../img/blank.png) no-repeat 0px 0px;
   text-indent: 10000px;
   content: '';
   display: inline-block !important;

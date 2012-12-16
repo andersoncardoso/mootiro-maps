@@ -85,6 +85,15 @@
     },
     'Supporters': {
       'pt-br': 'Apoio institucional'
+    },
+    'About me': {
+      'pt-br': 'Sobre mim'
+    },
+    'Recent contributions': {
+      'pt-br': 'Contribuições recentes'
+    },
+    'User has not wrote about oneself': {
+      'pt-br': 'Usuário ainda não escreveu sobre si'
     }
   };
 

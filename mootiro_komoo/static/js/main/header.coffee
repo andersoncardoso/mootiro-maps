@@ -8,8 +8,8 @@ define (require) ->
   class Header extends Backbone.View
     template: _.template header_tpl
 
-    events: {
-    }
+    events:
+      'click .logo a': 'root'
 
     initialize: ->
       # delete @options.el  # ?? why this
@@ -23,5 +23,10 @@ define (require) ->
       @$el.html renderedContent
       @$el.find('#upper-bar-container').append @upperBar.$el
       this
+
+    root: ->
+      Backbone.trigger 'main::root'
+      return false
+
 
   Header

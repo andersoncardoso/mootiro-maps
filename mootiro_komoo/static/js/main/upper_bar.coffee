@@ -7,10 +7,10 @@ define (require) ->
   class UpperBar extends Backbone.View
     template: _.template upperBar_tpl
 
-    events: {
+    events:
       'click .login': 'login'
       'click .logout': 'logout'
-    }
+      'click .user': 'profile'
 
     initialize: () ->
       _.bindAll this
@@ -22,9 +22,16 @@ define (require) ->
       this
 
     login: ->
-      Backbone.trigger 'auth:loginRequired', window.location.href
+      Backbone.trigger 'auth::loginRequired', window.location.href
+      return false
 
     logout: ->
-      Backbone.trigger 'auth:logout', window.location.href
+      Backbone.trigger 'auth::logout', window.location.href
+      return false
+
+    profile: ->
+      Backbone.trigger 'user::profile', 'me'
+      return false
+
 
   UpperBar

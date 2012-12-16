@@ -20,7 +20,8 @@
 
       UpperBar.prototype.events = {
         'click .login': 'login',
-        'click .logout': 'logout'
+        'click .logout': 'logout',
+        'click .user': 'profile'
       };
 
       UpperBar.prototype.initialize = function() {
@@ -36,11 +37,18 @@
       };
 
       UpperBar.prototype.login = function() {
-        return Backbone.trigger('auth:loginRequired', window.location.href);
+        Backbone.trigger('auth::loginRequired', window.location.href);
+        return false;
       };
 
       UpperBar.prototype.logout = function() {
-        return Backbone.trigger('auth:logout', window.location.href);
+        Backbone.trigger('auth::logout', window.location.href);
+        return false;
+      };
+
+      UpperBar.prototype.profile = function() {
+        Backbone.trigger('user::profile', 'me');
+        return false;
       };
 
       return UpperBar;

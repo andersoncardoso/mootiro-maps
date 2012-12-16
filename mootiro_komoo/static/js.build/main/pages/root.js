@@ -1,0 +1,1 @@
+(function(){define(["require"],function(e){var t,n;return t=function(){return $("#action-bar").empty(),$("#main-content").empty(),$("#sidebar").empty(),!0},n=function(){},{start:n,render:t}})}).call(this);

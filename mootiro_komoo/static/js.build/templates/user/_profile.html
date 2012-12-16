@@ -1,0 +1,17 @@
+<h1 class="title"><%= user.name %></h1>
+
+<ul class="contact-info">
+  <% if(user.email) { %>
+    <li class="email"><%= user.email %></li>
+  <% } %>
+  <% if(user.contact) _.each(user.contact, function (c) { %>
+    <li class="<%= c.type.toLowerCase() %>"><%= c.value %></li>
+  <% }); %>
+</ul>
+
+<article class="user-info">
+  <h1><%= i18n('About me') %></h1>
+  <div class="content">
+    <%- user.about_me || i18n('User has not wrote about oneself') %>
+  </div>
+</article>

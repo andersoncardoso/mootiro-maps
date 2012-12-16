@@ -1,0 +1,1 @@
+(function(){define(["require","underscore","backbone","update/models"],function(e){var t,n,r,i;return i=e("underscore"),t=e("backbone"),n=e("update/models").Update,r=t.Collection.extend({model:n,urlRoot:"/api/update"}),{Updates:r}})}).call(this);

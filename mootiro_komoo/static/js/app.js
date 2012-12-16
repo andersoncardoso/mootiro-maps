@@ -1,7 +1,7 @@
 (function() {
 
   define(function(require) {
-    var $, Backbone, Footer, Header, analytics, authRouter, facebook, footer, header;
+    var $, Backbone, Footer, Header, analytics, authRouter, facebook, footer, header, mainRouter, userRouter;
     require('common');
     $ = require('jquery');
     Backbone = require('backbone');
@@ -13,19 +13,29 @@
     footer = new Footer({
       el: '#footer-container'
     });
+    mainRouter = require('main/router');
     authRouter = require('authentication/router');
+    userRouter = require('user/router');
     $(function() {
-      var loginApp;
-      loginApp = new authRouter.LoginApp({});
-      return Backbone.history.start();
+      return Backbone.history.start({
+        pushState: true,
+        root: '/'
+      });
     });
     analytics = require('analytics');
     analytics.init();
     facebook = require('facebook-jssdk');
     facebook.init(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.facebookAppId : void 0);
+    Backbone.on('map::see-on-map', function(model) {
+      return typeof console !== "undefined" && console !== null ? console.log('I should display this geojson on map:', model.get('geojson')) : void 0;
+    });
     return {
-      start: function(module) {
-        if (module != null) return require([module]);
+      start: function(module, arg) {
+        if (module != null) {
+          return require([module], function(m) {
+            return m != null ? typeof m.start === "function" ? m.start(arg) : void 0 : void 0;
+          });
+        }
       }
     };
   });
