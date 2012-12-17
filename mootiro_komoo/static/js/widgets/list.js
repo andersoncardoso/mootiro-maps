@@ -10,25 +10,26 @@
       className: 'list',
       initialize: function() {
         _.bindAll(this);
-        this.listenTo(this.collection, 'add', this.add);
+        this.listenTo(this.collection, 'add', this.addOne);
+        this.listenTo(this.collection, 'reset', this.addAll);
+        this.listenTo(this.collection, 'all', this.render);
         this.itemViews = {};
-        return this.ItemView = this.options.ItemView;
+        this.ItemView = this.options.ItemView;
+        this.collection.pager();
+        return this.render();
       },
-      render: function() {
-        var _this = this;
+      render: function() {},
+      addAll: function() {
         this.$el.empty();
-        this.collection.each(function(model) {
-          return _this.add(model);
-        });
+        this.collection.each(this.addOne);
         return this;
       },
-      add: function(item) {
+      addOne: function(item) {
         var itemView;
         itemView = new this.ItemView({
           model: item
         });
         this.$el.append(itemView.render().$el);
-        this.itemViews[item.cid] = itemView;
         return this;
       }
     });

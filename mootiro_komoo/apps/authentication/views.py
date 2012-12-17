@@ -57,6 +57,5 @@ def user_view(request, id_):
     return {
                 'KomooNS_data': {
                     'user': user_data
-                },
-                'js_module': 'user/pages/profile'
+                }
             }

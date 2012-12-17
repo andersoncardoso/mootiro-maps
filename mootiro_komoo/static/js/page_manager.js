@@ -21,10 +21,10 @@
 
       Page.prototype.open = function() {
         var _ref, _ref2, _ref3;
-        $('#actionbar').append((_ref = this.actionBar) != null ? _ref.render().$el : void 0);
-        $('#sidebar').append((_ref2 = this.sidebar) != null ? _ref2.render().$el : void 0);
+        $('#actionbar').append((_ref = this.actionBar) != null ? _ref.$el : void 0);
+        $('#sidebar').append((_ref2 = this.sidebar) != null ? _ref2.$el : void 0);
         $('#main-content').empty();
-        return $('#main-content').append((_ref3 = this.mainContent) != null ? _ref3.render().$el : void 0);
+        return $('#main-content').append((_ref3 = this.mainContent) != null ? _ref3.$el : void 0);
       };
 
       Page.prototype.close = function() {

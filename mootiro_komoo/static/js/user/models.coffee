@@ -9,14 +9,10 @@ define (require) ->
       window.model = this
       Update = require('update/models').Update
 
-      Updates = require('update/collections').Updates
-      UserUpdates = Updates.extend
-        urlRoot: "/api/user/#{@get('id')}/updates"
-
-      return new Updates().add [
-            {action: 'add', type: 'need', name: 'test 1', geojson: 'geojson1'},
-            {action: 'add', type: 'community', name: 'test 2', geojson: 'geojson2'}
-        ]
+      Updates = require('./collections').PaginatedUpdates
+      collection = new Updates([{}], user: this)
+      window.collection = collection
+      return collection
 
 
   User: User

@@ -13,10 +13,10 @@ define (require) ->
       @mainContent = views.mainContent
 
     open: ->
-      $('#actionbar').append @actionBar?.render().$el
-      $('#sidebar').append @sidebar?.render().$el
+      $('#actionbar').append @actionBar?.$el
+      $('#sidebar').append @sidebar?.$el
       $('#main-content').empty()
-      $('#main-content').append @mainContent?.render().$el
+      $('#main-content').append @mainContent?.$el
 
     close: ->
       # Remove DOM and unbind some events to avoid memory leak

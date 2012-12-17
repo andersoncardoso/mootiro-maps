@@ -12,6 +12,7 @@ config =
         'jquery': '../lib/jquery-1.7.1.min'
         'underscore': '../lib/underscore-min'
         'backbone': '../lib/backbone-min'
+        'backbone.paginator': '../lib/backbone.paginator.min'
         'reForm': '../lib/reForm'
         'async': '../lib/requirejs/async'
         'goog': '../lib/requirejs/goog'
@@ -28,6 +29,9 @@ config =
             exports: '_'
         'backbone':
             deps: ['underscore', 'jquery']
+            exports: 'Backbone'
+        'backbone.paginator':
+            deps: ['backbone']
             exports: 'Backbone'
         'reForm':
             deps: ['jquery', 'underscore', 'backbone']

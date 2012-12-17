@@ -58,7 +58,7 @@ def map(request):
 
 @render_to('main/root.html')
 def root(request):
-    return {'js_module': 'main/pages/root'}
+    return {}
 
 def _fetch_geo_objects(Q, zoom):
     ret = {}

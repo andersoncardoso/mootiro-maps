@@ -75,6 +75,22 @@ class UsersHandler(ResourceHandler):
                                                  user=request.user))
 
 
+class UserUpdateHandler(ResourceHandler):
+    """ /users/[id_]/update """
+
+    def get(self, request, id_):
+        # FIXME: Replace this fake implementation
+        page = int(request.GET.get('page', 0))
+        return JsonResponse({
+            'results': [
+                {
+                    'name': 'name {}'.format(page * 5 + i),
+                    'id': page * 5 + i
+                } for i in range(5)],
+            'count': 25
+        })
+
+
 class LoginHandler(ResourceHandler):
     """ /user/login """
 

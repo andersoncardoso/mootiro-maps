@@ -28,7 +28,8 @@ text!templates/widgets/_modal_box.html
 utils.js
 authentication/router.js
 update/models.js
-update/collections.js
+backbone/paginator.js
+user/collections.js
 user/models.js
 text!templates/user/_profile.html
 text!templates/user/_sidebar.html

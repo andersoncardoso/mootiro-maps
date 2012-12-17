@@ -9,21 +9,24 @@ define (require) ->
 
     initialize: ->
       _.bindAll this
-      @listenTo @collection, 'add', @add
+      @listenTo @collection, 'add', @addOne
+      @listenTo @collection, 'reset', @addAll
+      @listenTo @collection, 'all', @render
       @itemViews = {}
       @ItemView = @options.ItemView
+      @collection.pager()
+      @render()
 
     render: ->
+
+    addAll: ->
       @$el.empty()
-      @collection.each (model) =>
-        @add model
+      @collection.each @addOne
       this
 
-    add: (item) ->
-      itemView = new @ItemView
-          model: item
+    addOne: (item) ->
+      itemView = new @ItemView model: item
       @$el.append itemView.render().$el
-      @itemViews[item.cid] = itemView
       this
 
   List

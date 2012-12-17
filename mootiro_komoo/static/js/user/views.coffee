@@ -8,17 +8,20 @@ define (require) ->
 
   Profile = Backbone.View.extend
     initialize: ->
-      profile_tpl = require 'text!templates/user/_profile.html'
-      @template = _.template profile_tpl
       _.bindAll this
+      @template = _.template require 'text!templates/user/_profile.html'
       @listenTo @model, 'change', @render
+
       @updatesView = new Updates
         collection: @model.getUpdates()
 
+      @render()
+
     render: ->
+      @updatesView.$el.detach()  # Dont lost the updates element
       @$el.html @template
         user: @model.toJSON()
-      @$el.append @updatesView.render().$el
+      @$el.find('#user-updates-container').append @updatesView.$el
       this
 
 
@@ -26,10 +29,9 @@ define (require) ->
 
   Sidebar = Backbone.View.extend
     initialize: ->
-      sidebar_tpl = require 'text!templates/user/_sidebar.html'
-      @template = _.template sidebar_tpl
       _.bindAll this
-      @listenTo @model, 'change', @render
+      @template = _.template require 'text!templates/user/_sidebar.html'
+      @render()
 
     render: ->
       @$el.html @template
@@ -46,40 +48,59 @@ define (require) ->
       'click .see-on-map': 'seeOnMap'
 
     initialize: ->
-      update_tpl = require 'text!templates/user/_update_item.html'
-      @template = _.template update_tpl
       _.bindAll this
+      @template = _.template require 'text!templates/user/_update_item.html'
       @listenTo @model, 'change', @render
       window.model = @model
+      @render()
 
     render: ->
       @$el.removeClass().addClass [
-          @model.get('type').toLowerCase(),
-          @model.get('action').toLowerCase()
+          @model.get('type')?.toLowerCase(),
+          @model.get('action')?.toLowerCase()
       ]
       @$el.html @template
         update: @model.toJSON()
       this
 
-    seeOnMap: (a) ->
+    seeOnMap: (e) ->
+      e?.preventDefault?()
       Backbone.trigger 'map::see-on-map', @model
-      false
+      this
 
 
   Updates = Backbone.View.extend
+    events:
+      'click a.previous': 'previousPage'
+      'click a.next': 'nextPage'
+
     initialize: ->
-      updates_tpl = require 'text!templates/user/_updates_block.html'
-      @template = _.template updates_tpl
       _.bindAll this
+      @template = _.template require 'text!templates/user/_updates_block.html'
       List = require 'widgets/list'
       @listView = new List
         collection: @collection
         className: 'updates list'
         ItemView: Update
+      @render()
 
     render: ->
+      @listView.$el.detach()  # Dont lost the updates element
       @$el.html @template()
-      @$el.find('.list-container').append @listView.render().$el
+      @$el.find('.list-container').prepend @listView.$el
+      this
+
+    previousPage: (e) ->
+      e?.preventDefault?()
+      console.log @collection.currentPage, @collection.firstPage
+      if @collection.currentPage > @collection.firstPage
+        @collection.requestPreviousPage()
+      this
+
+    nextPage: (e) ->
+      e?.preventDefault?()
+      if @collection.currentPage < @collection.totalPages - 1
+        @collection.requestNextPage()
       this
 
 

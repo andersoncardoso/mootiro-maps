@@ -271,7 +271,6 @@ body > .content-box {
     ul.list {
 
         display: table;
-        width: 100%;
         margin: 0px;
         padding: 0px;
 
@@ -295,14 +294,12 @@ body > .content-box {
                 height: 100%;
             }
             > a {
-                padding: 5px;
-
                 &:hover {
                     background-color: transparent;
                 }
             }
             > i {
-                padding-left: 5px;
+                text-align: center;
                 &:before {background-color: silver;} // TODO: Remove me
             }
         }
@@ -316,16 +313,19 @@ body > .content-box {
 
 
 ul.updates {
+    width: 100%;
+
     > li {
         > i {
             .icon('blank.png', 32px);
-            width: 32px;
+            width: 6%;
         }
 
         a.label {
             .h3-font;
 
-            padding-top: 15px;
+            width: 90%;
+            padding: 10px 0 5px;
             text-decoration: none;
         }
         .info {
@@ -335,6 +335,10 @@ ul.updates {
             display: block;
             font-size: 60%;
             font-weight: normal;
+        }
+
+        .see-on-map {
+            width: 4%;
         }
 
         &:hover {
@@ -440,6 +444,7 @@ a.see-on-map {
             > li {
                 .border-radius;
 
+                display: table;
                 margin: 5px 0;
                 background-color: lighten(@main-bg, 5%);
 
