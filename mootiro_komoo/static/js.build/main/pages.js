@@ -1,0 +1,1 @@
+(function(){define(["require","page_manager"],function(e){var t,n,r;return n=e("page_manager"),r={render:function(){var e;return e=new n.Page,n.open(e)}},t={render:function(){var e;return e=new n.Page,n.open(e)}},{root:r,notFound:t}})}).call(this);

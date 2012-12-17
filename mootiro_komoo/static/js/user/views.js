@@ -1,21 +1,20 @@
 (function() {
 
   define(function(require) {
-    var $, Backbone, List, Profile, Sidebar, Update, Updates, profile_tpl, sidebar_tpl, update_tpl, updates_tpl, _;
+    var $, Backbone, Profile, Sidebar, Update, Updates, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
-    profile_tpl = require('text!templates/user/_profile.html');
     Profile = Backbone.View.extend({
-      template: _.template(profile_tpl),
-      events: {},
       initialize: function() {
+        var profile_tpl;
+        profile_tpl = require('text!templates/user/_profile.html');
+        this.template = _.template(profile_tpl);
         _.bindAll(this);
         this.listenTo(this.model, 'change', this.render);
-        this.updatesView = new Updates({
+        return this.updatesView = new Updates({
           collection: this.model.getUpdates()
         });
-        return this.render();
       },
       render: function() {
         this.$el.html(this.template({
@@ -25,14 +24,13 @@
         return this;
       }
     });
-    sidebar_tpl = require('text!templates/user/_sidebar.html');
     Sidebar = Backbone.View.extend({
-      template: _.template(sidebar_tpl),
-      events: {},
       initialize: function() {
+        var sidebar_tpl;
+        sidebar_tpl = require('text!templates/user/_sidebar.html');
+        this.template = _.template(sidebar_tpl);
         _.bindAll(this);
-        this.listenTo(this.model, 'change', this.render);
-        return this.render();
+        return this.listenTo(this.model, 'change', this.render);
       },
       render: function() {
         this.$el.html(this.template({
@@ -41,16 +39,18 @@
         return this;
       }
     });
-    update_tpl = require('text!templates/user/_update_item.html');
     Update = Backbone.View.extend({
-      template: _.template(update_tpl),
       tagName: 'li',
       events: {
         'click .see-on-map': 'seeOnMap'
       },
       initialize: function() {
+        var update_tpl;
+        update_tpl = require('text!templates/user/_update_item.html');
+        this.template = _.template(update_tpl);
         _.bindAll(this);
-        return this.listenTo(this.model, 'change', this.render);
+        this.listenTo(this.model, 'change', this.render);
+        return window.model = this.model;
       },
       render: function() {
         this.$el.removeClass().addClass([this.model.get('type').toLowerCase(), this.model.get('action').toLowerCase()]);
@@ -59,18 +59,18 @@
         }));
         return this;
       },
-      seeOnMap: function() {
+      seeOnMap: function(a) {
         Backbone.trigger('map::see-on-map', this.model);
         return false;
       }
     });
-    updates_tpl = require('text!templates/user/_updates_block.html');
-    List = require('widgets/list');
     Updates = Backbone.View.extend({
-      template: _.template(updates_tpl),
-      events: {},
       initialize: function() {
+        var List, updates_tpl;
+        updates_tpl = require('text!templates/user/_updates_block.html');
+        this.template = _.template(updates_tpl);
         _.bindAll(this);
+        List = require('widgets/list');
         return this.listView = new List({
           collection: this.collection,
           className: 'updates list',

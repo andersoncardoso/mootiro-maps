@@ -6,22 +6,37 @@ define (require) ->
   Backbone = require 'backbone'
 
   # Draw layout blocks
-  require ['main/header'], (Header) ->
-    header = new Header
+  require ['main/views'], (mainViews) ->
+    feedbackView = new mainViews.Feedback()
+    $('#feedback-container').append feedbackView.render().$el
+
+    modelsWorking = 0
+    Backbone.on 'app::working', (model) ->
+      modelsWorking++
+      console.log 'a', modelsWorking
+      feedbackView.display 'Working...'
+    Backbone.on 'app::done', (model) ->
+      console.log 'b'
+      if --modelsWorking is 0
+        feedbackView.close()
+
+    Backbone.trigger 'app::working'
+
+    header = new mainViews.Header
       el: '#header-container'
 
-  require ['main/footer'], (Footer) ->
-    footer = new Footer
+    footer = new mainViews.Footer
       el: '#footer-container'
+
 
   # Start backbone routers
   require ['main/router', 'authentication/router', 'user/router'], ->
     $ ->
       Backbone.history.start({pushState: true, root: '/'})
+      Backbone.trigger 'app::done'
 
   # Init google analytics
-  $ ->
-    require ['analytics'], (analytics) ->  analytics.init()
+  require ['analytics'], (analytics) ->  analytics.init()
 
   # Init facebook sdk
   require ['facebook-jssdk'], (facebook) ->

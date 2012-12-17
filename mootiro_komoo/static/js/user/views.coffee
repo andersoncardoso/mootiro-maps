@@ -6,19 +6,14 @@ define (require) ->
 
   #### Profile Main View ####
 
-  profile_tpl = require 'text!templates/user/_profile.html'
   Profile = Backbone.View.extend
-    template: _.template profile_tpl
-
-    events: {
-    }
-
     initialize: ->
+      profile_tpl = require 'text!templates/user/_profile.html'
+      @template = _.template profile_tpl
       _.bindAll this
       @listenTo @model, 'change', @render
       @updatesView = new Updates
         collection: @model.getUpdates()
-      @render()
 
     render: ->
       @$el.html @template
@@ -28,17 +23,13 @@ define (require) ->
 
 
   #### Profile Sidebar ####
-  sidebar_tpl = require 'text!templates/user/_sidebar.html'
+
   Sidebar = Backbone.View.extend
-    template: _.template sidebar_tpl
-
-    events: {
-    }
-
     initialize: ->
+      sidebar_tpl = require 'text!templates/user/_sidebar.html'
+      @template = _.template sidebar_tpl
       _.bindAll this
       @listenTo @model, 'change', @render
-      @render()
 
     render: ->
       @$el.html @template
@@ -47,19 +38,19 @@ define (require) ->
 
 
   #### Profile Blocks ####
-  #
-  update_tpl = require 'text!templates/user/_update_item.html'
+
   Update = Backbone.View.extend
-    template: _.template update_tpl
     tagName: 'li'
 
-    events: {
+    events:
       'click .see-on-map': 'seeOnMap'
-    }
 
     initialize: ->
+      update_tpl = require 'text!templates/user/_update_item.html'
+      @template = _.template update_tpl
       _.bindAll this
       @listenTo @model, 'change', @render
+      window.model = @model
 
     render: ->
       @$el.removeClass().addClass [
@@ -70,21 +61,17 @@ define (require) ->
         update: @model.toJSON()
       this
 
-    seeOnMap: ->
+    seeOnMap: (a) ->
       Backbone.trigger 'map::see-on-map', @model
       false
 
 
-  updates_tpl = require 'text!templates/user/_updates_block.html'
-  List = require 'widgets/list'
   Updates = Backbone.View.extend
-    template: _.template updates_tpl
-
-    events: {
-    }
-
     initialize: ->
+      updates_tpl = require 'text!templates/user/_updates_block.html'
+      @template = _.template updates_tpl
       _.bindAll this
+      List = require 'widgets/list'
       @listView = new List
         collection: @collection
         className: 'updates list'

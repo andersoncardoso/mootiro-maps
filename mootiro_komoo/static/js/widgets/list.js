@@ -16,8 +16,9 @@
       },
       render: function() {
         var _this = this;
+        this.$el.empty();
         this.collection.each(function(model) {
-          if (!_this.itemViews[model.cid]) return _this.add(model);
+          return _this.add(model);
         });
         return this;
       },

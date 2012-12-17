@@ -6,13 +6,12 @@ jquery.js
 underscore.js
 backbone.js
 text.js
-text!templates/main/_header.html
 text!templates/main/_upper_bar.html
-main/upper_bar.js
-main/header.js
+text!templates/main/_header.html
 text!templates/main/_footer.html
-main/footer.js
-main/pages/root.js
+main/views.js
+page_manager.js
+main/pages.js
 main/router.js
 reForm.js
 authentication/models.js
@@ -37,7 +36,7 @@ text!templates/user/_update_item.html
 text!templates/user/_updates_block.html
 widgets/list.js
 user/views.js
-user/pages/profile.js
+user/pages.js
 user/router.js
 analytics.js
 facebook-jssdk.js

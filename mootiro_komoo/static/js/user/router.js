@@ -15,8 +15,8 @@
       }
 
       UserRouter.prototype.routes = {
-        'user': 'list',
-        'user/:id': 'profile'
+        'user(/)': 'user',
+        'user/:id(/)': 'profile'
       };
 
       UserRouter.prototype.initialize = function() {
@@ -28,10 +28,26 @@
         return Backbone.on('user::profile', this.profile);
       };
 
+      UserRouter.prototype.user = function() {
+        var next, queryString, url;
+        if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
+          url = window.location;
+          if (url.search && url.search.indexOf('next') > -1) {
+            queryString = {};
+            url.search.replace(new RegExp("([^?=&]+)(=([^&]*))?", "g"), function($0, $1, $2, $3) {
+              return queryString[$1] = $3;
+            });
+            next = queryString['next'];
+          }
+          return Backbone.trigger('auth::loginRequired', next);
+        }
+      };
+
       UserRouter.prototype.profile = function(id) {
         var profile;
-        profile = require('user/pages/profile');
-        if (profile.render(id)) return this.navigate("user/" + id);
+        profile = require('user/pages').profile;
+        profile.render(id);
+        return this.navigate("user/" + id);
       };
 
       return UserRouter;

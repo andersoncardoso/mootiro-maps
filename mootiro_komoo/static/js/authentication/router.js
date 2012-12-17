@@ -21,11 +21,10 @@
       }
 
       LoginApp.prototype.routes = {
-        '': 'root',
-        'login': 'login',
-        'register': 'register',
-        'not-verified': 'not_verified',
-        'verified': 'verified'
+        'login(/)': 'login',
+        'register(/)': 'register',
+        'not-verified(/)': 'not_verified',
+        'verified(/)': 'verified'
       };
 
       LoginApp.prototype.initialize = function() {
@@ -116,25 +115,6 @@
       LoginApp.prototype._loginRequired = function(next) {
         if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
           if (next) this.loginView.updateUrls(next);
-          return this.login();
-        }
-      };
-
-      LoginApp.prototype.root = function() {
-        var next, path, queryString, url;
-        this.closeModals();
-        Backbone.trigger('main::root');
-        path = window.location.pathname;
-        if ((path === '/user/' || path === '/user') && !(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
-          url = window.location;
-          if (url.search && url.search.indexOf('next') > -1) {
-            queryString = {};
-            url.search.replace(new RegExp("([^?=&]+)(=([^&]*))?", "g"), function($0, $1, $2, $3) {
-              return queryString[$1] = $3;
-            });
-            next = queryString['next'];
-            this.loginView.updateUrls(next);
-          }
           return this.login();
         }
       };

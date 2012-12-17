@@ -90,7 +90,7 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
 
     @property
     def url(self):
-        return reverse('user_view', kwargs={'id': self.id})
+        return reverse('user_view', kwargs={'id_': self.id})
 
     @property
     def avatar(self):

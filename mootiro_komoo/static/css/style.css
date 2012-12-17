@@ -83,10 +83,28 @@ hr {
   border-top: 1px solid #EEE;
   border-bottom: 1px solid white;
 }
+/* Feedback message */
+#feedback-container {
+  width: 100%;
+  height: 0px;
+  text-align: center;
+  top: 50px;
+  position: fixed;
+  background: blue;
+}
+#feedback-container .feedback {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  display: inline;
+  padding: 5px;
+  background-color: #fff89e;
+}
 /** Main content container **/
 body > .content-box {
   *zoom: 1;
   width: 1150px;
+  min-height: 300px;
   margin: 0 auto 10px;
   /* Left bar with icons */
 
@@ -467,12 +485,14 @@ body > .content-box > .main > .content .user-updates h1 {
   background-color: silver;
 }
 .list-container ul.list {
+  display: table;
+  width: 100%;
   margin: 0px;
   padding: 0px;
 }
 .list-container ul.list > li {
   *zoom: 1;
-  display: table;
+  display: table-row;
   width: 100%;
   padding: 5px 0;
   list-style: none;

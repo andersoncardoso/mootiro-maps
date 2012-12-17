@@ -12,11 +12,10 @@ define (require) ->
 
   class LoginApp extends Backbone.Router
     routes:
-      '': 'root'
-      'login': 'login'
-      'register': 'register'
-      'not-verified': 'not_verified'
-      'verified': 'verified'
+      'login(/)': 'login'
+      'register(/)': 'register'
+      'not-verified(/)': 'not_verified'
+      'verified(/)': 'verified'
 
     initialize: () ->
       _.bindAll this
@@ -99,23 +98,6 @@ define (require) ->
         @login()
 
     # =========== routes ===========================
-    root: ->
-      @closeModals()
-      Backbone.trigger 'main::root'
-      path = window.location.pathname
-      if (path is '/user/' or path is '/user') \
-         and not KomooNS?.isAuthenticated
-
-        url = window.location
-        if url.search and url.search.indexOf('next') > -1
-          # get search parameters into a object
-          queryString = {}
-          url.search.replace new RegExp("([^?=&]+)(=([^&]*))?", "g"),
-            ($0, $1, $2, $3) -> queryString[$1] = $3
-          next = queryString['next']
-          @loginView.updateUrls next
-        @login()
-
     login: ->
       @closeModals()
       if not KomooNS?.isAuthenticated

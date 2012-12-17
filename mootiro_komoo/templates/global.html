@@ -32,7 +32,6 @@
 
   </head>
   <body>
-
     <!-- Site Header -->
     <div id="header-container"></div>
     <!-- /Site Header -->
@@ -42,23 +41,25 @@
 
       <!-- Action Bar -->
       <nav id="action-bar" class="action-bar">
+      {% block actionbar %}
+      {% endblock %}
       </nav>
       <!-- /Action Bar -->
 
       <!-- Content -->
       <div class="main">
-        {% block content %}
         <section class="content" id="main-content">
-        </section>
+        {% block content %}
         {% endblock %}
+        </section>
       </div>
       <!-- /Content -->
 
       <!-- Sidebar -->
-      {% block sidebar %}
       <section id="sidebar" class="sidebar">
-      </section>
+      {% block sidebar %}
       {% endblock %}
+      </section>
       <!-- /Sidebar -->
 
     </div>
@@ -68,6 +69,9 @@
     <div id="footer-container"></div>
     <!-- /Footer -->
 
+    <div id="feedback-container"></div>
+
+
     {# Loading these scripts inside body to prevent issues loading google maps #}
     <!-- RequireJS stuff -->
     <script type="text/javascript" src="{{STATIC_URL}}js/config.js"></script>
@@ -75,6 +79,5 @@
 
     {% block js %}{% endblock %}
 
-    </script>
   </body>
 </html>

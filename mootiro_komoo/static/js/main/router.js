@@ -14,7 +14,9 @@
         MainRouter.__super__.constructor.apply(this, arguments);
       }
 
-      MainRouter.prototype.routes = {};
+      MainRouter.prototype.routes = {
+        '': 'root'
+      };
 
       MainRouter.prototype.initialize = function() {
         _.bindAll(this);
@@ -23,17 +25,21 @@
 
       MainRouter.prototype.bindExternalEvents = function() {
         Backbone.on('main::root', this.root);
-        return Backbone.on('main::notfound', this.notfound);
+        return Backbone.on('main::notFound', this.notFound);
       };
 
       MainRouter.prototype.root = function() {
         var root;
-        root = require('main/pages/root');
-        if (root.render()) return this.navigate("");
+        root = require('main/pages').root;
+        root.render();
+        return this.navigate("");
       };
 
-      MainRouter.prototype.notfound = function() {
-        return alert('404 Not Found');
+      MainRouter.prototype.notFound = function() {
+        var notFound;
+        notFound = require('main/pages').notFound;
+        notFound.render();
+        return alert('404 Not Found <TODO: render the 404 page>');
       };
 
       return MainRouter;

@@ -61,9 +61,9 @@ class UserHandler(ResourceHandler):
 
 
 class UsersHandler(ResourceHandler):
-    """ /users/[id_]/<action> """
+    """ /users/[id_] """
 
-    def get(self, request, id_, action):
+    def get(self, request, id_):
         fields = get_fields_to_show(request,
                 ['id', 'name', 'email', 'contact', 'url', 'is_admin'])
         user = request.user if id_ == 'me' else User.get_by_id(id_)
@@ -71,14 +71,8 @@ class UsersHandler(ResourceHandler):
         if not user:
             return JsonResponseNotFound()
 
-        # /user/[id_]
-        if not action:
-            return JsonResponse(user.to_cleaned_dict(fields=fields,
-                                                     user=request.user))
-
-        # /user/[id]/geojson
-        if action == 'geojson':
-            return JsonResponse(user.geojson)
+        return JsonResponse(user.to_cleaned_dict(fields=fields,
+                                                 user=request.user))
 
 
 class LoginHandler(ResourceHandler):

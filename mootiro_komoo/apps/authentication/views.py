@@ -43,14 +43,15 @@ def user_verification(request, key=''):
 
 
 @render_to('global.html')
-def user_view(request, id):
+def user_view(request, id_):
     """
     User page
     """
-    if id == 'me':
-        user = request.user
-    else:
-        user = User.get_by_id(id)
+    user = request.user if id_ == 'me' else User.get_by_id(id_)
+
+    if not user:
+        raise Http404
+
     user_data =  user.to_cleaned_dict(user=request.user)
     # filter data
     return {

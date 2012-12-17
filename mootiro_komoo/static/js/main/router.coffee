@@ -3,7 +3,8 @@ define (require) ->
   Backbone = require 'backbone'
 
   class MainRouter extends Backbone.Router
-    routes: {}
+    routes:
+      '': 'root'
 
     initialize: ->
       _.bindAll this
@@ -11,15 +12,16 @@ define (require) ->
 
     bindExternalEvents: ->
       Backbone.on 'main::root', @root
-      Backbone.on 'main::notfound', @notfound
+      Backbone.on 'main::notFound', @notFound
 
     root: ->
-      root = require 'main/pages/root'
-      if root.render()
-        @navigate ""
+      root = require('main/pages').root
+      root.render()
+      @navigate ""
 
-    notfound: ->
-      #TODO
-      alert '404 Not Found'
+    notFound: ->
+      notFound = require('main/pages').notFound
+      notFound.render()
+      alert '404 Not Found <TODO: render the 404 page>'
 
   return new MainRouter()

@@ -14,9 +14,9 @@ define (require) ->
       @ItemView = @options.ItemView
 
     render: ->
+      @$el.empty()
       @collection.each (model) =>
-        if not @itemViews[model.cid]
-          @add model
+        @add model
       this
 
     add: (item) ->
