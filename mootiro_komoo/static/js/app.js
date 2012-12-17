@@ -6,9 +6,9 @@
     $ = require('jquery');
     Backbone = require('backbone');
     require(['main/views'], function(mainViews) {
-      var feedbackView, footer, header, modelsWorking;
+      var User, feedbackView, footer, header, modelsWorking;
       feedbackView = new mainViews.Feedback();
-      $('#feedback-container').append(feedbackView.render().$el);
+      $('#feedback-container').append(feedbackView.$el);
       modelsWorking = 0;
       Backbone.on('app::working', function(model) {
         modelsWorking++;
@@ -20,8 +20,10 @@
         if (--modelsWorking === 0) return feedbackView.close();
       });
       Backbone.trigger('app::working');
+      User = require('user/models').User;
       header = new mainViews.Header({
-        el: '#header-container'
+        el: '#header-container',
+        model: new User(KomooNS.user)
       });
       return footer = new mainViews.Footer({
         el: '#footer-container'

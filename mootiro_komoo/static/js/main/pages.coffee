@@ -1,4 +1,5 @@
 define (require) ->
+  'use strict'
 
   pageManager = require 'page_manager'
 

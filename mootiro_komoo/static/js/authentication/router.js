@@ -3,15 +3,14 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var $, Backbone, LoginApp, not_verif_tpl, reForm, utils, verif_tpl, views, _;
+    'use strict';
+    var $, Backbone, LoginApp, reForm, utils, views, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
     reForm = require('reForm');
     views = require('./views');
     utils = require('utils');
-    not_verif_tpl = require('text!templates/authentication/_not_verified.html');
-    verif_tpl = require('text!templates/authentication/_verified.html');
     LoginApp = (function(_super) {
 
       __extends(LoginApp, _super);
@@ -29,10 +28,6 @@
 
       LoginApp.prototype.initialize = function() {
         _.bindAll(this);
-        this.initializeLogin();
-        this.initializeLogout();
-        this.initializeRegister();
-        this.initializeVerification();
         return this.bindExternalEvents();
       };
 
@@ -97,7 +92,7 @@
 
       LoginApp.prototype.bindExternalEvents = function() {
         Backbone.on('auth::loginRequired', this._loginRequired);
-        return Backbone.on('auth::logout', this.logoutView.logout);
+        return Backbone.on('auth::logout', this.logout);
       };
 
       LoginApp.prototype.registerLinkCB = function() {
@@ -114,6 +109,7 @@
 
       LoginApp.prototype._loginRequired = function(next) {
         if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
+          if (!(this.loginBox != null)) this.initializeLogin();
           if (next) this.loginView.updateUrls(next);
           return this.login();
         }
@@ -122,28 +118,33 @@
       LoginApp.prototype.login = function() {
         this.closeModals();
         if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
+          if (!(this.loginBox != null)) this.initializeLogin();
           return this.loginBox.open();
         }
+      };
+
+      LoginApp.prototype.logout = function() {
+        if (!this.logoutView) this.initializeLogout();
+        return this.logoutView.logout();
       };
 
       LoginApp.prototype.register = function() {
         this.closeModals();
         if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
+          if (!(this.registerBox != null)) this.initializeRegister();
           return this.registerBox.open();
         }
       };
 
       LoginApp.prototype.not_verified = function() {
-        var path;
         this.closeModals();
-        path = window.location.pathname;
+        if (!(this.notVerifiedBox != null)) this.initializeVerification();
         return this.notVerifiedBox.open();
       };
 
       LoginApp.prototype.verified = function() {
-        var path;
         this.closeModals();
-        path = window.location.pathname;
+        if (!(this.verifiedBox != null)) this.initializeVerification();
         return this.verifiedBox.open();
       };
 
@@ -153,7 +154,7 @@
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           modal = _ref[_i];
-          _results.push(modal.close());
+          _results.push(modal != null ? modal.close() : void 0);
         }
         return _results;
       };

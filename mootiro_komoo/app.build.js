@@ -18,8 +18,8 @@
         'templates': '../static/templates',
         'infobox': 'empty:',
         'markerclusterer': 'empty:',
-        'dutils': 'empty:',
-        'urls': 'empty:'
+        'dutils': '../static/lib/django-js-utils/dutils',
+        'urls': '../static/lib/django-js-utils/dutils.conf.urls'
     },
     shim: {
         'underscore': {
@@ -36,6 +36,13 @@
         'reForm': {
             deps: ['jquery', 'underscore', 'backbone'],
             exports: 'reForm'
+        },
+        'dutils': {
+            exports: 'dutils'
+        },
+        'urls': {
+            deps: ['dutils'],
+            exports: 'dutils'
         }
     },
     modules: [

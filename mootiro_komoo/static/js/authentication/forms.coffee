@@ -1,4 +1,5 @@
 define (require) ->
+  'use strict'
 
   reForm = require 'reForm'
 

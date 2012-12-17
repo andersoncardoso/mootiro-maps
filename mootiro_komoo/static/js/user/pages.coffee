@@ -1,4 +1,6 @@
 define (require) ->
+  'use strict'
+
   $ = require 'jquery'
   Backbone = require 'backbone'
 

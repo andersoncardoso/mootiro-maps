@@ -3,17 +3,13 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Backbone, LoginView, LogoutView, RegisterView, SocialButton, SocialButtonsList, VerificationView, dutils, forms, login_tpl, models, not_verif_tpl, register_tpl, social_btn_tpl, verif_tpl, _;
+    'use strict';
+    var Backbone, LoginView, LogoutView, RegisterView, SocialButton, SocialButtonsList, VerificationView, dutils, forms, models, _;
     _ = require('underscore');
     Backbone = require('backbone');
     models = require('./models');
     forms = require('./forms');
     dutils = require('urls');
-    login_tpl = require('text!templates/authentication/_login.html');
-    register_tpl = require('text!templates/authentication/_register.html');
-    social_btn_tpl = require('text!templates/authentication/_social_button.html');
-    not_verif_tpl = require('text!templates/authentication/_not_verified.html');
-    verif_tpl = require('text!templates/authentication/_verified.html');
     SocialButton = (function(_super) {
 
       __extends(SocialButton, _super);
@@ -24,10 +20,9 @@
 
       SocialButton.prototype.tagName = 'li';
 
-      SocialButton.prototype.template = _.template(social_btn_tpl);
-
       SocialButton.prototype.initialize = function() {
         _.bindAll(this, 'render');
+        this.template = _.template(require('text!templates/authentication/_social_button.html'));
         this.className = this.options.provider;
         this.url = "" + this.options.url + "?next=" + (this.options.next || '');
         this.image_url = this.options.image_url;
@@ -96,11 +91,10 @@
 
       LoginView.prototype.tagName = 'section';
 
-      LoginView.prototype.template = _.template(login_tpl);
-
       LoginView.prototype.initialize = function() {
         var next, _ref;
         _.bindAll(this);
+        this.template = _.template(require('text!templates/authentication/_login.html'));
         next = ((_ref = this.options) != null ? _ref.next : void 0) || '';
         this.buildButtons(next);
         this.model = new models.LoginModel({});
@@ -197,8 +191,6 @@
         RegisterView.__super__.constructor.apply(this, arguments);
       }
 
-      RegisterView.prototype.template = _.template(register_tpl);
-
       RegisterView.prototype.className = 'register';
 
       RegisterView.prototype.tagName = 'section';
@@ -206,6 +198,7 @@
       RegisterView.prototype.initialize = function() {
         var user;
         _.bindAll(this);
+        this.template = _.template(require('text!templates/authentication/_register.html'));
         user = new models.User({});
         return this.form = new forms.RegisterForm({
           formId: 'form_register',
@@ -237,13 +230,13 @@
         _.bindAll(this);
         this.verified = this.options.verified;
         if (this.verified) {
-          this.template = _.template(verif_tpl);
+          this.template = _.template(require('text!templates/authentication/_verified.html'));
           this.loginModel = new models.LoginModel({});
           return this.loginForm = new forms.LoginForm({
             model: this.loginModel
           });
         } else {
-          return this.template = _.template(not_verif_tpl);
+          return this.template = _.template(require('text!templates/authentication/_not_verified.html'));
         }
       };
 

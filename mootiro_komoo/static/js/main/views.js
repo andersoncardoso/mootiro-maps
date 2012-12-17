@@ -3,6 +3,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
+    'use strict';
     var $, Backbone, Feedback, Footer, Header, UpperBar, _;
     $ = require('jquery');
     _ = require('underscore');
@@ -20,7 +21,8 @@
       Feedback.prototype.className = 'feedback';
 
       Feedback.prototype.initialize = function() {
-        return this.$el.hide();
+        this.$el.hide();
+        return this.render();
       };
 
       Feedback.prototype.display = function(msg) {
@@ -58,33 +60,36 @@
       };
 
       UpperBar.prototype.initialize = function() {
-        var upperBar_tpl;
-        upperBar_tpl = require('text!templates/main/_upper_bar.html');
-        this.template = _.template(upperBar_tpl);
         _.bindAll(this);
+        this.template = _.template(require('text!templates/main/_upper_bar.html'));
+        this.listenTo(this.model, 'change', this.render);
+        window.current = this.model;
         return this.render();
       };
 
       UpperBar.prototype.render = function() {
-        var renderedContent;
-        renderedContent = this.template();
-        this.$el.html(renderedContent);
+        this.$el.html(this.template({
+          user: this.model.toJSON()
+        }));
         return this;
       };
 
-      UpperBar.prototype.login = function() {
+      UpperBar.prototype.login = function(e) {
+        if (e != null) e.preventDefault();
         Backbone.trigger('auth::loginRequired', window.location.href);
-        return false;
+        return this;
       };
 
-      UpperBar.prototype.logout = function() {
+      UpperBar.prototype.logout = function(e) {
+        if (e != null) e.preventDefault();
         Backbone.trigger('auth::logout', window.location.href);
-        return false;
+        return this;
       };
 
-      UpperBar.prototype.profile = function() {
-        Backbone.trigger('user::profile', KomooNS.user.id);
-        return false;
+      UpperBar.prototype.profile = function(e) {
+        if (e != null) e.preventDefault();
+        Backbone.trigger('user::profile', this.model.id);
+        return this;
       };
 
       return UpperBar;
@@ -103,25 +108,26 @@
       };
 
       Header.prototype.initialize = function() {
-        var header_tpl;
-        header_tpl = require('text!templates/main/_header.html');
-        this.template = _.template(header_tpl);
-        this.upperBar = new UpperBar();
         _.bindAll(this);
+        this.template = _.template(require('text!templates/main/_header.html'));
+        this.upperBar = new UpperBar({
+          model: this.model
+        });
         return this.render();
       };
 
       Header.prototype.render = function() {
-        var renderedContent;
-        renderedContent = this.template();
-        this.$el.html(renderedContent);
+        this.upperBar.$el.detach();
+        this.$el.html(this.template({
+          user: this.model.toJSON()
+        }));
         this.$el.find('#upper-bar-container').append(this.upperBar.$el);
         return this;
       };
 
-      Header.prototype.root = function() {
-        Backbone.trigger('main::root');
-        return false;
+      Header.prototype.root = function(e) {
+        if (e != null) e.preventDefault();
+        return Backbone.trigger('main::root');
       };
 
       return Header;
@@ -135,20 +141,14 @@
         Footer.__super__.constructor.apply(this, arguments);
       }
 
-      Footer.prototype.events = {};
-
       Footer.prototype.initialize = function() {
-        var footer_tpl;
-        footer_tpl = require('text!templates/main/_footer.html');
-        this.template = _.template(footer_tpl);
         _.bindAll(this);
+        this.template = _.template(require('text!templates/main/_footer.html'));
         return this.render();
       };
 
       Footer.prototype.render = function() {
-        var renderedContent;
-        renderedContent = this.template();
-        this.$el.html(renderedContent);
+        this.$el.html(this.template());
         return this;
       };
 

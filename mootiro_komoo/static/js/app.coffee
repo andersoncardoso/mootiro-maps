@@ -8,7 +8,7 @@ define (require) ->
   # Draw layout blocks
   require ['main/views'], (mainViews) ->
     feedbackView = new mainViews.Feedback()
-    $('#feedback-container').append feedbackView.render().$el
+    $('#feedback-container').append feedbackView.$el
 
     modelsWorking = 0
     Backbone.on 'app::working', (model) ->
@@ -22,8 +22,11 @@ define (require) ->
 
     Backbone.trigger 'app::working'
 
+    User = require('user/models').User
+
     header = new mainViews.Header
       el: '#header-container'
+      model: new User KomooNS.user
 
     footer = new mainViews.Footer
       el: '#footer-container'

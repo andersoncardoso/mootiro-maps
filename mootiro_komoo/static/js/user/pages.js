@@ -1,6 +1,7 @@
 (function() {
 
   define(function(require) {
+    'use strict';
     var $, Backbone, getUser, pageManager, profile;
     $ = require('jquery');
     Backbone = require('backbone');

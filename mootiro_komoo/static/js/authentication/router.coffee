@@ -1,4 +1,5 @@
 define (require) ->
+  'use strict'
 
   $ = require 'jquery'
   _ = require 'underscore'
@@ -7,8 +8,6 @@ define (require) ->
   views = require './views'
   utils = require 'utils'
 
-  not_verif_tpl = require 'text!templates/authentication/_not_verified.html'
-  verif_tpl = require 'text!templates/authentication/_verified.html'
 
   class LoginApp extends Backbone.Router
     routes:
@@ -19,10 +18,6 @@ define (require) ->
 
     initialize: () ->
       _.bindAll this
-      @initializeLogin()
-      @initializeLogout()
-      @initializeRegister()
-      @initializeVerification()
       @bindExternalEvents()
 
     initializeLogin: ->
@@ -79,7 +74,7 @@ define (require) ->
 
     bindExternalEvents: ->
       Backbone.on 'auth::loginRequired', @_loginRequired
-      Backbone.on 'auth::logout', @logoutView.logout
+      Backbone.on 'auth::logout', @logout
 
 
     # ============ callbacks ======================
@@ -94,6 +89,8 @@ define (require) ->
 
     _loginRequired: (next)->
       if not KomooNS?.isAuthenticated
+        if not @loginBox?
+          @initializeLogin()
         @loginView.updateUrls(next) if next
         @login()
 
@@ -101,26 +98,37 @@ define (require) ->
     login: ->
       @closeModals()
       if not KomooNS?.isAuthenticated
+        if not @loginBox?
+          @initializeLogin()
         @loginBox.open()
+
+    logout: ->
+      if not @logoutView
+        @initializeLogout()
+      @logoutView.logout()
 
     register: ->
       @closeModals()
       if not KomooNS?.isAuthenticated
+        if not @registerBox?
+          @initializeRegister()
         @registerBox.open()
 
     not_verified: ->
       @closeModals()
-      path = window.location.pathname
+      if not @notVerifiedBox?
+        @initializeVerification()
       @notVerifiedBox.open()
 
     verified: ->
       @closeModals()
-      path = window.location.pathname
+      if not @verifiedBox?
+        @initializeVerification()
       @verifiedBox.open()
 
     # ============= utils ==============================
     closeModals: ->
-      modal.close() for modal in [
+      modal?.close() for modal in [
         @loginBox, @registerBox, @verifiedBox, @notVerifiedBox]
 
 

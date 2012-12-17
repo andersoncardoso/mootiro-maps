@@ -1,6 +1,7 @@
 (function() {
 
   define(function(require) {
+    'use strict';
     var Backbone, Update, Updates, _;
     _ = require('underscore');
     Backbone = require('backbone');

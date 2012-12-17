@@ -1,6 +1,7 @@
 (function() {
 
   define(function(require) {
+    'use strict';
     var $, Backbone, Profile, Sidebar, Update, Updates, _;
     $ = require('jquery');
     _ = require('underscore');

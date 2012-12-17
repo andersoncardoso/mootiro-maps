@@ -1,6 +1,7 @@
 (function() {
 
   define(function(require) {
+    'use strict';
     var notFound, pageManager, root;
     pageManager = require('page_manager');
     root = {

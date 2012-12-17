@@ -1,4 +1,5 @@
 define (require) ->
+  'use strict'
 
   # $ = require 'jquery'
   _ = require 'underscore'
@@ -8,11 +9,6 @@ define (require) ->
   dutils = require 'urls'
 
   # underscore templates
-  login_tpl = require 'text!templates/authentication/_login.html'
-  register_tpl = require 'text!templates/authentication/_register.html'
-  social_btn_tpl = require 'text!templates/authentication/_social_button.html'
-  not_verif_tpl = require 'text!templates/authentication/_not_verified.html'
-  verif_tpl = require 'text!templates/authentication/_verified.html'
 
 
   #
@@ -26,10 +22,10 @@ define (require) ->
   #
   class SocialButton extends Backbone.View
     tagName: 'li'
-    template: _.template social_btn_tpl
 
     initialize: ->
       _.bindAll this, 'render'
+      @template = _.template require 'text!templates/authentication/_social_button.html'
       @className = @options.provider
       @url = "#{@options.url}?next=#{@options.next or ''}"
       @image_url = @options.image_url
@@ -83,10 +79,10 @@ define (require) ->
   class LoginView extends Backbone.View
     className: 'login_box'
     tagName: 'section'
-    template: _.template login_tpl
 
     initialize: ->
       _.bindAll this #, 'render', 'buildButtons', 'updateUrls'
+      @template = _.template require 'text!templates/authentication/_login.html'
 
       next = @options?.next or ''
       @buildButtons(next)
@@ -151,12 +147,12 @@ define (require) ->
   # RegisterView to be used with the LoginBox
   #
   class RegisterView extends Backbone.View
-    template: _.template register_tpl
     className: 'register'
     tagName: 'section'
 
     initialize: ->
       _.bindAll this
+      @template = _.template require 'text!templates/authentication/_register.html'
       user = new models.User {}
 
       @form = new forms.RegisterForm
@@ -183,12 +179,12 @@ define (require) ->
       _.bindAll this
       @verified = @options.verified
       if @verified
-        @template = _.template verif_tpl
+        @template = _.template require 'text!templates/authentication/_verified.html'
         @loginModel = new models.LoginModel({})
         @loginForm = new forms.LoginForm
           model: @loginModel
       else
-        @template = _.template not_verif_tpl
+        @template = _.template require 'text!templates/authentication/_not_verified.html'
 
     render: ->
       renderedContent = @template {}

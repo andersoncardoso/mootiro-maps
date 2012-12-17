@@ -1,4 +1,6 @@
 define (require) ->
+  'use strict'
+
   $ = require 'jquery'
   _ = require 'underscore'
   Backbone = require 'backbone'
@@ -10,6 +12,7 @@ define (require) ->
 
     initialize: ->
       @$el.hide()
+      @render()
 
     display: (msg) ->
       @$el.html msg
@@ -28,27 +31,30 @@ define (require) ->
       'click .user': 'profile'
 
     initialize: () ->
-      upperBar_tpl = require 'text!templates/main/_upper_bar.html'
-      @template = _.template upperBar_tpl
       _.bindAll this
+      @template = _.template require 'text!templates/main/_upper_bar.html'
+      @listenTo @model, 'change', @render
+      window.current = @model
       @render()
 
     render: ->
-      renderedContent = @template()
-      @$el.html renderedContent
+      @$el.html @template user: @model.toJSON()
       this
 
-    login: ->
+    login: (e) ->
+      e?.preventDefault()
       Backbone.trigger 'auth::loginRequired', window.location.href
-      return false
+      this
 
-    logout: ->
+    logout: (e) ->
+      e?.preventDefault()
       Backbone.trigger 'auth::logout', window.location.href
-      return false
+      this
 
-    profile: ->
-      Backbone.trigger 'user::profile', KomooNS.user.id
-      return false
+    profile: (e) ->
+      e?.preventDefault()
+      Backbone.trigger 'user::profile', @model.id
+      this
 
 
   class Header extends Backbone.View
@@ -56,36 +62,31 @@ define (require) ->
       'click .logo a': 'root'
 
     initialize: ->
-      header_tpl = require 'text!templates/main/_header.html'
-      @template = _.template header_tpl
-      @upperBar = new UpperBar()
       _.bindAll this
+      @template = _.template require 'text!templates/main/_header.html'
+      @upperBar = new UpperBar
+        model: @model
       @render()
 
     render: ->
-      renderedContent = @template()
-      @$el.html renderedContent
+      @upperBar.$el.detach()
+      @$el.html @template user: @model.toJSON()
       @$el.find('#upper-bar-container').append @upperBar.$el
       this
 
-    root: ->
+    root: (e) ->
+      e?.preventDefault()
       Backbone.trigger 'main::root'
-      return false
 
 
   class Footer extends Backbone.View
-    events: {
-    }
-
     initialize: ->
-      footer_tpl = require 'text!templates/main/_footer.html'
-      @template = _.template footer_tpl
       _.bindAll this
+      @template = _.template require 'text!templates/main/_footer.html'
       @render()
 
     render: ->
-      renderedContent = @template()
-      @$el.html renderedContent
+      @$el.html @template()
       this
 
   Header: Header
