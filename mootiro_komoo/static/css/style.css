@@ -350,6 +350,9 @@ body > .content-box > .main > .content .user-updates {
 body > .content-box > .main > .content .user-updates h1 {
   margin: 5px 10px;
 }
+body > .content-box > .main > .content .user-updates .list {
+  min-height: 275px;
+}
 /** Misc **/
 .contact-info > li.phone,
 .contact.phone {

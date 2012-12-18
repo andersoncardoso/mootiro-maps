@@ -23,18 +23,23 @@ define (require) ->
       clear = (view) ->
         if not view then return
 
-        # Clear all sub views
-        # You should add all sub views to subView array
-        _.each view.subViews, clear
+        if view.subViews
+          # Clear all sub views
+          _.each view.subViews, clear
+          # Remove subviews references
+          view.subViews.length = 0
         # Call views custom method
         view.onClose?()
         # Clear all DOM events
         view.unbind()
         # Remove DOM and clear model/collection events
         view.remove()
-        # Remove detached DOM elements
+        # Remove references to detached DOM elements
         delete view.$el
         delete view.el
+        # Remove references to model and collection
+        delete view.model
+        delete view.collection
 
       _([@actionBar, @sidebar, @mainContent]).each clear
 

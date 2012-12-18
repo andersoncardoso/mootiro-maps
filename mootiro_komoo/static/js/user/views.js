@@ -48,7 +48,6 @@
         _.bindAll(this);
         this.template = _.template(require('text!templates/user/_update_item.html'));
         this.listenTo(this.model, 'change', this.render);
-        window.model = this.model;
         return this.render();
       },
       render: function() {

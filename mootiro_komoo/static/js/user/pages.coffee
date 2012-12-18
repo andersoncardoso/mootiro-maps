@@ -38,9 +38,6 @@ define (require) ->
       # Get the user
       user = getUser id
       user.fetch().done ->
-
-        window.user = user
-
         # User Profile don't have an action bar, so make it empty
         $('#action-bar').empty()
 

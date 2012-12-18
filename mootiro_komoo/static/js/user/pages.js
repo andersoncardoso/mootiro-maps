@@ -36,7 +36,6 @@
         user = getUser(id);
         user.fetch().done(function() {
           var profilePage;
-          window.user = user;
           $('#action-bar').empty();
           profilePage = new pageManager.Page({
             sidebar: new views.Sidebar({

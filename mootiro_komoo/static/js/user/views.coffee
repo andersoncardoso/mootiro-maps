@@ -54,7 +54,6 @@ define (require) ->
       _.bindAll this
       @template = _.template require 'text!templates/user/_update_item.html'
       @listenTo @model, 'change', @render
-      window.model = @model
       @render()
 
     render: ->

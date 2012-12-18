@@ -31,12 +31,17 @@
         var clear;
         clear = function(view) {
           if (!view) return;
-          _.each(view.subViews, clear);
+          if (view.subViews) {
+            _.each(view.subViews, clear);
+            view.subViews.length = 0;
+          }
           if (typeof view.onClose === "function") view.onClose();
           view.unbind();
           view.remove();
           delete view.$el;
-          return delete view.el;
+          delete view.el;
+          delete view.model;
+          return delete view.collection;
         };
         return _([this.actionBar, this.sidebar, this.mainContent]).each(clear);
       };

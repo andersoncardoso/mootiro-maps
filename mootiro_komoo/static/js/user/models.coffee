@@ -17,7 +17,6 @@ define (require) ->
       return @updates
 
     goToProfile: ->
-      console.log 'aaa'
       Backbone.trigger 'user::profile', @id
 
 

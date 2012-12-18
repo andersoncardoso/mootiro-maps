@@ -19,7 +19,6 @@
         return this.updates;
       },
       goToProfile: function() {
-        console.log('aaa');
         return Backbone.trigger('user::profile', this.id);
       }
     });
