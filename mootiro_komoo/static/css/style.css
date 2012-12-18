@@ -2468,6 +2468,7 @@ a.button.twitter {
   display: block;
   padding-left: 5px;
   padding-right: 5px;
+  font-size: 0.8em;
 }
 /** Dialog **/
 .dialog {
@@ -2635,14 +2636,14 @@ body > #footer-container > .footer .license {
   padding: 0px;
 }
 .external_providers li {
-  margin: 15px 5px 34px;
+  margin: 15px 5px 33px;
 }
 .login_form {
   width: 211.5px;
   float: right;
 }
 .login_form input {
-  height: 32px;
+  height: 28px;
 }
 .login_form small.error {
   width: 94%;

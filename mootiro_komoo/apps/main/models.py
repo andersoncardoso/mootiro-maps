@@ -4,7 +4,8 @@ from django.conf import settings
 
 from komoo_map.models import GeoRefModel
 from authentication.models import User
-from main.utils import BaseDAOMixin
+
+from .utils import BaseDAOMixin
 
 
 class CommonDataMixin(models.Model):
@@ -27,6 +28,17 @@ class CommonDataMixin(models.Model):
     class Meta:
         abstract = True
 
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'description': self.description,
+            'creator': self.creator,
+            'creation_date': self.creation_date,
+            'last_editor': self.last_editor,
+            'last_update': self.last_update,
+            # 'tags': self.tags
+        }
+
 
 class CommonObject(GeoRefModel, BaseDAOMixin):
     """
@@ -38,7 +50,9 @@ class CommonObject(GeoRefModel, BaseDAOMixin):
     type = models.CharField(max_length=256)
 
     def to_dict(self):
-        return {}
+        d = super(CommonObject, self).to_dict()
+        d['id'] = self.id
+        return d
 
     def from_dict(self, data):
         return None

@@ -17,6 +17,24 @@ from .utils import logout as auth_logout
 logger = logging.getLogger(__name__)
 
 
+def _user_form_specific_validations(user, json_data, form_validates):
+    if not json_data.get('password_confirm', None):
+        form_validates = False
+        user.errors['password_confirm'] = _('Required field')
+
+    license = json_data.get('license', '')
+    license = True if license == 'agree' else False
+    if not license:
+        form_validates = False
+        user.errors['license'] = _(''
+            'You must accept the license agrement')
+    if not json_data.get('password') == json_data.get('password_confirm'):
+        form_validates = False
+        user.errors['password_confirm'] = _(''
+                'Passwords did not match')
+    return form_validates
+
+
 class UserHandler(ResourceHandler):
     """ /user """
 
@@ -32,24 +50,9 @@ class UserHandler(ResourceHandler):
 
         # user model validations
         form_validates = user.is_valid()
+        form_validates = _user_form_specific_validations(
+                user, json_data, form_validates)
 
-        # form specific validations
-        if not json_data.get('password_confirm', None):
-            form_validates = False
-            user.errors['password_confirm'] = _('Required field')
-
-        license = json_data.get('license', '')
-        license = True if license == 'agree' else False
-        if not license:
-            form_validates = False
-            user.errors['license'] = _(''
-                'You must accept the license agrement')
-        if not json_data.get('password') == json_data.get('password_confirm'):
-            form_validates = False
-            user.errors['password_confirm'] = _(''
-                    'Passwords did not match')
-
-        # return errors or save
         if not form_validates:
             return JsonResponse({'errors': user.errors}, status_code=400)
         else:

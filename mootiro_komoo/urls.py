@@ -29,11 +29,7 @@ urlpatterns = patterns('',
     url(r'^jsi18n/$', javascript_catalog, js_info_dict,
         name='javascript_catalog'),
 
-    # root
-    url(r'^$', include('update.urls'), name='frontpage'),
-
     # unprefixed urls
-    url(r'', include('update.urls')),
     url(r'', include('hotsite.urls')),
     url(r'', include('main.urls')),
 
