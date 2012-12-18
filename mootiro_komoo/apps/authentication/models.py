@@ -11,6 +11,7 @@ from jsonfield import JSONField
 from lib.locker.models import Locker
 from main.utils import send_mail_async, iso_to_datetime
 from main.utils import BaseDAOMixin, PermissionMixin
+from main.datalog import get_user_updates
 from komoo_map.models import GeoRefModel, POINT
 
 
@@ -184,6 +185,11 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
             message=CONFIRMATION_EMAIL_MSG.format(
                 name=self.name,
                 verification_url=verification_url))
+
+
+    def contributions(self, page=1, num=None):
+        """ return user's update """
+        return get_user_updates(self, page=page, num=num)
 
     # dummy fix for django weirdness =/
     def get_and_delete_messages(self):

@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 import json
-from markdown import markdown
+# from markdown import markdown
 import requests
 import simplejson
 import dateutil
@@ -236,8 +236,8 @@ def clean_autocomplete_field(field_data, model):
         raise forms.ValidationError(_('invalid field data'))
 
 
-def render_markup(text):
-    return markdown(text, safe_mode=True) if text else ''
+# def render_markup(text):
+#     return markdown(text, safe_mode=True) if text else ''
 
 
 def send_mail(title='', message='', sender='', receivers=[]):
@@ -362,7 +362,7 @@ def get_json_data(request):
     return simplejson.loads(request.raw_post_data)
 
 
-def to_json(obj):
+def _to_json_default(obj):
     """
     Converts non default objects to json
     usage:
@@ -380,6 +380,10 @@ def to_json(obj):
     raise TypeError(repr(obj) + ' is not JSON serializable')
 
 
+def to_json(data):
+    return simplejson.dumps(data, default=_to_json_default)
+
+
 class JsonResponse(HttpResponse):
     """
     Creates a Json Response. The Http status code can be changed.
@@ -393,7 +397,7 @@ class JsonResponse(HttpResponse):
             return JsonResponse(my_errors_dict, status_code=400)
     """
     def __init__(self, data={}, status_code=None):
-        content = simplejson.dumps(data, default=to_json)
+        content = to_json(data)
         super(JsonResponse, self).__init__(content=content,
                     mimetype='application/json')
         if status_code:
@@ -658,6 +662,6 @@ class PermissionMixin(object):
         return not fieldname in getattr(self, 'private_fields', [])
 
     def to_cleaned_dict(self, fields=['all'], user=None):
-        return {key: val for key, val in self.to_dict().items() \
-                if (key in fields or 'all' in fields) and \
+        return {key: val for key, val in self.to_dict().items()
+                if (key in fields or 'all' in fields) and
                    self.can_view_field(key, user)}

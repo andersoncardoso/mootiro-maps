@@ -4,7 +4,8 @@ from django.conf import settings
 
 from komoo_map.models import GeoRefModel
 from authentication.models import User
-from main.utils import BaseDAOMixin
+
+from .utils import BaseDAOMixin
 
 
 class CommonDataMixin(models.Model):
