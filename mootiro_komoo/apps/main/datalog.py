@@ -21,3 +21,8 @@ def get_user_updates(user, page=1, num=None):
         params['limit'] = num
 
     return _datalog_request(params)
+
+
+def log_data(obj, user, action):
+    # async task
+    pass

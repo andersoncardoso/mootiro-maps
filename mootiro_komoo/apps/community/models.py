@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import simplejson
-
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.gis.db import models
 from django.contrib.gis.measure import Distance
 from django.core.urlresolvers import reverse
@@ -21,6 +18,7 @@ class Community(CommonObject, CommonDataMixin):
     common_object_type = 'community'
 
     population = models.IntegerField(null=True, blank=True)
+
 
     class Map:
         title = _('Community')
@@ -46,15 +44,14 @@ class Community(CommonObject, CommonDataMixin):
         pass
 
     def to_dict(self):
-        data = super(Community_CO, self).to_json()
-        data.update({
+        dict_ = super(Community, self).to_dict()
+        dict_.update({
             'population': self.population,
         })
-        return data
+        return dict_
 
     def is_valid(self):
-        res = super(Community_CO, self).is_valid()
-        return res
+        return False
 
     # TODO: order communities from the database
     # def closest_communities(self, max=3, radius=Distance(km=25)):

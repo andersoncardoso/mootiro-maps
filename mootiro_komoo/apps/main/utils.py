@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import json
 # from markdown import markdown
 import requests
 import simplejson
@@ -61,7 +60,7 @@ def create_geojson(objects, type_='FeatureCollection', convert=True,
             type_ = obj.__class__.__name__
             if not hasattr(obj, 'geometry'):
                 continue
-            geometry_json = json.loads(obj.geometry.geojson)
+            geometry_json = simplejson.loads(obj.geometry.geojson)
             geometries = geometry_json['geometries']
             geometry = None
 
@@ -111,7 +110,7 @@ def create_geojson(objects, type_='FeatureCollection', convert=True,
             geojson['features'].append(feature)
 
     if convert:
-        return json.dumps(geojson)
+        return simplejson.dumps(geojson)
 
     return geojson
 
@@ -430,13 +429,10 @@ class BaseView(ResourceHandler):
 
         def get(self, request, document_id):
           # your view code for GET requests for html go here
-
         def post(self, request, document_id):
           # your viewcode for POST request for html go here
-
         def get_json(self, request, document_id):
           # your view code for GET requests for json go here
-
         def post(self, request, document_id):
           # your viewcode for POST request for json go here
 
@@ -627,6 +623,19 @@ class BaseDAOMixin(object):
     def filter_by(cls, **kwargs):
         """ filter by keyword arguments """
         return cls.objects.filter(**kwargs)
+
+    # utility json methods
+    def to_json(self):
+        if hasattr(self, 'to_dict'):
+            return to_json(self.to_dict())
+        else:
+            raise Exception('No .to_dict() method defined')
+
+    def from_json(self, data):
+        if hasattr(self, 'from_dict'):
+            self.from_dict(simplejson.loads(data))
+        else:
+            raise Exception('No .from_dict() method defined')
 
 
 class PermissionMixin(object):
