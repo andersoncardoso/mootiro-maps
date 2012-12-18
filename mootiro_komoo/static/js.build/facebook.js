@@ -1,0 +1,1 @@
+(function(){var e;e=KomooNS.facebookAppId,define(["require","//connect.facebook.net/en_US/all.js#xfbml=1&appId="+e],function(e){return FB})}).call(this);

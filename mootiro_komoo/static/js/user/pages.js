@@ -14,7 +14,7 @@
         }
         return;
       }
-      User = require('user/models').User;
+      User = require('./models').User;
       user = new User();
       user.id = id;
       user.on('request', function(model) {
@@ -30,27 +30,28 @@
     };
     profile = {
       render: function(id) {
-        var profilePage, user, userViews;
-        userViews = require('user/views');
+        var dfd, user, views;
+        views = require('./views');
+        dfd = new $.Deferred();
         user = getUser(id);
-        user.on('error', function(model, error) {
-          if (error.status === 404) {
-            return Backbone.trigger('main::notFound', model);
-          }
+        user.fetch().done(function() {
+          var profilePage;
+          window.user = user;
+          $('#action-bar').empty();
+          profilePage = new pageManager.Page({
+            sidebar: new views.Sidebar({
+              model: user
+            }),
+            mainContent: new views.Profile({
+              model: user
+            })
+          });
+          pageManager.open(profilePage);
+          return dfd.resolve();
+        }).fail(function(jqXHR) {
+          return dfd.reject(jqXHR);
         });
-        window.user = user;
-        $('#action-bar').empty();
-        profilePage = new pageManager.Page({
-          sidebar: new userViews.Sidebar({
-            model: user
-          }),
-          mainContent: new userViews.Profile({
-            model: user
-          })
-        });
-        return $.when(user.fetch()).done(function() {
-          return pageManager.open(profilePage);
-        });
+        return dfd.promise();
       }
     };
     return {

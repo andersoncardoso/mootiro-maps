@@ -2,7 +2,7 @@
 
   define(function(require) {
     'use strict';
-    var notFound, pageManager, root;
+    var error, pageManager, root;
     pageManager = require('page_manager');
     root = {
       render: function() {
@@ -11,16 +11,16 @@
         return pageManager.open(rootPage);
       }
     };
-    notFound = {
+    error = {
       render: function() {
-        var notFoundPage;
-        notFoundPage = new pageManager.Page();
-        return pageManager.open(notFoundPage);
+        var errorPage;
+        errorPage = new pageManager.Page();
+        return pageManager.open(errorPage);
       }
     };
     return {
       root: root,
-      notFound: notFound
+      error: error
     };
   });
 

@@ -8,11 +8,11 @@ define (require) ->
       rootPage = new pageManager.Page()
       pageManager.open rootPage
 
-  notFound =
+  error =
     render: ->
-      notFoundPage = new pageManager.Page()
-      pageManager.open notFoundPage
+      errorPage = new pageManager.Page()
+      pageManager.open errorPage
 
 
   root: root
-  notFound: notFound
+  error: error

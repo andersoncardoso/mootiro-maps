@@ -4,9 +4,10 @@ define (require) ->
   $ = require 'jquery'
   _ = require 'underscore'
   Backbone = require 'backbone'
+
   reForm = require 'reForm'
   views = require './views'
-  utils = require 'utils'
+  ModalBox = require 'widgets/modal'
 
 
   class LoginApp extends Backbone.Router
@@ -24,22 +25,13 @@ define (require) ->
       @loginView = new views.LoginView {}
       @loginView.form.on 'register-link:click', @registerLinkCB
 
-      @loginBox = new utils.ModalBox
+      @loginBox = new ModalBox
         title: i18n 'Login'
         content: @loginView.render().el
         modal_id: 'login-modal-box'
 
-      $("a.login-required").bind "click.loginrequired", (evt) =>
-        if not KomooNS?.isAuthenticated
-          evt.preventDefault()
-          next = $(evt.target).attr "href"
-          next = (document.location.pathname + next) if next?.charAt(0) is '#'
-          @_loginRequired next
-          return false
-
     initializeLogout: ->
       @logoutView = new views.LogoutView {}
-      #@logoutView.bindLogoutButton()
 
     initializeRegister: ->
       @registerView = new views.RegisterView {}
@@ -47,7 +39,7 @@ define (require) ->
       @registerView.form.on 'success', @registerFormOnSuccessCB
       @registerView.form.on 'login-link:click', @loginLinkCB
 
-      @registerBox = new utils.ModalBox
+      @registerBox = new ModalBox
         title: i18n 'Register'
         width: '450px'
         content: @registerView.render().el
@@ -62,12 +54,12 @@ define (require) ->
 
       @verifiedView.loginForm.on 'register-link:click', @registerLinkCB
 
-      @notVerifiedBox = new utils.ModalBox
+      @notVerifiedBox = new ModalBox
         title: i18n 'Verification'
         content: @notVerifiedView.render().el
         modal_id: 'verification-modal-box'
 
-      @verifiedBox = new utils.ModalBox
+      @verifiedBox = new ModalBox
         title: i18n 'Verification'
         content: @verifiedView.render().el
         modal_id: 'verification-modal-box'

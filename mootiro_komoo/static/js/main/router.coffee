@@ -4,6 +4,9 @@ define (require) ->
   _ = require 'underscore'
   Backbone = require 'backbone'
 
+  pages = require('./pages')
+
+
   class MainRouter extends Backbone.Router
     routes:
       '': 'root'
@@ -14,16 +17,15 @@ define (require) ->
 
     bindExternalEvents: ->
       Backbone.on 'main::root', @root
-      Backbone.on 'main::notFound', @notFound
+      Backbone.on 'main::error', @error
 
     root: ->
-      root = require('main/pages').root
-      root.render()
-      @navigate ""
+      pages.root.render()
+      @navigate ''
 
-    notFound: ->
-      notFound = require('main/pages').notFound
-      notFound.render()
-      alert '404 Not Found <TODO: render the 404 page>'
+    error: (code, msg) ->
+      pages.error.render()
+      alert "#{code} #{msg} <TODO: render the error page>"
+
 
   return new MainRouter()

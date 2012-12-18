@@ -1,12 +1,14 @@
 (function() {
   var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
+    __slice = Array.prototype.slice;
 
   define(function(require) {
     'use strict';
-    var Backbone, UserRouter, _;
+    var Backbone, UserRouter, pages, _;
     _ = require('underscore');
     Backbone = require('backbone');
+    pages = require('./pages');
     UserRouter = (function(_super) {
 
       __extends(UserRouter, _super);
@@ -29,6 +31,14 @@
         return Backbone.on('user::profile', this.profile);
       };
 
+      UserRouter.prototype.goTo = function() {
+        var args, page;
+        page = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+        return page.render(args).fail(function(e) {
+          return Backbone.trigger('main::error', e.status, e.statusText);
+        });
+      };
+
       UserRouter.prototype.user = function() {
         var next, queryString, url;
         if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
@@ -45,9 +55,7 @@
       };
 
       UserRouter.prototype.profile = function(id) {
-        var profile;
-        profile = require('user/pages').profile;
-        profile.render(id);
+        this.goTo(pages.profile, id);
         return this.navigate("user/" + id);
       };
 

@@ -2,17 +2,20 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, PaginatedUpdates, Update, _;
+    var Backbone, PaginatedUpdates, Update, urls, _;
     _ = require('underscore');
     Backbone = require('backbone');
     require('backbone.paginator');
+    urls = require('urls');
     Update = require('update/models').Update;
     PaginatedUpdates = Backbone.Paginator.requestPager.extend({
       model: Update,
       paginator_core: {
         dataType: 'json',
         url: function() {
-          return "/api/user/" + this.options.user.id + "/update?";
+          return urls.resolve('user_update_api', {
+            id_: this.options.user.id
+          });
         }
       },
       paginator_ui: {
@@ -21,7 +24,7 @@
         perPage: 5
       },
       server_api: {
-        'limit': function() {
+        'per_page': function() {
           return this.perPage;
         },
         'page': function() {

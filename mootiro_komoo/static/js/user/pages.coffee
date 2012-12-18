@@ -12,7 +12,7 @@ define (require) ->
       return
 
     # Create the user instance
-    User = require('user/models').User
+    User = require('./models').User
     user = new User()
     user.id = id
 
@@ -29,32 +29,36 @@ define (require) ->
 
   profile =
     render: (id) ->
-      userViews = require 'user/views'
+      views = require './views'
+
+      # Deferred object to router know when the page is ready or if occurred
+      # an error
+      dfd = new $.Deferred()
 
       # Get the user
       user = getUser id
+      user.fetch().done ->
 
-      # Display Not Found page is the model got 404 http response
-      user.on 'error', (model, error) ->
-        if error.status is 404
-          Backbone.trigger 'main::notFound', model
+        window.user = user
 
-      window.user = user
+        # User Profile don't have an action bar, so make it empty
+        $('#action-bar').empty()
 
-      # User Profile don't have an action bar, so make it empty
-      $('#action-bar').empty()
+        # Use Page class and page manager to avoid memory leak and centralize some
+        # common tasks
+        profilePage = new pageManager.Page
+          sidebar: new views.Sidebar
+              model: user
+          mainContent: new views.Profile
+              model: user
 
-      # Use Page class and page manager to avoid memory leak and centralize some
-      # common tasks
-      profilePage = new pageManager.Page
-        sidebar: new userViews.Sidebar
-            model: user
-        mainContent: new userViews.Profile
-            model: user
-
-      $.when(user.fetch()).done ->
         pageManager.open profilePage
 
+        dfd.resolve()
+      .fail (jqXHR) ->
+        dfd.reject jqXHR
+
+      dfd.promise()
 
 
   getUser: getUser

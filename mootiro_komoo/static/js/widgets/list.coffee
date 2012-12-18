@@ -14,6 +14,7 @@ define (require) ->
       @listenTo @collection, 'all', @render
       @itemViews = {}
       @ItemView = @options.ItemView
+      @subViews = []
       @collection.pager()
       @render()
 
@@ -27,6 +28,7 @@ define (require) ->
     addOne: (item) ->
       itemView = new @ItemView model: item
       @$el.append itemView.render().$el
+      @subViews.push itemView
       this
 
   List

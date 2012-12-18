@@ -4,6 +4,8 @@ define (require) ->
   _ = require 'underscore'
   Backbone = require 'backbone'
 
+  pages = require('./pages')
+
   class UserRouter extends Backbone.Router
     routes:
       'user(/)': 'user'
@@ -15,6 +17,11 @@ define (require) ->
 
     bindExternalEvents: ->
       Backbone.on 'user::profile', @profile
+
+    goTo: (page, args...) ->
+      page.render(args)
+      .fail (e) ->
+        Backbone.trigger 'main::error', e.status, e.statusText
 
     user: ->
       if not KomooNS?.isAuthenticated
@@ -28,9 +35,8 @@ define (require) ->
         Backbone.trigger 'auth::loginRequired', next
 
     profile: (id) ->
-      profile = require('user/pages').profile
-
-      profile.render id
+      @goTo pages.profile, id
       @navigate "user/#{id}"
 
-  return new UserRouter()
+
+  new UserRouter()

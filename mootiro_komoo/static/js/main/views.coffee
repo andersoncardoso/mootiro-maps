@@ -17,11 +17,13 @@ define (require) ->
     display: (msg) ->
       @$el.html msg
       @delayed ?= setTimeout (=> @$el.css 'display': 'inline'), 100
+      this
 
     close: ->
       clearTimeout @delayed
       @delayed = null
       @$el.fadeOut()
+      this
 
 
   class UpperBar extends Backbone.View
@@ -53,7 +55,7 @@ define (require) ->
 
     profile: (e) ->
       e?.preventDefault()
-      Backbone.trigger 'user::profile', @model.id
+      @model.goToProfile()
       this
 
 
@@ -66,12 +68,13 @@ define (require) ->
       @template = _.template require 'text!templates/main/_header.html'
       @upperBar = new UpperBar
         model: @model
+      @subViews = [@upperBar]
       @render()
 
     render: ->
       @upperBar.$el.detach()
       @$el.html @template user: @model.toJSON()
-      @$el.find('#upper-bar-container').append @upperBar.$el
+      @$('#upper-bar-container').append @upperBar.$el
       this
 
     root: (e) ->
@@ -88,6 +91,7 @@ define (require) ->
     render: ->
       @$el.html @template()
       this
+
 
   Header: Header
   Footer: Footer

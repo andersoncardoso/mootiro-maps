@@ -59,7 +59,7 @@ config = {
     },
     'urls': {
       deps: ['dutils'],
-      exports: 'dutils'
+      exports: 'dutils.urls'
     }
   }
 };

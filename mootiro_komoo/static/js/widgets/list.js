@@ -15,6 +15,7 @@
         this.listenTo(this.collection, 'all', this.render);
         this.itemViews = {};
         this.ItemView = this.options.ItemView;
+        this.subViews = [];
         this.collection.pager();
         return this.render();
       },
@@ -30,6 +31,7 @@
           model: item
         });
         this.$el.append(itemView.render().$el);
+        this.subViews.push(itemView);
         return this;
       }
     });

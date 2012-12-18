@@ -14,6 +14,7 @@
         this.updatesView = new Updates({
           collection: this.model.getUpdates()
         });
+        this.subViews = [this.updatesView];
         return this.render();
       },
       render: function() {
@@ -21,7 +22,7 @@
         this.$el.html(this.template({
           user: this.model.toJSON()
         }));
-        this.$el.find('#user-updates-container').append(this.updatesView.$el);
+        this.$('#user-updates-container').append(this.updatesView.$el);
         return this;
       }
     });
@@ -81,19 +82,19 @@
           className: 'updates list',
           ItemView: Update
         });
+        this.subViews = [this.listView];
         return this.render();
       },
       render: function() {
         this.listView.$el.detach();
         this.$el.html(this.template());
-        this.$el.find('.list-container').prepend(this.listView.$el);
+        this.$('.list-container').prepend(this.listView.$el);
         return this;
       },
       previousPage: function(e) {
         if (e != null) {
           if (typeof e.preventDefault === "function") e.preventDefault();
         }
-        console.log(this.collection.currentPage, this.collection.firstPage);
         if (this.collection.currentPage > this.collection.firstPage) {
           this.collection.requestPreviousPage();
         }

@@ -75,7 +75,7 @@
     var hash, hashes, vars, _i, _len;
     vars = [];
     hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    console.log(hashes);
+    if (typeof console !== "undefined" && console !== null) console.log(hashes);
     for (_i = 0, _len = hashes.length; _i < _len; _i++) {
       hash = hashes[_i];
       hash = hash.split('=');

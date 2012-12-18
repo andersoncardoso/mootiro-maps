@@ -16,6 +16,7 @@ define (require) ->
 
       @updatesView = new Updates
         collection: @model.getUpdates()
+      @subViews = [@updatesView]
 
       @render()
 
@@ -23,7 +24,7 @@ define (require) ->
       @updatesView.$el.detach()  # Dont lost the updates element
       @$el.html @template
         user: @model.toJSON()
-      @$el.find('#user-updates-container').append @updatesView.$el
+      @$('#user-updates-container').append @updatesView.$el
       this
 
 
@@ -84,17 +85,17 @@ define (require) ->
         collection: @collection
         className: 'updates list'
         ItemView: Update
+      @subViews = [@listView]
       @render()
 
     render: ->
       @listView.$el.detach()  # Dont lost the updates element
       @$el.html @template()
-      @$el.find('.list-container').prepend @listView.$el
+      @$('.list-container').prepend @listView.$el
       this
 
     previousPage: (e) ->
       e?.preventDefault?()
-      console.log @collection.currentPage, @collection.firstPage
       if @collection.currentPage > @collection.firstPage
         @collection.requestPreviousPage()
       this

@@ -48,7 +48,7 @@ config =
             exports: 'dutils'
         'urls':
             deps: ['dutils']
-            exports: 'dutils'
+            exports: 'dutils.urls'
 
 requirejs?.config config
 require ?= config

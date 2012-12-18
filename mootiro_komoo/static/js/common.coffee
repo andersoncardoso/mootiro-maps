@@ -88,7 +88,7 @@ define (require) ->
       vars = []
       hashes = window.location.href.slice(
           window.location.href.indexOf('?') + 1).split('&')
-      console.log hashes
+      console?.log hashes
       for hash in hashes
         hash = hash.split '='
         vars.push hash[0]

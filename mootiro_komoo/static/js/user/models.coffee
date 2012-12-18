@@ -3,18 +3,22 @@ define (require) ->
 
   _ = require 'underscore'
   Backbone = require 'backbone'
+  urls = require 'urls'
 
   User = Backbone.Model.extend
-    urlRoot: '/api/user'
+    urlRoot: urls.resolve 'user_api'
 
     getUpdates: ->
-      window.model = this
-      Update = require('update/models').Update
+      if @updates? then return @updates
 
       Updates = require('./collections').PaginatedUpdates
-      collection = new Updates([{}], user: this)
-      window.collection = collection
-      return collection
+      @updates = new Updates([], user: this)
+      window.collection = @updates
+      return @updates
+
+    goToProfile: ->
+      console.log 'aaa'
+      Backbone.trigger 'user::profile', @id
 
 
   User: User

@@ -28,13 +28,17 @@
       };
 
       Page.prototype.close = function() {
-        return _([this.actionBar, this.sidebar, this.mainContent]).each(function(view) {
-          if (view) {
-            view.remove();
-            view.unbind();
-            return typeof view.onClose === "function" ? view.onClose() : void 0;
-          }
-        });
+        var clear;
+        clear = function(view) {
+          if (!view) return;
+          _.each(view.subViews, clear);
+          if (typeof view.onClose === "function") view.onClose();
+          view.unbind();
+          view.remove();
+          delete view.$el;
+          return delete view.el;
+        };
+        return _([this.actionBar, this.sidebar, this.mainContent]).each(clear);
       };
 
       return Page;
@@ -49,12 +53,14 @@
       PageManager.prototype.currentPage = null;
 
       PageManager.prototype.open = function(page) {
+        if (!page || page === this.currentPage) return;
         this.close(this.currentPage);
         this.currentPage = page;
         return this.currentPage.open();
       };
 
       PageManager.prototype.close = function(page) {
+        if (page == null) page = this.currentPage;
         if (!page) return;
         page.close();
         if (this.currentPage === page) return this.currentPage = null;

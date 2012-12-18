@@ -1,15 +1,12 @@
 define (require) ->
   'use strict'
 
-  # $ = require 'jquery'
   _ = require 'underscore'
   Backbone = require 'backbone'
+
   models = require './models'
   forms = require './forms'
-  dutils = require 'urls'
-
-  # underscore templates
-
+  urls = require 'urls'
 
   #
   # View for Social Login Buttons (like Google or Facebook)
@@ -17,30 +14,25 @@ define (require) ->
   #   socialBtn = new SocialButton
   #       provider: 'provider-name'
   #       url: 'provider/login/url/'
-  #       image_url: 'url/for/the/button/image'
   #       msg: 'message on the button, consider i18n'
   #
   class SocialButton extends Backbone.View
     tagName: 'li'
 
     initialize: ->
-      _.bindAll this, 'render'
+      _.bindAll this
       @template = _.template require 'text!templates/authentication/_social_button.html'
       @className = @options.provider
       @url = "#{@options.url}?next=#{@options.next or ''}"
-      @image_url = @options.image_url
       @msg = @options.message
       @provider = @options.provider
 
-
     render: ->
-      renderedContent = @template {
+      @$el.html @template
         provider: @provider
         url: @url
-        image_url: @image_url
         msg: @msg
-      }
-      @$el.html renderedContent
+
       @$el.addClass @className
       this
 
@@ -51,8 +43,8 @@ define (require) ->
   # usage:
   #     btnsList = new SocialButtonsList
   #         buttons: [
-  #           {provider: ..., url: ..., image_url: ..., msg: ...}
-  #           {provider: ..., url: ..., image_url: ..., msg: ...}
+  #           {provider: ..., url: ..., msg: ...}
+  #           {provider: ..., url: ..., msg: ...}
   #         ]
   class SocialButtonsList extends Backbone.View
     tagName: 'ul'
@@ -63,10 +55,9 @@ define (require) ->
       @buttons = @options.buttons
 
     render: ->
-      buttons = @buttons
       @$el.html ''
 
-      _.each buttons, (btn) =>
+      _.each @buttons, (btn) =>
         btnView = new SocialButton btn
         @$el.append btnView.render().el
       this
@@ -81,7 +72,7 @@ define (require) ->
     tagName: 'section'
 
     initialize: ->
-      _.bindAll this #, 'render', 'buildButtons', 'updateUrls'
+      _.bindAll this
       @template = _.template require 'text!templates/authentication/_login.html'
 
       next = @options?.next or ''
@@ -94,29 +85,27 @@ define (require) ->
         model: @model
 
     render: ->
-      renderedContent = @template {}
-      @$el.html renderedContent
-      @$el.find('.social_buttons').append @socialBtnsView.render().el
-      @$el.find('.login_form').append @form.render().el
+      @$el.html @template {}
+      @$('.social_buttons').append @socialBtnsView.render().el
+      @$('.login_form').append @form.render().el
       this
 
     buildButtons: (next='') ->
       googleButton =
         provider: 'google',
-        url: dutils.urls.resolve 'login_google'
+        url: urls.resolve 'login_google'
         next: next
-        image_url: '/static/img/login-google.png'
         message: i18n 'Log In with Google'
 
       facebookButton =
         provider: 'facebook',
-        url: dutils.urls.resolve 'login_facebook'
+        url: urls.resolve 'login_facebook'
         next: next
-        image_url: '/static/img/login-facebook.png'
         message: i18n 'Log In with Facebook'
 
       @socialBtnsView = new SocialButtonsList
         buttons: [googleButton, facebookButton]
+      this
 
     updateUrls: (next='') ->
       @model.set {next: next}
@@ -135,13 +124,6 @@ define (require) ->
     logout: (next) ->
       @model.doLogout next
 
-    bindLogoutButton: ->
-      $('.logout').click (evt) =>
-        evt.preventDefault()
-        next = $(evt.target).attr "href"
-        next = (document.location.pathname + next) if next?.charAt(0) is '#'
-        @logout next
-        return false
 
   #
   # RegisterView to be used with the LoginBox
@@ -161,10 +143,10 @@ define (require) ->
         model: user
 
     render: ->
-      renderedContent = @template {}
-      @$el.html renderedContent
-      @$el.find('.form-wrapper').append @form.render().el
+      @$el.html @template {}
+      @$('.form-wrapper').append @form.render().el
       this
+
 
   #
   # Verification view for user email confirmation
@@ -187,23 +169,13 @@ define (require) ->
         @template = _.template require 'text!templates/authentication/_not_verified.html'
 
     render: ->
-      renderedContent = @template {}
-      @$el.html renderedContent
+      @$el.html @template {}
       if @verified
-        @$el.find('.login-form-box').append @loginForm.render().el
+        @$('.login-form-box').append @loginForm.render().el
       this
 
 
-
-  return {
-    LoginView: LoginView
-    LogoutView: LogoutView
-    RegisterView: RegisterView
-    VerificationView: VerificationView
-  }
-
-
-
-
-
-
+  LoginView: LoginView
+  LogoutView: LogoutView
+  RegisterView: RegisterView
+  VerificationView: VerificationView

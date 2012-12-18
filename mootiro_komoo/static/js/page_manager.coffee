@@ -20,11 +20,23 @@ define (require) ->
 
     close: ->
       # Remove DOM and unbind some events to avoid memory leak
-      _([@actionBar, @sidebar, @mainContent]).each (view) ->
-        if view
-          view.remove()
-          view.unbind()
-          view.onClose?()
+      clear = (view) ->
+        if not view then return
+
+        # Clear all sub views
+        # You should add all sub views to subView array
+        _.each view.subViews, clear
+        # Call views custom method
+        view.onClose?()
+        # Clear all DOM events
+        view.unbind()
+        # Remove DOM and clear model/collection events
+        view.remove()
+        # Remove detached DOM elements
+        delete view.$el
+        delete view.el
+
+      _([@actionBar, @sidebar, @mainContent]).each clear
 
 
   class PageManager
@@ -32,11 +44,13 @@ define (require) ->
     currentPage: null
 
     open: (page) ->
+      if not page or page is @currentPage then return
+
       @close @currentPage
       @currentPage = page
       @currentPage.open()
 
-    close: (page) ->
+    close: (page=@currentPage) ->
       if not page then return
 
       page.close()

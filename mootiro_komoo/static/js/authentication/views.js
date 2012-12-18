@@ -4,12 +4,12 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, LoginView, LogoutView, RegisterView, SocialButton, SocialButtonsList, VerificationView, dutils, forms, models, _;
+    var Backbone, LoginView, LogoutView, RegisterView, SocialButton, SocialButtonsList, VerificationView, forms, models, urls, _;
     _ = require('underscore');
     Backbone = require('backbone');
     models = require('./models');
     forms = require('./forms');
-    dutils = require('urls');
+    urls = require('urls');
     SocialButton = (function(_super) {
 
       __extends(SocialButton, _super);
@@ -21,24 +21,20 @@
       SocialButton.prototype.tagName = 'li';
 
       SocialButton.prototype.initialize = function() {
-        _.bindAll(this, 'render');
+        _.bindAll(this);
         this.template = _.template(require('text!templates/authentication/_social_button.html'));
         this.className = this.options.provider;
         this.url = "" + this.options.url + "?next=" + (this.options.next || '');
-        this.image_url = this.options.image_url;
         this.msg = this.options.message;
         return this.provider = this.options.provider;
       };
 
       SocialButton.prototype.render = function() {
-        var renderedContent;
-        renderedContent = this.template({
+        this.$el.html(this.template({
           provider: this.provider,
           url: this.url,
-          image_url: this.image_url,
           msg: this.msg
-        });
-        this.$el.html(renderedContent);
+        }));
         this.$el.addClass(this.className);
         return this;
       };
@@ -64,11 +60,9 @@
       };
 
       SocialButtonsList.prototype.render = function() {
-        var buttons,
-          _this = this;
-        buttons = this.buttons;
+        var _this = this;
         this.$el.html('');
-        _.each(buttons, function(btn) {
+        _.each(this.buttons, function(btn) {
           var btnView;
           btnView = new SocialButton(btn);
           return _this.$el.append(btnView.render().el);
@@ -105,11 +99,9 @@
       };
 
       LoginView.prototype.render = function() {
-        var renderedContent;
-        renderedContent = this.template({});
-        this.$el.html(renderedContent);
-        this.$el.find('.social_buttons').append(this.socialBtnsView.render().el);
-        this.$el.find('.login_form').append(this.form.render().el);
+        this.$el.html(this.template({}));
+        this.$('.social_buttons').append(this.socialBtnsView.render().el);
+        this.$('.login_form').append(this.form.render().el);
         return this;
       };
 
@@ -118,21 +110,20 @@
         if (next == null) next = '';
         googleButton = {
           provider: 'google',
-          url: dutils.urls.resolve('login_google'),
+          url: urls.resolve('login_google'),
           next: next,
-          image_url: '/static/img/login-google.png',
           message: i18n('Log In with Google')
         };
         facebookButton = {
           provider: 'facebook',
-          url: dutils.urls.resolve('login_facebook'),
+          url: urls.resolve('login_facebook'),
           next: next,
-          image_url: '/static/img/login-facebook.png',
           message: i18n('Log In with Facebook')
         };
-        return this.socialBtnsView = new SocialButtonsList({
+        this.socialBtnsView = new SocialButtonsList({
           buttons: [googleButton, facebookButton]
         });
+        return this;
       };
 
       LoginView.prototype.updateUrls = function(next) {
@@ -166,20 +157,6 @@
         return this.model.doLogout(next);
       };
 
-      LogoutView.prototype.bindLogoutButton = function() {
-        var _this = this;
-        return $('.logout').click(function(evt) {
-          var next;
-          evt.preventDefault();
-          next = $(evt.target).attr("href");
-          if ((next != null ? next.charAt(0) : void 0) === '#') {
-            next = document.location.pathname + next;
-          }
-          _this.logout(next);
-          return false;
-        });
-      };
-
       return LogoutView;
 
     })(Backbone.View);
@@ -208,10 +185,8 @@
       };
 
       RegisterView.prototype.render = function() {
-        var renderedContent;
-        renderedContent = this.template({});
-        this.$el.html(renderedContent);
-        this.$el.find('.form-wrapper').append(this.form.render().el);
+        this.$el.html(this.template({}));
+        this.$('.form-wrapper').append(this.form.render().el);
         return this;
       };
 
@@ -241,11 +216,9 @@
       };
 
       VerificationView.prototype.render = function() {
-        var renderedContent;
-        renderedContent = this.template({});
-        this.$el.html(renderedContent);
+        this.$el.html(this.template({}));
         if (this.verified) {
-          this.$el.find('.login-form-box').append(this.loginForm.render().el);
+          this.$('.login-form-box').append(this.loginForm.render().el);
         }
         return this;
       };

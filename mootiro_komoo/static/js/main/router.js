@@ -4,9 +4,10 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, MainRouter, _;
+    var Backbone, MainRouter, pages, _;
     _ = require('underscore');
     Backbone = require('backbone');
+    pages = require('./pages');
     MainRouter = (function(_super) {
 
       __extends(MainRouter, _super);
@@ -26,21 +27,17 @@
 
       MainRouter.prototype.bindExternalEvents = function() {
         Backbone.on('main::root', this.root);
-        return Backbone.on('main::notFound', this.notFound);
+        return Backbone.on('main::error', this.error);
       };
 
       MainRouter.prototype.root = function() {
-        var root;
-        root = require('main/pages').root;
-        root.render();
-        return this.navigate("");
+        pages.root.render();
+        return this.navigate('');
       };
 
-      MainRouter.prototype.notFound = function() {
-        var notFound;
-        notFound = require('main/pages').notFound;
-        notFound.render();
-        return alert('404 Not Found <TODO: render the 404 page>');
+      MainRouter.prototype.error = function(code, msg) {
+        pages.error.render();
+        return alert("" + code + " " + msg + " <TODO: render the error page>");
       };
 
       return MainRouter;

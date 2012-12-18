@@ -2,21 +2,25 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, User, _;
+    var Backbone, User, urls, _;
     _ = require('underscore');
     Backbone = require('backbone');
+    urls = require('urls');
     User = Backbone.Model.extend({
-      urlRoot: '/api/user',
+      urlRoot: urls.resolve('user_api'),
       getUpdates: function() {
-        var Update, Updates, collection;
-        window.model = this;
-        Update = require('update/models').Update;
+        var Updates;
+        if (this.updates != null) return this.updates;
         Updates = require('./collections').PaginatedUpdates;
-        collection = new Updates([{}], {
+        this.updates = new Updates([], {
           user: this
         });
-        window.collection = collection;
-        return collection;
+        window.collection = this.updates;
+        return this.updates;
+      },
+      goToProfile: function() {
+        console.log('aaa');
+        return Backbone.trigger('user::profile', this.id);
       }
     });
     return {

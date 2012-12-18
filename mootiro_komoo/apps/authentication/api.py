@@ -81,11 +81,12 @@ class UserUpdateHandler(ResourceHandler):
     def get(self, request, id_):
         # FIXME: Replace this fake implementation
         page = int(request.GET.get('page', 0))
+        per_page = int(request.GET.get('per_page', ))
         return JsonResponse({
             'results': [
                 {
-                    'name': 'name {}'.format(page * 5 + i),
-                    'id': page * 5 + i
+                    'name': 'name {}'.format(page * per_page + i),
+                    'id': page * per_page + i
                 } for i in range(5)],
             'count': 25
         })

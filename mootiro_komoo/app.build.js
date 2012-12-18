@@ -42,7 +42,7 @@
         },
         'urls': {
             deps: ['dutils'],
-            exports: 'dutils'
+            exports: 'dutils.urls'
         }
     },
     modules: [
@@ -54,15 +54,12 @@
                 'app',
                 'googlemaps',
                 'analytics',
-                'facebook-jssdk',
+                'facebook',
                 'map/controls',
                 'map/maptypes',
                 'map/providers',
                 'map/maps',
                 'map.jquery',
-                'project/box',
-                'project/model',
-                'community/model'
             ],
             exclude: [
             ]

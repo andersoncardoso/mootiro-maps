@@ -26,20 +26,23 @@
       };
 
       Feedback.prototype.display = function(msg) {
-        var _ref,
-          _this = this;
+        var _this = this;
         this.$el.html(msg);
-        return (_ref = this.delayed) != null ? _ref : this.delayed = setTimeout((function() {
-          return _this.$el.css({
-            'display': 'inline'
-          });
-        }), 100);
+        if (this.delayed == null) {
+          this.delayed = setTimeout((function() {
+            return _this.$el.css({
+              'display': 'inline'
+            });
+          }), 100);
+        }
+        return this;
       };
 
       Feedback.prototype.close = function() {
         clearTimeout(this.delayed);
         this.delayed = null;
-        return this.$el.fadeOut();
+        this.$el.fadeOut();
+        return this;
       };
 
       return Feedback;
@@ -88,7 +91,7 @@
 
       UpperBar.prototype.profile = function(e) {
         if (e != null) e.preventDefault();
-        Backbone.trigger('user::profile', this.model.id);
+        this.model.goToProfile();
         return this;
       };
 
@@ -113,6 +116,7 @@
         this.upperBar = new UpperBar({
           model: this.model
         });
+        this.subViews = [this.upperBar];
         return this.render();
       };
 
@@ -121,7 +125,7 @@
         this.$el.html(this.template({
           user: this.model.toJSON()
         }));
-        this.$el.find('#upper-bar-container').append(this.upperBar.$el);
+        this.$('#upper-bar-container').append(this.upperBar.$el);
         return this;
       };
 

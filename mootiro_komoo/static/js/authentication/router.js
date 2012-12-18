@@ -4,13 +4,13 @@
 
   define(function(require) {
     'use strict';
-    var $, Backbone, LoginApp, reForm, utils, views, _;
+    var $, Backbone, LoginApp, ModalBox, reForm, views, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
     reForm = require('reForm');
     views = require('./views');
-    utils = require('utils');
+    ModalBox = require('widgets/modal');
     LoginApp = (function(_super) {
 
       __extends(LoginApp, _super);
@@ -32,25 +32,12 @@
       };
 
       LoginApp.prototype.initializeLogin = function() {
-        var _this = this;
         this.loginView = new views.LoginView({});
         this.loginView.form.on('register-link:click', this.registerLinkCB);
-        this.loginBox = new utils.ModalBox({
+        return this.loginBox = new ModalBox({
           title: i18n('Login'),
           content: this.loginView.render().el,
           modal_id: 'login-modal-box'
-        });
-        return $("a.login-required").bind("click.loginrequired", function(evt) {
-          var next;
-          if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
-            evt.preventDefault();
-            next = $(evt.target).attr("href");
-            if ((next != null ? next.charAt(0) : void 0) === '#') {
-              next = document.location.pathname + next;
-            }
-            _this._loginRequired(next);
-            return false;
-          }
         });
       };
 
@@ -62,7 +49,7 @@
         this.registerView = new views.RegisterView({});
         this.registerView.form.on('success', this.registerFormOnSuccessCB);
         this.registerView.form.on('login-link:click', this.loginLinkCB);
-        return this.registerBox = new utils.ModalBox({
+        return this.registerBox = new ModalBox({
           title: i18n('Register'),
           width: '450px',
           content: this.registerView.render().el,
@@ -78,12 +65,12 @@
           verified: true
         });
         this.verifiedView.loginForm.on('register-link:click', this.registerLinkCB);
-        this.notVerifiedBox = new utils.ModalBox({
+        this.notVerifiedBox = new ModalBox({
           title: i18n('Verification'),
           content: this.notVerifiedView.render().el,
           modal_id: 'verification-modal-box'
         });
-        return this.verifiedBox = new utils.ModalBox({
+        return this.verifiedBox = new ModalBox({
           title: i18n('Verification'),
           content: this.verifiedView.render().el,
           modal_id: 'verification-modal-box'
