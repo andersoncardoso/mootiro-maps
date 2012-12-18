@@ -6,8 +6,8 @@ from __future__ import unicode_literals, division
 # from markdown import markdown as render_markup
 #
 from django import template
-from django import forms
-from django.conf import settings
+# from django import forms
+# from django.conf import settings
 # from django.utils.translation import gettext_lazy as _
 # from django.core.urlresolvers import reverse
 # from django.contrib.contenttypes.models import ContentType
@@ -16,14 +16,14 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.utils import simplejson
 from django.db.models.query import QuerySet
 #
-from main.utils import templatetag_args_parser
+# from main.utils import templatetag_args_parser
 # from main.urils import create_geojson
-from main.widgets import ImageSwitch, ImageSwitchMultiple
+# from main.widgets import ImageSwitch, ImageSwitchMultiple
 # from main.widgets import Autocomplete
-from community.models import Community
-from need.models import Need, NeedCategory
-from organization.models import Organization
-from resources.models import Resource
+# from community.models import Community
+# from need.models import Need, NeedCategory
+# from organization.models import Organization
+# from resources.models import Resource
 # from proposal.models import Proposal
 # from signatures.models import Signature
 #
@@ -55,68 +55,68 @@ def menu(context, selected_area=''):
     return dict(selected_area=selected_area)
 
 
-@register.inclusion_tag('main/templatetags/geo_objects_listing.html')
-def geo_objects_listing(arg1='', arg2='', arg3='', arg4=''):
-    """Usage: {% geo_objects_listing [show_categories] [switchable] [prefix] [hide_names] %}"""
-    parsed_args = templatetag_args_parser(arg1, arg2, arg3, arg4)
-    show_categories = parsed_args.get('show_categories', 'False').lower() == 'true'
-    switchable = parsed_args.get('switchable', 'False').lower() == 'true'
-    hide_names = parsed_args.get('hide_names', 'False').lower() == 'true'
-    prefix = parsed_args.get('prefix', '')
+# @register.inclusion_tag('main/templatetags/geo_objects_listing.html')
+# def geo_objects_listing(arg1='', arg2='', arg3='', arg4=''):
+#     """Usage: {% geo_objects_listing [show_categories] [switchable] [prefix] [hide_names] %}"""
+#     parsed_args = templatetag_args_parser(arg1, arg2, arg3, arg4)
+#     show_categories = parsed_args.get('show_categories', 'False').lower() == 'true'
+#     switchable = parsed_args.get('switchable', 'False').lower() == 'true'
+#     hide_names = parsed_args.get('hide_names', 'False').lower() == 'true'
+#     prefix = parsed_args.get('prefix', '')
+#
+#     img = {
+#         'communities': Community.image,
+#         'communities_off': Community.image_off if switchable else Community.image,
+#         'needs': Need.image,
+#         'needs_off': Need.image_off if switchable else Need.image,
+#         'organizations': Organization.image,
+#         'organizations_off': Organization.image_off if switchable else Organization.image,
+#         'resources': Resource.image,
+#         'resources_off': Resource.image_off if switchable else Resource.image,
+#     }
+#
+#     image_field = lambda image, image_off: \
+#         forms.BooleanField(
+#             widget=ImageSwitch(image_tick=image, image_no_tick=image_off, prefix=prefix)
+#         )
+#
+#     class GeoObjectsForm(forms.Form):
+#         communities = image_field(img['communities'], img['communities_off'])
+#         needs = image_field(img['needs'], img['needs_off'])
+#         organizations = image_field(img['organizations'], img['organizations_off'])
+#         resources = image_field(img['resources'], img['resources_off'])
+#
+#         need_categories = forms.ModelMultipleChoiceField(
+#             queryset=NeedCategory.objects.all().order_by('name'),
+#             widget=ImageSwitchMultiple(
+#                 get_image_tick=NeedCategory.get_image,
+#                 get_image_no_tick=NeedCategory.get_image_off if switchable \
+#                                     else NeedCategory.get_image,
+#                 show_names=True,
+#                 prefix=prefix
+#             )
+#         )
+#
+#     form = GeoObjectsForm()
+#
+#     return dict(form=form, show_categories=show_categories,
+#             hide_names=hide_names)
 
-    img = {
-        'communities': Community.image,
-        'communities_off': Community.image_off if switchable else Community.image,
-        'needs': Need.image,
-        'needs_off': Need.image_off if switchable else Need.image,
-        'organizations': Organization.image,
-        'organizations_off': Organization.image_off if switchable else Organization.image,
-        'resources': Resource.image,
-        'resources_off': Resource.image_off if switchable else Resource.image,
-    }
 
-    image_field = lambda image, image_off: \
-        forms.BooleanField(
-            widget=ImageSwitch(image_tick=image, image_no_tick=image_off, prefix=prefix)
-        )
-
-    class GeoObjectsForm(forms.Form):
-        communities = image_field(img['communities'], img['communities_off'])
-        needs = image_field(img['needs'], img['needs_off'])
-        organizations = image_field(img['organizations'], img['organizations_off'])
-        resources = image_field(img['resources'], img['resources_off'])
-
-        need_categories = forms.ModelMultipleChoiceField(
-            queryset=NeedCategory.objects.all().order_by('name'),
-            widget=ImageSwitchMultiple(
-                get_image_tick=NeedCategory.get_image,
-                get_image_no_tick=NeedCategory.get_image_off if switchable \
-                                    else NeedCategory.get_image,
-                show_names=True,
-                prefix=prefix
-            )
-        )
-
-    form = GeoObjectsForm()
-
-    return dict(form=form, show_categories=show_categories,
-            hide_names=hide_names)
-
-
-@register.inclusion_tag('main/templatetags/geo_objects_add.html')
-def geo_objects_add(arg1='', arg2='', arg3=''):
-    """Usage: {% geo_objects_add [prefix] %}"""
-    parsed_args = templatetag_args_parser(arg1, arg2, arg3)
-    prefix = parsed_args.get('prefix', '')
-
-    img = {
-        'communities': Community.image,
-        'needs': Need.image,
-        'organizations': Organization.image,
-        'resources': Resource.image,
-    }
-
-    return dict(img=img, STATIC_URL=settings.STATIC_URL)
+# @register.inclusion_tag('main/templatetags/geo_objects_add.html')
+# def geo_objects_add(arg1='', arg2='', arg3=''):
+#     """Usage: {% geo_objects_add [prefix] %}"""
+#     parsed_args = templatetag_args_parser(arg1, arg2, arg3)
+#     prefix = parsed_args.get('prefix', '')
+#
+#     img = {
+#         'communities': Community.image,
+#         'needs': Need.image,
+#         'organizations': Organization.image,
+#         'resources': Resource.image,
+#     }
+#
+#     return dict(img=img, STATIC_URL=settings.STATIC_URL)
 #
 #
 # @register.inclusion_tag('main/templatetags/history.html')
