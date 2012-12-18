@@ -20,20 +20,6 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 
-try:
-    from functools import wraps
-except ImportError:
-    def wraps(wrapped, assigned=('__module__', '__name__', '__doc__'),
-              updated=('__dict__',)):
-        def inner(wrapper):
-            for attr in assigned:
-                setattr(wrapper, attr, getattr(wrapped, attr))
-            for attr in updated:
-                getattr(wrapper, attr).update(getattr(wrapped, attr, {}))
-            return wrapper
-        return inner
-
-
 def datetime_to_iso(datetime_obj):
     """ parses a python datetime object to a ISO-8601 string """
     if datetime_obj is None:
@@ -348,6 +334,14 @@ class ResourceHandler:
             raise Http404
 
 
+def randstr(l=10):
+    chars = letters + digits
+    s = ''
+    for i in range(l):
+        s = s + choice(chars)
+    return s
+
+
 def get_fields_to_show(request, default=['all']):
     data = request.GET.get('fields', None)
     return data.split(',') if data else default
@@ -410,201 +404,6 @@ class JsonResponseNotFound(JsonResponse):
         super(JsonResponseNotFound, self).__init__(
                 {'error': err if not msg else '{}: {}'.format(err, msg)},
                 status_code=404)
-
-
-def randstr(l=10):
-    chars = letters + digits
-    s = ''
-    for i in range(l):
-        s = s + choice(chars)
-    return s
-
-
-class BaseView(ResourceHandler):
-    """ Base class for views
-    usage:
-
-      on views.py
-      class SomeView(BaseView):
-
-        def get(self, request, document_id):
-          # your view code for GET requests for html go here
-        def post(self, request, document_id):
-          # your viewcode for POST request for html go here
-        def get_json(self, request, document_id):
-          # your view code for GET requests for json go here
-        def post(self, request, document_id):
-          # your viewcode for POST request for json go here
-
-      on urls.py
-        url('^my_view/$', views.SomeView.dispatch, name='view')
-    """
-    def _get_handler_method(self, request_handler, http_method):
-        """Utility function for the Resource Class dispacther."""
-        method = http_method
-        if self.accept_type == 'application/json':
-            method = '{}_json'.format(http_method)
-        try:
-            handler_method = getattr(request_handler, method.lower(),
-                             getattr(request_handler, http_method.lower()))
-            if callable(handler_method):
-                return handler_method
-        except AttributeError:
-            pass
-
-
-# class SearchTagsBaseView(BaseView):
-#     """ Base class for "search tags" views
-#     usage:
-#
-#       on views.py
-#       class SearchSomeTagsView(SearchTagsBaseView):
-#           model = SomeModel
-#     """
-#     limit = 10
-#
-#     def get(self, request):
-#         # Import here to prevent a strange issue
-#         from lib.taggit.models import TaggedItem
-#         term = request.GET['term']
-#         qset = TaggedItem.tags_for(self.model
-#                 ).filter(name__istartswith=term
-#                 ).annotate(count=Count('taggit_taggeditem_items__id')
-#                 ).order_by('-count', 'slug')[:self.limit]
-#         tags = [t.name for t in qset]
-#         return HttpResponse(simplejson.dumps(tags),
-#                 mimetype='application/json')
-
-
-class SearchByBaseView(BaseView):
-    """ Base class for "search by" views
-    usage:
-
-      on views.py
-      class SearchBySomethingView(SearchByBaseView):
-          model = SomeModel
-    """
-    def get(self, request):
-        term = request.GET.get('term', '')
-        collection = self.model.objects.filter(Q(name__icontains=term) |
-                                               Q(slug__icontains=term))
-        d = [{'value': obj.id, 'label': obj.name} for obj in collection]
-        return HttpResponse(simplejson.dumps(d),
-                mimetype='application/json')
-
-
-class AllMethodsMixin(object):
-    """ Mixin to return the same content to any http method
-    usage:
-
-      on views.py
-      class SomeView(BaseView, AllMethodsMixin):
-        def all(self, request, document_id):
-          # your view code go here
-    """
-    def get(self, *args, **kwargs):
-        return self.all(*args, **kwargs)
-
-    def post(self, *args, **kwargs):
-        return self.all(*args, **kwargs)
-
-    def put(self, *args, **kwargs):
-        return self.all(*args, **kwargs)
-
-    def patch(self, *args, **kwargs):
-        return self.all(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        return self.all(*args, **kwargs)
-
-
-class ViewObjectMixin(object):
-    def get_object(self, pk):
-        return get_object_or_404(self.model, pk=pk)
-
-    def get_object_name(self):
-        return getattr(self, 'object_name', 'object')
-
-
-class ViewDetailsMixin(ViewObjectMixin):
-    def get(self, request, pk, *args, **kwargs):
-        try:
-            context = super(ViewDetailsMixin, self).get(
-                    request, pk, *args, **kwargs)
-        except AttributeError:
-            context = {}
-
-        obj = self.get_object(pk)
-        context['object'] = obj
-        context[self.get_object_name()] = obj
-
-        return context
-
-
-class ViewListMixin(object):
-    sort_order = ['creation_date', 'name']
-    default_order = 'name'
-
-    def get_queryset(self, request):
-        return getattr(self, 'queryset',
-                filtered_query(self.model.objects, request))
-
-    def get_collection(self, request):
-        return sorted_query(self.get_queryset(request), self.sort_order,
-                request, default_order=self.default_order)
-
-    def get_collection_name(self):
-        return getattr(self, 'collection_name', 'collection')
-
-    def get(self, request, *args, **kwargs):
-        try:
-            context = super(ViewListMixin, self).get(
-                    request, *args, **kwargs)
-        except AttributeError:
-            context = {}
-
-        collection = self.get_collection(request)
-        context['collection'] = collection
-        count = collection.count()
-        context['count'] = count
-        context['{}_count'.format(self.get_collection_name())] = count
-        context[self.get_collection_name()] = collection
-
-        return context
-
-
-class ViewPaginatedListMixin(ViewListMixin):
-    def get(self, request, *args, **kwargs):
-        try:
-            context = super(ViewPaginatedListMixin, self).get(
-                    request, *args, **kwargs)
-        except AttributeError:
-            context = {}
-
-        collection = context.get('collection', self.get_collection(request))
-        collection = paginated_query(collection, request)
-        context['collection'] = collection
-        context[self.get_collection_name()] = collection
-
-        return context
-
-
-class ViewGeojsonMixin(object):
-    def get(self, request, pk, *args, **kwargs):
-        try:
-            context = super(ViewGeojsonMixin, self).get(
-                    request, pk, *args, **kwargs)
-        except AttributeError:
-            context = {}
-
-        obj = self.get_object(pk)
-        try:
-            geojson = create_geojson(obj)
-        except TypeError:
-            geojson = create_geojson([obj])
-        context['geojson'] = geojson
-
-        return context
 
 
 class BaseDAOMixin(object):
@@ -674,3 +473,192 @@ class PermissionMixin(object):
         return {key: val for key, val in self.to_dict().items()
                 if (key in fields or 'all' in fields) and
                    self.can_view_field(key, user)}
+
+
+# class BaseView(ResourceHandler):
+#     """ Base class for views
+#     usage:
+#
+#       on views.py
+#       class SomeView(BaseView):
+#
+#         def get(self, request, document_id):
+#           # your view code for GET requests for html go here
+#         def post(self, request, document_id):
+#           # your viewcode for POST request for html go here
+#         def get_json(self, request, document_id):
+#           # your view code for GET requests for json go here
+#         def post(self, request, document_id):
+#           # your viewcode for POST request for json go here
+#
+#       on urls.py
+#         url('^my_view/$', views.SomeView.dispatch, name='view')
+#     """
+#     def _get_handler_method(self, request_handler, http_method):
+#         """Utility function for the Resource Class dispacther."""
+#         method = http_method
+#         if self.accept_type == 'application/json':
+#             method = '{}_json'.format(http_method)
+#         try:
+#             handler_method = getattr(request_handler, method.lower(),
+#                              getattr(request_handler, http_method.lower()))
+#             if callable(handler_method):
+#                 return handler_method
+#         except AttributeError:
+#             pass
+
+
+# class SearchTagsBaseView(BaseView):
+#     """ Base class for "search tags" views
+#     usage:
+#
+#       on views.py
+#       class SearchSomeTagsView(SearchTagsBaseView):
+#           model = SomeModel
+#     """
+#     limit = 10
+#
+#     def get(self, request):
+#         # Import here to prevent a strange issue
+#         from lib.taggit.models import TaggedItem
+#         term = request.GET['term']
+#         qset = TaggedItem.tags_for(self.model
+#                 ).filter(name__istartswith=term
+#                 ).annotate(count=Count('taggit_taggeditem_items__id')
+#                 ).order_by('-count', 'slug')[:self.limit]
+#         tags = [t.name for t in qset]
+#         return HttpResponse(simplejson.dumps(tags),
+#                 mimetype='application/json')
+
+
+# class SearchByBaseView(BaseView):
+#     """ Base class for "search by" views
+#     usage:
+#
+#       on views.py
+#       class SearchBySomethingView(SearchByBaseView):
+#           model = SomeModel
+#     """
+#     def get(self, request):
+#         term = request.GET.get('term', '')
+#         collection = self.model.objects.filter(Q(name__icontains=term) |
+#                                                Q(slug__icontains=term))
+#         d = [{'value': obj.id, 'label': obj.name} for obj in collection]
+#         return HttpResponse(simplejson.dumps(d),
+#                 mimetype='application/json')
+#
+
+# class AllMethodsMixin(object):
+#     """ Mixin to return the same content to any http method
+#     usage:
+#
+#       on views.py
+#       class SomeView(BaseView, AllMethodsMixin):
+#         def all(self, request, document_id):
+#           # your view code go here
+#     """
+#     def get(self, *args, **kwargs):
+#         return self.all(*args, **kwargs)
+#
+#     def post(self, *args, **kwargs):
+#         return self.all(*args, **kwargs)
+#
+#     def put(self, *args, **kwargs):
+#         return self.all(*args, **kwargs)
+#
+#     def patch(self, *args, **kwargs):
+#         return self.all(*args, **kwargs)
+#
+#     def delete(self, *args, **kwargs):
+#         return self.all(*args, **kwargs)
+
+
+# class ViewObjectMixin(object):
+#     def get_object(self, pk):
+#         return get_object_or_404(self.model, pk=pk)
+#
+#     def get_object_name(self):
+#         return getattr(self, 'object_name', 'object')
+
+
+# class ViewDetailsMixin(ViewObjectMixin):
+#     def get(self, request, pk, *args, **kwargs):
+#         try:
+#             context = super(ViewDetailsMixin, self).get(
+#                     request, pk, *args, **kwargs)
+#         except AttributeError:
+#             context = {}
+#
+#         obj = self.get_object(pk)
+#         context['object'] = obj
+#         context[self.get_object_name()] = obj
+#
+#         return context
+
+
+# class ViewListMixin(object):
+#     sort_order = ['creation_date', 'name']
+#     default_order = 'name'
+#
+#     def get_queryset(self, request):
+#         return getattr(self, 'queryset',
+#                 filtered_query(self.model.objects, request))
+#
+#     def get_collection(self, request):
+#         return sorted_query(self.get_queryset(request), self.sort_order,
+#                 request, default_order=self.default_order)
+#
+#     def get_collection_name(self):
+#         return getattr(self, 'collection_name', 'collection')
+#
+#     def get(self, request, *args, **kwargs):
+#         try:
+#             context = super(ViewListMixin, self).get(
+#                     request, *args, **kwargs)
+#         except AttributeError:
+#             context = {}
+#
+#         collection = self.get_collection(request)
+#         context['collection'] = collection
+#         count = collection.count()
+#         context['count'] = count
+#         context['{}_count'.format(self.get_collection_name())] = count
+#         context[self.get_collection_name()] = collection
+#
+#         return context
+
+
+# class ViewPaginatedListMixin(ViewListMixin):
+#     def get(self, request, *args, **kwargs):
+#         try:
+#             context = super(ViewPaginatedListMixin, self).get(
+#                     request, *args, **kwargs)
+#         except AttributeError:
+#             context = {}
+#
+#         collection = context.get('collection', self.get_collection(request))
+#         collection = paginated_query(collection, request)
+#         context['collection'] = collection
+#         context[self.get_collection_name()] = collection
+#
+#         return context
+
+
+# class ViewGeojsonMixin(object):
+#     def get(self, request, pk, *args, **kwargs):
+#         try:
+#             context = super(ViewGeojsonMixin, self).get(
+#                     request, pk, *args, **kwargs)
+#         except AttributeError:
+#             context = {}
+#
+#         obj = self.get_object(pk)
+#         try:
+#             geojson = create_geojson(obj)
+#         except TypeError:
+#             geojson = create_geojson([obj])
+#         context['geojson'] = geojson
+#
+#         return context
+
+

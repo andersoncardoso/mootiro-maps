@@ -51,7 +51,9 @@ class UserTest(unittest.TestCase):
             'password': 'eb5a9887586930f7f2e9c1c42bc937188afa689d',
             'creation_date': datetime.datetime(2012, 12, 14, 15, 23, 30, 0),
             'is_admin': False,
-            'is_active': False
+            'is_active': False,
+            'about_me': '',
+            'avatar': None,
         }
 
     @patch('django.conf.settings.USER_PASSWORD_SALT', 'blablabla')

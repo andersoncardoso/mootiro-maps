@@ -37,6 +37,7 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
     """
     name = models.CharField(max_length=256, null=False)
     email = models.CharField(max_length=512, null=False, unique=True)
+    about_me = models.TextField(null=True, blank=True, default='')
     password = models.CharField(max_length=256, null=False)
     contact = JSONField(null=True, blank=True)
     creation_date = models.DateTimeField(auto_now_add=True)
@@ -128,7 +129,7 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
             'creation_date', 'is_admin', 'is_active', 'avatar', 'about_me']
         for key, val in data.iteritems():
             if key in expected_keys:
-                if key == 'url':
+                if key in ['url', 'avatar']:
                     continue
                 elif key == 'creation_date' and isinstance(val, basestring):
                     self.creation_date = iso_to_datetime(val)

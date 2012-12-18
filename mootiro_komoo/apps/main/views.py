@@ -11,42 +11,40 @@ from django.contrib.gis.measure import Distance
 from django.template import loader, Context
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseNotFound
-from django.core.urlresolvers import reverse
+# from django.core.urlresolvers import reverse
 from django.core.mail import mail_admins
 from django.utils.translation import ugettext as _
-from django.shortcuts import redirect
 from django.conf import settings
 
 from annoying.decorators import render_to, ajax_request
-from annoying.functions import get_object_or_None
-import requests
+# import requests
 
-from authentication.models import User
+# from authentication.models import User
 from community.models import Community
-from need.models import Need
-from proposal.models import Proposal
-from organization.models import OrganizationBranch, Organization
+# from need.models import Need
+# from proposal.models import Proposal
+# from organization.models import OrganizationBranch, Organization
 from resources.models import Resource
-from investment.models import Investment
-from projects.models import Project
+# from investment.models import Investment
+# from projects.models import Project
 from main.utils import create_geojson, ResourceHandler
 
 
 logger = logging.getLogger(__name__)
 
 
-ENTITY_MODEL = {
-    'c': Community,
-    'n': Need,
-    'p': Proposal,
-    'o': Organization,
-    'b': OrganizationBranch,
-    'r': Resource,
-    'i': Investment,
-    'j': Project,
-    'u': User,
-}
-ENTITY_MODEL_REV = {v: k for k, v in ENTITY_MODEL.items()}
+# ENTITY_MODEL = {
+#     'c': Community,
+#     'n': Need,
+#     'p': Proposal,
+#     'o': Organization,
+#     'b': OrganizationBranch,
+#     'r': Resource,
+#     'i': Investment,
+#     'j': Project,
+#     'u': User,
+# }
+# ENTITY_MODEL_REV = {v: k for k, v in ENTITY_MODEL.items()}
 
 
 @render_to('main/map.html')
@@ -56,13 +54,16 @@ def map(request):
         'geojson': {}
     }
 
+
 @render_to('main/root.html')
 def root(request):
     return {}
 
+
 def _fetch_geo_objects(Q, zoom):
     ret = {}
-    for model in [Community, Need, Resource, OrganizationBranch]:
+    # for model in [Community, Need, Resource, OrganizationBranch]:
+    for model in [Community, Resource]:
         ret[model.__name__] = model.objects.filter(Q)
     return ret
 
@@ -185,33 +186,7 @@ def custom_500(request):
     return {}
 
 
-@render_to('not_anymore.html')
-def permalink(request, identifier=''):
-    url = 'root'
-    if identifier:
-        entity, id_ = identifier[0], identifier[1:]
-        obj = get_object_or_None(ENTITY_MODEL[entity], pk=id_)
-        if not obj:
-            return {}
-        url = getattr(obj, 'view_url', '/')
-    return redirect(url)
-
-
-@ajax_request
-def get_geojson_from_hashlink(request):
-    hashlink = request.GET.get('hashlink', '')
-    if hashlink:
-        obj = ENTITY_MODEL[hashlink[0]].objects.get(pk=hashlink[1:])
-        geojson = create_geojson([obj])
-    else:
-        geojson = {}
-
-    return {'geojson': geojson}
-
-
 if settings.TESTING:
-    from django.views.decorators.csrf import csrf_exempt
-    from django.utils.decorators import method_decorator
 
     class TestResourceHandler(ResourceHandler):
         """This is only a dummy handler used for testing"""
