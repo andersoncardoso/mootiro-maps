@@ -29,13 +29,13 @@ define (require) ->
         content: @loginView.render().el
         modal_id: 'login-modal-box'
 
-      $("a.login-required").bind "click.loginrequired", (evt) =>
-        if not KomooNS?.isAuthenticated
-          evt.preventDefault()
-          next = $(evt.target).attr "href"
-          next = (document.location.pathname + next) if next?.charAt(0) is '#'
-          @_loginRequired next
-          return false
+      # $("a.login-required").bind "click.loginrequired", (evt) =>
+      #   if not KomooNS?.isAuthenticated
+      #     evt.preventDefault()
+      #     next = $(evt.target).attr "href"
+      #     next = (document.location.pathname + next) if next?.charAt(0) is '#'
+      #     @_loginRequired next
+      #     return false
 
     initializeLogout: ->
       @logoutView = new views.LogoutView {}

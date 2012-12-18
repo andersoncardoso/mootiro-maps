@@ -32,25 +32,12 @@
       };
 
       LoginApp.prototype.initializeLogin = function() {
-        var _this = this;
         this.loginView = new views.LoginView({});
         this.loginView.form.on('register-link:click', this.registerLinkCB);
-        this.loginBox = new utils.ModalBox({
+        return this.loginBox = new utils.ModalBox({
           title: i18n('Login'),
           content: this.loginView.render().el,
           modal_id: 'login-modal-box'
-        });
-        return $("a.login-required").bind("click.loginrequired", function(evt) {
-          var next;
-          if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
-            evt.preventDefault();
-            next = $(evt.target).attr("href");
-            if ((next != null ? next.charAt(0) : void 0) === '#') {
-              next = document.location.pathname + next;
-            }
-            _this._loginRequired(next);
-            return false;
-          }
         });
       };
 
