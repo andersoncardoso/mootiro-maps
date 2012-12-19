@@ -40,6 +40,13 @@
         this.totalPages = Math.ceil(response.count / this.perPage);
         this.totalRecords = parseInt(response.count);
         return results;
+      },
+      sync: function() {
+        var _this = this;
+        this.trigger('request');
+        return Backbone.Paginator.requestPager.prototype.sync.apply(this, arguments).done(function() {
+          return _this.trigger('sync');
+        });
       }
     });
     return {

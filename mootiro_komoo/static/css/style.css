@@ -634,6 +634,9 @@ a.see-on-map:hover:before {
   margin-right: 5px;
   vertical-align: middle;
 }
+.pagination {
+  text-align: center;
+}
 .pagination a,
 .pagination span {
   padding: 2px;
@@ -642,11 +645,26 @@ a.see-on-map:hover:before {
 .pagination span.page {
   padding: 2px 5px;
 }
+.pagination input {
+  text-align: right;
+}
+.pagination .disabled {
+  opacity: 0;
+  cursor: default;
+}
+.pagination .first,
+.pagination .previous {
+  float: left;
+}
 .pagination .first:before {
   content: '<< ';
 }
 .pagination .previous:before {
   content: '< ';
+}
+.pagination .next,
+.pagination .last {
+  float: right;
 }
 .pagination .next:after {
   content: ' >';

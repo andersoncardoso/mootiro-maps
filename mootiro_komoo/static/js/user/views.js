@@ -69,7 +69,8 @@
     Updates = Backbone.View.extend({
       events: {
         'click a.previous': 'previousPage',
-        'click a.next': 'nextPage'
+        'click a.next': 'nextPage',
+        'keypress .current-page': 'goTo'
       },
       initialize: function() {
         var List;
@@ -82,13 +83,28 @@
           ItemView: Update
         });
         this.subViews = [this.listView];
+        this.listenTo(this.collection, 'reset', this.update);
         return this.render();
       },
       render: function() {
         this.listView.$el.detach();
-        this.$el.html(this.template());
+        this.$el.html(this.template(this.collection));
         this.$('.list-container').prepend(this.listView.$el);
         return this;
+      },
+      update: function() {
+        this.$('.current-page').val(this.collection.currentPage + 1);
+        this.$('.total-pages').text(this.collection.totalPages);
+        if (this.collection.currentPage === 0) {
+          this.$('.previous').addClass('disabled');
+        } else {
+          this.$('.previous').removeClass('disabled');
+        }
+        if (this.collection.currentPage === this.collection.totalPages - 1) {
+          return this.$('.next').addClass('disabled');
+        } else {
+          return this.$('.next').removeClass('disabled');
+        }
       },
       previousPage: function(e) {
         if (e != null) {
@@ -107,6 +123,16 @@
           this.collection.requestNextPage();
         }
         return this;
+      },
+      goTo: function(e) {
+        var page;
+        if (e.keyCode !== 13) return;
+        page = parseInt(this.$('.current-page').val(), 10);
+        if (_.isNaN(page) || page <= 0 || page > this.collection.totalPages) {
+          this.update();
+          return;
+        }
+        return this.collection.goTo(page - 1);
       }
     });
     return {

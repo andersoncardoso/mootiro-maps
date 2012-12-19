@@ -86,6 +86,9 @@
     'Supporters': {
       'pt-br': 'Apoio institucional'
     },
+    'See on map': {
+      'pt-br': 'Ver no mapa'
+    },
     'About me': {
       'pt-br': 'Sobre mim'
     },
@@ -94,6 +97,18 @@
     },
     'User has not wrote about oneself': {
       'pt-br': 'Usuário ainda não escreveu sobre si'
+    },
+    'previous %n': {
+      'pt-br': '%n anteriores'
+    },
+    'next %n': {
+      'pt-br': 'próximos %n'
+    },
+    'page': {
+      'pt-br': 'página'
+    },
+    'of': {
+      'pt-br': 'de'
     }
   };
 

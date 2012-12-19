@@ -32,5 +32,10 @@ define (require) ->
       @totalRecords = parseInt response.count
       results
 
+    sync: ->
+        @trigger 'request'
+        Backbone.Paginator.requestPager.prototype.sync.apply(this, arguments)
+        .done => @trigger 'sync'
+
 
   PaginatedUpdates: PaginatedUpdates

@@ -12,13 +12,19 @@ define (require) ->
       @listenTo @collection, 'add', @addOne
       @listenTo @collection, 'reset', @addAll
       @listenTo @collection, 'all', @render
+      @listenTo @collection, 'request', @_loading
+      @listenTo @collection, 'sync', @_loaded
       @itemViews = {}
+      window.collection = @collection
       @ItemView = @options.ItemView
       @subViews = []
       @collection.pager()
       @render()
 
     render: ->
+
+    _loading: -> console?.log 'loading...'
+    _loaded: -> console?.log 'loaded'
 
     addAll: ->
       @$el.empty()
