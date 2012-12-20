@@ -15,10 +15,6 @@ from komoo_map.models import POLYGON, LINESTRING, POINT
 #     def __unicode__(self):
 #         return self.name
 #
-#     def save(self, *args, **kwargs):
-#         self.slug = slugify(self.name)
-#         return super(ResourceKind, self).save(*args, **kwargs)
-#
 #     @classmethod
 #     def favorites(cls, number=10):
 #         return ResourceKind.objects.all(

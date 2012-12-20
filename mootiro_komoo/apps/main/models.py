@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.conf import settings
+from jsonfield import JSONField
 
 from komoo_map.models import GeoRefModel
 from authentication.models import User
@@ -21,6 +22,8 @@ class CommonDataMixin(models.Model):
     last_update = models.DateTimeField(auto_now=True)
 
     # tags = TaggableManager()
+
+    extra_data = JSONField(null=True, blank=True)
 
     def __unicode__(self):
         return unicode(self.name)
@@ -61,6 +64,13 @@ class CommonObject(GeoRefModel, BaseDAOMixin):
         super(CommonObject, self).__init__(*args, **kwargs)
         if hasattr(self, 'common_object_type') and self.common_object_type:
             self.type = self.common_object_type
+
+
+class TargetAudience(models.Model):
+    name = models.CharField(max_length=64, unique=True, blank=False)
+
+    def __unicode__(self):
+        return self.name
 
 
 class RelationType(models.Model):
