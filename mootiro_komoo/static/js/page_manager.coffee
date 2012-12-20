@@ -28,7 +28,7 @@ define (require) ->
           _.each view.subViews, clear
           # Clear reForm forms
           if view.fields
-            for field in fields.slice(0).reverse()
+            for field in view.fields.slice(0).reverse()
               clear field.instance
           # Remove subviews references
           view.subViews.length = 0

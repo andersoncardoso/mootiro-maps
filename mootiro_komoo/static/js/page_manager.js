@@ -35,7 +35,7 @@
           if (view.subViews) {
             _.each(view.subViews, clear);
             if (view.fields) {
-              _ref = fields.slice(0).reverse();
+              _ref = view.fields.slice(0).reverse();
               for (_i = 0, _len = _ref.length; _i < _len; _i++) {
                 field = _ref[_i];
                 clear(field.instance);
