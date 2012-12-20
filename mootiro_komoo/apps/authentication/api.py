@@ -18,6 +18,10 @@ logger = logging.getLogger(__name__)
 
 
 def _user_form_specific_validations(user, json_data, form_validates):
+    """
+    This method makes User's Form specific validation.
+    Used on: /user <POST>
+    """
     if not json_data.get('password_confirm', None):
         form_validates = False
         user.errors['password_confirm'] = _('Required field')
@@ -36,7 +40,7 @@ def _user_form_specific_validations(user, json_data, form_validates):
 
 
 class UserHandler(ResourceHandler):
-    """ /user """
+    """ /users """
 
     def post(self, request):
         """
@@ -77,6 +81,10 @@ class UsersHandler(ResourceHandler):
         return JsonResponse(user.to_cleaned_dict(fields=fields,
                                                  user=request.user))
 
+    def put(self, request, id_):
+        """ Updates user data """
+        return JsonResponse({})
+
 
 class UserUpdateHandler(ResourceHandler):
     """ /users/[id_]/update """
@@ -96,7 +104,7 @@ class UserUpdateHandler(ResourceHandler):
 
 
 class LoginHandler(ResourceHandler):
-    """ /user/login """
+    """ /users/login """
 
     def post(self, request):
         """
@@ -124,7 +132,7 @@ class LoginHandler(ResourceHandler):
 
 
 class LogoutHandler(ResourceHandler):
-    """ /user/logout """
+    """ /users/logout """
 
     def get(self, request):
         next_page = request.GET.get('next', '') or reverse('root')

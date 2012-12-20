@@ -18,8 +18,8 @@
       }
 
       UserRouter.prototype.routes = {
-        'user(/)': 'user',
-        'user/:id(/)': 'profile'
+        'users(/)': 'user',
+        'users/:id(/)': 'profile'
       };
 
       UserRouter.prototype.initialize = function() {
@@ -56,7 +56,7 @@
 
       UserRouter.prototype.profile = function(id) {
         this.goTo(pages.profile, id);
-        return this.navigate("user/" + id);
+        return this.navigate("users/" + id);
       };
 
       return UserRouter;

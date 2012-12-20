@@ -97,6 +97,7 @@ define (require) ->
     logout: ->
       if not @logoutView
         @initializeLogout()
+      console.log 'LOGOUT'
       @logoutView.logout()
 
     register: ->

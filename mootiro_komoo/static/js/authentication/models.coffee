@@ -4,12 +4,13 @@ define (require) ->
   $ = require 'jquery'
   _ = require 'underscore'
   Backbone = require 'backbone'
+  urls = require 'urls'
 
   class LoginModel extends Backbone.Model
-    urlRoot: '/api/user/login/'
+    urlRoot: urls.resolve 'login_api'
 
   class LogoutModel extends Backbone.Model
-    urlRoot: '/api/user/logout/'
+    urlRoot: urls.resolve 'logout_api'
     initialize: ->
       _.bindAll this
     doLogout: (next) ->
@@ -25,7 +26,7 @@ define (require) ->
               window.location = resp.redirect
 
   class User extends Backbone.Model
-    urlRoot: '/api/user/'
+    urlRoot: urls.resolve 'user_api'
 
   return {
     LoginModel: LoginModel

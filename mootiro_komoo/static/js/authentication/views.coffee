@@ -120,6 +120,8 @@ define (require) ->
     initialize: (@options) ->
       _.bindAll this
       @model = new models.LogoutModel {}
+      window.logoutmodel = @model
+      console.log 'heree???'
 
     logout: (next) ->
       @model.doLogout next

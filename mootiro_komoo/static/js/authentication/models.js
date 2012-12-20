@@ -4,10 +4,11 @@
 
   define(function(require) {
     'use strict';
-    var $, Backbone, LoginModel, LogoutModel, User, _;
+    var $, Backbone, LoginModel, LogoutModel, User, urls, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
+    urls = require('urls');
     LoginModel = (function(_super) {
 
       __extends(LoginModel, _super);
@@ -16,7 +17,7 @@
         LoginModel.__super__.constructor.apply(this, arguments);
       }
 
-      LoginModel.prototype.urlRoot = '/api/user/login/';
+      LoginModel.prototype.urlRoot = urls.resolve('login_api');
 
       return LoginModel;
 
@@ -29,7 +30,7 @@
         LogoutModel.__super__.constructor.apply(this, arguments);
       }
 
-      LogoutModel.prototype.urlRoot = '/api/user/logout/';
+      LogoutModel.prototype.urlRoot = urls.resolve('logout_api');
 
       LogoutModel.prototype.initialize = function() {
         return _.bindAll(this);
@@ -67,7 +68,7 @@
         User.__super__.constructor.apply(this, arguments);
       }
 
-      User.prototype.urlRoot = '/api/user/';
+      User.prototype.urlRoot = urls.resolve('user_api');
 
       return User;
 

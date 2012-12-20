@@ -150,7 +150,9 @@
       LogoutView.prototype.initialize = function(options) {
         this.options = options;
         _.bindAll(this);
-        return this.model = new models.LogoutModel({});
+        this.model = new models.LogoutModel({});
+        window.logoutmodel = this.model;
+        return console.log('heree???');
       };
 
       LogoutView.prototype.logout = function(next) {

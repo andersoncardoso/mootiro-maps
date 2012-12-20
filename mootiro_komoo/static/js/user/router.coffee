@@ -8,8 +8,8 @@ define (require) ->
 
   class UserRouter extends Backbone.Router
     routes:
-      'user(/)': 'user'
-      'user/:id(/)': 'profile'
+      'users(/)': 'user'
+      'users/:id(/)': 'profile'
 
     initialize: ->
       _.bindAll this
@@ -36,7 +36,7 @@ define (require) ->
 
     profile: (id) ->
       @goTo pages.profile, id
-      @navigate "user/#{id}"
+      @navigate "users/#{id}"
 
 
   new UserRouter()

@@ -112,6 +112,7 @@
 
       LoginApp.prototype.logout = function() {
         if (!this.logoutView) this.initializeLogout();
+        console.log('LOGOUT');
         return this.logoutView.logout();
       };
 
