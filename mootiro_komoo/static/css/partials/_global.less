@@ -98,13 +98,14 @@ body > .content-box {
             height: @size;
             overflow: hidden;
             margin: 1px 0px;
-            padding: 5px;
+            padding: 7px 5px 8px 10px;
             /* Text should be invisible */
             color: transparent;
 
             &.active {
                 background-color: @action-active-bg;
             }
+
         }
 
         /* Little hack to force action bar width */
@@ -113,30 +114,45 @@ body > .content-box {
             color: transparent;
         }
 
+        .action-item (@url, @icon-size, @col:0, @row:0) {
+            @col-offset: 0;
+            @row-offset: 5;
+            .icon(@url, @icon-size, @col-offset+@col, @row-offset+@row);
+
+            &:hover {
+                .icon(@url, @icon-size, @col-offset+@col, @row-offset+@row+2);
+            }
+
+            &.active,
+            &.active:hover {
+                .icon(@url, @icon-size, @col-offset+@col, @row-offset+@row+1);
+            }
+        }
+
+
         /* Actions */
-        .edit {
-            .icon('blank.png', @size);
-            &:before {background-color: silver;} // TODO: Remove me
+        @icon-size: 16px;
+        @icon-sprite: 'sprite.png';
+        .delete {
+            .action-item(@icon-sprite, @icon-size, 0);
         }
         .star {
-            .icon('blank.png', @size);
-            &:before {background-color: silver;} // TODO: Remove me
-        }
-        .discuss {
-            .icon('blank.png', @size);
-            &:before {background-color: silver;} // TODO: Remove me
-        }
-        .history {
-            .icon('blank.png', @size);
-            &:before {background-color: silver;} // TODO: Remove me
+            .action-item(@icon-sprite, @icon-size, 1);
         }
         .report {
-            .icon('blank.png', @size);
-            &:before {background-color: silver;} // TODO: Remove me
+            .action-item(@icon-sprite, @icon-size, 2);
         }
-        .delete {
-            .icon('blank.png', @size);
-            &:before {background-color: silver;} // TODO: Remove me
+        .feed {
+            .action-item(@icon-sprite, @icon-size, 3);
+        }
+        .discuss {
+            .action-item(@icon-sprite, @icon-size, 4);
+        }
+        .history {
+            .action-item(@icon-sprite, @icon-size, 5);
+        }
+        .edit {
+            .action-item(@icon-sprite, @icon-size, 6);
         }
     }
 
@@ -237,35 +253,34 @@ body > .content-box {
 
 .contact-info > li,
 .contact {
-    @size: 16px;
+    @icon-size: 16px;
+    @col-offset: 5;
+    @row-offset: 0;
+    @icon-sprite: 'sprite.png';
 
-    &.phone {
-        .icon('blank.png', @size);
-        &:before {background-color: silver;} // TODO: Remove me
+    &.email {
+        .icon(@icon-sprite, @icon-size, @col-offset, @row-offset);
     }
     &.address {
-        .icon('blank.png', @size);
-        &:before {background-color: silver;} // TODO: Remove me
+        .icon(@icon-sprite, @icon-size, @col-offset+1, @row-offset);
     }
-    &.email {
-        .icon('blank.png', @size);
-        &:before {background-color: silver;} // TODO: Remove me
-    }
-    &.facebook {
-        .icon('blank.png', @size);
-        &:before {background-color: silver;} // TODO: Remove me
-    }
-    &.twitter {
-        .icon('blank.png', @size);
-        &:before {background-color: silver;} // TODO: Remove me
-    }
-    &.skype {
-        .icon('blank.png', @size);
-        &:before {background-color: silver;} // TODO: Remove me
+    &.phone {
+        .icon(@icon-sprite, @icon-size, @col-offset, @row-offset+1);
     }
     &.site {
-        .icon('blank.png', @size);
-        &:before {background-color: silver;} // TODO: Remove me
+        .icon('blank.png', @icon-size, @col-offset+1, @row-offset+1);
+    }
+    &.skype {
+        .icon(@icon-sprite, @icon-size, @col-offset, @row-offset+2);
+    }
+    &.twitter {
+        .icon(@icon-sprite, @icon-size, @col-offset+1, @row-offset+2);
+    }
+    &.facebook {
+        .icon(@icon-sprite, @icon-size, @col-offset, @row-offset+3);
+    }
+    &.gplus {
+        .icon(@icon-sprite, @icon-size, @col-offset+1, @row-offset+3);
     }
 
 
@@ -357,7 +372,7 @@ ul.updates {
 }
 
 a.see-on-map {
-    .icon('menu/sprite.png', 20px, 0, 0);
+    .icon('sprite.png', 20px, 0, 0);
 
     width: 32px;
     text-align: center;
@@ -367,7 +382,7 @@ a.see-on-map {
     color: @inactive-icon-color;
 
     &:hover {
-        .icon('menu/sprite.png', 20px, 0, 1);
+        .icon('sprite.png', 20px, 0, 1);
 
         color: @pin-color;
         background: transparent;

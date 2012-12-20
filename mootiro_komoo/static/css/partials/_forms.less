@@ -122,19 +122,26 @@ form {
 .inline-form.display {
     .clearfix;
 
-    min-height: 25px;
+    min-height: 35px;
     padding: 10px;
 
     > .edit {
-        .icon('blank.png', 24px);
+        @size: 16px;
+        .icon('sprite.png', @size, 6, 5);
 
         display: none;
-        width: 24px;
-        height: 24px;
+        width: @size;
+        height: @size;
+        padding: 10px;
         overflow: hidden;
         color: transparent;
-        background-color: silver;
         float: right;
+        font-size: 12px;
+
+        &:hover {
+            background-color: inherit;
+            .icon('sprite.png', @size, 6, 7);
+        }
     }
 
     &:hover {
