@@ -26,6 +26,10 @@ define (require) ->
         if view.subViews
           # Clear all sub views
           _.each view.subViews, clear
+          # Clear reForm forms
+          if view.fields
+            for field in fields.slice(0).reverse()
+              clear field.instance
           # Remove subviews references
           view.subViews.length = 0
         # Call views custom method

@@ -1,4 +1,4 @@
-<h1 class="title"><%= user.name %></h1>
+<h1 class="title" id="user-name-container"></h1>
 
 <ul class="contact-info">
   <% if(user.email) { %>
@@ -11,8 +11,7 @@
 
 <article class="user-info">
   <h1><%= i18n('About me') %></h1>
-  <div class="content">
-    <%- user.about_me || i18n('User has not wrote about oneself') %>
+  <div class="content" id="user-info-container">
   </div>
 </article>
 

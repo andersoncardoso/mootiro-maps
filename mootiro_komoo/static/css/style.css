@@ -346,6 +346,7 @@ body > .content-box > .main > .content .user-updates {
   -webkit-box-shadow: 0 0 0 1px #dceff4, 0 0 0 #ffffff;
   box-shadow: 0 0 0 1px #dceff4, 0 0 0 #ffffff;
   padding: 5px 0px;
+  margin-top: 50px !important;
 }
 body > .content-box > .main > .content .user-updates h1 {
   margin: 5px 10px;
@@ -498,7 +499,6 @@ body > .content-box > .main > .content .user-updates .list {
   width: 100%;
   padding: 5px 0;
   list-style: none;
-  border-top: solid 1px #dceff4;
 }
 .list-container ul.list > li:before,
 .list-container ul.list > li:after {
@@ -508,7 +508,8 @@ body > .content-box > .main > .content .user-updates .list {
 .list-container ul.list > li:after {
   clear: both;
 }
-.list-container ul.list > li:first-child {
+.list-container ul.list > li:first-child > a,
+.list-container ul.list > li:first-child > i {
   border-top: none;
 }
 .list-container ul.list > li > a,
@@ -516,6 +517,7 @@ body > .content-box > .main > .content .user-updates .list {
   display: table-cell !important;
   vertical-align: middle;
   height: 100%;
+  border-top: solid 1px #dceff4;
 }
 .list-container ul.list > li > a:hover {
   background-color: transparent;
@@ -1416,6 +1418,33 @@ header.main nav > ul > li.has-submenu:after {
   border-bottom-color: #fad7d7;
 }
 /** Forms **/
+form.inline-form {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  background: #bdefea;
+  padding: 5px;
+}
+form.inline-form label {
+  display: none;
+}
+form.inline-form .widget-conteiner label {
+  display: block;
+}
+form.inline-form input[type=text],
+form.inline-form textarea {
+  width: 99%;
+  font: inherit;
+}
+form.inline-form textarea {
+  min-height: 100px;
+}
+form.inline-form.open {
+  display: block;
+}
+form.inline-form.closed {
+  display: none;
+}
 form label {
   color: #555555;
   display: block;
@@ -1427,7 +1456,8 @@ form label.error {
 form .field-container {
   margin-bottom: 10px;
 }
-form input {
+form input[type=text],
+form input[type=password] {
   background: white;
   box-shadow: none;
   border: 1px solid #bcbebf;
@@ -1443,7 +1473,8 @@ form input {
   -moz-transition: border 1s ease 0s;
   -webkit-transition: border 1s ease 0s;
 }
-form input:focus {
+form input[type=text]:focus,
+form input[type=password]:focus {
   border: 1px solid #009cb4;
 }
 form input.error,
@@ -1454,14 +1485,6 @@ form input[type=checkbox] {
   display: inline-block;
   margin-right: 10px;
   width: auto;
-}
-form input[type=submit] {
-  width: 100%;
-  padding: 3px 6px;
-  border: 0;
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 120%;
 }
 form .small {
   font-size: 0.9em;
@@ -1488,6 +1511,54 @@ form .field-container.half-box-right {
 }
 form .field-container.half-box-right small.error {
   width: 94%;
+}
+.inline-form.display {
+  *zoom: 1;
+  min-height: 25px;
+  padding: 10px;
+}
+.inline-form.display:before,
+.inline-form.display:after {
+  content: "";
+  display: table;
+}
+.inline-form.display:after {
+  clear: both;
+}
+.inline-form.display > .edit {
+  display: inline-block;
+  display: none;
+  width: 24px;
+  height: 24px;
+  overflow: hidden;
+  color: transparent;
+  background-color: silver;
+  float: right;
+}
+.inline-form.display > .edit:before {
+  background: /* @menu-fg */ url(../img/blank.png) no-repeat 0px 0px;
+  text-indent: 10000px;
+  content: '';
+  display: inline-block !important;
+  width: 24px;
+  height: 24px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.inline-form.display:hover {
+  background: #f6f6f6;
+}
+.inline-form.display:hover > .edit {
+  display: block;
+}
+.inline-form.display > .content {
+  margin-right: 25px;
+}
+.inline-form.display.open {
+  display: block;
+}
+.inline-form.display.closed {
+  display: none;
 }
 /* Search form */
 form.search {
@@ -2664,10 +2735,13 @@ body > #footer-container > .footer .license {
   float: right;
 }
 .login_form input {
-  height: 28px;
+  width: 100%;
 }
 .login_form small.error {
   width: 94%;
+}
+#form_register input[type=submit] {
+  width: 100%;
 }
 .auth-not-verified img {
   max-width: 211.5px;

@@ -1,6 +1,41 @@
 /** Forms **/
 
+h1 .inline-form {
+}
+
 form {
+
+    &.inline-form {
+        .border-radius;
+
+        background: @inline-form-bg;
+        padding: 5px;
+
+        label {
+            display: none;
+        }
+        .widget-conteiner label {
+            display: block;
+        }
+
+        input[type=text],
+        textarea {
+          width: 99%;
+          font: inherit;
+        }
+
+        textarea {
+            min-height: 100px;
+        }
+
+        &.open {
+            display: block;
+        }
+        &.closed {
+            display: none;
+        }
+    }
+
     label {
         color: @label-color;
         display: block;
@@ -12,7 +47,8 @@ form {
     .field-container {
         margin-bottom: 10px;
     }
-    input {
+    input[type=text],
+    input[type=password] {
         background: white;
         box-shadow: none;
         border: 1px solid #bcbebf;
@@ -42,12 +78,12 @@ form {
         width: auto;
     }
     input[type=submit] {
-    width: 100%;
-    padding: 3px 6px;
-    border: 0;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 120%;
+    //width: 100%;
+    //padding: 3px 6px;
+    //border: 0;
+    //border-radius: 5px;
+    //font-weight: bold;
+    //font-size: 120%;
     // color: #fff;
     // .gradient(vertical, #1e9c5b, darken(#1e9c5b, 15%));
     }
@@ -80,6 +116,43 @@ form {
         small.error {
             width: 94%;
         }
+    }
+}
+
+.inline-form.display {
+    .clearfix;
+
+    min-height: 25px;
+    padding: 10px;
+
+    > .edit {
+        .icon('blank.png', 24px);
+
+        display: none;
+        width: 24px;
+        height: 24px;
+        overflow: hidden;
+        color: transparent;
+        background-color: silver;
+        float: right;
+    }
+
+    &:hover {
+        background: @inline-form-hover-bg;
+
+        > .edit {
+            display: block;
+        }
+    }
+
+    > .content {
+        margin-right: 25px;
+    }
+    &.open {
+        display: block;
+    }
+    &.closed {
+        display: none;
     }
 }
 

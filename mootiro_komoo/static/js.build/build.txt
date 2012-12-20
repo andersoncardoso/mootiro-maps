@@ -35,6 +35,7 @@ text!templates/widgets/_modal_box.html
 widgets/modal.js
 authentication/router.js
 text!templates/user/_profile.html
+text!templates/forms/_inline_form.html
 text!templates/user/_sidebar.html
 text!templates/user/_update_item.html
 text!templates/user/_updates_block.html

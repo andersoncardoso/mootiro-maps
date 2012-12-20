@@ -8,6 +8,9 @@ define (require) ->
   User = Backbone.Model.extend
     urlRoot: urls.resolve 'user_api'
 
+    defaults:
+      'about_me': ''
+
     getUpdates: ->
       if @updates? then return @updates
 

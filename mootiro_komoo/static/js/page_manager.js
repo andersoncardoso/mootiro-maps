@@ -30,9 +30,17 @@
       Page.prototype.close = function() {
         var clear;
         clear = function(view) {
+          var field, _i, _len, _ref;
           if (!view) return;
           if (view.subViews) {
             _.each(view.subViews, clear);
+            if (view.fields) {
+              _ref = fields.slice(0).reverse();
+              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                field = _ref[_i];
+                clear(field.instance);
+              }
+            }
             view.subViews.length = 0;
           }
           if (typeof view.onClose === "function") view.onClose();

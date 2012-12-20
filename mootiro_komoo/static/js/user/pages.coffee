@@ -22,7 +22,8 @@ define (require) ->
     user.on 'sync', (model, resp, options) ->
       Backbone.trigger 'app::done', model
     user.on 'error', (model, error) ->
-      if error.status? then  Backbone.trigger 'app::done', model
+      if error.status?
+        Backbone.trigger 'app::done', model
 
     return user
 

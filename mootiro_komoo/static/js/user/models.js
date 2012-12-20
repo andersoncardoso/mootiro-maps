@@ -8,6 +8,9 @@
     urls = require('urls');
     User = Backbone.Model.extend({
       urlRoot: urls.resolve('user_api'),
+      defaults: {
+        'about_me': ''
+      },
       getUpdates: function() {
         var Updates;
         if (this.updates != null) return this.updates;

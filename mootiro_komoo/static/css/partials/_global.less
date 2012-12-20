@@ -217,6 +217,7 @@ body > .content-box {
                 .border-fake(1px, @main-bg);
 
                 padding: 5px 0px;
+                margin-top: 50px !important;
 
                 h1 {
                     margin: 5px 10px;
@@ -285,10 +286,12 @@ body > .content-box {
             width: 100%;
             padding: 5px 0;
             list-style: none;
-            border-top: solid 1px @main-bg;
 
             &:first-child {
-                border-top: none;
+                > a,
+                > i {
+                    border-top: none;
+                }
             }
 
             > a,
@@ -296,6 +299,7 @@ body > .content-box {
                 display: table-cell !important;
                 vertical-align: middle;
                 height: 100%;
+                border-top: solid 1px @main-bg;
             }
             > a {
                 &:hover {

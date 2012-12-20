@@ -2,29 +2,118 @@
 
   define(function(require) {
     'use strict';
-    var $, Backbone, Profile, Sidebar, Update, Updates, _;
+    var $, Backbone, FieldView, InlineForm, NameField, NameView, Profile, ReForm, Sidebar, Update, Updates, UserInfoField, UserInfoView, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
-    Profile = Backbone.View.extend({
+    ReForm = require('reForm');
+    FieldView = Backbone.View.extend({
       initialize: function() {
         _.bindAll(this);
-        this.template = _.template(require('text!templates/user/_profile.html'));
-        this.listenTo(this.model, 'change', this.render);
-        this.updatesView = new Updates({
-          collection: this.model.getUpdates()
-        });
-        this.subViews = [this.updatesView];
+        this.listenTo(this.model, "change", this.render);
+        this._template = _.template(this.template);
         return this.render();
       },
       render: function() {
+        console.log('blabla');
+        return this.$el.html(this._template({
+          model: this.model.toJSON()
+        }));
+      }
+    });
+    NameView = FieldView.extend({
+      template: '<%= model.name %>'
+    });
+    UserInfoView = FieldView.extend({
+      template: '<%= model.about_me || i18n("User has not wrote about oneself")  %>'
+    });
+    Profile = Backbone.View.extend({
+      initialize: function() {
+        window.model = this.model;
+        _.bindAll(this);
+        this.template = _.template(require('text!templates/user/_profile.html'));
+        this.listenTo(this.model, 'change', this.render);
+        if ((typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.user : void 0) && KomooNS.user.id === this.model.id) {
+          NameView = NameField;
+          UserInfoView = UserInfoField;
+        }
+        this.nameView = new NameView({
+          model: this.model
+        });
+        this.userInfoView = new UserInfoView({
+          model: this.model
+        });
+        this.updatesView = new Updates({
+          collection: this.model.getUpdates()
+        });
+        this.subViews = [this.nameView, this.userInfoView, this.updatesView];
+        return this.render();
+      },
+      render: function() {
+        this.nameView.$el.detach();
+        this.userInfoView.$el.detach();
         this.updatesView.$el.detach();
         this.$el.html(this.template({
           user: this.model.toJSON()
         }));
+        this.$('#user-name-container').append(this.nameView.$el);
+        this.$('#user-info-container').append(this.userInfoView.$el);
         this.$('#user-updates-container').append(this.updatesView.$el);
         return this;
       }
+    });
+    InlineForm = ReForm.Form.extend({
+      events: {
+        'click .edit': 'toggle',
+        'click .cancel': 'toggle'
+      },
+      initialize: function() {
+        ReForm.Form.prototype.initialize.apply(this, arguments);
+        this.listenTo(this.model, "change", this.update);
+        this.formTemplate = _.template(require('text!templates/forms/_inline_form.html'));
+        this._displayView = new this.displayView(this.options);
+        this.subViews = [this._displayView];
+        return this.render();
+      },
+      render: function() {
+        var _ref, _ref2;
+        if ((_ref = this._displayView) != null) {
+          if ((_ref2 = _ref.$el) != null) _ref2.detach();
+        }
+        ReForm.Form.prototype.render.apply(this, arguments);
+        if (this._displayView != null) {
+          this.$('.display .content').append(this._displayView.$el);
+        }
+        return this;
+      },
+      update: function() {
+        if (this.model) return this.set(this.model.toJSON());
+      },
+      toggle: function(e) {
+        e.preventDefault();
+        this.update();
+        return this.$('.display, form.inline-form').toggleClass('open').toggleClass('closed');
+      }
+    });
+    NameField = InlineForm.extend({
+      fields: [
+        {
+          label: i18n('Name'),
+          name: 'name',
+          widget: ReForm.commonWidgets.TextWidget
+        }
+      ],
+      displayView: NameView
+    });
+    UserInfoField = InlineForm.extend({
+      fields: [
+        {
+          label: i18n('About me'),
+          name: 'about_me',
+          widget: ReForm.commonWidgets.TextAreaWidget
+        }
+      ],
+      displayView: UserInfoView
     });
     Sidebar = Backbone.View.extend({
       initialize: function() {
