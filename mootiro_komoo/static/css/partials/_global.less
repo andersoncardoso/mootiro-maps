@@ -254,8 +254,8 @@ body > .content-box {
 .contact-info > li,
 .contact {
     @icon-size: 16px;
-    @col-offset: 5;
-    @row-offset: 0;
+    @col-offset: 7;
+    @row-offset: 7;
     @icon-sprite: 'sprite.png';
 
     &.email {
@@ -265,22 +265,22 @@ body > .content-box {
         .icon(@icon-sprite, @icon-size, @col-offset+1, @row-offset);
     }
     &.phone {
-        .icon(@icon-sprite, @icon-size, @col-offset, @row-offset+1);
+        .icon(@icon-sprite, @icon-size, @col-offset+2, @row-offset);
     }
     &.site {
-        .icon('blank.png', @icon-size, @col-offset+1, @row-offset+1);
+        .icon('blank.png', @icon-size, @col-offset+3, @row-offset);
     }
     &.skype {
-        .icon(@icon-sprite, @icon-size, @col-offset, @row-offset+2);
+        .icon(@icon-sprite, @icon-size, @col-offset+4, @row-offset);
     }
     &.twitter {
-        .icon(@icon-sprite, @icon-size, @col-offset+1, @row-offset+2);
+        .icon(@icon-sprite, @icon-size, @col-offset+5, @row-offset);
     }
     &.facebook {
-        .icon(@icon-sprite, @icon-size, @col-offset, @row-offset+3);
+        .icon(@icon-sprite, @icon-size, @col-offset+6, @row-offset);
     }
     &.gplus {
-        .icon(@icon-sprite, @icon-size, @col-offset+1, @row-offset+3);
+        .icon(@icon-sprite, @icon-size, @col-offset+7, @row-offset);
     }
 
 
