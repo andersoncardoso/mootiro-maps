@@ -30,18 +30,12 @@
       Page.prototype.close = function() {
         var clear;
         clear = function(view) {
-          var field, _i, _len, _ref;
           if (!view) return;
           if (view.subViews) {
             _.each(view.subViews, clear);
-            if (view.fields) {
-              _ref = view.fields.slice(0).reverse();
-              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                field = _ref[_i];
-                clear(field.instance);
-              }
-            }
-            view.subViews.length = 0;
+            delete view.subViews;
+            _.each(view.instances, clear);
+            delete view.instances;
           }
           if (typeof view.onClose === "function") view.onClose();
           view.unbind();
@@ -73,7 +67,6 @@
       };
 
       PageManager.prototype.close = function(page) {
-        if (page == null) page = this.currentPage;
         if (!page) return;
         page.close();
         if (this.currentPage === page) return this.currentPage = null;

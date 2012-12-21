@@ -1004,7 +1004,6 @@ body > .content-box > .main > .content .user-updates .list {
   vertical-align: middle;
 }
 .list-container ul.list {
-  display: table;
   margin: 0px;
   padding: 0px;
 }

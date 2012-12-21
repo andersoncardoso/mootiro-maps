@@ -26,12 +26,10 @@ define (require) ->
         if view.subViews
           # Clear all sub views
           _.each view.subViews, clear
+          delete view.subViews
           # Clear reForm forms
-          if view.fields
-            for field in view.fields.slice(0).reverse()
-              clear field.instance
-          # Remove subviews references
-          view.subViews.length = 0
+          _.each view.instances, clear
+          delete view.instances
         # Call views custom method
         view.onClose?()
         # Clear all DOM events
@@ -59,7 +57,7 @@ define (require) ->
       @currentPage = page
       @currentPage.open()
 
-    close: (page=@currentPage) ->
+    close: (page) ->
       if not page then return
 
       page.close()

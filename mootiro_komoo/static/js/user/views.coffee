@@ -20,7 +20,6 @@ define (require) ->
       @render()
 
     render: ->
-      console.log 'blabla'
       @$el.html @_template model: @model.toJSON()
 
 

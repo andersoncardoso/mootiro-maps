@@ -15,7 +15,6 @@
         return this.render();
       },
       render: function() {
-        console.log('blabla');
         return this.$el.html(this._template({
           model: this.model.toJSON()
         }));
