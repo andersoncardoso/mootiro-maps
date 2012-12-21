@@ -9,7 +9,8 @@ form {
         .border-radius;
 
         background: @inline-form-bg;
-        padding: 5px;
+        padding: 10px;
+        margin: -10px;
 
         label {
             display: none;
@@ -124,6 +125,7 @@ form {
 
     min-height: 36px;
     padding: 10px;
+    margin: -10px;
 
     > .edit {
         @size: 16px;
@@ -168,7 +170,7 @@ form.search {
     .input;
 
     @form-width: 350px;
-    @button-size: 24px;
+    @button-size: 16px;
 
     width: @form-width;
 
@@ -184,19 +186,22 @@ form.search {
 
     input[type=text] {
         display: inline !important;
-        width: (@form-width - @button-size - 10);
+        width: (@form-width - @button-size - 20);
+
+        &:focus {
+            border: none;
+        }
     }
 
     input[type=submit] {
         .clickable;
-        //.image;
+        .image('sprite.png', 10, 3, 16px);
         .remove-box-shadow;
 
         width: @button-size;
-        margin: 0px;
+        margin: 5px;
         padding: 0px;
         color: transparent;
-        background: none;
     }
 }
 

@@ -102,7 +102,9 @@ body > .content-box {
             /* Text should be invisible */
             color: transparent;
 
-            &.active {
+            &.active,
+            &:active {
+                .transition(all, 0s);
                 background-color: @action-active-bg;
             }
 
@@ -123,6 +125,7 @@ body > .content-box {
                 .icon(@url, @icon-size, @col-offset+@col, @row-offset+@row+2);
             }
 
+            &:active,
             &.active,
             &.active:hover {
                 .icon(@url, @icon-size, @col-offset+@col, @row-offset+@row+1);
@@ -228,6 +231,17 @@ body > .content-box {
                 }
             }
 
+            #user-info-container {
+                .inline-form {
+                   margin-top: -50px;
+
+                    > .field-container:first-child,
+                    > .content {
+                        margin-top: 45px;
+                    }
+                }
+            }
+
             .user-updates {
                 .border-radius(10px);
                 .border-fake(1px, @main-bg);
@@ -254,8 +268,8 @@ body > .content-box {
 .contact-info > li,
 .contact {
     @icon-size: 16px;
-    @col-offset: 7;
-    @row-offset: 7;
+    @col-offset: 11;
+    @row-offset: 3;
     @icon-sprite: 'sprite.png';
 
     &.email {
@@ -268,19 +282,19 @@ body > .content-box {
         .icon(@icon-sprite, @icon-size, @col-offset+2, @row-offset);
     }
     &.site {
-        .icon('blank.png', @icon-size, @col-offset+3, @row-offset);
+        .icon(@icon-sprite, @icon-size, @col-offset+3, @row-offset);
     }
     &.skype {
-        .icon(@icon-sprite, @icon-size, @col-offset+4, @row-offset);
+        .icon(@icon-sprite, @icon-size, @col-offset, @row-offset+1);
     }
     &.twitter {
-        .icon(@icon-sprite, @icon-size, @col-offset+5, @row-offset);
+        .icon(@icon-sprite, @icon-size, @col-offset+1, @row-offset+1);
     }
     &.facebook {
-        .icon(@icon-sprite, @icon-size, @col-offset+6, @row-offset);
+        .icon(@icon-sprite, @icon-size, @col-offset+2, @row-offset+1);
     }
     &.gplus {
-        .icon(@icon-sprite, @icon-size, @col-offset+7, @row-offset);
+        .icon(@icon-sprite, @icon-size, @col-offset+3, @row-offset+1);
     }
 
 
