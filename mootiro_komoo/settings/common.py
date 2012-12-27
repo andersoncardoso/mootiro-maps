@@ -91,11 +91,13 @@ INSTALLED_APPS = [
     'django.contrib.markup',
     'django.contrib.humanize',
 
-    # 3rd party apps
+    # lib and 3rd party apps
     'django_js_utils',
     'fileupload',
     'gunicorn',
     'djcelery',
+    'lib.tags',
+    'lib.locker',
 
     # our apps
     'main',
@@ -113,7 +115,6 @@ INSTALLED_APPS = [
     'signatures',
     'projects',
     'discussion',
-    'lib.locker',
 ]
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024

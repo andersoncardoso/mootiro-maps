@@ -85,11 +85,6 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
     def __unicode__(self):
         return unicode(self.name)
 
-    # @property
-    # def view_url(self):
-    #     # deprecated
-    #     return self.url
-
     @property
     def url(self):
         return reverse('user_view', kwargs={'id_': self.id})

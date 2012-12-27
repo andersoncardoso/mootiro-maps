@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.conf import settings
 from jsonfield import JSONField
 
 from komoo_map.models import GeoRefModel
 from authentication.models import User
+from tags.models import Tag, TagsField
 
 from .utils import BaseDAOMixin
 
@@ -21,7 +21,7 @@ class CommonDataMixin(models.Model):
                         blank=True, related_name='last_edited_%(class)s')
     last_update = models.DateTimeField(auto_now=True)
 
-    # tags = TaggableManager()
+    tags = TagsField()
 
     extra_data = JSONField(null=True, blank=True)
 
@@ -39,7 +39,7 @@ class CommonDataMixin(models.Model):
             'creation_date': self.creation_date,
             'last_editor': self.last_editor,
             'last_update': self.last_update,
-            # 'tags': self.tags
+            'tags': self.tags,
         }
 
 
@@ -76,7 +76,7 @@ class TargetAudience(models.Model):
 # class RelationType(models.Model):
 #     """ Relation Types """
 #     name = models.CharField(max_length=512)
-# 
+#
 #     @property
 #     def name(self):
 #         if settings.code == 'en-us':
@@ -85,14 +85,14 @@ class TargetAudience(models.Model):
 #             rel_trans = RelationTypeTranslations.objects.get(
 #                     relation_type=self, language_code=settings.code)
 #             return unicode(rel_trans.name)
-# 
-# 
+#
+#
 # class RelationTypeTranslations(models.Model):
 #     """ Translations for RelationTypes"""
 #     name = models.CharField(max_length=512)
 #     language_code = models.CharField(max_length=128)
 #     relation_type = models.ForeignKey(RelationType)
-# 
+#
 #     def __unicode__(self):
 #         return unicode(self.name)
 
