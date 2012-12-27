@@ -29,9 +29,10 @@ urlpatterns = patterns('',
     url(r'^jsi18n/$', javascript_catalog, js_info_dict,
         name='javascript_catalog'),
 
-    # unprefixed urls
+    # mootiro maps apps
     url(r'', include('hotsite.urls')),
     url(r'', include('main.urls')),
+    url(r'', include('regions.urls')),
 
     # prefixed apps urls
     url(r'^need/', include('need.urls')),
@@ -48,7 +49,6 @@ urlpatterns = patterns('',
     url(r'^about/', include('hotsite.urls')),
     url(r'^about', 'hotsite.views.root'),
     url(r'^signatures/', include('signatures.urls')),
-    url(r'^community/', include('community.urls')),
 )
 
 if settings.DEBUG:

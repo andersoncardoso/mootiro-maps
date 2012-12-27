@@ -15,6 +15,15 @@ urlpatterns = patterns('authentication.views',
     url(r'^users/(me)/?$', 'user_view', name='user_view_me'),
 )
 
+#
+# authentication urls
+urlpatterns += patterns('main.views',
+    url(r'^register/?$', 'root', name='register'),
+    url(r'^login/?$', 'root', name='login'),
+    url(r'^not-verified/?$', 'root', name='not_verified'),
+    url(r'^verified/?$', 'root', name='verified'),
+)
+
 
 #
 # API urls

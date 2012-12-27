@@ -6,7 +6,7 @@ from mootiro_komoo.urls import prepare_regex as pr
 #         ProjectsView, SearchTagsView, SearchByNameView)
 
 
-urlpatterns = patterns('community.views',
+urlpatterns = patterns('regions.views',
     # url(r'^new$', NewView.dispatch, name='new_community'),
     # url(r'^edit$', EditView.dispatch, name='edit_community'),
     # url(r'^$', ListView.dispatch, name='list_communities'),

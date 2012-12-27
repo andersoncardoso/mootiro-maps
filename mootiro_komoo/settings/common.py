@@ -100,7 +100,7 @@ INSTALLED_APPS = [
     # our apps
     'main',
     'komoo_map',
-    'community',
+    'regions',
     'need',
     'proposal',
     'komoo_comments',

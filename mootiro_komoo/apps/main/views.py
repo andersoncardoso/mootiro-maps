@@ -20,7 +20,7 @@ from annoying.decorators import render_to, ajax_request
 # import requests
 
 # from authentication.models import User
-from community.models import Community
+from regions.models import Region
 # from need.models import Need
 # from proposal.models import Proposal
 # from organization.models import OrganizationBranch, Organization
@@ -63,7 +63,7 @@ def root(request):
 def _fetch_geo_objects(Q, zoom):
     ret = {}
     # for model in [Community, Need, Resource, OrganizationBranch]:
-    for model in [Community, Resource]:
+    for model in [Region, Resource]:
         ret[model.__name__] = model.objects.filter(Q)
     return ret
 
@@ -99,8 +99,8 @@ def radial_search(request):
 
     objs = _fetch_geo_objects(distance_query, 100)
     d = {}
-    if 'communities' in request.GET:
-        d['Community'] = objs['Community']
+    if 'regions' in request.GET:
+        d['Region'] = objs['Region']
     if 'needs' in request.GET:
         need_categories = request.GET['need_categories'].split(',')
         d['Need'] = []
