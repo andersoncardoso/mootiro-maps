@@ -4,12 +4,12 @@ from jsonfield import JSONField
 
 from komoo_map.models import GeoRefModel
 from authentication.models import User
-from tags.models import Tag, TagsField
+from tags.models import Tag, TagsMixin
 
 from .utils import BaseDAOMixin
 
 
-class CommonDataMixin(models.Model):
+class CommonDataMixin(models.Model, TagsMixin):
     """ Common attributes and behavior"""
     name = models.CharField(max_length=512)
     description = models.TextField()
@@ -20,8 +20,6 @@ class CommonDataMixin(models.Model):
     last_editor = models.ForeignKey(User, editable=False, null=True,
                         blank=True, related_name='last_edited_%(class)s')
     last_update = models.DateTimeField(auto_now=True)
-
-    tags = TagsField()
 
     extra_data = JSONField(null=True, blank=True)
 
