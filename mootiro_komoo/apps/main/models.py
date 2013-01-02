@@ -4,13 +4,31 @@ from jsonfield import JSONField
 
 from komoo_map.models import GeoRefModel
 from authentication.models import User
-from tags.models import Tag, TagsMixin
+from tags.models import TagsMixin
 
 from .utils import BaseDAOMixin
 
 
 class CommonDataMixin(models.Model, TagsMixin):
-    """ Common attributes and behavior"""
+    """
+    Abstract model for common attributes and behavior.
+
+    Fields:
+        name: object identifier
+        description: longer description of the object
+        creator: user who created this content
+        creation_date: datetime when the content was created
+        last_editor: last user who edited this content
+        last_update: datetime for the last edition
+        extra_data: utility field which holds a json with extra data (used for
+            object conversion. For example: when we change a Organization to a
+            Resource, we want to preserve the organization specific data in
+            this field)
+        tags: tags array for the content (provided by TagsMixin)
+
+    Methods:
+        to_dict: return a dict representation for the common attributes
+    """
     name = models.CharField(max_length=512)
     description = models.TextField()
 
@@ -43,10 +61,22 @@ class CommonDataMixin(models.Model, TagsMixin):
 
 class CommonObject(GeoRefModel, BaseDAOMixin):
     """
-    All mapped objects inherit from this object so then can be
-    inter-changeable. This model holds the 'true PK'' for a mapped
+    Common objects base model.
+
+    All mapped objects inherit from this object so they can be
+    inter-changeable. This model holds the 'true PK' for a mapped
     object and all references to them should be made through the
     CommonObject's id.
+
+    It's important to set a `common_object_type` attribute to the class which
+    inherits from this. Example:
+        class MyClass(CommonObject, CommonDataMixin):
+            common_object_type = 'myclass'
+            # ...
+            # MyClass attributes and methods
+
+    OBS: This Model is not abstract which means we have a implicit relation
+         betwen the child class and this class.
     """
     co_type = models.CharField(max_length=256)
 
@@ -56,6 +86,7 @@ class CommonObject(GeoRefModel, BaseDAOMixin):
         return d
 
     def from_dict(self, data):
+        # TODO: implement-me
         return None
 
     def __init__(self, *args, **kwargs):
@@ -65,6 +96,10 @@ class CommonObject(GeoRefModel, BaseDAOMixin):
 
 
 class TargetAudience(models.Model):
+    """
+    Target Audience for different type of contents
+    Works like a 'specific type of tag'.
+    """
     name = models.CharField(max_length=64, unique=True, blank=False)
 
     def __unicode__(self):
@@ -97,6 +132,7 @@ class TargetAudience(models.Model):
 
 class GenericRelations(models.Model):
     """ Relations For Common Objects"""
+    # TODO: improve this
     obj1_id = models.IntegerField(max_length=512)
     obj1_table = models.CharField(max_length=512)
 

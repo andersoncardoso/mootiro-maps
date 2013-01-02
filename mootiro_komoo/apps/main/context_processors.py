@@ -3,6 +3,21 @@ from django.middleware.csrf import get_token
 
 
 def komoo_namespace(request):
+    """
+    Sets implicit values for the KommoNS variable.
+    This variable is used to set the application's javascript namespace.
+
+    Returns:
+        isAuthenticated: if the user is authenticated or not
+        user: a json representation for the current user
+        lang: the language being used
+        facebookAppId: app id for facebook integration
+        require_baseUrl: use for proper requirejs configuration. Used to serve
+            minified static files on production and regular static files on
+            development.
+        csrf_token: token for cross-site request forgery protection.
+        staticUrl: our configured statics url root.
+    """
     user_dict = request.user.to_dict()
     user = {
         'id': user_dict.get('id', None),
