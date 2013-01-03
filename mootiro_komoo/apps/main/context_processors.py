@@ -28,7 +28,7 @@ def komoo_namespace(request):
     return {
         'KomooNS': {
             'isAuthenticated': request.user.is_authenticated(),
-            'user': user,
+            'user_data': user,
             'lang': getattr(request, 'LANGUAGE_CODE', None) or
                     settings.LANGUAGE_CODE,
             'facebookAppId': settings.FACEBOOK_APP_ID,

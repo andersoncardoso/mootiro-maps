@@ -121,9 +121,10 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
     def from_dict(self, data):
         expected_keys = [
             'id', 'name', 'email', 'password', 'contact', 'geojson', 'url',
-            'creation_date', 'is_admin', 'is_active', 'avatar', 'about_me']
+            'creation_date', 'is_admin', 'is_active', 'avatar', 'about_me',
+            'license', 'signin', 'password_confirm']
         datetime_keys = ['creation_date']
-        exclude_keys = ['url', 'avatar']
+        exclude_keys = ['url', 'avatar', 'license', 'signin', 'password_confirm']
         build_obj_from_dict(self, data, expected_keys, datetime_keys,
                             exclude_keys)
 

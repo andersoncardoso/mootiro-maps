@@ -12,6 +12,7 @@ urlpatterns = patterns('authentication.views',
     url(r'^users/verification/(?P<key>\S+)/?$', 'user_verification',
             name='user_verification'),
     url(r'^users/(?P<id_>\d+)/?$', 'user_view', name='user_view'),
+    url(r'^users/(?P<id_>\d+)/edit/?$', 'user_view', name='user_edit'),
     url(r'^users/(me)/?$', 'user_view', name='user_view_me'),
 )
 
