@@ -34,34 +34,64 @@ class TaggedObject(models.Model):
             tag=tag)
 
 
-class TagsMixin(object):
-    """ Provides easy tags access to any model """
+class TagList(list):
+    def __init__(self, descriptor, instance):
+        self.descriptor = descriptor
+        self.instance = instance
 
-    def _get_tags(self):
-        return [tag.name
-                for tag in TaggedObject.get_tags_for_object(self)]
+    def add(self, tag):
+        return self.descriptor.add_tag(self.instance, tag)
 
-    def _set_tags(self, new_tags):
+    def remove(self, tag):
+        self.descriptor.remove_tag(self.instance, tag)
+
+
+class TagField(object):
+    """ Tag-like behavior descriptor """
+
+    def __get__(self, instance, owner):
+        tag_list = TagList(self, instance)
+        for tag in TaggedObject.get_tags_for_object(instance):
+            tag_list.append(tag.name)
+        return tag_list
+
+    def __set__(self, instance, new_tags):
         # del old tags
-        self._del_tags()
+        self.__delete__(instance)
 
         # create new tags
         for tag in new_tags:
-            tag_obj = self.add_tag(tag)
+            tag_obj = self.add_tag(instance, tag)
 
-    def _del_tags(self):
+    def __delete__(self, instance):
         tags = [
             tagged_obj for tagged_obj in TaggedObject.objects.filter(
-                object_id=getattr(self, 'id', None),
-                object_table='{}.{}'.format(self._meta.app_label,
-                    self.__class__.__name__)
+                object_id=getattr(instance, 'id', None),
+                object_table='{}.{}'.format(instance._meta.app_label,
+                    instance.__class__.__name__)
         )]
         for tag in tags:
             tag.delete()
 
-    tags = property(_get_tags, _set_tags, _del_tags, 'tags manager')
-
-    def add_tag(self, tag):
+    def add_tag(self, instance, tag):
         tag_obj = Tag.add(tag)
-        TaggedObject.add_tag_to_object(tag_obj, self)
+        TaggedObject.add_tag_to_object(tag_obj, instance)
         return tag_obj
+
+    def remove_tag(self, instance, tag):
+        try:
+            if isinstance(tag, basestring):
+                tag = Tag.objects.get(name=tag)
+            elif not isinstance(tag, Tag):
+                tag = None
+        except Exception as err:
+            tag = None
+
+        if tag:
+            TaggedObject.objects.filter(
+                    object_id=getattr(instance, 'id', None),
+                    object_table='{}.{}'.format(instance._meta.app_label,
+                        instance.__class__.__name__),
+                    tag=tag
+            ).delete()
+
