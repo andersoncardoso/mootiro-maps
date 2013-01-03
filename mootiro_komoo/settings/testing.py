@@ -8,6 +8,11 @@ INTERNAL_IPS = ('127.0.0.1', )
 
 SECRET_KEY = 'superawesomeunicornninjapandasflyingintheskywithdoublerainbows'
 
+
+INSTALLED_APPS += [
+    'tests',
+]
+
 # disable csrf for testing
 MIDDLEWARE_CLASSES.remove('django.middleware.csrf.CsrfViewMiddleware')
 

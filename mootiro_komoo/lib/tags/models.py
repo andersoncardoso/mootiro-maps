@@ -34,7 +34,7 @@ class TaggedObject(models.Model):
             tag=tag)
 
 
-class TagList(list):
+class _TagList(list):
     def __init__(self, descriptor, instance):
         self.descriptor = descriptor
         self.instance = instance
@@ -47,10 +47,25 @@ class TagList(list):
 
 
 class TagField(object):
-    """ Tag-like behavior descriptor """
+    """
+    Tag-like behavior descriptor. It treats the TagField attribute like a
+    list, but implictly makes all the necessary database queries.
+    usage:
+        class MyClass(models.Model):
+            tags = TagField()
+
+        obj = MyClass()
+        obj.tags  # returns []
+        obj.tags = ['tag A', 'tag B']  # creates and saves tags to object
+        obj.tags  # returns ['tag A', 'tag B']
+        obj.tags.add('tag C')
+        obj.tags.remove('tag A')
+        obj.tags  # returns ['tag B', 'tag C']
+
+    """
 
     def __get__(self, instance, owner):
-        tag_list = TagList(self, instance)
+        tag_list = _TagList(self, instance)
         for tag in TaggedObject.get_tags_for_object(instance):
             tag_list.append(tag.name)
         return tag_list
@@ -61,7 +76,7 @@ class TagField(object):
 
         # create new tags
         for tag in new_tags:
-            tag_obj = self.add_tag(instance, tag)
+            self.add_tag(instance, tag)
 
     def __delete__(self, instance):
         tags = [
@@ -84,7 +99,7 @@ class TagField(object):
                 tag = Tag.objects.get(name=tag)
             elif not isinstance(tag, Tag):
                 tag = None
-        except Exception as err:
+        except Exception:
             tag = None
 
         if tag:
