@@ -9,7 +9,7 @@ from django.utils.translation import ugettext as _
 from jsonfield import JSONField
 
 from lib.locker.models import Locker
-from main.utils import send_mail_async, iso_to_datetime
+from main.utils import send_mail_async, build_obj_from_dict
 from main.utils import BaseDAOMixin, PermissionMixin
 from main.datalog import get_user_updates
 from komoo_map.models import GeoRefModel, POINT
@@ -122,16 +122,10 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
         expected_keys = [
             'id', 'name', 'email', 'password', 'contact', 'geojson', 'url',
             'creation_date', 'is_admin', 'is_active', 'avatar', 'about_me']
-        for key, val in data.iteritems():
-            if key in expected_keys:
-                if key in ['url', 'avatar']:
-                    continue
-                elif key == 'creation_date' and isinstance(val, basestring):
-                    self.creation_date = iso_to_datetime(val)
-                else:
-                    setattr(self, key, val)
-            else:
-                raise Exception('Unexpected Key: {}'.format(key))
+        datetime_keys = ['creation_date']
+        exclude_keys = ['url', 'avatar']
+        build_obj_from_dict(self, data, expected_keys, datetime_keys,
+                            exclude_keys)
 
     def to_dict(self):
         fields_and_defaults = [
@@ -181,7 +175,6 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
             message=CONFIRMATION_EMAIL_MSG.format(
                 name=self.name,
                 verification_url=verification_url))
-
 
     def contributions(self, page=1, num=None):
         """ return user's update """

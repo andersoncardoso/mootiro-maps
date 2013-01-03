@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.translation import ugettext as _
 
 from main.models import CommonObject, CommonDataMixin
+from main.utils import build_obj_from_dict
 from jsonfield import JSONField
 from komoo_map.models import POLYGON, LINESTRING, POINT
 
@@ -44,8 +45,9 @@ class Resource(CommonObject, CommonDataMixin):
         return '/resource/%s' % self.id
 
     # ================== utils =============================
-    def from_dict(self):
-        pass
+    def from_dict(self, data):
+        super(Resource, self).from_dict(data)
+        build_obj_from_dict(self, data, expected_keys, datetime_keys)
 
     def to_dict(self):
         dict_ = super(Resource, self).to_dict()

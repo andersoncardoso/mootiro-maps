@@ -6,7 +6,7 @@ from komoo_map.models import GeoRefModel
 from authentication.models import User
 from tags.models import TagField
 
-from .utils import BaseDAOMixin
+from .utils import BaseDAOMixin, iso_to_datetime, build_obj_from_dict
 
 
 class CommonDataMixin(models.Model):
@@ -58,7 +58,15 @@ class CommonDataMixin(models.Model):
             'last_editor': self.last_editor,
             'last_update': self.last_update,
             'tags': self.tags,
+            'extra_data': self.extra_data,
         }
+
+    def from_dict(self, data):
+        expected_keys = [
+            'name', 'description', 'creator', 'creation_date', 'last_editor',
+            'last_update', 'tags', 'extra_data']
+        datetime_keys = ['creation_date', 'last_update']
+        build_obj_from_dict(self, data, expected_keys, datetime_keys)
 
 
 class CommonObject(GeoRefModel, BaseDAOMixin):

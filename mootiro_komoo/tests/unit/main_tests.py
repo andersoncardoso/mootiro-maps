@@ -5,7 +5,7 @@ import datetime
 from ..test_utils import setup_env, create_test_user
 setup_env()
 
-from main.models import CommonObject, CommonDataMixin
+from main.models import CommonDataMixin
 
 
 class MyClass(CommonDataMixin):
@@ -24,7 +24,7 @@ class CommonDataMixinTest(unittest.TestCase):
         obj.name = 'object test'
         obj.description = 'this is a simple attributes test'
         obj.creator = self.user
-        obj.extra_data = {'bla': 'blee', 'some_number': 3}
+        obj.extra_data = {'bla': 'ble', 'some_number': 3}
         obj.id = 1
         obj.tags = ['tag1', 'tag2', 'tag3']
         obj.creation_date = datetime.datetime(2012, 12, 14, 15, 23, 30, 0)
@@ -50,8 +50,30 @@ class CommonDataMixinTest(unittest.TestCase):
             'creation_date': datetime.datetime(2012, 12, 14, 15, 23, 30, 0),
             'last_editor': None,
             'last_update': None,
-            # 'extra_data': {'bla': 'ble', 'some_number': 3},
+            'extra_data': {'bla': 'ble', 'some_number': 3},
             'tags': ['tag1', 'tag2', 'tag3'],
         }
         self.assertDictEqual(expected_dict, obj.to_dict())
+
+    def from_dict_test(self):
+        data_dict = {
+            'name': 'object test',
+            'description': 'this is a simple attributes test',
+            'creator': self.user,
+            'creation_date': datetime.datetime(2012, 12, 14, 15, 23, 30, 0),
+            'last_editor': None,
+            'last_update': None,
+            'extra_data': {'bla': 'ble', 'some_number': 3},
+            'tags': ['tag1', 'tag2', 'tag3'],
+        }
+        obj = MyClass()
+        obj.id = 1
+        obj.from_dict(data_dict)
+        self.assertEqual('object test', obj.name)
+        self.assertEqual('this is a simple attributes test', obj.description)
+        self.assertEqual(self.user, obj.creator)
+        self.assertEqual(datetime.datetime(2012, 12, 14, 15, 23, 30, 0),
+                         obj.creation_date)
+        self.assertEqual(['tag1', 'tag2', 'tag3'], obj.tags)
+
 
