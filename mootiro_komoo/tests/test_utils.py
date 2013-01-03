@@ -3,21 +3,8 @@ import os
 import sys
 import unittest
 import requests
-from django.core.management import setup_environ
-
-A_POLYGON_GEOMETRY = '''
-    {
-        "type":"GeometryCollection",
-        "geometries":[
-            {
-                "type":"Polygon",
-                "coordinates":[
-                        [[0,0],[1,1],[2,2],[0,0]]
-                ]
-            }
-        ]
-    }
-'''
+import datetime
+# from django.core.management import setup_environ
 
 
 def setup_env():
@@ -38,10 +25,43 @@ def setup_env():
     # from settings import testing as environ
     # setup_environ(environ)
 
+setup_env()
+from authentication.models import User
+
+
+A_POLYGON_GEOMETRY = '''
+    {
+        "type":"GeometryCollection",
+        "geometries":[
+            {
+                "type":"Polygon",
+                "coordinates":[
+                        [[0,0],[1,1],[2,2],[0,0]]
+                ]
+            }
+        ]
+    }
+'''
+
 
 def ensure_empty_db():
     # TODO
     pass
+
+
+def create_test_user():
+    """utility function for creating a test user"""
+    User.objects.all().delete()
+    user = User()
+    user.id = 1
+    user.name = 'Test User'
+    user.email = 'test@user.com'
+    user.set_password('12345')
+    user.contact = {'tel': '1234567890', 'skype': 'skype_from_test_user'}
+    user.save()
+    user.creation_date = datetime.datetime(2012, 12, 14, 15, 23, 30, 0)
+    user.save()
+    return user
 
 
 class Client(object):
@@ -64,6 +84,7 @@ class Client(object):
 
     def patch(self, endpoint, *args, **kwargs):
         return self._proxy_to_requests('patch', endpoint, *args, **kwargs)
+
 
 class IntegrationTest(unittest.TestCase):
     def __init__(self, *args, **kwargs):

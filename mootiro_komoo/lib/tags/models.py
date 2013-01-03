@@ -20,7 +20,7 @@ class TaggedObject(models.Model):
     def get_tags_for_object(cls, obj):
         return [
             tagged_obj.tag for tagged_obj in TaggedObject.objects.filter(
-                object_id=obj.id,
+                object_id=getattr(obj, 'id', None),
                 object_table='{}.{}'.format(obj._meta.app_label,
                     obj.__class__.__name__)
         )]
@@ -28,7 +28,7 @@ class TaggedObject(models.Model):
     @classmethod
     def add_tag_to_object(cls, tag, obj):
         obj, created = TaggedObject.objects.get_or_create(
-            object_id=obj.id,
+            object_id=getattr(obj, 'id', None),
             object_table='{}.{}'.format(obj._meta.app_label,
                 obj.__class__.__name__),
             tag=tag)
@@ -52,7 +52,7 @@ class TagsMixin(object):
     def _del_tags(self):
         tags = [
             tagged_obj for tagged_obj in TaggedObject.objects.filter(
-                object_id=self.id,
+                object_id=getattr(self, 'id', None),
                 object_table='{}.{}'.format(self._meta.app_label,
                     self.__class__.__name__)
         )]

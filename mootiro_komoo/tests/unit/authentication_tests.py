@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import unittest
 import datetime
 from mock import MagicMock, patch
-from ..test_utils import setup_env
+from ..test_utils import setup_env, create_test_user
 setup_env()
 
 from authentication.models import User, Login
@@ -13,18 +13,7 @@ class UserTest(unittest.TestCase):
 
     @classmethod
     def _create_test_user(self):
-        # ensure User table is empty
-        User.objects.all().delete()
-        user = User()
-        user.id = 1
-        user.name = 'Test User'
-        user.email = 'test@user.com'
-        user.set_password('12345')
-        user.contact = {'tel': '1234567890', 'skype': 'skype_from_test_user'}
-        user.save()
-        user.creation_date = datetime.datetime(2012, 12, 14, 15, 23, 30, 0)
-        user.save()
-        return user
+        return create_test_user()
 
     @classmethod
     def _get_test_user_dict(self):
@@ -158,9 +147,9 @@ class UserTest(unittest.TestCase):
                 'The email body should mention the user name')
         self.assertTrue(verification_url in mail_kwargs['message'],
                 'The email body should have the verification url')
-        self.assertTrue(user.email in  mail_kwargs['receivers'],
+        self.assertTrue(user.email in mail_kwargs['receivers'],
                 'The user should be an email receiver')
-        self.assertTrue('MootiroMaps' in  mail_kwargs['title'],
+        self.assertTrue('MootiroMaps' in mail_kwargs['title'],
                 'The email subject should mention MootiroMaps')
 
 
