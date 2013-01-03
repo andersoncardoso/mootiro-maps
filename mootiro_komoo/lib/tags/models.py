@@ -3,12 +3,20 @@ from django.db import models
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=1024)
+    name = models.CharField(max_length=1024, unique=True)
 
     @classmethod
     def add(cls, tag):
         obj, created = cls.objects.get_or_create(name=tag)
         return obj
+
+    @classmethod
+    def get_by_name(cls, tag_name):
+        try:
+            tag = Tag.objects.get(name=tag_name)
+        except Exception:
+            tag = None
+        return tag
 
 
 class TaggedObject(models.Model):
@@ -35,6 +43,7 @@ class TaggedObject(models.Model):
 
 
 class _TagList(list):
+    """ utility extended list for tags in TagField descriptor"""
     def __init__(self, descriptor, instance):
         self.descriptor = descriptor
         self.instance = instance
@@ -55,12 +64,19 @@ class TagField(object):
             tags = TagField()
 
         obj = MyClass()
-        obj.tags  # returns []
-        obj.tags = ['tag A', 'tag B']  # creates and saves tags to object
-        obj.tags  # returns ['tag A', 'tag B']
+        obj.tags
+        # returns []
+
+        obj.tags = ['tag A', 'tag B']
+        # creates and saves tags to object
+
+        obj.tags
+        # returns ['tag A', 'tag B']
+
         obj.tags.add('tag C')
         obj.tags.remove('tag A')
-        obj.tags  # returns ['tag B', 'tag C']
+        obj.tags
+        # returns ['tag B', 'tag C']
 
     """
 
@@ -94,12 +110,9 @@ class TagField(object):
         return tag_obj
 
     def remove_tag(self, instance, tag):
-        try:
-            if isinstance(tag, basestring):
-                tag = Tag.objects.get(name=tag)
-            elif not isinstance(tag, Tag):
-                tag = None
-        except Exception:
+        if isinstance(tag, basestring):
+            tag = Tag.get_by_name(tag)
+        elif not isinstance(tag, Tag):
             tag = None
 
         if tag:

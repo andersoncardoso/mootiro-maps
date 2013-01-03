@@ -4,6 +4,7 @@ import unittest
 from ..test_utils import setup_env
 setup_env()
 
+from django.db import IntegrityError
 from tags.models import Tag, TaggedObject
 from tests.models import TestTaggedClass
 
@@ -14,7 +15,14 @@ class TagTest(unittest.TestCase):
         Tag.objects.all().delete()
         TaggedObject.objects.all().delete()
 
-    def tag_test(self):
+    def tag_unique_name_test(self):
+        self._clean_all_tags()
+        Tag(name='A').save()
+        with self.assertRaises(IntegrityError):
+            Tag(name='A').save()
+
+
+    def tag_descriptor_test(self):
         self._clean_all_tags()
         obj = TestTaggedClass()
         obj.save()
@@ -25,8 +33,8 @@ class TagTest(unittest.TestCase):
         # implicitly create and set tags
         obj.tags = ['A', 'B']
         self.assertEqual(['A', 'B'], obj.tags)
-        tagA = Tag.objects.get(name='A')
-        tagB = Tag.objects.get(name='B')
+        tagA = Tag.get_by_name('A')
+        tagB = Tag.get_by_name('B')
         self.assertTrue(tagA)
         self.assertTrue(tagB)
 
