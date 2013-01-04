@@ -6,7 +6,7 @@ from django.contrib.gis.db import models
 from django.utils.translation import ugettext as _
 from django.template.defaultfilters import slugify
 
-from main.models import CommonDataMixin, CommonObject, TargetAudience
+from main.models import CommonObject, TargetAudience
 from komoo_map.models import POLYGON, LINESTRING, POINT
 
 
@@ -40,7 +40,7 @@ class NeedCategory(models.Model):
         return "img/need_categories/%s-off.png" % slugify(self.name)
 
 
-class Need(CommonObject, CommonDataMixin):
+class Need(CommonObject):
     common_object_type = 'need'
 
     categories = models.ManyToManyField(NeedCategory)

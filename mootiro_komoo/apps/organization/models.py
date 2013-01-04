@@ -5,7 +5,7 @@ from django.db import models
 
 from django.utils.translation import ugettext as _
 
-from main.models import CommonObject, CommonDataMixin, TargetAudience
+from main.models import BaseModel, CommonObject, TargetAudience
 
 from komoo_map.models import POLYGON, POINT
 
@@ -16,7 +16,7 @@ LOGO_CHOICES = (
 )
 
 
-class Organization(CommonObject, CommonDataMixin):
+class Organization(CommonObject):
     # logo = models.ForeignKey(UploadedFile, null=True, blank=True)
     # logo_category = models.ForeignKey('OrganizationCategory', null=True,
     #                    blank=True, related_name='organization_category_logo')
@@ -54,7 +54,7 @@ class Organization(CommonObject, CommonDataMixin):
         return {}
 
 
-class OrganizationCategory(models.Model):
+class OrganizationCategory(BaseModel):
     name = models.CharField(max_length=320, unique=True)
 
     def __unicode__(self):

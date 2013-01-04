@@ -2,14 +2,29 @@
 from django.db import models
 from jsonfield import JSONField
 
-from komoo_map.models import GeoRefModel
-from authentication.models import User
 from tags.models import TagField
 
-from .utils import BaseDAOMixin, iso_to_datetime, build_obj_from_dict
+from komoo_map.models import GeoRefModel
+from authentication.models import User
+from .utils import build_obj_from_dict
+from .mixins import BaseDAOMixin
 
 
-class CommonDataMixin(models.Model):
+class BaseModel(models.Model, BaseDAOMixin):
+
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def _table_ref(cls):
+        return '{}.{}'.format(cls._meta.app_label, cls.__name__)
+
+    @property
+    def table_ref(self):
+        return self._table_ref()
+
+
+class CommonDataMixin(models.Model, BaseDAOMixin):
     """
     Abstract model for common attributes and behavior.
 
@@ -69,7 +84,7 @@ class CommonDataMixin(models.Model):
         build_obj_from_dict(self, data, expected_keys, datetime_keys)
 
 
-class CommonObject(GeoRefModel, BaseDAOMixin):
+class CommonObject(GeoRefModel, BaseModel, CommonDataMixin):
     """
     Common objects base model.
 
@@ -105,7 +120,7 @@ class CommonObject(GeoRefModel, BaseDAOMixin):
             self.co_type = self.common_object_type
 
 
-class TargetAudience(models.Model):
+class TargetAudience(BaseModel):
     """
     Target Audience for different type of contents
     Works like a 'specific type of tag'.
@@ -116,36 +131,22 @@ class TargetAudience(models.Model):
         return self.name
 
 
-# class RelationType(models.Model):
-#     """ Relation Types """
-#     name = models.CharField(max_length=512)
-#
-#     @property
-#     def name(self):
-#         if settings.code == 'en-us':
-#             return unicode(self.name)
-#         else:
-#             rel_trans = RelationTypeTranslations.objects.get(
-#                     relation_type=self, language_code=settings.code)
-#             return unicode(rel_trans.name)
-#
-#
-# class RelationTypeTranslations(models.Model):
-#     """ Translations for RelationTypes"""
-#     name = models.CharField(max_length=512)
-#     language_code = models.CharField(max_length=128)
-#     relation_type = models.ForeignKey(RelationType)
-#
-#     def __unicode__(self):
-#         return unicode(self.name)
-
-
-class GenericRelations(models.Model):
+class GenericRelations(BaseModel):
     """ Relations For Common Objects"""
-    # TODO: improve this
     obj1_id = models.IntegerField(max_length=512)
     obj1_table = models.CharField(max_length=512)
 
     obj2_id = models.IntegerField(max_length=512)
     obj2_table = models.CharField(max_length=512)
+
+    relation_from_1_to_2 = models.CharField(max_length=1024, null=True,
+                                blank=True)
+    relation_from_2_to_1 = models.CharField(max_length=1024, null=True,
+                                blank=True)
+
+
+
+
+
+
 

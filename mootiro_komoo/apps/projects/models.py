@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from jsonfield import JSONField
 
+from main.models import BaseModel
 from main.models import CommonDataMixin
 from authentication.models import User
 
@@ -15,7 +16,7 @@ from authentication.models import User
 #     # dynamic ref
 
 
-class Project(CommonDataMixin):
+class Project(BaseModel, CommonDataMixin):
 
     contributors = models.ManyToManyField(User, null=True, blank=True,
             related_name='project_contributors')

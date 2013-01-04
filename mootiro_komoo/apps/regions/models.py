@@ -6,7 +6,7 @@ from django.contrib.gis.db import models
 # from django.contrib.gis.measure import Distance
 from django.utils.translation import ugettext as _
 
-from main.models import CommonObject, CommonDataMixin
+from main.models import CommonObject
 from komoo_map.models import POLYGON
 
 
@@ -15,7 +15,7 @@ REGION_TYPES = (
 )
 
 
-class Region(CommonObject, CommonDataMixin):
+class Region(CommonObject):
     """ Common Object inherited Regions"""
     common_object_type = 'regions'
 

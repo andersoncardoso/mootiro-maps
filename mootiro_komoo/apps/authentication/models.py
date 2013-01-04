@@ -10,7 +10,7 @@ from jsonfield import JSONField
 
 from lib.locker.models import Locker
 from main.utils import send_mail_async, build_obj_from_dict
-from main.utils import BaseDAOMixin, PermissionMixin
+from main.mixins import PermissionMixin, BaseDAOMixin
 from main.datalog import get_user_updates
 from komoo_map.models import GeoRefModel, POINT
 
@@ -124,7 +124,8 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
             'creation_date', 'is_admin', 'is_active', 'avatar', 'about_me',
             'license', 'signin', 'password_confirm']
         datetime_keys = ['creation_date']
-        exclude_keys = ['url', 'avatar', 'license', 'signin', 'password_confirm']
+        exclude_keys = ['url', 'avatar', 'license', 'signin',
+                        'password_confirm']
         build_obj_from_dict(self, data, expected_keys, datetime_keys,
                             exclude_keys)
 
@@ -184,6 +185,14 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
     # dummy fix for django weirdness =/
     def get_and_delete_messages(self):
         pass
+
+    @classmethod
+    def _table_ref(cls):
+        return '{}.{}'.format(cls._meta.app_label, cls.__name__)
+
+    @property
+    def table_ref(self):
+        return self._table_ref()
 
 
 class AnonymousUser(object):
