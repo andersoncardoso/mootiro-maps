@@ -1,18 +1,3 @@
-<h1 class="title" id="user-name-container"></h1>
-
-<ul class="contact-info">
-  <% if(user.email) { %>
-    <li class="email"><%= user.email %></li>
-  <% } %>
-  <% if(user.contact) _.each(user.contact, function (c) { %>
-    <li class="<%= c.type.toLowerCase() %>"><%= c.value %></li>
-  <% }); %>
-</ul>
-
-<article class="user-info">
-  <h1><%= i18n('About me') %></h1>
-  <div class="content" id="user-info-container">
-  </div>
-</article>
+<div id="user-info-container"></div>
 
 <div id="user-updates-container"></div>

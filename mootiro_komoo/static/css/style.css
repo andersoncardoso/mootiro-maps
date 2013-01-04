@@ -235,9 +235,11 @@ body > .content-box > .action-bar .delete.active:hover:before {
   margin-right: 5px;
   vertical-align: middle;
 }
+body > .content-box > .action-bar .rate,
 body > .content-box > .action-bar .star {
   display: inline-block;
 }
+body > .content-box > .action-bar .rate:before,
 body > .content-box > .action-bar .star:before {
   background: /* @menu-fg */ url(../img/sprite.png) no-repeat -5 0;
   text-indent: 10000px;
@@ -248,6 +250,7 @@ body > .content-box > .action-bar .star:before {
   margin-right: 5px;
   vertical-align: middle;
 }
+body > .content-box > .action-bar .rate:before,
 body > .content-box > .action-bar .star:before {
   background: /* @menu-fg */ url(../img/sprite.png) no-repeat -16px -80px;
   text-indent: 10000px;
@@ -258,9 +261,11 @@ body > .content-box > .action-bar .star:before {
   margin-right: 5px;
   vertical-align: middle;
 }
+body > .content-box > .action-bar .rate:hover,
 body > .content-box > .action-bar .star:hover {
   display: inline-block;
 }
+body > .content-box > .action-bar .rate:hover:before,
 body > .content-box > .action-bar .star:hover:before {
   background: /* @menu-fg */ url(../img/sprite.png) no-repeat -7 0;
   text-indent: 10000px;
@@ -271,6 +276,7 @@ body > .content-box > .action-bar .star:hover:before {
   margin-right: 5px;
   vertical-align: middle;
 }
+body > .content-box > .action-bar .rate:hover:before,
 body > .content-box > .action-bar .star:hover:before {
   background: /* @menu-fg */ url(../img/sprite.png) no-repeat -16px -112px;
   text-indent: 10000px;
@@ -281,13 +287,19 @@ body > .content-box > .action-bar .star:hover:before {
   margin-right: 5px;
   vertical-align: middle;
 }
+body > .content-box > .action-bar .rate:active,
 body > .content-box > .action-bar .star:active,
+body > .content-box > .action-bar .rate.active,
 body > .content-box > .action-bar .star.active,
+body > .content-box > .action-bar .rate.active:hover,
 body > .content-box > .action-bar .star.active:hover {
   display: inline-block;
 }
+body > .content-box > .action-bar .rate:active:before,
 body > .content-box > .action-bar .star:active:before,
+body > .content-box > .action-bar .rate.active:before,
 body > .content-box > .action-bar .star.active:before,
+body > .content-box > .action-bar .rate.active:hover:before,
 body > .content-box > .action-bar .star.active:hover:before {
   background: /* @menu-fg */ url(../img/sprite.png) no-repeat -6 0;
   text-indent: 10000px;
@@ -298,8 +310,11 @@ body > .content-box > .action-bar .star.active:hover:before {
   margin-right: 5px;
   vertical-align: middle;
 }
+body > .content-box > .action-bar .rate:active:before,
 body > .content-box > .action-bar .star:active:before,
+body > .content-box > .action-bar .rate.active:before,
 body > .content-box > .action-bar .star.active:before,
+body > .content-box > .action-bar .rate.active:hover:before,
 body > .content-box > .action-bar .star.active:hover:before {
   background: /* @menu-fg */ url(../img/sprite.png) no-repeat -16px -96px;
   text-indent: 10000px;

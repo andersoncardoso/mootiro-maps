@@ -5,6 +5,7 @@ i18n.js
 jquery.js
 underscore.js
 backbone.js
+main/mixins.js
 dutils.js
 urls.js
 backbone/paginator.js
@@ -15,6 +16,7 @@ text.js
 text!templates/main/_upper_bar.html
 text!templates/main/_header.html
 text!templates/main/_footer.html
+text!templates/main/_action_bar.html
 main/views.js
 page_manager.js
 main/pages.js
@@ -34,8 +36,8 @@ utils.js
 text!templates/widgets/_modal_box.html
 widgets/modal.js
 authentication/router.js
+text!templates/user/_user_info.html
 text!templates/user/_profile.html
-text!templates/forms/_inline_form.html
 text!templates/user/_sidebar.html
 text!templates/user/_update_item.html
 text!templates/user/_updates_block.html

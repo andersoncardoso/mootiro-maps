@@ -5,6 +5,7 @@ define (require) ->
   Backbone = require 'backbone'
 
   pageManager = require 'page_manager'
+  views = require './views'
 
   getUser = (id) ->
     if not id?
@@ -28,29 +29,47 @@ define (require) ->
     return user
 
 
-  profile =
-    render: (id) ->
-      views = require './views'
+  class Profile extends pageManager.Page
+    constructor: (@userId, @mode='view') ->
+      @id = "user::profile::#{@userId}"
 
+    setMode: (mode) ->
+      if @mode is mode
+        if mode is 'edit'
+          Backbone.trigger 'user::profile', @userId
+        return
+
+      @actionBar.setMode mode
+      #@sidebar.setMode mode
+      #@mainContent.setMode mode
+      @mode = mode
+
+    render: ->
       # Deferred object to router know when the page is ready or if occurred
       # an error
       dfd = new $.Deferred()
 
-      # Get the user
-      user = getUser id
-      user.fetch().done ->
-        # User Profile don't have an action bar, so make it empty
-        $('#action-bar').empty()
+      console.log '--->', @id
+      if pageManager.currentPage?.id is @id
+        pageManager.currentPage.setMode @mode
+        dfd.resolve()
+        return dfd.promise()
 
+      # Get the user
+      user = getUser @userId
+      window.user = user
+      user.fetch().done =>
         # Use Page class and page manager to avoid memory leak and centralize some
         # common tasks
-        profilePage = new pageManager.Page
-          sidebar: new views.Sidebar
-              model: user
-          mainContent: new views.Profile
-              model: user
+        data =
+          model: user
+          mode: @mode
 
-        pageManager.open profilePage
+        @actionBar = new views.ActionBar data
+        @sidebar = new views.Sidebar data
+        @mainContent = new views.Profile data
+
+        pageManager.open this
 
         dfd.resolve()
       .fail (jqXHR) ->
@@ -59,5 +78,10 @@ define (require) ->
       dfd.promise()
 
 
+  class Edit extends Profile
+    constructor: (userId, mode='edit') ->
+      super userId, mode
+
   getUser: getUser
-  profile: profile
+  Profile: Profile
+  Edit: Edit

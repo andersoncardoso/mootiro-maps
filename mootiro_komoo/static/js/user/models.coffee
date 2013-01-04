@@ -3,6 +3,7 @@ define (require) ->
 
   _ = require 'underscore'
   Backbone = require 'backbone'
+  PermissionMixin = require('main/mixins').PermissionMixin
   urls = require 'urls'
 
   User = Backbone.Model.extend
@@ -10,6 +11,11 @@ define (require) ->
 
     defaults:
       'about_me': ''
+
+    permissions:
+      edit: (user) ->
+        user instanceof User and
+          (user.isSuperuser() or user.get('id') is @get('id'))
 
     getUpdates: ->
       if @updates? then return @updates
@@ -22,5 +28,14 @@ define (require) ->
     goToProfile: ->
       Backbone.trigger 'user::profile', @id
 
+    edit: ->
+      Backbone.trigger 'user::edit', @id
+
+    isSuperuser: ->
+      # TODO: implement
+      false
+
+
+  _.extend User.prototype, PermissionMixin
 
   User: User

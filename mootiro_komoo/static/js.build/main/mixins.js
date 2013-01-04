@@ -1,0 +1,1 @@
+(function(){define(["require","underscore"],function(e){var t,n;return n=e("underscore"),t={defaultPermissions:{view:!0,edit:!0},hasPermission:function(e,t){var r,i,s;return r=(i=(s=this.permissions)!=null?s[e]:void 0)!=null?i:this.defaultPermissions[e],r?(n.isFunction(r)&&(t==null&&(t=KomooNS.user),r=r.apply(this,[t])),r):!1}},{PermissionMixin:t}})}).call(this);

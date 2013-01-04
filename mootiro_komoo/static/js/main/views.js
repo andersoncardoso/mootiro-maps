@@ -4,7 +4,7 @@
 
   define(function(require) {
     'use strict';
-    var $, Backbone, Feedback, Footer, Header, UpperBar, _;
+    var $, ActionBar, Backbone, Feedback, Footer, Header, UpperBar, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
@@ -159,10 +159,80 @@
       return Footer;
 
     })(Backbone.View);
+    ActionBar = (function(_super) {
+
+      __extends(ActionBar, _super);
+
+      function ActionBar() {
+        ActionBar.__super__.constructor.apply(this, arguments);
+      }
+
+      ActionBar.prototype.tagName = 'ul';
+
+      ActionBar.prototype.events = {
+        'click a': 'do'
+      };
+
+      ActionBar.prototype.actions = [
+        {
+          action: 'edit',
+          label: i18n('Edit')
+        }, {
+          action: 'rate',
+          label: i18n('Rate')
+        }, {
+          action: 'discuss',
+          label: i18n('Discuss')
+        }, {
+          action: 'history',
+          label: i18n('History')
+        }, {
+          action: 'report',
+          label: i18n('Report')
+        }, {
+          action: 'delete',
+          label: i18n('Delete')
+        }
+      ];
+
+      ActionBar.prototype.initialize = function() {
+        _.bindAll(this);
+        this.template = _.template(require('text!templates/main/_action_bar.html'));
+        this.mode = this.options.mode;
+        return this.render();
+      };
+
+      ActionBar.prototype.render = function() {
+        this.$el.html(this.template({
+          actions: this.actions,
+          model: this.model.toJSON(),
+          hasPermission: _.bind(this.model.hasPermission, this.model)
+        }));
+        this.setMode(this.mode);
+        return this;
+      };
+
+      ActionBar.prototype["do"] = function(e) {
+        var action;
+        e.preventDefault();
+        action = $(e.target).attr('data-action');
+        if (_.isFunction(this.model[action])) return this.model[action]();
+      };
+
+      ActionBar.prototype.setMode = function(mode) {
+        this.mode = mode;
+        this.$('.active').removeClass('active');
+        return this.$("a[data-action=" + mode + "]").addClass('active');
+      };
+
+      return ActionBar;
+
+    })(Backbone.View);
     return {
       Header: Header,
       Footer: Footer,
       UpperBar: UpperBar,
+      ActionBar: ActionBar,
       Feedback: Feedback
     };
   });

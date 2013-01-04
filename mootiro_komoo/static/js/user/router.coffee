@@ -6,10 +6,14 @@ define (require) ->
 
   pages = require('./pages')
 
+  window.pageManager = require 'page_manager'
+
+
   class UserRouter extends Backbone.Router
     routes:
       'users(/)': 'user'
       'users/:id(/)': 'profile'
+      'users/:id/edit(/)': 'edit'
 
     initialize: ->
       _.bindAll this
@@ -17,10 +21,10 @@ define (require) ->
 
     bindExternalEvents: ->
       Backbone.on 'user::profile', @profile
+      Backbone.on 'user::edit', @edit
 
-    goTo: (page, args...) ->
-      page.render(args)
-      .fail (e) ->
+    goTo: (page) ->
+      page.render().fail (e) ->
         Backbone.trigger 'main::error', e.status, e.statusText
 
     user: ->
@@ -35,8 +39,11 @@ define (require) ->
         Backbone.trigger 'auth::loginRequired', next
 
     profile: (id) ->
-      @goTo pages.profile, id
       @navigate "users/#{id}"
+      @goTo new pages.Profile(id)
 
+    edit: (id) ->
+      @navigate "users/#{id}/edit"
+      @goTo new pages.Edit(id)
 
   new UserRouter()

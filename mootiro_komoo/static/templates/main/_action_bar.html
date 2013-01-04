@@ -1,0 +1,8 @@
+<% _.each(actions, function(item) {
+    if (hasPermission(item.action)) {
+%>
+<li><a class="<%= item.action %>" data-action="<%= item.action %>" href="#" title="<%= item.label %>"><%= item.label %></a></li>
+<%
+    }
+  });
+%>

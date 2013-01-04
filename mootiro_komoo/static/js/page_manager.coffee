@@ -13,9 +13,8 @@ define (require) ->
       @mainContent = views.mainContent
 
     open: ->
-      $('#actionbar').append @actionBar?.$el
+      $('#action-bar').append @actionBar?.$el
       $('#sidebar').append @sidebar?.$el
-      $('#main-content').empty()
       $('#main-content').append @mainContent?.$el
 
     close: ->

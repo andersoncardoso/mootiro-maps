@@ -6,56 +6,35 @@ define (require) ->
   Backbone = require 'backbone'
   ReForm = require 'reForm'
 
+  ActionBar = require('main/views').ActionBar
+
 
   #### Profile Main View ####
 
-  #
-  # Generic view for model fields
-  #
-  FieldView = Backbone.View.extend
+  class UserInfo extends Backbone.View
     initialize: ->
       _.bindAll this
-      @listenTo @model, "change", @render
-      @_template = _.template @template
+      @template = _.template require 'text!templates/user/_user_info.html'
+      @listenTo @model, 'change', @render
       @render()
 
     render: ->
-      @$el.html @_template model: @model.toJSON()
+      @$el.html @template user: @model.toJSON()
 
 
-  NameView = FieldView.extend
-    template: '<%= model.name %>'
-
-
-  UserInfoView = FieldView.extend
-    template: '<%= model.about_me || i18n("User has not wrote about oneself")  %>'
-
-  #
-  # Main profile View
-  #
-  Profile = Backbone.View.extend
+  class Profile extends Backbone.View
     initialize: ->
       window.model = @model
       _.bindAll this
       @template = _.template require 'text!templates/user/_profile.html'
-      @listenTo @model, 'change', @render
 
-      # FIXME: this is not safe
-      if KomooNS?.user and KomooNS.user.id is @model.id
-        NameView = NameField
-        UserInfoView = UserInfoField
-
-      @nameView = new NameView
-        model: @model
-
-      @userInfoView = new UserInfoView
+      @userInfoView = new UserInfo
         model: @model
 
       @updatesView = new Updates
         collection: @model.getUpdates()
 
       @subViews = [
-        @nameView
         @userInfoView
         @updatesView
       ]
@@ -63,73 +42,18 @@ define (require) ->
       @render()
 
     render: ->
-      @nameView.$el.detach()  # Dont lost the updates element
       @userInfoView.$el.detach()  # Dont lost the updates element
       @updatesView.$el.detach()  # Dont lost the updates element
       @$el.html @template
         user: @model.toJSON()
-      @$('#user-name-container').append @nameView.$el
       @$('#user-info-container').append @userInfoView.$el
       @$('#user-updates-container').append @updatesView.$el
       this
 
 
-  #### Inline forms ####
-
-  #
-  # Generic inline form view
-  #
-  InlineForm = ReForm.Form.extend
-    events:
-      'click .edit': 'toggle'
-      'click .cancel': 'toggle'
-
-    initialize: ->
-      ReForm.Form.prototype.initialize.apply this, arguments
-      @listenTo @model, "change", @update
-      @formTemplate = _.template require 'text!templates/forms/_inline_form.html'
-      @_displayView = new @displayView @options
-      @subViews = [@_displayView]
-      @render()
-
-    render: ->
-      @_displayView?.$el?.detach()
-      ReForm.Form.prototype.render.apply this, arguments
-      if @_displayView?
-        @$('.display .content').append @_displayView.$el
-      this
-
-    update: ->
-      if @model
-        @set @model.toJSON()
-
-    toggle: (e) ->
-      e.preventDefault()
-      @update()
-      @$('.display, form.inline-form').toggleClass('open').toggleClass('closed')
-
-
-  NameField = InlineForm.extend
-    fields: [
-      label: i18n('Name')
-      name: 'name'
-      widget: ReForm.commonWidgets.TextWidget
-    ]
-    displayView: NameView
-
-
-  UserInfoField = InlineForm.extend
-    fields: [
-      label: i18n('About me')
-      name: 'about_me'
-      widget: ReForm.commonWidgets.TextAreaWidget
-    ]
-    displayView: UserInfoView
-
-
   #### Profile Sidebar ####
 
-  Sidebar = Backbone.View.extend
+  class Sidebar extends Backbone.View
     initialize: ->
       _.bindAll this
       @template = _.template require 'text!templates/user/_sidebar.html'
@@ -143,7 +67,7 @@ define (require) ->
 
   #### Profile Blocks ####
 
-  Update = Backbone.View.extend
+  class Update extends Backbone.View
     tagName: 'li'
 
     events:
@@ -170,7 +94,7 @@ define (require) ->
       this
 
 
-  Updates = Backbone.View.extend
+  class Updates extends Backbone.View
     events:
       'click a.previous': 'previousPage'
       'click a.next': 'nextPage'
@@ -234,4 +158,5 @@ define (require) ->
 
   Profile: Profile
   Updates: Updates
+  ActionBar: ActionBar
   Sidebar: Sidebar

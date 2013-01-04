@@ -23,11 +23,17 @@ define (require) ->
 
     Backbone.trigger 'app::working'
 
+    # Create the logged in user model
+    # TODO: improve me
     User = require('user/models').User
+    if KomooNS.isAuthenticated
+      KomooNS.user = new User KomooNS.user_data
+    else
+      KomooNS.user = new User {}
 
     header = new mainViews.Header
       el: '#header-container'
-      model: new User KomooNS.user
+      model: KomooNS.user
 
     footer = new mainViews.Footer
       el: '#footer-container'

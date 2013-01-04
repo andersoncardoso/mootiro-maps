@@ -20,9 +20,14 @@
       });
       Backbone.trigger('app::working');
       User = require('user/models').User;
+      if (KomooNS.isAuthenticated) {
+        KomooNS.user = new User(KomooNS.user_data);
+      } else {
+        KomooNS.user = new User({});
+      }
       header = new mainViews.Header({
         el: '#header-container',
-        model: new User(KomooNS.user)
+        model: KomooNS.user
       });
       return footer = new mainViews.Footer({
         el: '#footer-container'

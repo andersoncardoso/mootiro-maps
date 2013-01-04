@@ -93,7 +93,48 @@ define (require) ->
       this
 
 
+  class ActionBar extends Backbone.View
+    tagName: 'ul'
+
+    events:
+      'click a': 'do'
+
+    actions: [
+      { action: 'edit',    label: i18n 'Edit' }
+      { action: 'rate',    label: i18n 'Rate' }
+      { action: 'discuss', label: i18n 'Discuss' }
+      { action: 'history', label: i18n 'History' }
+      { action: 'report',  label: i18n 'Report' }
+      { action: 'delete',  label: i18n 'Delete' }
+    ]
+
+    initialize: ->
+      _.bindAll this
+      @template = _.template require 'text!templates/main/_action_bar.html'
+      @mode = @options.mode
+      @render()
+
+    render: ->
+      @$el.html @template
+        actions: @actions
+        model: @model.toJSON()
+        hasPermission: _.bind(@model.hasPermission, @model)
+      @setMode @mode
+      this
+
+    do: (e) ->
+      e.preventDefault()
+      action = $(e.target).attr 'data-action'
+      if _.isFunction @model[action]
+        @model[action]()
+
+    setMode: (@mode) ->
+      @$('.active').removeClass 'active'
+      @$("a[data-action=#{mode}]").addClass 'active'
+
+
   Header: Header
   Footer: Footer
   UpperBar: UpperBar
+  ActionBar: ActionBar
   Feedback: Feedback
