@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.db.models import Q
+from django.utils.translation import ugettext as _
+from django.core.paginator import Paginator
 from jsonfield import JSONField
 
 from tags.models import TagField
 
 from komoo_map.models import GeoRefModel
 from authentication.models import User
-from .utils import build_obj_from_dict
+from .utils import build_obj_from_dict, get_model_from_table_ref
 from .mixins import BaseDAOMixin
 
 
@@ -84,6 +87,232 @@ class CommonDataMixin(models.Model, BaseDAOMixin):
         build_obj_from_dict(self, data, expected_keys, datetime_keys)
 
 
+class TargetAudience(BaseModel):
+    """
+    Target Audience for different type of contents
+    Works like a specific type of tag
+    """
+    name = models.CharField(max_length=64, unique=True, blank=False)
+
+    def __unicode__(self):
+        return self.name
+
+
+class GenericRef(BaseModel):
+    """ Generic Ref used for the GenericRelatoion Table """
+    obj_table = models.CharField(max_length=1024)
+    obj_id = models.IntegerField()
+
+    def get_object(self):
+        """ get the 'true' object from the reference """
+        model = get_model_from_table_ref(self.obj_table)
+        return model.objects.get(id=self.obj_id)
+
+    @classmethod
+    def get_reference_for_object(cls, obj):
+        """ given a object, get the reference for it"""
+        ref, created = cls.get_or_create(
+                obj_table=obj.table_ref, obj_id=obj.id)
+        return ref
+
+
+RELATIONS = {
+    # TODO: this is just a draft. this probably will change
+    # (from_1_to_2, from_2_to_1)
+    'ownership': (_('owns'), _('is owned by')),
+    'partnership': (_('is partner of'), _('is partner of')),
+    'branch_of': (_('is branch of'), _('is the headquarter of')),
+}
+
+
+class GenericRelation(BaseModel):
+    """ Generic Relations Betwen any two objects"""
+    obj1 = models.ForeignKey(GenericRef, related_name='relations_for_obj1')
+    obj2 = models.ForeignKey(GenericRef, related_name='relations_for_obj2')
+
+    relation_type = models.CharField(max_length=1024, null=True, blank=True)
+
+    @classmethod
+    def has_relation(cls, obj1, obj2):
+        """ check if any two object has a relation """
+        # TODO: CHANGE-ME to **not** build the references
+        ref_obj1 = GenericRef.get_reference_for_object(obj1)
+        ref_obj2 = GenericRef.get_reference_for_object(obj2)
+
+        relations = GenericRelation.objects.filter(
+            Q(obj1=ref_obj1, obj2=ref_obj2) |
+            Q(obj1=ref_obj2, obj2=ref_obj1)
+        )
+        return relations.exists()
+
+    @classmethod
+    def add_relation(cls, obj1, obj2, relation_type=None):
+        """ add (if dont exist) a relation betwen two objects """
+        if not cls.has_relation(obj1, obj2):
+            ref_obj1 = GenericRef.get_reference_for_object(obj1)
+            ref_obj2 = GenericRef.get_reference_for_object(obj2)
+
+            relation, created = GenericRelation.get_or_create(
+                    obj1=ref_obj1, obj2=ref_obj2, relation_type=relation_type)
+
+            return relation
+        else:
+            return None
+
+    @classmethod
+    def remove_relation(cls, obj1, obj2):
+        """ add (if dont exist) a relation betwen two objects """
+        rel = GenericRelation.objects.filter(
+            Q(
+                obj1__obj_id=obj1.id, obj1__obj_table=obj1.table_ref,
+                obj2__obj_id=obj2.id, obj2__obj_table=obj2.table_ref,
+            ) |
+            Q(
+                obj1__obj_id=obj2.id, obj1__obj_table=obj2.table_ref,
+                obj2__obj_id=obj1.id, obj2__obj_table=obj1.table_ref,
+            )
+        )
+        if rel.exists():
+            rel.delete()
+            return True
+        return False
+
+
+class _RelationsList(list):
+    """ utility extended list for relations in RelationsField descriptor"""
+    def __init__(self, descriptor, instance, queryset=None):
+        self.descriptor = descriptor
+        self.instance = instance
+        self.qs = queryset
+
+    def add(self, obj, relation_type=None):
+        return self.descriptor.add_relation(
+                self.instance, obj, relation_type=relation_type)
+
+    def remove(self, obj):
+        self.descriptor.remove_relation(self.instance, obj)
+
+    def paginated(self, page=1, per_page=10):
+        if self.qs:
+            paginator = Paginator(self.qs, per_page)
+            return paginator.page(page).object_list
+        else:
+            return self
+
+    def filter_by_table_ref(self, table_ref):
+        rel_obj = GenericRef.get_reference_for_object(self.instance)
+        qs = GenericRelation.objects.filter(
+            Q(obj1=rel_obj, obj2__obj_table=table_ref) |
+            Q(obj2=rel_obj, obj1__obj_table=table_ref)
+        )
+        relation_list = _RelationsList(self.descriptor, self.instance,
+                queryset=qs)
+        for rel in qs:
+            if rel.obj1.obj_table == self.instance.table_ref and \
+               rel.obj1.obj_id == self.instance.id:
+
+                relation_list.append(
+                    (rel.obj2.get_object(),
+                     RELATIONS[rel.relation_type][1]
+                            if rel.relation_type else '')
+                )
+
+            elif rel.obj2.obj_table == self.instance.table_ref and \
+               rel.obj2.obj_id == self.instance.id:
+
+                relation_list.append(
+                    (rel.obj1.get_object(),
+                     RELATIONS[rel.relation_type][1]
+                            if rel.relation_type else '')
+                )
+
+            else:
+                raise Exception('instance is not referenced in the relation')
+                pass
+
+        return relation_list
+
+
+class RelationsField(object):
+    """
+    Relations descriptor.
+    usage:
+        class MyClass(models.Model):
+            relations = RelationsField()
+
+        obj = MyClass()
+        obj.relations
+        # returns []
+
+        obj.relations = [(objA, 'relation_type1'), (objB, 'relation_type2')]
+        # creates and saves relations to object
+
+        obj.relations
+        # returns [(objA, 'relation_type1'), (objB, 'relation_type2')]
+
+        obj.relations.add(objC, relation_type3)
+        obj.relations.remove(objA)
+        obj.relations
+        # returns [(objB, 'relation_type2'), (objC, 'relation_type3')]
+
+        obj.relations.paginate(page=1, num=10)
+
+        obj.relations.filter_by_type('relation_type1')
+    """
+    def __get__(self, instance, owner):
+        ref_obj = GenericRef.get_reference_for_object(instance)
+        qs = GenericRelation.objects.filter(
+                Q(obj1=ref_obj) | Q(obj2=ref_obj))
+
+        relation_list = _RelationsList(self, instance, queryset=qs)
+        for rel in qs:
+            if rel.obj1.obj_table == instance.table_ref and \
+               rel.obj1.obj_id == instance.id:
+
+                relation_list.append(
+                    (rel.obj2.get_object(),
+                     RELATIONS[rel.relation_type][0]
+                        if rel.relation_type else '')
+                )
+
+            elif rel.obj2.obj_table == instance.table_ref and \
+               rel.obj2.obj_id == instance.id:
+
+                relation_list.append(
+                    (rel.obj1.get_object(),
+                     RELATIONS[rel.relation_type][1]
+                            if rel.relation_type else '')
+                )
+
+            else:
+                raise Exception('instance is not referenced in the relation')
+                pass
+
+        return relation_list
+
+    def __set__(self, instance, new_relations):
+        # del old relations
+        self.__delete__(instance)
+
+        # create new tags
+        for rel in new_relations:
+            self.add_relation(instance, rel)
+
+    def __delete__(self, instance):
+        ref_obj = GenericRef.get_reference_for_object(instance)
+        GenericRelation.objects.filter(
+            Q(obj1=ref_obj) | Q(obj2=ref_obj
+        ).delete())
+
+    def add_relation(self, instance, obj, relation_type=None):
+        GenericRelation.add_relation(
+            instance, obj, relation_type=relation_type)
+
+    def remove_relation(self, instance, obj):
+        if obj:
+            return GenericRelation.remove_relation(instance, obj)
+
+
 class CommonObject(GeoRefModel, BaseModel, CommonDataMixin):
     """
     Common objects base model.
@@ -99,11 +328,12 @@ class CommonObject(GeoRefModel, BaseModel, CommonDataMixin):
             common_object_type = 'myclass'
             # ...
             # MyClass attributes and methods
-
     OBS: This Model is not abstract which means we have a implicit relation
          betwen the child class and this class.
     """
     co_type = models.CharField(max_length=256)
+
+    relations = RelationsField()
 
     def to_dict(self):
         d = super(CommonObject, self).to_dict()
@@ -111,42 +341,10 @@ class CommonObject(GeoRefModel, BaseModel, CommonDataMixin):
         return d
 
     def from_dict(self, data):
-        # TODO: implement-me
-        return None
+        super(CommonObject, self).from_dict(data)
+        self.id = getattr(data, 'id', None)
 
     def __init__(self, *args, **kwargs):
         super(CommonObject, self).__init__(*args, **kwargs)
         if hasattr(self, 'common_object_type') and self.common_object_type:
             self.co_type = self.common_object_type
-
-
-class TargetAudience(BaseModel):
-    """
-    Target Audience for different type of contents
-    Works like a 'specific type of tag'.
-    """
-    name = models.CharField(max_length=64, unique=True, blank=False)
-
-    def __unicode__(self):
-        return self.name
-
-
-class GenericRelations(BaseModel):
-    """ Relations For Common Objects"""
-    obj1_id = models.IntegerField(max_length=512)
-    obj1_table = models.CharField(max_length=512)
-
-    obj2_id = models.IntegerField(max_length=512)
-    obj2_table = models.CharField(max_length=512)
-
-    relation_from_1_to_2 = models.CharField(max_length=1024, null=True,
-                                blank=True)
-    relation_from_2_to_1 = models.CharField(max_length=1024, null=True,
-                                blank=True)
-
-
-
-
-
-
-

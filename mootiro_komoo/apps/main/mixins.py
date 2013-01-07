@@ -2,12 +2,7 @@
 from __future__ import unicode_literals
 import simplejson
 
-from django.db import models
-from jsonfield import JSONField
-
-from tags.models import TagField
-
-from .utils import to_json, build_obj_from_dict
+from .utils import to_json
 
 
 class BaseDAOMixin(object):
@@ -26,6 +21,11 @@ class BaseDAOMixin(object):
     def filter_by(cls, **kwargs):
         """ filter by keyword arguments """
         return cls.objects.filter(**kwargs)
+
+    @classmethod
+    def get_or_create(cls, **kwargs):
+        """ get if exists or create if don't. Returns: (obj, created) """
+        return cls.objects.get_or_create(**kwargs)
 
     # utility json methods
     def to_json(self):
