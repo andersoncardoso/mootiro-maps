@@ -195,7 +195,9 @@ class _RelationsList(list):
     def paginated(self, page=1, per_page=10):
         if self.qs:
             paginator = Paginator(self.qs, per_page)
-            return paginator.page(page).object_list
+            return self._build_list_from_queryset(
+                    paginator.page(page).object_list)
+
         else:
             return self
 
@@ -205,6 +207,9 @@ class _RelationsList(list):
             Q(obj1=rel_obj, obj2__obj_table=table_ref) |
             Q(obj2=rel_obj, obj1__obj_table=table_ref)
         )
+        return self._build_list_from_queryset(qs)
+
+    def _build_list_from_queryset(self, qs):
         relation_list = _RelationsList(self.descriptor, self.instance,
                 queryset=qs)
         for rel in qs:
@@ -256,7 +261,6 @@ class RelationsField(object):
         # returns [(objB, 'relation_type2'), (objC, 'relation_type3')]
 
         obj.relations.paginate(page=1, num=10)
-
         obj.relations.filter_by_type('relation_type1')
     """
     def __get__(self, instance, owner):
@@ -265,30 +269,7 @@ class RelationsField(object):
                 Q(obj1=ref_obj) | Q(obj2=ref_obj))
 
         relation_list = _RelationsList(self, instance, queryset=qs)
-        for rel in qs:
-            if rel.obj1.obj_table == instance.table_ref and \
-               rel.obj1.obj_id == instance.id:
-
-                relation_list.append(
-                    (rel.obj2.get_object(),
-                     RELATIONS[rel.relation_type][0]
-                        if rel.relation_type else '')
-                )
-
-            elif rel.obj2.obj_table == instance.table_ref and \
-               rel.obj2.obj_id == instance.id:
-
-                relation_list.append(
-                    (rel.obj1.get_object(),
-                     RELATIONS[rel.relation_type][1]
-                            if rel.relation_type else '')
-                )
-
-            else:
-                raise Exception('instance is not referenced in the relation')
-                pass
-
-        return relation_list
+        return relation_list._build_list_from_queryset(qs)
 
     def __set__(self, instance, new_relations):
         # del old relations
