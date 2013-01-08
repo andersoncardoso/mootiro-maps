@@ -1,5 +1,7 @@
-define ['googlemaps'], (googleMaps) ->
+define (require) ->
     'use strict'
+
+    googleMaps = require 'services/googlemaps'
 
     window.komoo ?= {}
     window.komoo.event ?= googleMaps.event

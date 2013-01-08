@@ -6,6 +6,7 @@
     dir: '.build/min',
 
     paths: {
+        'lib': '../static/lib',
         'jquery': '../static/lib/jquery-1.7.1.min',
         'underscore': '../static/lib/underscore-min',
         'backbone': '../static/lib/backbone-min',
@@ -52,9 +53,9 @@
             include: [
                 'i18n',
                 'app',
-                'googlemaps',
-                'analytics',
-                'facebook',
+                'services/googlemaps',
+                'services/analytics',
+                'services/facebook',
                 'map/controls',
                 'map/maptypes',
                 'map/providers',

@@ -1,6 +1,12 @@
-define ['googlemaps', 'underscore', 'map/core', 'map/collections', 'map/features', 'map/geometries'],
-(googleMaps, _, core, Collections, Features, geometries) ->
+define (require) ->
     'use strict'
+
+    googleMaps = require 'services/googlemaps'
+    _ = require 'underscore'
+    core = require './core'
+    Collections = require './collections'
+    Features = require './features'
+    geometries = require './geometries'
 
     window.komoo ?= {}
     window.komoo.event ?= googleMaps.event

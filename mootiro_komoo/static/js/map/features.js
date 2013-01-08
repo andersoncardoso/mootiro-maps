@@ -1,8 +1,10 @@
 (function() {
 
-  define(['googlemaps', 'map/geometries'], function(googleMaps, geometries) {
+  define(function(require) {
     'use strict';
-    var Feature, _base;
+    var Feature, geometries, googleMaps, _base;
+    googleMaps = require('services/googlemaps');
+    geometries = require('./geometries');
     if (window.komoo == null) window.komoo = {};
     if ((_base = window.komoo).event == null) _base.event = googleMaps.event;
     Feature = (function() {

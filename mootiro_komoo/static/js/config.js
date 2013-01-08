@@ -18,8 +18,8 @@ config = {
     'async': '../lib/requirejs/async',
     'goog': '../lib/requirejs/goog',
     'propertyParser': '../lib/requirejs/propertyParser',
-    'infobox': 'vendor/infobox_packed',
-    'markerclusterer': 'vendor/markerclusterer_packed',
+    'infobox': 'map/vendor/infobox_packed',
+    'markerclusterer': 'map/vendor/markerclusterer_packed',
     'sinon': '../lib/sinon-1.5.0',
     'dutils': '../lib/django-js-utils/dutils',
     'urls': '../lib/django-js-utils/dutils.conf.urls'

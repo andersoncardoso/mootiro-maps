@@ -1,4 +1,16 @@
 
+lib/reveal/reveal.css
+----------------
+lib/reveal/reveal.css
+
+lib/qunit/qunit.css
+----------------
+lib/qunit/qunit.css
+
+lib/jquery-plugins/tagsinput/jquery.tagsinput.css
+----------------
+lib/jquery-plugins/tagsinput/jquery.tagsinput.css
+
 common.js
 ----------------
 i18n.js
@@ -45,15 +57,15 @@ widgets/list.js
 user/views.js
 user/pages.js
 user/router.js
-analytics.js
+services/analytics.js
 app.js
 common.js
 async.js
 propertyParser.js
 goog.js
 goog!maps,3,other_params:[sensor=false&libraries=drawing&language=pt-br]
-googlemaps.js
-facebook.js
+services/googlemaps.js
+services/facebook.js
 map/component.js
 map/common.js
 map/multimarker.js

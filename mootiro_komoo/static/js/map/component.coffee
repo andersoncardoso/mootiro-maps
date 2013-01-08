@@ -1,5 +1,7 @@
-define ['jquery'], ($) ->
+define (require) ->
     'use strict'
+
+    $ = require 'jquery'
 
 
     class Component

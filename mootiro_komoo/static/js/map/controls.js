@@ -2,8 +2,16 @@
   var __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-  define(['googlemaps', 'map/component', 'map/common', 'map/geometries', 'map/utils', 'infobox', 'markerclusterer'], function(googleMaps, Component, common, geometries, utils, InfoBox, MarkerClusterer) {
-    var ADD, AjaxBalloon, AutosaveLocation, Balloon, Box, CUTOUT, CloseBox, DELETE, DrawingControl, DrawingManager, EDIT, EMPTY, FeatureClusterer, GeometrySelector, InfoWindow, LINESTRING, LicenseBox, Location, MULTILINESTRING, MULTIPOINT, MULTIPOLYLINE, NEW, OVERLAY, PERIMETER_SELECTION, POINT, POLYGON, POLYLINE, PerimeterSelector, SaveLocation, SearchBox, StreetView, SupporterBox, Tooltip, _ADD_LINE, _ADD_POINT, _ADD_SHAPE, _CANCEL, _CLOSE, _CUT_OUT, _LOADING, _NEXT_STEP, _SUM, _base;
+  define(function(require) {
+    'use strict';
+    var ADD, AjaxBalloon, AutosaveLocation, Balloon, Box, CUTOUT, CloseBox, Component, DELETE, DrawingControl, DrawingManager, EDIT, EMPTY, FeatureClusterer, GeometrySelector, InfoWindow, Infobox, LINESTRING, LicenseBox, Location, MULTILINESTRING, MULTIPOINT, MULTIPOLYLINE, MarkerClusterer, NEW, OVERLAY, PERIMETER_SELECTION, POINT, POLYGON, POLYLINE, PerimeterSelector, SaveLocation, SearchBox, StreetView, SupporterBox, Tooltip, common, geometries, googleMaps, utils, _ADD_LINE, _ADD_POINT, _ADD_SHAPE, _CANCEL, _CLOSE, _CUT_OUT, _LOADING, _NEXT_STEP, _SUM, _base;
+    googleMaps = require('services/googlemaps');
+    Component = require('./component');
+    common = require('./common');
+    geometries = require('./geometries');
+    utils = require('./utils');
+    Infobox = require('infobox');
+    MarkerClusterer = require('markerclusterer');
     if (window.komoo == null) window.komoo = {};
     if ((_base = window.komoo).event == null) _base.event = googleMaps.event;
     _NEXT_STEP = gettext('Next Step');

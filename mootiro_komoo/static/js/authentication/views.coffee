@@ -177,7 +177,9 @@ define (require) ->
       this
 
 
-  LoginView: LoginView
-  LogoutView: LogoutView
-  RegisterView: RegisterView
-  VerificationView: VerificationView
+  return {
+    LoginView: LoginView
+    LogoutView: LogoutView
+    RegisterView: RegisterView
+    VerificationView: VerificationView
+  }

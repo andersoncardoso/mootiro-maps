@@ -8,7 +8,7 @@
  * @copyright (c) 2012 it3s
  */
 
-define(['googlemaps'], function (googleMaps) {
+define(['services/googlemaps'], function (googleMaps) {
 
 /**
  * @name MultiMarkerOptions

@@ -1,5 +1,8 @@
-define ['googlemaps', 'map/geometries'], (googleMaps, geometries) ->
+define (require) ->
     'use strict'
+
+    googleMaps = require 'services/googlemaps'
+    geometries = require './geometries'
 
     window.komoo ?= {}
     window.komoo.event ?= googleMaps.event

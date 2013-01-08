@@ -4,9 +4,15 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-  define(['googlemaps', 'underscore', 'map/core', 'map/collections', 'map/features', 'map/geometries'], function(googleMaps, _, core, Collections, Features, geometries) {
+  define(function(require) {
     'use strict';
-    var AjaxEditor, AjaxMap, Editor, Map, Preview, StaticMap, UserEditor, _base;
+    var AjaxEditor, AjaxMap, Collections, Editor, Features, Map, Preview, StaticMap, UserEditor, core, geometries, googleMaps, _, _base;
+    googleMaps = require('services/googlemaps');
+    _ = require('underscore');
+    core = require('./core');
+    Collections = require('./collections');
+    Features = require('./features');
+    geometries = require('./geometries');
     if (window.komoo == null) window.komoo = {};
     if ((_base = window.komoo).event == null) _base.event = googleMaps.event;
     Map = (function(_super) {

@@ -1,6 +1,10 @@
-define ['googlemaps', 'map/common', 'map/multimarker', 'map/multipolyline'],
-(googleMaps, common) ->
+define (require) ->
     'use strict'
+
+    googleMaps = require 'services/googlemaps'
+    common = require './common'
+    require './multimarker'
+    require './multipolyline'
 
     window.komoo ?= {}
     window.komoo.event ?= googleMaps.event

@@ -1,11 +1,15 @@
-define ['backbone', 'underscore', 'text!templates/map/_searchbox.html'], (Backbone, _, tplt) ->
-    SearchBoxView = Backbone.View.extend
+define (require) ->
+
+    _ = require 'underscore'
+    Backbone = require 'backbone'
+
+    class SearchBoxView extends Backbone.View
         events:
             'click .search': 'onSearchBtnClick'
             'change .location-type': 'onTypeChange'
 
         initialize: () ->
-            @template = _.template tplt
+            @template = _.template require 'text!templates/map/_searchbox.html'
 
         render: () ->
             renderedContent = @template()

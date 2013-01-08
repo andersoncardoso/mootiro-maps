@@ -5,7 +5,7 @@ define (require) ->
   $ = require 'jquery'
   Backbone = require 'backbone'
 
-  # Create the facebook element
+  # Create the facebook DOM element
   $('body').prepend $ '<div id="fb-root" />'
 
   # Draw layout blocks
@@ -45,7 +45,7 @@ define (require) ->
       Backbone.trigger 'app::done'
 
     # Init google analytics
-    require ['analytics'], (analytics) ->
+    require ['services/analytics'], (analytics) ->
       analytics.init()
 
 

@@ -1,5 +1,13 @@
-define ['googlemaps', 'map/component', 'map/common', 'map/geometries', 'map/utils', 'infobox', 'markerclusterer'],
-(googleMaps, Component, common, geometries, utils, InfoBox, MarkerClusterer)->
+define (require) ->
+    'use strict'
+
+    googleMaps = require 'services/googlemaps'
+    Component = require './component'
+    common = require './common'
+    geometries = require './geometries'
+    utils = require './utils'
+    Infobox = require 'infobox'
+    MarkerClusterer = require 'markerclusterer'
 
     window.komoo ?= {}
     window.komoo.event ?= googleMaps.event

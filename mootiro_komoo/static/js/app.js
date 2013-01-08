@@ -41,7 +41,7 @@
         });
         return Backbone.trigger('app::done');
       });
-      return require(['analytics'], function(analytics) {
+      return require(['services/analytics'], function(analytics) {
         return analytics.init();
       });
     });

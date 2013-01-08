@@ -101,5 +101,3 @@ define (require) ->
     LoginForm: LoginForm
     RegisterForm: RegisterForm
   }
-
-

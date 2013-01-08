@@ -1,4 +1,4 @@
-define(['googlemaps'], function (googleMaps) {
+define(['services/googlemaps'], function (googleMaps) {
 
 if (!window.komoo) komoo = {};
 komoo.utils = {};
