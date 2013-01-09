@@ -99,7 +99,7 @@ class TargetAudience(BaseModel):
 
 
 class GenericRef(BaseModel):
-    """ Generic Ref used for the GenericRelatoion Table """
+    """ Generic Ref used for the GenericRelation Table """
     obj_table = models.CharField(max_length=1024)
     obj_id = models.IntegerField()
 
@@ -277,13 +277,15 @@ class RelationsField(object):
 
         # create new tags
         for rel in new_relations:
-            self.add_relation(instance, rel)
+            obj = rel[0] or None
+            relation_type = rel[1] or None
+            self.add_relation(instance, obj, relation_type)
 
     def __delete__(self, instance):
         ref_obj = GenericRef.get_reference_for_object(instance)
         GenericRelation.objects.filter(
-            Q(obj1=ref_obj) | Q(obj2=ref_obj
-        ).delete())
+            Q(obj1=ref_obj) | Q(obj2=ref_obj)
+        ).delete()
 
     def add_relation(self, instance, obj, relation_type=None):
         GenericRelation.add_relation(
