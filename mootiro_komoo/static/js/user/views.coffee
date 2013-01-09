@@ -7,6 +7,7 @@ define (require) ->
   ReForm = require 'reForm'
 
   ActionBar = require('main/views').ActionBar
+  UserInfoForm = require('./forms').UserInfoForm
 
 
   #### Profile Main View ####
@@ -28,27 +29,56 @@ define (require) ->
       _.bindAll this
       @template = _.template require 'text!templates/user/_profile.html'
 
-      @userInfoView = new UserInfo
-        model: @model
+      @subViews = []
 
+      # Create the views for each mode
+      ## View mode
+      @userInfoViews =
+        view: new UserInfo
+          model: @model
+
+      ## Edit mode
+      if @model.hasPermission 'edit'
+        @userInfoViews['edit'] = new UserInfoForm
+          model: @model
+          formId: 'user-info'
+          submit_label: i18n 'Save'
+        @listenTo @userInfoViews['edit'], 'submit', @onSubmit
+
+      for mode, view of @userInfoViews
+        @subViews.push view
+
+      # User updates
       @updatesView = new Updates
         collection: @model.getUpdates()
+      @subViews.push @updatesView
 
-      @subViews = [
-        @userInfoView
-        @updatesView
-      ]
-
-      @render()
+      @setMode(@options.mode ? 'view')
 
     render: ->
-      @userInfoView.$el.detach()  # Dont lost the updates element
-      @updatesView.$el.detach()  # Dont lost the updates element
+      for view in @subViews
+        view.$el.detach()
+
       @$el.html @template
         user: @model.toJSON()
-      @$('#user-info-container').append @userInfoView.$el
+        mode: @mode
+
+      @$('#user-info-container').append @userInfoViews[@mode]?.$el
       @$('#user-updates-container').append @updatesView.$el
       this
+
+    setMode: (@mode) ->
+      if not @model.hasPermission(@mode) or not @userInfoViews[@mode]?
+        console?.log "Mode '#{@mode}' not allowed, changing to 'view'."
+        Backbone.trigger 'user::profile', @model.id
+        return
+
+      @userInfoViews[@mode].render()
+      @render()
+
+    onSubmit: () ->
+      Backbone.trigger 'user::profile', @model.id
+
 
 
   #### Profile Sidebar ####

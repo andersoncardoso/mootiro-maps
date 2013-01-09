@@ -4,12 +4,13 @@
 
   define(function(require) {
     'use strict';
-    var $, ActionBar, Backbone, Profile, ReForm, Sidebar, Update, Updates, UserInfo, _;
+    var $, ActionBar, Backbone, Profile, ReForm, Sidebar, Update, Updates, UserInfo, UserInfoForm, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
     ReForm = require('reForm');
     ActionBar = require('main/views').ActionBar;
+    UserInfoForm = require('./forms').UserInfoForm;
     UserInfo = (function(_super) {
 
       __extends(UserInfo, _super);
@@ -43,28 +44,67 @@
       }
 
       Profile.prototype.initialize = function() {
+        var mode, view, _ref, _ref2;
         window.model = this.model;
         _.bindAll(this);
         this.template = _.template(require('text!templates/user/_profile.html'));
-        this.userInfoView = new UserInfo({
-          model: this.model
-        });
+        this.subViews = [];
+        this.userInfoViews = {
+          view: new UserInfo({
+            model: this.model
+          })
+        };
+        if (this.model.hasPermission('edit')) {
+          this.userInfoViews['edit'] = new UserInfoForm({
+            model: this.model,
+            formId: 'user-info',
+            submit_label: i18n('Save')
+          });
+          this.listenTo(this.userInfoViews['edit'], 'submit', this.onSubmit);
+        }
+        _ref = this.userInfoViews;
+        for (mode in _ref) {
+          view = _ref[mode];
+          this.subViews.push(view);
+        }
         this.updatesView = new Updates({
           collection: this.model.getUpdates()
         });
-        this.subViews = [this.userInfoView, this.updatesView];
-        return this.render();
+        this.subViews.push(this.updatesView);
+        return this.setMode((_ref2 = this.options.mode) != null ? _ref2 : 'view');
       };
 
       Profile.prototype.render = function() {
-        this.userInfoView.$el.detach();
-        this.updatesView.$el.detach();
+        var view, _i, _len, _ref, _ref2;
+        _ref = this.subViews;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          view.$el.detach();
+        }
         this.$el.html(this.template({
-          user: this.model.toJSON()
+          user: this.model.toJSON(),
+          mode: this.mode
         }));
-        this.$('#user-info-container').append(this.userInfoView.$el);
+        this.$('#user-info-container').append((_ref2 = this.userInfoViews[this.mode]) != null ? _ref2.$el : void 0);
         this.$('#user-updates-container').append(this.updatesView.$el);
         return this;
+      };
+
+      Profile.prototype.setMode = function(mode) {
+        this.mode = mode;
+        if (!this.model.hasPermission(this.mode) || !(this.userInfoViews[this.mode] != null)) {
+          if (typeof console !== "undefined" && console !== null) {
+            console.log("Mode '" + this.mode + "' not allowed, changing to 'view'.");
+          }
+          Backbone.trigger('user::profile', this.model.id);
+          return;
+        }
+        this.userInfoViews[this.mode].render();
+        return this.render();
+      };
+
+      Profile.prototype.onSubmit = function() {
+        return Backbone.trigger('user::profile', this.model.id);
       };
 
       return Profile;

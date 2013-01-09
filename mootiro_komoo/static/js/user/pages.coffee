@@ -41,7 +41,7 @@ define (require) ->
 
       @actionBar.setMode mode
       #@sidebar.setMode mode
-      #@mainContent.setMode mode
+      @mainContent.setMode mode
       @mode = mode
 
     render: ->

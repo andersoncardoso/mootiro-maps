@@ -47,6 +47,7 @@
           return;
         }
         this.actionBar.setMode(mode);
+        this.mainContent.setMode(mode);
         return this.mode = mode;
       };
 
