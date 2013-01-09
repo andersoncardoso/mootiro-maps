@@ -1,42 +1,6 @@
 /** Forms **/
 
-h1 .inline-form {
-}
-
 form {
-
-    &.inline-form {
-        .border-radius;
-
-        background: @inline-form-bg;
-        padding: 10px;
-        margin: -10px;
-
-        label {
-            display: none;
-        }
-        .widget-conteiner label {
-            display: block;
-        }
-
-        input[type=text],
-        textarea {
-          width: 99%;
-          font: inherit;
-        }
-
-        textarea {
-            min-height: 100px;
-        }
-
-        &.open {
-            display: block;
-        }
-        &.closed {
-            display: none;
-        }
-    }
-
     label {
         color: @label-color;
         display: block;
@@ -117,51 +81,6 @@ form {
         small.error {
             width: 94%;
         }
-    }
-}
-
-.inline-form.display {
-    .clearfix;
-
-    min-height: 36px;
-    padding: 10px;
-    margin: -10px;
-
-    > .edit {
-        @size: 16px;
-        .icon('sprite.png', @size, 6, 5);
-
-        display: none;
-        width: @size;
-        height: @size;
-        padding: 10px;
-        overflow: hidden;
-        color: transparent;
-        float: right;
-        font-size: 12px;
-
-        &:hover {
-            background-color: inherit;
-            .icon('sprite.png', @size, 6, 7);
-        }
-    }
-
-    &:hover {
-        background: @inline-form-hover-bg;
-
-        > .edit {
-            display: block;
-        }
-    }
-
-    > .content {
-        margin-right: 25px;
-    }
-    &.open {
-        display: block;
-    }
-    &.closed {
-        display: none;
     }
 }
 
@@ -261,3 +180,33 @@ a.button {
 
 }
 
+form#user-info {
+    label {
+        color: inherit;
+    }
+
+    .field-container {
+
+        &.name {
+            label {
+                display: none;
+            }
+            input {
+                .h1-font;
+                margin: -2px 0 25px -5px;
+            }
+        }
+
+        &.about-me {
+            label {
+                .h2-font;
+                margin: 10px 0;
+            }
+            textarea {
+                width: 100%;
+                margin: -3px;
+                font: inherit;
+            }
+        }
+    }
+}

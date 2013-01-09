@@ -6,7 +6,7 @@ define (require) ->
   PermissionMixin = require('main/mixins').PermissionMixin
   urls = require 'urls'
 
-  User = Backbone.Model.extend
+  class User extends Backbone.Model
     urlRoot: urls.resolve 'user_api'
 
     defaults:
@@ -38,4 +38,6 @@ define (require) ->
 
   _.extend User.prototype, PermissionMixin
 
-  User: User
+  return {
+    User: User
+  }

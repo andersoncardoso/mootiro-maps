@@ -48,6 +48,7 @@ utils.js
 text!templates/widgets/_modal_box.html
 widgets/modal.js
 authentication/router.js
+user/forms.js
 text!templates/user/_user_info.html
 text!templates/user/_profile.html
 text!templates/user/_sidebar.html
