@@ -5,7 +5,8 @@ import datetime
 from ..test_utils import setup_env, create_test_user
 setup_env()
 
-from main.models import CommonDataMixin
+from main.models import CommonDataMixin, GenericRelation, GenericRef
+from tests.models import TestModelA, TestModelB
 
 
 class MyClass(CommonDataMixin):
@@ -75,5 +76,56 @@ class CommonDataMixinTest(unittest.TestCase):
         self.assertEqual(datetime.datetime(2012, 12, 14, 15, 23, 30, 0),
                          obj.creation_date)
         self.assertEqual(['tag1', 'tag2', 'tag3'], obj.tags)
+
+
+class GenericRelationsTest(unittest.TestCase):
+    def _clean_all(self):
+        GenericRelation.objects.all().delete()
+        GenericRef.objects.all().delete()
+
+    def setUp(self):
+        self._clean_all()
+
+    def empty_relations_test(self):
+        obj_A = TestModelA(name='A')
+        obj_A.save()
+        self.assertEqual([], obj_A.relations)
+
+    def load_relations_array_test(self):
+        a1 = TestModelA.objects.create(name='A1')
+        a2 = TestModelA.objects.create(name='A2')
+        b = TestModelB.objects.create(name='B')
+
+        # a relation represtations is a tuple (object, relation_type)
+        new_relations = [(a2, ''), (b, '')]
+        a1.relations = new_relations
+
+        self.assertEqual(new_relations, a1.relations)
+
+    def add_relation_test(self):
+        a1 = TestModelA.objects.create(name='A1')
+        a2 = TestModelB.objects.create(name='A2')
+
+        self.assertEqual([], a1.relations)
+        a1.relations.add(a2)
+
+        self.assertEqual([(a2, ''),], a1.relations)
+        self.assertTrue(GenericRelation.has_relation(a1, a2))
+
+    def remove_relation_test(self):
+        a1 = TestModelA.objects.create(name='A1')
+        a2 = TestModelA.objects.create(name='A2')
+        b = TestModelB.objects.create(name='B')
+
+        # a relation represtations is a tuple (object, relation_type)
+        new_relations = [(a2, ''), (b, '')]
+        a1.relations = new_relations
+        self.assertTrue(GenericRelation.has_relation(a1, b))
+
+        a1.relations.remove(b)
+
+        self.assertEqual([(a2, ''),], a1.relations)
+        self.assertFalse(GenericRelation.has_relation(a1, b))
+
 
 

@@ -36,7 +36,10 @@ class UserTest(unittest.TestCase):
                         }
                     }
                 ]},
-            'contact': {'tel': '1234567890', 'skype': 'skype_from_test_user'},
+            'contact': [
+                {'type': 'phone', 'value':'1234567890'},
+                {'type': 'skype', 'value': 'skype_from_test_user'},
+            ],
             'password': 'eb5a9887586930f7f2e9c1c42bc937188afa689d',
             'creation_date': datetime.datetime(2012, 12, 14, 15, 23, 30, 0),
             'is_admin': False,
@@ -112,13 +115,17 @@ class UserTest(unittest.TestCase):
 
     def contact_test(self):
         user = self._create_test_user()
-        contact_dict = {'tel': '1234567890', 'skype': 'skype_from_test_user'}
-        self.assertDictEqual(user.contact, contact_dict)
+        expected_contact = [
+            {'type': 'phone', 'value':'1234567890'},
+            {'type': 'skype', 'value': 'skype_from_test_user'},
+        ]
+        for idx, ct in enumerate(expected_contact):
+            self.assertDictEqual(ct, user.contact[idx])
 
         fb_contact = 'http://facebook.com/test_user'
-        user.contact['facebook'] = fb_contact
+        user.contact.append({'type': 'facebook', 'value': fb_contact})
         user.save()
-        self.assertEqual(User.get_by_id(user.id).contact['facebook'],
+        self.assertEqual(User.get_by_id(user.id).contact[2]['value'],
                          fb_contact)
 
     @patch('authentication.models.send_mail_async')

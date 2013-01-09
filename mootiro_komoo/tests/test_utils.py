@@ -57,7 +57,10 @@ def create_test_user():
     user.name = 'Test User'
     user.email = 'test@user.com'
     user.set_password('12345')
-    user.contact = {'tel': '1234567890', 'skype': 'skype_from_test_user'}
+    user.contact = [
+        {'type': 'phone', 'value':'1234567890'},
+        {'type': 'skype', 'value': 'skype_from_test_user'},
+    ]
     user.save()
     user.creation_date = datetime.datetime(2012, 12, 14, 15, 23, 30, 0)
     user.save()

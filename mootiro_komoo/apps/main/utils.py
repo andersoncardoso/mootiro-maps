@@ -420,11 +420,7 @@ def build_obj_from_dict(obj, data, expected_keys=[], datetime_keys=[],
 
 def get_model_from_table_ref(table_ref):
     module_name, model_name = table_ref.split('.')
-    module = __import__(
-            '{}.models'.format(module_name),
-            globals(),
-            locals(),
-            [model_name, ]
-    )
-    model = getattr(module, model_name)
+    module = __import__(module_name)
+    models = getattr(module, 'models')
+    model = getattr(models, model_name)
     return model
