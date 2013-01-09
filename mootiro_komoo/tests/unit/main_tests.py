@@ -109,7 +109,7 @@ class GenericRelationsTest(unittest.TestCase):
         self.assertEqual([], a1.relations)
         a1.relations.add(a2)
 
-        self.assertEqual([(a2, ''),], a1.relations)
+        self.assertEqual([(a2, ''), ], a1.relations)
         self.assertTrue(GenericRelation.has_relation(a1, a2))
 
     def remove_relation_test(self):
@@ -124,8 +124,49 @@ class GenericRelationsTest(unittest.TestCase):
 
         a1.relations.remove(b)
 
-        self.assertEqual([(a2, ''),], a1.relations)
+        self.assertEqual([(a2, ''), ], a1.relations)
         self.assertFalse(GenericRelation.has_relation(a1, b))
 
+    def filter_by_model_test(self):
+        a1 = TestModelA.objects.create(name='A1')
+        a2 = TestModelA.objects.create(name='A2')
+        a3 = TestModelA.objects.create(name='A3')
+        b = TestModelB.objects.create(name='B')
+
+        self.assertEqual([], a1.relations)
+
+        a1.relations.add(a2)
+        a1.relations.add(a3)
+        a1.relations.add(b)
+
+        relations_with_TestModelA = a1.relations.filter_by_model(TestModelA)
+        self.assertEquals([(a2, ''), (a3, ''), ], relations_with_TestModelA)
+
+        relations_with_TestModelB = a1.relations.filter_by_model(TestModelB)
+        self.assertEquals([(b, ''), ], relations_with_TestModelB)
+
+    def paginated_test(self):
+        a1 = TestModelA.objects.create(name='A1')
+        a2 = TestModelA.objects.create(name='A2')
+        a3 = TestModelA.objects.create(name='A3')
+        b = TestModelB.objects.create(name='B')
+
+        self.assertEqual([], a1.relations)
+
+        a1.relations.add(a2)
+        a1.relations.add(a3)
+        a1.relations.add(b)
+
+        self.assertEqual([(a2, ''), (a3, ''), ],
+                         a1.relations.paginated(per_page=2))
+        self.assertEqual([(b, ''), ],
+                         a1.relations.paginated(page=2, per_page=2))
+
+        self.assertEqual([(a2, ''), ],
+                         a1.relations.filter_by_model(TestModelA
+                             ).paginated(per_page=1))
+        self.assertEqual([(a3, ''), ],
+                         a1.relations.filter_by_model(TestModelA
+                             ).paginated(page=2, per_page=1))
 
 

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext as _
@@ -201,7 +202,8 @@ class _RelationsList(list):
         else:
             return self
 
-    def filter_by_table_ref(self, table_ref):
+    def filter_by_model(self, model):
+        table_ref = model._table_ref()
         rel_obj = GenericRef.get_reference_for_object(self.instance)
         qs = GenericRelation.objects.filter(
             Q(obj1=rel_obj, obj2__obj_table=table_ref) |
