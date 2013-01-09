@@ -18,6 +18,7 @@ body {
   font-size: 14px;
   font-family: Calibri, "Trebuchet MS", Verdana, sans-serif;
   background-color: #ffffff;
+  overflow: hidden;
 }
 h1 {
   font-size: 214%;
