@@ -15,6 +15,22 @@ from .mixins import BaseDAOMixin
 
 
 class BaseModel(models.Model, BaseDAOMixin):
+    """
+    Base Model provides:
+        - a DAO interface for abstracting de ORM
+        - easy table references
+
+    examples:
+      class MyModel(BaseModel):
+        pass
+
+      obj = MyModel()
+      obj.table_ref  # returns a reference like "app_label.class_name"
+
+      MyModel.get_by_id(number)
+      MyModel.filter_by(name='bla', other_data='ble')
+      obj, created = MyModel.get_or_create(name='bla', other_data='ble')
+    """
 
     class Meta:
         abstract = True
@@ -25,6 +41,7 @@ class BaseModel(models.Model, BaseDAOMixin):
 
     @property
     def table_ref(self):
+        """ Returns a "app_label.class_name" string """
         return self._table_ref()
 
 
@@ -187,13 +204,21 @@ class _RelationsList(list):
         self.qs = queryset
 
     def add(self, obj, relation_type=None):
+        """ add relation with an object """
         return self.descriptor.add_relation(
                 self.instance, obj, relation_type=relation_type)
 
     def remove(self, obj):
+        """ remove relations with an object """
         self.descriptor.remove_relation(self.instance, obj)
 
     def paginated(self, page=1, per_page=10):
+        """
+        return a paginated relations.
+        usage:
+          obj.relations.paginated(per_page=20) # page 1, 20 items
+          obj.relations.paginated(page=3, per_page=20) # from item 41 to 60
+        """
         if self.qs:
             paginator = Paginator(self.qs, per_page)
             return self._build_list_from_queryset(
@@ -203,6 +228,18 @@ class _RelationsList(list):
             return self
 
     def filter_by_model(self, model):
+        """
+        filter relations by table_ref
+        example:
+          obj.relations
+          # returns [(org1, ''), (resource,''), (org2, '')]
+          obj.relations.filter_by_model(Organization)
+          # returns [(org1, ''), (org2, '')]
+
+        it is chainable. Ex:
+            obj.relations.filter_by_model(Organization
+                            ).paginated(page=2, per_page=5)
+        """
         table_ref = model._table_ref()
         rel_obj = GenericRef.get_reference_for_object(self.instance)
         qs = GenericRelation.objects.filter(
@@ -212,6 +249,13 @@ class _RelationsList(list):
         return self._build_list_from_queryset(qs)
 
     def _build_list_from_queryset(self, qs):
+        """
+        Given a GenericRelation queryset, build a list like:
+          [
+            (object_1, 'relation_type_with_1'),
+            (object_2, 'relation_type_with_2')
+          ]
+        """
         relation_list = _RelationsList(self.descriptor, self.instance,
                 queryset=qs)
         for rel in qs:
