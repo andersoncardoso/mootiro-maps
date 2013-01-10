@@ -3,6 +3,7 @@ from django.db import models
 
 
 class Tag(models.Model):
+    """ Namespaced tags """
     name = models.CharField(max_length=1024)
     namespace = models.CharField(max_length=128, default='tag')
 
@@ -11,6 +12,7 @@ class Tag(models.Model):
 
     @classmethod
     def add(cls, tag, namespace='tag'):
+        """ add a tag given its 'name'. Tags are unique by namespace """
         obj, created = cls.objects.get_or_create(name=tag, namespace=namespace)
         return obj
 
@@ -24,12 +26,14 @@ class Tag(models.Model):
 
 
 class TaggedObject(models.Model):
+    """ Tagged Generic Objects """
     tag = models.ForeignKey(Tag)
     object_id = models.IntegerField()
     object_table = models.CharField(max_length=512)
 
     @classmethod
     def get_tags_for_object(cls, obj, namespace='tag'):
+        """ get all tags for and object """
         return [
             tagged_obj.tag for tagged_obj in TaggedObject.objects.filter(
                 object_id=getattr(obj, 'id', None),
@@ -64,9 +68,12 @@ class TagField(object):
     """
     Tag-like behavior descriptor. It treats the TagField attribute like a
     list, but implictly makes all the necessary database queries.
+    The constructor uses an optional 'namespace' attribute to specialize
+    the tags. The default namesmpace is 'tag'
     usage:
         class MyClass(models.Model):
             tags = TagField()
+            target = TagField(namespace='target_audience')
 
         obj = MyClass()
         obj.tags
@@ -82,6 +89,13 @@ class TagField(object):
         obj.tags.remove('tag A')
         obj.tags
         # returns ['tag B', 'tag C']
+
+        obj.target
+        # returns []
+
+        obj.target.add('tag C')
+        # Now we have a 'tag C' for the default namespace 'tag' and other for
+        # the 'target_audience' namespace
     """
 
     def __init__(self, namespace='tag'):
