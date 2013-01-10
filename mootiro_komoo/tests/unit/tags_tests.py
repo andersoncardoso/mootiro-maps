@@ -6,7 +6,7 @@ setup_env()
 
 from django.db import IntegrityError
 from tags.models import Tag, TaggedObject
-from tests.models import TestTaggedClass
+from tests.models import TestTaggedClass, TestNamespaceTaggedClass
 
 
 class TagTest(unittest.TestCase):
@@ -20,7 +20,6 @@ class TagTest(unittest.TestCase):
         Tag(name='A').save()
         with self.assertRaises(IntegrityError):
             Tag(name='A').save()
-
 
     def tag_descriptor_test(self):
         self._clean_all_tags()
@@ -49,5 +48,28 @@ class TagTest(unittest.TestCase):
         self.assertEqual(3, Tag.objects.all().count())
         self.assertIn('A', [tag.name for tag in Tag.objects.all()])
         self.assertEqual(['B', 'C'], obj.tags)
+
+    def namespaced_tags_test(self):
+        self._clean_all_tags()
+        tg = TestNamespaceTaggedClass()
+        tg.save()
+
+        self.assertEqual([], tg.tags)
+        self.assertEqual([], tg.target_audience)
+
+        tg.tags = ['A', 'B']
+        tg.target_audience = ['A', 'C']
+
+        self.assertEqual(['A', 'B'], tg.tags)
+        self.assertEqual(['A', 'C'], tg.target_audience)
+
+        A_tags = Tag.objects.filter(name='A')
+        self.assertEqual(2, A_tags.count())
+        self.assertTrue('tag' in [tag.namespace for tag in A_tags])
+        self.assertTrue('target_audience' in [tag.namespace for tag in A_tags])
+
+        tg.target_audience.remove('A')
+        self.assertEqual(['C'], tg.target_audience)
+        self.assertEqual(['A', 'B'], tg.tags)
 
 
