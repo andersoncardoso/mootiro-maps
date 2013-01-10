@@ -8,6 +8,11 @@ class TestTaggedClass(models.Model):
     tags = TagField()
 
 
+class TestNamespaceTaggedClass(models.Model):
+    target_audience = TagField(namespace='target_audience')
+    tags = TagField()
+
+
 class TestModelA(BaseModel):
     name = models.CharField(max_length=100)
     relations = RelationsField()
@@ -16,3 +21,5 @@ class TestModelA(BaseModel):
 class TestModelB(BaseModel):
     name = models.CharField(max_length=100)
     relations = RelationsField()
+
+

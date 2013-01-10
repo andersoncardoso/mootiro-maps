@@ -104,6 +104,10 @@ class CommonDataMixin(models.Model, BaseDAOMixin):
         datetime_keys = ['creation_date', 'last_update']
         build_obj_from_dict(self, data, expected_keys, datetime_keys)
 
+#
+# ====================== Target Audiences ================================
+#
+
 
 class TargetAudience(BaseModel):
     """
@@ -114,6 +118,10 @@ class TargetAudience(BaseModel):
 
     def __unicode__(self):
         return self.name
+
+#
+# ======================= Generic Relations ===============================
+#
 
 
 class GenericRef(BaseModel):
@@ -340,6 +348,10 @@ class RelationsField(object):
     def remove_relation(self, instance, obj):
         if obj:
             return GenericRelation.remove_relation(instance, obj)
+
+#
+# ===================== Common Objects ========================
+#
 
 
 class CommonObject(GeoRefModel, BaseModel, CommonDataMixin):

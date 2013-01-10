@@ -3,17 +3,21 @@ from django.db import models
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=1024, unique=True)
+    name = models.CharField(max_length=1024)
+    namespace = models.CharField(max_length=128, default='tag')
+
+    class Meta:
+        unique_together = (("name", "namespace"),)
 
     @classmethod
-    def add(cls, tag):
-        obj, created = cls.objects.get_or_create(name=tag)
+    def add(cls, tag, namespace='tag'):
+        obj, created = cls.objects.get_or_create(name=tag, namespace=namespace)
         return obj
 
     @classmethod
-    def get_by_name(cls, tag_name):
+    def get_by_name(cls, tag_name, namespace='tag'):
         try:
-            tag = Tag.objects.get(name=tag_name)
+            tag = Tag.objects.get(name=tag_name, namespace=namespace)
         except Exception:
             tag = None
         return tag
@@ -25,12 +29,13 @@ class TaggedObject(models.Model):
     object_table = models.CharField(max_length=512)
 
     @classmethod
-    def get_tags_for_object(cls, obj):
+    def get_tags_for_object(cls, obj, namespace='tag'):
         return [
             tagged_obj.tag for tagged_obj in TaggedObject.objects.filter(
                 object_id=getattr(obj, 'id', None),
                 object_table='{}.{}'.format(obj._meta.app_label,
-                    obj.__class__.__name__)
+                    obj.__class__.__name__),
+                tag__namespace=namespace
         )]
 
     @classmethod
@@ -77,12 +82,16 @@ class TagField(object):
         obj.tags.remove('tag A')
         obj.tags
         # returns ['tag B', 'tag C']
-
     """
+
+    def __init__(self, namespace='tag'):
+        self.namespace = namespace
 
     def __get__(self, instance, owner):
         tag_list = _TagList(self, instance)
-        for tag in TaggedObject.get_tags_for_object(instance):
+        for tag in TaggedObject.get_tags_for_object(
+                    instance, namespace=self.namespace):
+
             tag_list.append(tag.name)
         return tag_list
 
@@ -99,23 +108,24 @@ class TagField(object):
             tagged_obj for tagged_obj in TaggedObject.objects.filter(
                 object_id=getattr(instance, 'id', None),
                 object_table='{}.{}'.format(instance._meta.app_label,
-                    instance.__class__.__name__)
+                    instance.__class__.__name__),
+                tag__namespace=self.namespace
         )]
         for tag in tags:
             tag.delete()
 
     def add_tag(self, instance, tag):
-        tag_obj = Tag.add(tag)
+        tag_obj = Tag.add(tag, namespace=self.namespace)
         TaggedObject.add_tag_to_object(tag_obj, instance)
         return tag_obj
 
     def remove_tag(self, instance, tag):
         if isinstance(tag, basestring):
-            tag = Tag.get_by_name(tag)
+            tag = Tag.get_by_name(tag, namespace=self.namespace)
         elif not isinstance(tag, Tag):
             tag = None
 
-        if tag:
+        if tag and tag.namespace == self.namespace:
             TaggedObject.objects.filter(
                     object_id=getattr(instance, 'id', None),
                     object_table='{}.{}'.format(instance._meta.app_label,
