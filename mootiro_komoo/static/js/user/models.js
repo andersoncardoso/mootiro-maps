@@ -20,7 +20,16 @@
       User.prototype.urlRoot = urls.resolve('user_api');
 
       User.prototype.defaults = {
-        'about_me': ''
+        'about_me': '',
+        'contact': [
+          {
+            type: 'phone',
+            value: '12345678'
+          }, {
+            type: 'skype',
+            value: 'skypelogin'
+          }
+        ]
       };
 
       User.prototype.permissions = {
