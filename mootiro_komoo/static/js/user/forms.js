@@ -4,9 +4,11 @@
 
   define(function(require) {
     'use strict';
-    var ContactWidget, MultiWidget, UserInfoForm, reForm;
+    var ContactWidget, MultiWidget, SelectWidget, UserInfoForm, mainForms, reForm;
     reForm = require('reForm');
-    MultiWidget = require('main/forms').MultiWidget;
+    mainForms = require('main/forms');
+    MultiWidget = mainForms.MultiWidget;
+    SelectWidget = mainForms.SelectWidget;
     ContactWidget = (function(_super) {
 
       __extends(ContactWidget, _super);
@@ -21,7 +23,39 @@
         {
           name: 'type',
           container_class: 'type',
-          widget: reForm.commonWidgets.TextWidget
+          widget: SelectWidget,
+          args: {
+            options: [
+              {
+                label: '',
+                value: ''
+              }, {
+                label: 'Address',
+                value: 'address'
+              }, {
+                label: 'Phone',
+                value: 'phone'
+              }, {
+                label: 'Email',
+                value: 'email'
+              }, {
+                label: 'Website',
+                value: 'website'
+              }, {
+                label: 'Skype',
+                value: 'skype'
+              }, {
+                label: 'Facebook',
+                value: 'facebook'
+              }, {
+                label: 'Google Plus',
+                value: 'gplus'
+              }, {
+                label: 'Twitter',
+                value: 'twitter'
+              }
+            ]
+          }
         }, {
           name: 'value',
           container_class: 'value',

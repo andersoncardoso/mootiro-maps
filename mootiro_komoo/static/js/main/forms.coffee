@@ -4,22 +4,30 @@ define (require) ->
   _ = require 'underscore'
   reForm = require 'reForm'
 
-  class MultiWidget extends reForm.Widget
-    fields: []
-    collectionTemplate: """
-<div class="collection-container <%=container_class%>"></div>
+  collectionTemplate = """
+  <div class="collection-container <%=container_class%>"></div>
 """
-    fieldTemplate: """
+  fieldTemplate = """
 <div class="field-container <%=container_class%>">
   <label><%=label%></label>
   <div class="widget-container"></div>
 </div>
 """
+  multiTemplate = """
+<div class="fields-container"></div>
+<a class="add-row">+ Add another one</a>
+"""
+
+
+  class MultiWidget extends reForm.Widget
+    fields: []
+
+    collectionTemplate: collectionTemplate
+    fieldTemplate: fieldTemplate
+    template: multiTemplate
 
     events:
       'click .add-row': 'onAddClick'
-
-    template: '<div class="fields-container"></div><a class="add-row">+ Add another one</a>'
 
     initialize: ->
       @options.type = 'json'
@@ -76,8 +84,7 @@ define (require) ->
       for field in @fields
         # build args object
         args =
-          name: field.name
-          input_id: "id_#{field.name}_#{@rows}"  # TODO: get parent id
+          name: "#{@name}_#{field.name}_#{@rows}"
           label: field.label or ''
           value: field.value or ''
           container_class: field.container_class or ''
@@ -103,6 +110,26 @@ define (require) ->
       this
 
 
+  selectTemplate = """
+<select name="<%=name%>" id="id_<%=name%>">
+  <%_.each(options, function (opt) {%>
+    <option value="<%=opt.value%>" <%=opt.attrs%>><%=opt.label%></option>
+  <% }); %>
+</select>
+"""
+
+
+  class SelectWidget extends reForm.Widget
+    template: selectTemplate
+
+    set: (value) ->
+      @$("select[name=#{@options.name}]").val value
+
+    get: (value) ->
+      @$("select[name=#{@options.name}]").val()
+
+
   return {
     MultiWidget: MultiWidget
+    SelectWidget: SelectWidget
   }

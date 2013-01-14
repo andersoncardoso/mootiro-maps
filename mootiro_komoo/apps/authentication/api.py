@@ -73,7 +73,7 @@ class UsersHandler(ResourceHandler):
     def get(self, request, id_):
         # FIXME: add 'contact' to default fields
         fields = get_fields_to_show(request,
-                ['id', 'name', 'email', 'url', 'contact', 'is_admin'])
+                ['id', 'name', 'email', 'url', 'is_admin'])
         user = request.user if id_ == 'me' else User.get_by_id(id_)
 
         if not user:

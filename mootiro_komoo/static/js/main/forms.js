@@ -4,9 +4,12 @@
 
   define(function(require) {
     'use strict';
-    var MultiWidget, reForm, _;
+    var MultiWidget, SelectWidget, collectionTemplate, fieldTemplate, multiTemplate, reForm, selectTemplate, _;
     _ = require('underscore');
     reForm = require('reForm');
+    collectionTemplate = "<div class=\"collection-container <%=container_class%>\"></div>";
+    fieldTemplate = "<div class=\"field-container <%=container_class%>\">\n  <label><%=label%></label>\n  <div class=\"widget-container\"></div>\n</div>";
+    multiTemplate = "<div class=\"fields-container\"></div>\n<a class=\"add-row\">+ Add another one</a>";
     MultiWidget = (function(_super) {
 
       __extends(MultiWidget, _super);
@@ -17,15 +20,15 @@
 
       MultiWidget.prototype.fields = [];
 
-      MultiWidget.prototype.collectionTemplate = "<div class=\"collection-container <%=container_class%>\"></div>";
+      MultiWidget.prototype.collectionTemplate = collectionTemplate;
 
-      MultiWidget.prototype.fieldTemplate = "<div class=\"field-container <%=container_class%>\">\n  <label><%=label%></label>\n  <div class=\"widget-container\"></div>\n</div>";
+      MultiWidget.prototype.fieldTemplate = fieldTemplate;
+
+      MultiWidget.prototype.template = multiTemplate;
 
       MultiWidget.prototype.events = {
         'click .add-row': 'onAddClick'
       };
-
-      MultiWidget.prototype.template = '<div class="fields-container"></div><a class="add-row">+ Add another one</a>';
 
       MultiWidget.prototype.initialize = function() {
         this.options.type = 'json';
@@ -108,8 +111,7 @@
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           field = _ref[_i];
           args = {
-            name: field.name,
-            input_id: "id_" + field.name + "_" + this.rows,
+            name: "" + this.name + "_" + field.name + "_" + this.rows,
             label: field.label || '',
             value: field.value || '',
             container_class: field.container_class || ''
@@ -134,8 +136,31 @@
       return MultiWidget;
 
     })(reForm.Widget);
+    selectTemplate = "<select name=\"<%=name%>\" id=\"id_<%=name%>\">\n  <%_.each(options, function (opt) {%>\n    <option value=\"<%=opt.value%>\" <%=opt.attrs%>><%=opt.label%></option>\n  <% }); %>\n</select>";
+    SelectWidget = (function(_super) {
+
+      __extends(SelectWidget, _super);
+
+      function SelectWidget() {
+        SelectWidget.__super__.constructor.apply(this, arguments);
+      }
+
+      SelectWidget.prototype.template = selectTemplate;
+
+      SelectWidget.prototype.set = function(value) {
+        return this.$("select[name=" + this.options.name + "]").val(value);
+      };
+
+      SelectWidget.prototype.get = function(value) {
+        return this.$("select[name=" + this.options.name + "]").val();
+      };
+
+      return SelectWidget;
+
+    })(reForm.Widget);
     return {
-      MultiWidget: MultiWidget
+      MultiWidget: MultiWidget,
+      SelectWidget: SelectWidget
     };
   });
 

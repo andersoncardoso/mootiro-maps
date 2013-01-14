@@ -2,7 +2,9 @@ define (require) ->
   'use strict'
 
   reForm = require 'reForm'
-  MultiWidget = require('main/forms').MultiWidget
+  mainForms = require 'main/forms'
+  MultiWidget = mainForms.MultiWidget
+  SelectWidget = mainForms.SelectWidget
 
 
   class ContactWidget extends MultiWidget
@@ -15,7 +17,20 @@ define (require) ->
       {
         name: 'type'
         container_class: 'type'
-        widget: reForm.commonWidgets.TextWidget
+        widget: SelectWidget
+        args: {
+          options: [
+            { label: '', value: '' }
+            { label: 'Address', value: 'address' }
+            { label: 'Phone', value: 'phone' }
+            { label: 'Email', value: 'email' }
+            { label: 'Website', value: 'website' }
+            { label: 'Skype', value: 'skype' }
+            { label: 'Facebook', value: 'facebook' }
+            { label: 'Google Plus', value: 'gplus' }
+            { label: 'Twitter', value: 'twitter' }
+          ]
+        }
       }
       {
         name: 'value'
