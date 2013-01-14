@@ -10,12 +10,12 @@ from string import letters, digits
 from random import choice
 from celery.decorators import task
 
-from django import forms
+# from django import forms
 from django.conf import settings
 from django.core.mail import send_mail as django_send_mail
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+# from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import Http404, HttpResponseNotAllowed, HttpResponse
-from django.utils.translation import ugettext_lazy as _
+# from django.utils.translation import ugettext_lazy as _
 
 
 def datetime_to_iso(datetime_obj):
@@ -99,29 +99,29 @@ def create_geojson(objects, type_='FeatureCollection', convert=True,
     return geojson
 
 
-def paginated_query(query, request=None, page=None, size=None):
-    """
-    Do the boring/repetitive pagination routine.
-    Expects a request with page and size attributes
-    params:
-        query: any queryset objects
-        request:  a django HttpRequest (GET)
-           page: page attr on request.GET (default: 1)
-           size: size attr on request.GET (default: 10)
-        size: size of each page
-        page: number of the current page
-    """
-    page = page or request.GET.get('page', '')
-    size = size or request.GET.get('size', 10)
-
-    paginator = Paginator(query, size)
-    try:
-        _paginated_query = paginator.page(page)
-    except PageNotAnInteger:  # If page is not an integer, deliver first page.
-        _paginated_query = paginator.page(1)
-    except EmptyPage:  # If page is out of range, deliver last page
-        _paginated_query = paginator.page(paginator.num_pages)
-    return _paginated_query
+# def paginated_query(query, request=None, page=None, size=None):
+#     """
+#     Do the boring/repetitive pagination routine.
+#     Expects a request with page and size attributes
+#     params:
+#         query: any queryset objects
+#         request:  a django HttpRequest (GET)
+#            page: page attr on request.GET (default: 1)
+#            size: size attr on request.GET (default: 10)
+#         size: size of each page
+#         page: number of the current page
+#     """
+#     page = page or request.GET.get('page', '')
+#     size = size or request.GET.get('size', 10)
+#
+#     paginator = Paginator(query, size)
+#     try:
+#         _paginated_query = paginator.page(page)
+#     except PageNotAnInteger:  # If page is not an integer, deliver first page
+#         _paginated_query = paginator.page(1)
+#     except EmptyPage:  # If page is out of range, deliver last page
+#         _paginated_query = paginator.page(paginator.num_pages)
+#     return _paginated_query
 
 
 date_order_map = {
@@ -130,60 +130,60 @@ date_order_map = {
 }
 
 
-def sorted_query(query_set, sort_fields, request, default_order='name'):
-    """
-    Used for handle listing sorters
-    params:
-        query_set: any query set object or manager
-        request: the HttpRequest obejct
-    """
-    query_set = query_set.all()
-    sort_order = {k: i for i, k in enumerate(sort_fields)}
-    sorters = request.GET.get('sorters', '')
-    if sorters:
-        sorters = sorted(sorters.split(','), key=lambda val: sort_order[val])
+# def sorted_query(query_set, sort_fields, request, default_order='name'):
+#     """
+#     Used for handle listing sorters
+#     params:
+#         query_set: any query set object or manager
+#         request: the HttpRequest obejct
+#     """
+#     query_set = query_set.all()
+#     sort_order = {k: i for i, k in enumerate(sort_fields)}
+#     sorters = request.GET.get('sorters', '')
+#     if sorters:
+#         sorters = sorted(sorters.split(','), key=lambda val: sort_order[val])
+#
+#     for i, sorter in enumerate(sorters[:]):
+#         if 'date' in sorter:
+#             date_order = request.GET.get(sorter, '-')
+#             sorters[i] = date_order_map[date_order] + sorter
+#
+#     if sorters:
+#         return query_set.order_by(*sorters)
+#     else:
+#         return query_set.order_by(default_order)
 
-    for i, sorter in enumerate(sorters[:]):
-        if 'date' in sorter:
-            date_order = request.GET.get(sorter, '-')
-            sorters[i] = date_order_map[date_order] + sorter
 
-    if sorters:
-        return query_set.order_by(*sorters)
-    else:
-        return query_set.order_by(default_order)
-
-
-def filtered_query(query_set, request):
-    filters = request.GET.get('filters', '')
-    for f in filters.split(','):
-        if f == 'tags':
-            request.encoding = 'latin-1'
-            tags = request.GET.get('tags', '')
-
-            if tags:
-                tags = tags.split(',')
-                for tag in tags:
-                    query_set = query_set.filter(tags__name=tag)
-        if f == 'community':
-            community = request.GET.get('community', '')
-            if community:
-                query_set = query_set.filter(community=community)
-        if f == 'need_categories':
-            need_categories = request.GET.get('need_categories', '')
-            if need_categories:
-                need_categories = need_categories.split(',')
-                for nc in need_categories:
-                    query_set = query_set.filter(categories=nc)
-        if f == 'target_audiences':
-            request.encoding = 'latin-1'
-            target_audiences = request.GET.get('target_audiences', '')
-            if target_audiences:
-                target_audiences = target_audiences.split(',')
-                for ta in target_audiences:
-                    query_set = query_set.filter(target_audiences__name=ta)
-
-    return query_set
+# def filtered_query(query_set, request):
+#     filters = request.GET.get('filters', '')
+#     for f in filters.split(','):
+#         if f == 'tags':
+#             request.encoding = 'latin-1'
+#             tags = request.GET.get('tags', '')
+#
+#             if tags:
+#                 tags = tags.split(',')
+#                 for tag in tags:
+#                     query_set = query_set.filter(tags__name=tag)
+#         if f == 'community':
+#             community = request.GET.get('community', '')
+#             if community:
+#                 query_set = query_set.filter(community=community)
+#         if f == 'need_categories':
+#             need_categories = request.GET.get('need_categories', '')
+#             if need_categories:
+#                 need_categories = need_categories.split(',')
+#                 for nc in need_categories:
+#                     query_set = query_set.filter(categories=nc)
+#         if f == 'target_audiences':
+#             request.encoding = 'latin-1'
+#             target_audiences = request.GET.get('target_audiences', '')
+#             if target_audiences:
+#                 target_audiences = target_audiences.split(',')
+#                 for ta in target_audiences:
+#                     query_set = query_set.filter(target_audiences__name=ta)
+#
+#     return query_set
 
 
 def templatetag_args_parser(*args):
@@ -199,7 +199,6 @@ def templatetag_args_parser(*args):
 
     And in the template...
       {% mytemplatetag 'zoom=12' 'label=Your name' %}
-
     """
     parsed_args = {}
     for arg in args:
@@ -209,14 +208,14 @@ def templatetag_args_parser(*args):
     return parsed_args
 
 
-def clean_autocomplete_field(field_data, model):
-    try:
-        if not field_data or field_data == 'None':
-            return model()
-        else:
-            return model.objects.get(pk=field_data)
-    except:
-        raise forms.ValidationError(_('invalid field data'))
+# def clean_autocomplete_field(field_data, model):
+#     try:
+#         if not field_data or field_data == 'None':
+#             return model()
+#         else:
+#             return model.objects.get(pk=field_data)
+#     except:
+#         raise forms.ValidationError(_('invalid field data'))
 
 
 # def render_markup(text):
@@ -224,11 +223,11 @@ def clean_autocomplete_field(field_data, model):
 
 
 def send_mail(title='', message='', sender='', receivers=[]):
-    '''
-    function for sending mails. If we are on debug (development) se will be
+    """
+    function for sending mails. On debug (development) mode the email will be
     sent by django mailer else will use the mailgun api.
     mailer.
-    '''
+    """
     if settings.DEBUG:
         django_send_mail(title, message, sender, receivers,
                             fail_silently=False)
@@ -383,7 +382,7 @@ class JsonResponse(HttpResponse):
             # some code
             return JsonResponse(my_data_dict)
         def my_other_view(request):
-            #some code
+            # some code
             return JsonResponse(my_errors_dict, status_code=400)
     """
     def __init__(self, data={}, status_code=None):
@@ -419,6 +418,9 @@ def build_obj_from_dict(obj, data, expected_keys=[], datetime_keys=[],
 
 
 def get_model_from_table_ref(table_ref):
+    """
+    given a table_ref like 'app_label.class_name', return the refered model
+    """
     module_name, model_name = table_ref.split('.')
     module = __import__(module_name)
     models = getattr(module, 'models')

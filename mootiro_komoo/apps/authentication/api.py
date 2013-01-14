@@ -73,7 +73,7 @@ class UsersHandler(ResourceHandler):
     def get(self, request, id_):
         # FIXME: add 'contact' to default fields
         fields = get_fields_to_show(request,
-                ['id', 'name', 'email', 'url', 'is_admin'])
+                ['id', 'name', 'email', 'url', 'contact', 'is_admin'])
         user = request.user if id_ == 'me' else User.get_by_id(id_)
 
         if not user:
@@ -112,12 +112,10 @@ class LoginHandler(ResourceHandler):
         Resposible for handle the LoginForm from LoginView
         (authentication/views.coffee)
         """
-        print 'REQ', request.raw_post_data
         json_data = get_json_data(request)
         email, password = [json_data.get(data, '')
                             for data in ['email', 'password']]
         email = email.lower()
-        print 'DATa:', email, password
 
         login = Login()
         login.from_dict({'email': email, 'password': password})

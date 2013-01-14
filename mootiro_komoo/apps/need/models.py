@@ -6,8 +6,9 @@ from django.contrib.gis.db import models
 from django.utils.translation import ugettext as _
 from django.template.defaultfilters import slugify
 
-from main.models import CommonObject, TargetAudience
+from main.models import CommonObject
 from komoo_map.models import POLYGON, LINESTRING, POINT
+from tags.models import TagField
 
 
 class NeedCategory(models.Model):
@@ -44,7 +45,7 @@ class Need(CommonObject):
     common_object_type = 'need'
 
     categories = models.ManyToManyField(NeedCategory)
-    target_audiences = models.ManyToManyField(TargetAudience, blank=False)
+    target_audience = TagField(namespace='target_audience')
 
     class Map:
         title = _('Need')

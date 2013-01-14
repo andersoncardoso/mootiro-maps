@@ -2,12 +2,11 @@
 from __future__ import unicode_literals
 
 from django.db import models
-
 from django.utils.translation import ugettext as _
 
-from main.models import BaseModel, CommonObject, TargetAudience
-
+from main.models import BaseModel, CommonObject
 from komoo_map.models import POLYGON, POINT
+from tags.models import TagField
 
 
 LOGO_CHOICES = (
@@ -28,10 +27,7 @@ class Organization(CommonObject):
 
     categories = models.ManyToManyField('OrganizationCategory', null=True,
                         blank=True)
-    target_audiences = models.ManyToManyField(TargetAudience, null=True,
-                        blank=True)
-
-    # tags = TaggableManager()
+    target_audiences = TagField(namespace='target_audience')
 
     class Map:
         editable = True

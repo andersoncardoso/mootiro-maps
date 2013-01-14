@@ -4,9 +4,11 @@ from __future__ import unicode_literals
 
 from django.contrib.gis.db import models
 # from django.contrib.gis.measure import Distance
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 from main.models import CommonObject
+from main.utils import build_obj_from_dict
 from komoo_map.models import POLYGON
 
 
@@ -16,11 +18,18 @@ REGION_TYPES = (
 
 
 class Region(CommonObject):
-    """ Common Object inherited Regions"""
+    """
+    Organizational regions, like communities, neighborhoods and etc
+
+    Inherits from CommonObject (common_object_type=regions).
+    Appends the extra_data below:
+        population: an extimate of the number of people living in this region
+        region_type: an classfications for the region kind. Default: Community
+    """
     common_object_type = 'regions'
 
     population = models.IntegerField(null=True, blank=True)
-    region_type = models.CharField(max_length=1024)
+    region_type = models.CharField(max_length=1024, default='Community')
 
     class Map:
         title = _('Region')
@@ -39,11 +48,13 @@ class Region(CommonObject):
 
     @property
     def url(self):
-        return '/regions/%s' % self.id
+        return reverse('region_view', kwargs={'id_': self.id})
 
     # ================= Utils ===========================
-    def from_dict(self):
-        pass
+    def from_dict(self, data):
+        super(Region, self).from_dict(data)
+        keys = ['population', 'region_type']
+        build_obj_from_dict(self, data, keys)
 
     def to_dict(self):
         dict_ = super(Region, self).to_dict()
@@ -54,7 +65,18 @@ class Region(CommonObject):
         return dict_
 
     def is_valid(self):
-        return False
+        validates = super(Region, self).is_valid()
+        if getattr(self, 'population', None):
+            try:
+                int(self.population)
+            except:
+                validates = False
+                self.errors['population'] = _('Must be an integer')
+        if getattr(self, 'region_type', None):
+            if not self.region_type in REGION_TYPES:
+                validates = False
+                self.errors['region_type'] = _('Invalid region type')
+        return validates
 
     # TODO: order communities from the database
     # def closest_communities(self, max=3, radius=Distance(km=25)):

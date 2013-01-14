@@ -21,6 +21,7 @@ class BaseModel(models.Model, BaseDAOMixin):
         - easy table references
 
     examples:
+      ```
       class MyModel(BaseModel):
         pass
 
@@ -30,6 +31,7 @@ class BaseModel(models.Model, BaseDAOMixin):
       MyModel.get_by_id(number)
       MyModel.filter_by(name='bla', other_data='ble')
       obj, created = MyModel.get_or_create(name='bla', other_data='ble')
+      ```
     """
 
     class Meta:
@@ -98,26 +100,19 @@ class CommonDataMixin(models.Model, BaseDAOMixin):
         }
 
     def from_dict(self, data):
-        expected_keys = [
+        keys = [
             'name', 'description', 'creator', 'creation_date', 'last_editor',
             'last_update', 'tags', 'extra_data']
-        datetime_keys = ['creation_date', 'last_update']
-        build_obj_from_dict(self, data, expected_keys, datetime_keys)
+        date_keys = ['creation_date', 'last_update']
+        build_obj_from_dict(self, data, keys, date_keys)
 
-#
-# ====================== Target Audiences ================================
-#
+    def is_valid(self):
+        self.errors = {}
+        validates = True
+        if not self.name:
+            validates, self.errors['name'] = False, _('Required field')
+        return validates
 
-
-class TargetAudience(BaseModel):
-    """
-    Target Audience for different type of contents
-    Works like a specific type of tag
-    """
-    name = models.CharField(max_length=64, unique=True, blank=False)
-
-    def __unicode__(self):
-        return self.name
 
 #
 # ======================= Generic Relations ===============================
