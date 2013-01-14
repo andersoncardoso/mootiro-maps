@@ -714,12 +714,12 @@ body > .content-box > .main > .content .user-updates .list {
   margin-right: 5px;
   vertical-align: middle;
 }
-.contact-info > li.site,
-.contact.site {
+.contact-info > li.website,
+.contact.website {
   display: inline-block;
 }
-.contact-info > li.site:before,
-.contact.site:before {
+.contact-info > li.website:before,
+.contact.website:before {
   background: /* @menu-fg */ url(../img/sprite.png) no-repeat -42 0;
   text-indent: 10000px;
   content: '';
@@ -729,8 +729,8 @@ body > .content-box > .main > .content .user-updates .list {
   margin-right: 5px;
   vertical-align: middle;
 }
-.contact-info > li.site:before,
-.contact.site:before {
+.contact-info > li.website:before,
+.contact.website:before {
   background: /* @menu-fg */ url(../img/sprite.png) no-repeat -224px -48px;
   text-indent: 10000px;
   content: '';
