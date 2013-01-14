@@ -10,7 +10,7 @@ form {
         color: @error-color;
     }
     .field-container {
-        margin-bottom: 10px;
+        padding-bottom: 10px;
     }
     input[type=text],
     input[type=password] {
@@ -19,7 +19,7 @@ form {
         border: 1px solid #bcbebf;
         display: block;
         width: 100%;
-        height: 28px;
+        height: 36px;
         padding: 4px 0 3px 4px;
         color: @label-color;
         .border-radius;
@@ -95,7 +95,7 @@ form.search {
     overflow: hidden;
 
     input {
-        height: @button-size;
+        height: @button-size + 4;
         border: none;
         background-color: transparent;
 
@@ -182,11 +182,20 @@ a.button {
 }
 
 form#user-info {
+    .border-radius;
+
+    background: @inline-form-bg;
+    padding: 5px;
+
     label {
         color: inherit;
     }
 
     .field-container {
+        > label {
+            .h2-font;
+            margin: 10px 0;
+        }
 
         &.name {
             label {
@@ -194,7 +203,6 @@ form#user-info {
             }
             input {
                 .h1-font;
-                margin: -2px 0 25px -5px;
             }
         }
 
@@ -222,13 +230,10 @@ form#user-info {
         }
 
         &.about-me {
-            label {
-                .h2-font;
-                margin: 10px 0;
-            }
             textarea {
                 width: 100%;
-                margin: -3px;
+                height: 110px;
+                padding: 5px;
                 font: inherit;
             }
         }

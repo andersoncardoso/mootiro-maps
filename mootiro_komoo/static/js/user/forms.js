@@ -4,11 +4,10 @@
 
   define(function(require) {
     'use strict';
-    var ContactWidget, MultiWidget, SelectWidget, UserInfoForm, mainForms, reForm;
+    var ContactWidget, MultiWidget, UserInfoForm, mainForms, reForm;
     reForm = require('reForm');
     mainForms = require('main/forms');
     MultiWidget = mainForms.MultiWidget;
-    SelectWidget = mainForms.SelectWidget;
     ContactWidget = (function(_super) {
 
       __extends(ContactWidget, _super);
@@ -23,35 +22,35 @@
         {
           name: 'type',
           container_class: 'type',
-          widget: SelectWidget,
+          widget: reForm.commonWidgets.DropdownWidget,
           args: {
-            options: [
+            choices: [
               {
-                label: '',
+                title: '',
                 value: ''
               }, {
-                label: 'Address',
+                title: i18n('Address'),
                 value: 'address'
               }, {
-                label: 'Phone',
+                title: i18n('Phone'),
                 value: 'phone'
               }, {
-                label: 'Email',
+                title: i18n('Email'),
                 value: 'email'
               }, {
-                label: 'Website',
+                title: i18n('Website'),
                 value: 'website'
               }, {
-                label: 'Skype',
+                title: i18n('Skype'),
                 value: 'skype'
               }, {
-                label: 'Facebook',
+                title: i18n('Facebook'),
                 value: 'facebook'
               }, {
-                label: 'Google Plus',
+                title: i18n('Google Plus'),
                 value: 'gplus'
               }, {
-                label: 'Twitter',
+                title: i18n('Twitter'),
                 value: 'twitter'
               }
             ]
@@ -73,6 +72,8 @@
       function UserInfoForm() {
         UserInfoForm.__super__.constructor.apply(this, arguments);
       }
+
+      UserInfoForm.prototype.template = require('text!templates/forms/_inline_form.html');
 
       UserInfoForm.prototype.fields = [
         {

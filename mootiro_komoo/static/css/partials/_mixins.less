@@ -209,3 +209,22 @@
         }
     }
 }
+
+
+.action-item (@url, @icon-size, @col:0, @row:0) {
+    @grid-size: @icon-size;
+    @col-offset: 0;
+    @row-offset: 5;
+    .icon(@url, @icon-size, @grid-size, @col-offset+@col, @row-offset+@row);
+
+    &:hover {
+        .icon(@url, @icon-size, @grid-size, @col-offset+@col, @row-offset+@row+2);
+    }
+
+    &:active,
+    &.active,
+    &.active:hover {
+        .icon(@url, @icon-size, @grid-size, @col-offset+@col, @row-offset+@row+1);
+    }
+}
+

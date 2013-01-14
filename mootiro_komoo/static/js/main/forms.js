@@ -4,12 +4,12 @@
 
   define(function(require) {
     'use strict';
-    var MultiWidget, SelectWidget, collectionTemplate, fieldTemplate, multiTemplate, reForm, selectTemplate, _;
+    var MultiWidget, collectionTemplate, fieldTemplate, multiTemplate, reForm, _;
     _ = require('underscore');
     reForm = require('reForm');
-    collectionTemplate = "<div class=\"collection-container <%=container_class%>\"></div>";
+    collectionTemplate = "<div class=\"collection-container <%=container_class%>\">\n  <a href=\"#\" class=\"remove\" title=\"<%=i18n('Remove')%>\">[-]</a>\n</div>";
     fieldTemplate = "<div class=\"field-container <%=container_class%>\">\n  <label><%=label%></label>\n  <div class=\"widget-container\"></div>\n</div>";
-    multiTemplate = "<div class=\"fields-container\"></div>\n<a class=\"add-row\">+ Add another one</a>";
+    multiTemplate = "<div class=\"fields-container\"></div>\n<a class=\"add-row\"><%=i18n('+ Add another one')%></a>";
     MultiWidget = (function(_super) {
 
       __extends(MultiWidget, _super);
@@ -27,7 +27,8 @@
       MultiWidget.prototype.template = multiTemplate;
 
       MultiWidget.prototype.events = {
-        'click .add-row': 'onAddClick'
+        'click .add-row': 'onAddClick',
+        'click .remove': 'onRemoveClick'
       };
 
       MultiWidget.prototype.initialize = function() {
@@ -96,6 +97,13 @@
         return this.addRow();
       };
 
+      MultiWidget.prototype.onRemoveClick = function(e) {
+        var el;
+        e.preventDefault();
+        el = $(e.target);
+        return el.parent().remove();
+      };
+
       MultiWidget.prototype.addRow = function(content) {
         var args, field, instances, key, renderedCollection, value, widget, _collectionTemplate, _fieldTemplate, _i, _len, _ref, _ref2;
         _collectionTemplate = _.template(this.collectionTemplate);
@@ -107,7 +115,7 @@
         };
         renderedCollection = $('<div>').html(_collectionTemplate(args)).children().detach();
         instances = {};
-        _ref = this.fields;
+        _ref = this.fields.slice(0).reverse();
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           field = _ref[_i];
           args = {
@@ -121,7 +129,7 @@
           instances[field.name] = widget;
           field = $('<div>').html(_fieldTemplate(args)).children().detach();
           field.find('.widget-container').append(widget.render().el);
-          renderedCollection.append(field).data('instances', instances);
+          renderedCollection.prepend(field).data('instances', instances);
         }
         this.$('.fields-container').append(renderedCollection);
         for (key in content) {
@@ -136,31 +144,8 @@
       return MultiWidget;
 
     })(reForm.Widget);
-    selectTemplate = "<select name=\"<%=name%>\" id=\"id_<%=name%>\">\n  <%_.each(options, function (opt) {%>\n    <option value=\"<%=opt.value%>\" <%=opt.attrs%>><%=opt.label%></option>\n  <% }); %>\n</select>";
-    SelectWidget = (function(_super) {
-
-      __extends(SelectWidget, _super);
-
-      function SelectWidget() {
-        SelectWidget.__super__.constructor.apply(this, arguments);
-      }
-
-      SelectWidget.prototype.template = selectTemplate;
-
-      SelectWidget.prototype.set = function(value) {
-        return this.$("select[name=" + this.options.name + "]").val(value);
-      };
-
-      SelectWidget.prototype.get = function(value) {
-        return this.$("select[name=" + this.options.name + "]").val();
-      };
-
-      return SelectWidget;
-
-    })(reForm.Widget);
     return {
-      MultiWidget: MultiWidget,
-      SelectWidget: SelectWidget
+      MultiWidget: MultiWidget
     };
   });
 

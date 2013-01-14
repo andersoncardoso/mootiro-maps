@@ -5,7 +5,9 @@ define (require) ->
   reForm = require 'reForm'
 
   collectionTemplate = """
-  <div class="collection-container <%=container_class%>"></div>
+  <div class="collection-container <%=container_class%>">
+    <a href="#" class="remove" title="<%=i18n('Remove')%>">[-]</a>
+  </div>
 """
   fieldTemplate = """
 <div class="field-container <%=container_class%>">
@@ -15,7 +17,7 @@ define (require) ->
 """
   multiTemplate = """
 <div class="fields-container"></div>
-<a class="add-row">+ Add another one</a>
+<a class="add-row"><%=i18n('+ Add another one')%></a>
 """
 
 
@@ -28,6 +30,7 @@ define (require) ->
 
     events:
       'click .add-row': 'onAddClick'
+      'click .remove': 'onRemoveClick'
 
     initialize: ->
       @options.type = 'json'
@@ -66,6 +69,11 @@ define (require) ->
       e.preventDefault()
       @addRow()
 
+    onRemoveClick: (e) ->
+      e.preventDefault()
+      el = $(e.target)
+      el.parent().remove()
+
     addRow: (content) ->
       # field Template
       _collectionTemplate = _.template @collectionTemplate
@@ -81,7 +89,7 @@ define (require) ->
         html(_collectionTemplate args).children().detach();
 
       instances = {}
-      for field in @fields
+      for field in @fields.slice(0).reverse()
         # build args object
         args =
           name: "#{@name}_#{field.name}_#{@rows}"
@@ -96,7 +104,7 @@ define (require) ->
 
         field = $('<div>').html(_fieldTemplate args).children().detach();
         field.find('.widget-container').append widget.render().el
-        renderedCollection.append(field).data 'instances', instances
+        renderedCollection.prepend(field).data 'instances', instances
 
       # prepend renderedCollection on form
       @$('.fields-container').append renderedCollection
@@ -110,26 +118,6 @@ define (require) ->
       this
 
 
-  selectTemplate = """
-<select name="<%=name%>" id="id_<%=name%>">
-  <%_.each(options, function (opt) {%>
-    <option value="<%=opt.value%>" <%=opt.attrs%>><%=opt.label%></option>
-  <% }); %>
-</select>
-"""
-
-
-  class SelectWidget extends reForm.Widget
-    template: selectTemplate
-
-    set: (value) ->
-      @$("select[name=#{@options.name}]").val value
-
-    get: (value) ->
-      @$("select[name=#{@options.name}]").val()
-
-
   return {
     MultiWidget: MultiWidget
-    SelectWidget: SelectWidget
   }

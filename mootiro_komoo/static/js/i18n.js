@@ -109,6 +109,45 @@
     },
     'of': {
       'pt-br': 'de'
+    },
+    'Contact': {
+      'pt-br': 'Contato'
+    },
+    'Address': {
+      'pt-br': 'Endereço'
+    },
+    'Phone': {
+      'pt-br': 'Telefone'
+    },
+    'Email': {
+      'pt-br': 'E-mail'
+    },
+    'Website': {
+      'pt-br': 'Website'
+    },
+    'Skype': {
+      'pt-br': 'Skype'
+    },
+    'Facebook': {
+      'pt-br': 'Facebook'
+    },
+    'Google Plus': {
+      'pt-br': 'Google Plus'
+    },
+    'Twitter': {
+      'pt-br': 'Twitter'
+    },
+    '+ Add another one': {
+      'pt-br': '+ Adicionar outro'
+    },
+    'Remove': {
+      'pt-br': 'Remover'
+    },
+    'Save': {
+      'pt-br': 'Salvar'
+    },
+    'Cancel': {
+      'pt-br': 'Cancelar'
     }
   };
 

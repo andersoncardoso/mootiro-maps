@@ -4,7 +4,6 @@ define (require) ->
   reForm = require 'reForm'
   mainForms = require 'main/forms'
   MultiWidget = mainForms.MultiWidget
-  SelectWidget = mainForms.SelectWidget
 
 
   class ContactWidget extends MultiWidget
@@ -17,18 +16,18 @@ define (require) ->
       {
         name: 'type'
         container_class: 'type'
-        widget: SelectWidget
+        widget: reForm.commonWidgets.DropdownWidget
         args: {
-          options: [
-            { label: '', value: '' }
-            { label: 'Address', value: 'address' }
-            { label: 'Phone', value: 'phone' }
-            { label: 'Email', value: 'email' }
-            { label: 'Website', value: 'website' }
-            { label: 'Skype', value: 'skype' }
-            { label: 'Facebook', value: 'facebook' }
-            { label: 'Google Plus', value: 'gplus' }
-            { label: 'Twitter', value: 'twitter' }
+          choices: [
+            { title: '', value: '' }
+            { title: i18n('Address'), value: 'address' }
+            { title: i18n('Phone'), value: 'phone' }
+            { title: i18n('Email'), value: 'email' }
+            { title: i18n('Website'), value: 'website' }
+            { title: i18n('Skype'), value: 'skype' }
+            { title: i18n('Facebook'), value: 'facebook' }
+            { title: i18n('Google Plus'), value: 'gplus' }
+            { title: i18n('Twitter'), value: 'twitter' }
           ]
         }
       }
@@ -43,6 +42,7 @@ define (require) ->
 
   # Form for inline edition
   class UserInfoForm extends reForm.Form
+    template: require 'text!templates/forms/_inline_form.html'
     fields: [
       {
         name: 'name',

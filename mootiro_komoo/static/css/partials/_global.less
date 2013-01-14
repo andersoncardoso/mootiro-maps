@@ -1,3 +1,9 @@
+* {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 body {
     min-width: @min-width;
     margin: 0px;
@@ -83,7 +89,7 @@ body > .content-box {
     > .action-bar {
         .column(1);
 
-        @size: 20px;
+        @size: 35px;
 
         ul {
             padding: 0px;
@@ -94,8 +100,8 @@ body > .content-box {
             .border-radius();
 
             width: @size;
-            display: block;
             height: @size;
+            display: block;
             overflow: hidden;
             margin: 1px 0px;
             padding: 7px 5px 8px 10px;
@@ -114,22 +120,6 @@ body > .content-box {
         &:after {
             content: ".";
             color: transparent;
-        }
-
-        .action-item (@url, @icon-size, @col:0, @row:0) {
-            @col-offset: 0;
-            @row-offset: 5;
-            .icon(@url, @icon-size, @col-offset+@col, @row-offset+@row);
-
-            &:hover {
-                .icon(@url, @icon-size, @col-offset+@col, @row-offset+@row+2);
-            }
-
-            &:active,
-            &.active,
-            &.active:hover {
-                .icon(@url, @icon-size, @col-offset+@col, @row-offset+@row+1);
-            }
         }
 
 
@@ -265,6 +255,18 @@ body > .content-box {
 }
 
 /** Misc **/
+
+.row > a.remove {
+    .action-item('sprite.png', 16px, 0);
+
+    color: transparent;
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    margin: 3px 0 0;
+    overflow: hidden;
+    float: left;
+}
 
 .contact-info > li,
 .contact {
@@ -574,7 +576,7 @@ a.see-on-map {
         > .placeholder {
             .border-radius;
 
-            width: 55%;
+            width: 95%;
             margin: ((@height - 85) / 2) auto;
             padding: 15px;
             background: @map-placeholder-bg;
