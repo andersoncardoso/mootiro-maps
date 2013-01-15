@@ -63,6 +63,9 @@
         this.data.when(im, ft, he).done(function() {
           return _this.initialized.resolve();
         });
+        this.data.when(this.initialized).done(function() {
+          return $(_this.element).trigger('initialized', _this);
+        });
       }
 
       Map.prototype.addControl = function(pos, el) {
@@ -72,19 +75,24 @@
       Map.prototype.loadGeoJsonFromOptons = function() {
         var _this = this;
         return this.data.when(this.initialized).done(function() {
-          var bounds, features;
+          var features;
           if (_this.options.geojson) {
             features = _this.loadGeoJSON(_this.options.geojson, !(_this.options.zoom != null));
-            bounds = features.getBounds();
-            if (bounds != null) _this.fitBounds(bounds);
-            if (features != null) {
-              features.setMap(_this, {
-                geometry: true,
-                icon: true
-              });
-            }
-            _this.publish('set_zoom', _this.options.zoom);
-            return _this.publish('features_loaded_from_options', features);
+            return _this.subscribe('features_loaded', function(loaded) {
+              var bounds;
+              if (loaded !== features) return;
+              bounds = features.getBounds();
+              console.log(features);
+              if (bounds != null) _this.fitBounds(bounds);
+              if (features != null) {
+                features.setMap(_this, {
+                  geometry: true,
+                  icon: true
+                });
+              }
+              _this.publish('set_zoom', _this.options.zoom);
+              return _this.publish('features_loaded_from_options', features);
+            });
           }
         });
       };
@@ -92,8 +100,7 @@
       Map.prototype.initGoogleMap = function(options) {
         if (options == null) options = this.googleMapDefaultOptions;
         this.googleMap = new googleMaps.Map(this.element, options);
-        this.handleGoogleMapEvents();
-        return $(this.element).trigger('initialized', this);
+        return this.handleGoogleMapEvents();
       };
 
       Map.prototype.handleGoogleMapEvents = function() {

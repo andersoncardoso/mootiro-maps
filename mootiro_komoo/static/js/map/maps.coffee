@@ -48,8 +48,11 @@ define (require) ->
             ft = @initFeatureTypes()
             he = @handleEvents()
 
-            @data.when(im, ft, he).done () =>
+            @data.when(im, ft, he).done =>
                 @initialized.resolve()
+
+            @data.when(@initialized).done =>
+                $(@element).trigger 'initialized', @
 
         addControl: (pos, el) ->
             @googleMap.controls[pos].push el
@@ -58,17 +61,21 @@ define (require) ->
             @data.when(@initialized).done () =>
                 if @options.geojson
                     features = @loadGeoJSON @options.geojson, not @options.zoom?
-                    bounds = features.getBounds()
-                    if bounds?
-                        @fitBounds bounds
-                    features?.setMap this, geometry: on, icon: on
-                    @publish 'set_zoom', @options.zoom
-                    @publish 'features_loaded_from_options', features
+                    # may we use deferred object here?
+                    @subscribe 'features_loaded', (loaded) =>
+                        if loaded isnt features then return
+
+                        bounds = features.getBounds()
+                        console.log features
+                        if bounds?
+                            @fitBounds bounds
+                        features?.setMap this, geometry: on, icon: on
+                        @publish 'set_zoom', @options.zoom
+                        @publish 'features_loaded_from_options', features
 
         initGoogleMap: (options = @googleMapDefaultOptions) ->
             @googleMap = new googleMaps.Map @element, options
             @handleGoogleMapEvents()
-            $(@element).trigger 'initialized', @
 
         handleGoogleMapEvents: ->
             eventNames = ['click', 'idle']
@@ -303,7 +310,7 @@ define (require) ->
 
         getBounds: -> @googleMap.getBounds()
 
-        setZoom: (zoom) -> if zoom? then @googleMap.setZoom zoom
+        setZoom: (zoom) -> @googleMap.setZoom zoom if zoom?
         getZoom: -> @googleMap.getZoom()
 
         fitBounds: (bounds = @features.getBounds()) ->

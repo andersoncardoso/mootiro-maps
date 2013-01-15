@@ -90,6 +90,10 @@
         },
         resize: function() {
           return $(window).resize();
+        },
+        refresh: function() {
+          var _ref;
+          return (_ref = $(this).data('map')) != null ? _ref.refresh() : void 0;
         }
       };
       $.fn.komooMap = function(method) {

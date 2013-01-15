@@ -65,6 +65,9 @@ define ['jquery', 'map/maps'], ($, maps) ->
             resize: ->
                 $(window).resize()
 
+            refresh: ->
+                $(this).data('map')?.refresh()
+
         $.fn.komooMap = (method) ->
             if methods[method]
                 methods[method].apply this, Array.prototype.slice.call(arguments, 1)

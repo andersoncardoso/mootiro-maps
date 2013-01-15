@@ -46,17 +46,26 @@ define (require) ->
             this
 
 
+    require 'map.jquery'
     class Preview extends Backbone.View
         initialize: ->
-            require ['map.jquery'], =>
-                @map = @$el.komooMap
-                    type: 'preview'
-                    width: @options.width ? '244px'
-                    height: @options.height ? '175px'
-                    geojson: @model.get 'geojson'
-                @render()
+            _.bindAll this
+            @render()
 
         render: ->
+            @$el.empty()
+            @map = @$el.komooMap
+                type: 'preview'
+                width: @options.width ? '244px'
+                height: @options.height ? '175px'
+                mapType: google.maps.MapTypeId.ROADMAP
+                zoom: 16
+                geojson: @model.get('geojson')
+
+            @map.on 'initialized', =>
+                @trigger 'initialized'
+                @$el.komooMap('refresh')
+            this
 
 
     return {

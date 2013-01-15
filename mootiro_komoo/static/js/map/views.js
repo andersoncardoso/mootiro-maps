@@ -63,6 +63,7 @@
       return SearchBoxView;
 
     })(Backbone.View);
+    require('map.jquery');
     Preview = (function(_super) {
 
       __extends(Preview, _super);
@@ -72,20 +73,28 @@
       }
 
       Preview.prototype.initialize = function() {
-        var _this = this;
-        return require(['map.jquery'], function() {
-          var _ref, _ref2;
-          _this.map = _this.$el.komooMap({
-            type: 'preview',
-            width: (_ref = _this.options.width) != null ? _ref : '244px',
-            height: (_ref2 = _this.options.height) != null ? _ref2 : '175px',
-            geojson: _this.model.get('geojson')
-          });
-          return _this.render();
-        });
+        _.bindAll(this);
+        return this.render();
       };
 
-      Preview.prototype.render = function() {};
+      Preview.prototype.render = function() {
+        var _ref, _ref2,
+          _this = this;
+        this.$el.empty();
+        this.map = this.$el.komooMap({
+          type: 'preview',
+          width: (_ref = this.options.width) != null ? _ref : '244px',
+          height: (_ref2 = this.options.height) != null ? _ref2 : '175px',
+          mapType: google.maps.MapTypeId.ROADMAP,
+          zoom: 16,
+          geojson: this.model.get('geojson')
+        });
+        this.map.on('initialized', function() {
+          _this.trigger('initialized');
+          return _this.$el.komooMap('refresh');
+        });
+        return this;
+      };
 
       return Preview;
 
