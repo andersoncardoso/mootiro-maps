@@ -152,7 +152,7 @@
         _.bindAll(this);
         this.model = new models.LogoutModel({});
         window.logoutmodel = this.model;
-        return console.log('heree???');
+        return typeof console !== "undefined" && console !== null ? console.log('heree???') : void 0;
       };
 
       LogoutView.prototype.logout = function(next) {

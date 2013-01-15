@@ -55,7 +55,6 @@
         var dfd, user, _ref,
           _this = this;
         dfd = new $.Deferred();
-        console.log('--->', this.id);
         if (((_ref = pageManager.currentPage) != null ? _ref.id : void 0) === this.id) {
           pageManager.currentPage.setMode(this.mode);
           dfd.resolve();

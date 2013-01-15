@@ -171,6 +171,11 @@
         return this._pubsub.on(message, callback, context);
       };
 
+      Mediator.prototype.remove = function() {
+        this._pubsub.stopListening();
+        return this._pubsub.off();
+      };
+
       Mediator.prototype._addToPublishQueue = function(message) {
         return this._pubQueue.push(arguments);
       };

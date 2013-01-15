@@ -43,6 +43,8 @@ define (require) ->
                         return
                     require ['map/maps'], (maps) =>
                         map = maps.makeMap opts
+                        map.subscribe 'features_loaded', (features) =>
+                            $this.trigger 'features_loaded', features
                         $this.data 'map', map
                         if opts.mapType? then map.googleMap.setMapTypeId opts.mapType
                         if opts.height is '100%'
@@ -82,7 +84,18 @@ define (require) ->
 
             center: ->
                 map = $(this).data('map')
-                map?.googleMap?.setCenter(map?.features?.getCenter())
+                map?.googleMap.setCenter(map?.features.getCenter())
+                $(this)
+
+            remove: ->
+                $(this).data('map')?.remove()
+                $(this).empty()
+                $(this).html ''
+                $(this).remove()
+                $(this)
+
+            clear: ->
+                $(this).data('map')?.clear()
                 $(this)
 
 

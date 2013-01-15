@@ -54,6 +54,11 @@ define (require) ->
             @data.when(@initialized).done =>
                 $(@element).trigger 'initialized', @
 
+        remove: ->
+            super
+            @features.remove()
+            komoo.event.clearInstanceListeners @googleMap
+
         addControl: (pos, el) ->
             @googleMap.controls[pos].push el
 
@@ -66,7 +71,6 @@ define (require) ->
                         if loaded isnt features then return
 
                         bounds = features.getBounds()
-                        console.log features
                         if bounds?
                             if not @options.zoom?
                                 @fitBounds bounds
@@ -397,7 +401,6 @@ define (require) ->
             @addComponent 'map/controls::GeometrySelector'
             @addComponent 'map/controls::PerimeterSelector'
 
-            console.log options
             if not options?.geojson?.features
                 if not @goToSavedLocation()
                     @goToUserLocation()

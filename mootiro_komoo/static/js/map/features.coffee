@@ -171,6 +171,11 @@ define (require) ->
             @marker?.setMap(null)
             @setMap(null)
 
+        remove: ->
+            komoo.event.clearInstanceListeners @marker
+            komoo.event.clearInstanceListeners this
+            @removeFromMap()
+
         setVisible: (@visible) ->
             @marker?.setVisible @visible
             @geometry.setVisible @visible

@@ -17,6 +17,14 @@ define (require) ->
       $('#sidebar').append @sidebar?.$el
       $('#main-content').append @mainContent?.$el
 
+      onOpen = (view) ->
+        if not view then return
+        if view.subViews
+          _.each view.subViews, onOpen
+        view.onOpen?()
+
+      _([@actionBar, @sidebar, @mainContent]).each onOpen
+
     close: ->
       # Remove DOM and unbind some events to avoid memory leak
       clear = (view) ->

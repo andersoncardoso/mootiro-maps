@@ -68,6 +68,12 @@
         });
       }
 
+      Map.prototype.remove = function() {
+        Map.__super__.remove.apply(this, arguments);
+        this.features.remove();
+        return komoo.event.clearInstanceListeners(this.googleMap);
+      };
+
       Map.prototype.addControl = function(pos, el) {
         return this.googleMap.controls[pos].push(el);
       };
@@ -82,7 +88,6 @@
               var bounds;
               if (loaded !== features) return;
               bounds = features.getBounds();
-              console.log(features);
               if (bounds != null) {
                 if (!(_this.options.zoom != null)) {
                   _this.fitBounds(bounds);
@@ -580,7 +585,6 @@
         this.addComponent('map/controls::DrawingControl');
         this.addComponent('map/controls::GeometrySelector');
         this.addComponent('map/controls::PerimeterSelector');
-        console.log(options);
         if (!(options != null ? (_ref = options.geojson) != null ? _ref.features : void 0 : void 0)) {
           if (!this.goToSavedLocation()) this.goToUserLocation();
         }

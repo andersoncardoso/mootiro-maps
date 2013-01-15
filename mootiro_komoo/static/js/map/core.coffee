@@ -163,9 +163,12 @@ define (require) ->
             @_addToPublishQueue.apply this, arguments
             @_processPublishQueue()
 
-
         subscribe: (message, callback, context) ->
             @_pubsub.on message, callback, context
+
+        remove: ->
+            @_pubsub.stopListening()
+            @_pubsub.off()
 
         _addToPublishQueue: (message) ->
             #console?.log "Adding message '#{message}' to publish queue"

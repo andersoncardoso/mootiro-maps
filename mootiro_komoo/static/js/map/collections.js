@@ -21,7 +21,7 @@
       };
 
       GenericCollection.prototype.clear = function() {
-        this.elements = [];
+        this.elements.length = 0;
         return this.updateLength();
       };
 
@@ -159,6 +159,13 @@
         return this.forEach(function(feature) {
           return feature.removeFromMap();
         });
+      };
+
+      FeatureCollection.prototype.remove = function() {
+        this.forEach(function(feature) {
+          return feature.remove();
+        });
+        return this.clear();
       };
 
       FeatureCollection.prototype.setVisible = function(flag) {

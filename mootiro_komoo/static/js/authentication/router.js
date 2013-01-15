@@ -112,7 +112,9 @@
 
       LoginApp.prototype.logout = function() {
         if (!this.logoutView) this.initializeLogout();
-        console.log('LOGOUT');
+        if (typeof console !== "undefined" && console !== null) {
+          console.log('LOGOUT');
+        }
         return this.logoutView.logout();
       };
 

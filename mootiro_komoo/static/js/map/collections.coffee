@@ -14,7 +14,7 @@ define (require) ->
         updateLength: -> @length = @elements.length
 
         clear: ->
-            @elements = []
+            @elements.length = 0
             @updateLength()
 
         getAt: (index) -> @elements[index]
@@ -102,6 +102,10 @@ define (require) ->
 
         removeAllFromMap: ->
             @forEach (feature) -> feature.removeFromMap()
+
+        remove: ->
+            @forEach (feature) -> feature.remove()
+            @clear()
 
         setVisible: (flag) ->
             @forEach (feature) -> feature.setVisible flag

@@ -57,6 +57,9 @@
             return require(['map/maps'], function(maps) {
               var map;
               map = maps.makeMap(opts);
+              map.subscribe('features_loaded', function(features) {
+                return $this.trigger('features_loaded', features);
+              });
               $this.data('map', map);
               if (opts.mapType != null) map.googleMap.setMapTypeId(opts.mapType);
               if (opts.height === '100%') {
@@ -110,13 +113,24 @@
           return $(this);
         },
         center: function() {
-          var map, _ref, _ref2;
+          var map;
           map = $(this).data('map');
           if (map != null) {
-            if ((_ref = map.googleMap) != null) {
-              _ref.setCenter(map != null ? (_ref2 = map.features) != null ? _ref2.getCenter() : void 0 : void 0);
-            }
+            map.googleMap.setCenter(map != null ? map.features.getCenter() : void 0);
           }
+          return $(this);
+        },
+        remove: function() {
+          var _ref;
+          if ((_ref = $(this).data('map')) != null) _ref.remove();
+          $(this).empty();
+          $(this).html('');
+          $(this).remove();
+          return $(this);
+        },
+        clear: function() {
+          var _ref;
+          if ((_ref = $(this).data('map')) != null) _ref.clear();
           return $(this);
         }
       };

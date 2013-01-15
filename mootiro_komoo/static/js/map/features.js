@@ -289,6 +289,12 @@
         return this.setMap(null);
       };
 
+      Feature.prototype.remove = function() {
+        komoo.event.clearInstanceListeners(this.marker);
+        komoo.event.clearInstanceListeners(this);
+        return this.removeFromMap();
+      };
+
       Feature.prototype.setVisible = function(visible) {
         var _ref;
         this.visible = visible;

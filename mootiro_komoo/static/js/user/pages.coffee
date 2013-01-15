@@ -49,7 +49,6 @@ define (require) ->
       # an error
       dfd = new $.Deferred()
 
-      console.log '--->', @id
       if pageManager.currentPage?.id is @id
         pageManager.currentPage.setMode @mode
         dfd.resolve()

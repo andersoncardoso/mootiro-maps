@@ -20,10 +20,16 @@
       }
 
       Page.prototype.open = function() {
-        var _ref, _ref2, _ref3;
+        var onOpen, _ref, _ref2, _ref3;
         $('#action-bar').append((_ref = this.actionBar) != null ? _ref.$el : void 0);
         $('#sidebar').append((_ref2 = this.sidebar) != null ? _ref2.$el : void 0);
-        return $('#main-content').append((_ref3 = this.mainContent) != null ? _ref3.$el : void 0);
+        $('#main-content').append((_ref3 = this.mainContent) != null ? _ref3.$el : void 0);
+        onOpen = function(view) {
+          if (!view) return;
+          if (view.subViews) _.each(view.subViews, onOpen);
+          return typeof view.onOpen === "function" ? view.onOpen() : void 0;
+        };
+        return _([this.actionBar, this.sidebar, this.mainContent]).each(onOpen);
       };
 
       Page.prototype.close = function() {
