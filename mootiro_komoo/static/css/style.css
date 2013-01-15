@@ -1212,6 +1212,10 @@ a.see-on-map:hover:before {
   border: solid 1px #eeece7;
   background: #fafaf9;
 }
+.box.avatar {
+  text-align: center;
+  background: transparent;
+}
 .box.tags {
   background-color: transparent;
 }

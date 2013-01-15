@@ -1,11 +1,10 @@
 (function() {
 
   define(function(require) {
-    var App, Backbone, jQuery, retry;
+    var App, Backbone, jQuery;
     App = require('app');
     jQuery = require('jquery');
     Backbone = require('backbone');
-    retry = 1000;
     requirejs.onError = function(err) {
       if (err.requireType === 'timeout') {
         alert("Timeout: Ocorreu uma falha ao carregar alguns serviços externos. Partes do Mootiro Maps poderão não funcionar corretamente.");

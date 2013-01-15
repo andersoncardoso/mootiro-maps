@@ -4,8 +4,6 @@ define (require) ->
   jQuery = require 'jquery'
   Backbone = require 'backbone'
 
-  retry = 1000
-
   requirejs.onError = (err) ->
     if err.requireType == 'timeout'
       # TODO: i18n me
