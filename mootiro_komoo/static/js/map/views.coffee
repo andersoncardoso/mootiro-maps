@@ -50,21 +50,32 @@ define (require) ->
     class Preview extends Backbone.View
         initialize: ->
             _.bindAll this
+            @map = $('<div>')
             @render()
 
+            Backbone.on 'module::error', (err) =>
+                if @loading and err.message.indexOf 'goog!maps' > -1
+                    @$el.html """<div class="loading">#{i18n('Map unavailable!')}</div>"""
+
+
+
         render: ->
-            @$el.empty()
-            @map = @$el.komooMap
+            @loading = true
+            @map.detach()
+            @$el.html """<div class="loading">#{i18n('Loading...')}</div>"""
+            @map.komooMap
                 type: 'preview'
-                width: @options.width ? '244px'
-                height: @options.height ? '175px'
-                mapType: google.maps.MapTypeId.ROADMAP
+                mapType: 'roadmap'
                 zoom: 16
                 geojson: @model.get('geojson')
+                width: @options.width ? '100%'
+                height: @options.height ? '100%'
 
-            @map.on 'initialized', =>
-                @trigger 'initialized'
-                @$el.komooMap('refresh')
+            @map.on 'loaded', =>
+                @map.fadeTo 0, 0
+                @$el.empty().css(height: '100%').append @map
+                @map.komooMap('refresh').komooMap('center').fadeTo 100, 1
+                @loading = false
             this
 
 

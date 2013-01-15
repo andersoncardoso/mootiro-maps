@@ -59,6 +59,9 @@ define (require) ->
                     @bounds?.union feature.getBounds()
             @bounds
 
+        getCenter: ->
+            @getBounds()?.getCenter()
+
         setMap: (@map, force) ->
             tmpForce = null
             @forEach (feature) =>

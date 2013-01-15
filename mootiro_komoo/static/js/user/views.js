@@ -140,7 +140,7 @@
         this.$el.html(this.template({
           user: this.model.toJSON()
         }));
-        this.$('#map-placeholder').append(this.mapPreview.$el);
+        this.$('.map.box').append(this.mapPreview.$el);
         return this;
       };
 

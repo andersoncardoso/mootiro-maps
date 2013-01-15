@@ -83,7 +83,13 @@
               if (loaded !== features) return;
               bounds = features.getBounds();
               console.log(features);
-              if (bounds != null) _this.fitBounds(bounds);
+              if (bounds != null) {
+                if (!(_this.options.zoom != null)) {
+                  _this.fitBounds(bounds);
+                } else {
+                  _this.googleMap.setCenter(bounds.getCenter());
+                }
+              }
               if (features != null) {
                 features.setMap(_this, {
                   geometry: true,
@@ -106,6 +112,9 @@
       Map.prototype.handleGoogleMapEvents = function() {
         var eventNames,
           _this = this;
+        google.maps.event.addListenerOnce(this.googleMap, 'idle', function() {
+          return $(_this.element).trigger('loaded', _this);
+        });
         eventNames = ['click', 'idle'];
         return eventNames.forEach(function(eventName) {
           return komoo.event.addListener(_this.googleMap, eventName, function(e) {

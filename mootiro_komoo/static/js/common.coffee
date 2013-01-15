@@ -2,14 +2,18 @@ define (require) ->
 
   App = require 'app'
   jQuery = require 'jquery'
+  Backbone = require 'backbone'
+
+  retry = 1000
 
   requirejs.onError = (err) ->
     if err.requireType == 'timeout'
       # TODO: i18n me
-      alert 'Timeout', "Ocorreu uma falha ao carregar alguns serviços externos. Partes do Mootiro Maps poderão não funcionar corretamente."
-      console?.error err
-    else
-      throw err
+      alert "Timeout: Ocorreu uma falha ao carregar alguns serviços externos. Partes do Mootiro Maps poderão não funcionar corretamente."
+     else
+       throw err
+
+      Backbone.trigger 'module::error', err
 
 
   ##

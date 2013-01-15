@@ -3,7 +3,7 @@ baseUrl = KomooNS?.require_baseUrl ? '/static/js'
 
 config =
     baseUrl: baseUrl
-    waitSeconds: 30
+    waitSeconds: 10
     paths:
         'lib': '../lib'
         'text': '../lib/requirejs/text'

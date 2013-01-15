@@ -484,14 +484,16 @@ body > .content-box > .sidebar {
   /* Little hack to force sidebar width */
 
 }
-body > .content-box > .sidebar > * {
+body > .content-box > .sidebar > *,
+body > .content-box > .sidebar > div > * {
   margin-bottom: 15px;
 }
 body > .content-box > .sidebar:after {
   content: ".";
   color: transparent;
 }
-body > .content-box > .sidebar > .button {
+body > .content-box > .sidebar > .button,
+body > .content-box > .sidebar > div > .button {
   display: block;
   margin: 15px 0;
 }
@@ -1183,10 +1185,12 @@ a.see-on-map:hover:before {
   -moz-border-radius: 0px;
   border-radius: 0px;
   height: 150px;
+  padding: 0;
   border: solid 1px #dceff4;
-  background-color: transparent;
+  background-color: #f4f3f0;
+  text-align: center;
 }
-.box.map > .placeholder {
+.box.map .placeholder {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -1195,8 +1199,18 @@ a.see-on-map:hover:before {
   padding: 15px;
   background: #ffdb8c;
 }
-.box.map > .placeholder a:hover {
+.box.map .placeholder a:hover {
   background-color: #ffcb59;
+}
+.box.map .loading {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  display: inline-block;
+  padding: 10px;
+  margin: 52.5px auto;
+  border: solid 1px #eeece7;
+  background: #fafaf9;
 }
 .box.tags {
   background-color: transparent;

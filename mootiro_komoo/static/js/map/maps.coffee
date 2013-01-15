@@ -68,7 +68,10 @@ define (require) ->
                         bounds = features.getBounds()
                         console.log features
                         if bounds?
-                            @fitBounds bounds
+                            if not @options.zoom?
+                                @fitBounds bounds
+                            else
+                                @googleMap.setCenter bounds.getCenter()
                         features?.setMap this, geometry: on, icon: on
                         @publish 'set_zoom', @options.zoom
                         @publish 'features_loaded_from_options', features
@@ -78,6 +81,9 @@ define (require) ->
             @handleGoogleMapEvents()
 
         handleGoogleMapEvents: ->
+            google.maps.event.addListenerOnce @googleMap, 'idle', =>
+                $(@element).trigger 'loaded', @
+
             eventNames = ['click', 'idle']
             eventNames.forEach (eventName) =>
                 komoo.event.addListener @googleMap, eventName, (e) =>

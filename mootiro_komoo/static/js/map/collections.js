@@ -95,6 +95,11 @@
         return this.bounds;
       };
 
+      FeatureCollection.prototype.getCenter = function() {
+        var _ref;
+        return (_ref = this.getBounds()) != null ? _ref.getCenter() : void 0;
+      };
+
       FeatureCollection.prototype.setMap = function(map, force) {
         var tmpForce,
           _this = this;

@@ -73,25 +73,38 @@
       }
 
       Preview.prototype.initialize = function() {
+        var _this = this;
         _.bindAll(this);
-        return this.render();
+        this.map = $('<div>');
+        this.render();
+        return Backbone.on('module::error', function(err) {
+          if (_this.loading && err.message.indexOf('goog!maps' > -1)) {
+            return _this.$el.html("<div class=\"loading\">" + (i18n('Map unavailable!')) + "</div>");
+          }
+        });
       };
 
       Preview.prototype.render = function() {
         var _ref, _ref2,
           _this = this;
-        this.$el.empty();
-        this.map = this.$el.komooMap({
+        this.loading = true;
+        this.map.detach();
+        this.$el.html("<div class=\"loading\">" + (i18n('Loading...')) + "</div>");
+        this.map.komooMap({
           type: 'preview',
-          width: (_ref = this.options.width) != null ? _ref : '244px',
-          height: (_ref2 = this.options.height) != null ? _ref2 : '175px',
-          mapType: google.maps.MapTypeId.ROADMAP,
+          mapType: 'roadmap',
           zoom: 16,
-          geojson: this.model.get('geojson')
+          geojson: this.model.get('geojson'),
+          width: (_ref = this.options.width) != null ? _ref : '100%',
+          height: (_ref2 = this.options.height) != null ? _ref2 : '100%'
         });
-        this.map.on('initialized', function() {
-          _this.trigger('initialized');
-          return _this.$el.komooMap('refresh');
+        this.map.on('loaded', function() {
+          _this.map.fadeTo(0, 0);
+          _this.$el.empty().css({
+            height: '100%'
+          }).append(_this.map);
+          _this.map.komooMap('refresh').komooMap('center').fadeTo(100, 1);
+          return _this.loading = false;
         });
         return this;
       };

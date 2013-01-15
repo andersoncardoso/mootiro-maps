@@ -1,4 +1,7 @@
-define ['jquery', 'map/maps'], ($, maps) ->
+define (require) ->
+
+    $ = require 'jquery'
+
     (($) ->
         fixMapSize = (e) ->
             map = e.data.map
@@ -7,7 +10,8 @@ define ['jquery', 'map/maps'], ($, maps) ->
             map.refresh()
 
         fixMapHeight = (map, mapPanel = $('#map-panel')) ->
-            height = $('body').innerHeight() - $('#top').innerHeight() - $('.upper_bar').innerHeight() - 5
+            parent = $(map.element).parent()
+            height = parent.innerHeight()
             $(map.element).height height
             mapPanel.height height
             panelInfo = $('.panel-info-wrapper')
@@ -37,12 +41,14 @@ define ['jquery', 'map/maps'], ($, maps) ->
                         # FIXME
                         $this.parent().parent().find('.see-on-map').hide()
                         return
-                    map = maps.makeMap opts
-                    $this.data 'map', map
-                    if opts.mapType? then map.googleMap.setMapTypeId opts.mapType
-                    if opts.height is '100%'
-                        $(window).resize map: map, fixMapSize
-                        $(window).resize()
+                    require ['map/maps'], (maps) =>
+                        map = maps.makeMap opts
+                        $this.data 'map', map
+                        if opts.mapType? then map.googleMap.setMapTypeId opts.mapType
+                        if opts.height is '100%'
+                            $(window).resize map: map, fixMapSize
+                            $(window).resize()
+
 
             edit: (feature) ->
                 $(this).data('map')?.editFeature feature
@@ -64,9 +70,21 @@ define ['jquery', 'map/maps'], ($, maps) ->
 
             resize: ->
                 $(window).resize()
+                $(this)
 
             refresh: ->
                 $(this).data('map')?.refresh()
+                $(this)
+
+            fit: ->
+                $(this).data('map')?.fitBounds()
+                $(this)
+
+            center: ->
+                map = $(this).data('map')
+                map?.googleMap?.setCenter(map?.features?.getCenter())
+                $(this)
+
 
         $.fn.komooMap = (method) ->
             if methods[method]

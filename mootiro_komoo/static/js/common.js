@@ -1,16 +1,18 @@
 (function() {
 
   define(function(require) {
-    var App, jQuery;
+    var App, Backbone, jQuery, retry;
     App = require('app');
     jQuery = require('jquery');
+    Backbone = require('backbone');
+    retry = 1000;
     requirejs.onError = function(err) {
       if (err.requireType === 'timeout') {
-        alert('Timeout', "Ocorreu uma falha ao carregar alguns serviços externos. Partes do Mootiro Maps poderão não funcionar corretamente.");
-        return typeof console !== "undefined" && console !== null ? console.error(err) : void 0;
+        alert("Timeout: Ocorreu uma falha ao carregar alguns serviços externos. Partes do Mootiro Maps poderão não funcionar corretamente.");
       } else {
         throw err;
       }
+      return Backbone.trigger('module::error', err);
     };
     window.storage = {
       session: {

@@ -105,7 +105,7 @@ define (require) ->
       @$el.html @template
         user: @model.toJSON()
 
-      @$('#map-placeholder').append @mapPreview.$el
+      @$('.map.box').append @mapPreview.$el
       this
 
 

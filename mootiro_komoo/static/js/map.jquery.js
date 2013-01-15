@@ -1,6 +1,8 @@
 (function() {
 
-  define(['jquery', 'map/maps'], function($, maps) {
+  define(function(require) {
+    var $;
+    $ = require('jquery');
     return (function($) {
       var fixMapHeight, fixMapSize, fixMapWidth, methods;
       fixMapSize = function(e) {
@@ -11,9 +13,10 @@
         return map.refresh();
       };
       fixMapHeight = function(map, mapPanel) {
-        var height, panelInfo;
+        var height, panelInfo, parent;
         if (mapPanel == null) mapPanel = $('#map-panel');
-        height = $('body').innerHeight() - $('#top').innerHeight() - $('.upper_bar').innerHeight() - 5;
+        parent = $(map.element).parent();
+        height = parent.innerHeight();
         $(map.element).height(height);
         mapPanel.height(height);
         panelInfo = $('.panel-info-wrapper');
@@ -37,7 +40,8 @@
       methods = {
         init: function(options) {
           return this.each(function() {
-            var $this, map, opts, _ref, _ref2, _ref3;
+            var $this, opts, _ref, _ref2, _ref3,
+              _this = this;
             $this = $(this);
             $this.addClass('komoo-map-googlemap');
             opts = $.extend({
@@ -50,15 +54,18 @@
               $this.parent().parent().find('.see-on-map').hide();
               return;
             }
-            map = maps.makeMap(opts);
-            $this.data('map', map);
-            if (opts.mapType != null) map.googleMap.setMapTypeId(opts.mapType);
-            if (opts.height === '100%') {
-              $(window).resize({
-                map: map
-              }, fixMapSize);
-              return $(window).resize();
-            }
+            return require(['map/maps'], function(maps) {
+              var map;
+              map = maps.makeMap(opts);
+              $this.data('map', map);
+              if (opts.mapType != null) map.googleMap.setMapTypeId(opts.mapType);
+              if (opts.height === '100%') {
+                $(window).resize({
+                  map: map
+                }, fixMapSize);
+                return $(window).resize();
+              }
+            });
           });
         },
         edit: function(feature) {
@@ -89,11 +96,28 @@
           return $(this);
         },
         resize: function() {
-          return $(window).resize();
+          $(window).resize();
+          return $(this);
         },
         refresh: function() {
           var _ref;
-          return (_ref = $(this).data('map')) != null ? _ref.refresh() : void 0;
+          if ((_ref = $(this).data('map')) != null) _ref.refresh();
+          return $(this);
+        },
+        fit: function() {
+          var _ref;
+          if ((_ref = $(this).data('map')) != null) _ref.fitBounds();
+          return $(this);
+        },
+        center: function() {
+          var map, _ref, _ref2;
+          map = $(this).data('map');
+          if (map != null) {
+            if ((_ref = map.googleMap) != null) {
+              _ref.setCenter(map != null ? (_ref2 = map.features) != null ? _ref2.getCenter() : void 0 : void 0);
+            }
+          }
+          return $(this);
         }
       };
       $.fn.komooMap = function(method) {

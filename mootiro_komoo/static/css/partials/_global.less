@@ -157,7 +157,8 @@ body > .content-box {
 
         float: left;
 
-        > * {
+        > *,
+        > div > * {
             margin-bottom: 15px;
         }
 
@@ -167,7 +168,8 @@ body > .content-box {
             color: transparent;
         }
 
-        > .button {
+        > .button,
+        > div > .button {
             display: block;
             margin: 15px 0;
         }
@@ -570,10 +572,12 @@ a.see-on-map {
         .border-radius(0px);
 
         height: @height;
+        padding: 0;
         border: solid 1px @main-bg;
         background-color: @map-box-bg;
+        text-align: center;
 
-        > .placeholder {
+        .placeholder {
             .border-radius;
 
             width: 95%;
@@ -584,6 +588,16 @@ a.see-on-map {
             a:hover {
                 background-color: darken(@map-placeholder-bg, 10%);
             }
+        }
+
+        .loading {
+            .border-radius;
+
+            display: inline-block;
+            padding: 10px;
+            margin: ((@height - 45) / 2) auto;
+            border: solid 1px darken(@map-box-bg, 3%);
+            background: lighten(@map-box-bg, 3%);
         }
     }
 
