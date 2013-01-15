@@ -44,11 +44,11 @@ config = {
       exports: 'reForm'
     },
     'infobox': {
-      deps: ['googlemaps'],
+      deps: ['services/googlemaps'],
       exports: 'InfoBox'
     },
     'markerclusterer': {
-      deps: ['googlemaps'],
+      deps: ['services/googlemaps'],
       exports: 'MarkerClusterer'
     },
     'sinon': {

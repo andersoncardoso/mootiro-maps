@@ -83,15 +83,29 @@ define (require) ->
 
   #### Profile Sidebar ####
 
+  mapViews = require 'map/views'
+
   class Sidebar extends Backbone.View
     initialize: ->
       _.bindAll this
       @template = _.template require 'text!templates/user/_sidebar.html'
+
+      @subViews = []
+
+      @mapPreview = new mapViews.Preview
+        model: @model
+      @subViews.push @mapPreview
+
       @render()
 
     render: ->
+      for view in @subViews
+        view.$el.detach()
+
       @$el.html @template
         user: @model.toJSON()
+
+      @$('#map-placeholder').append @mapPreview.$el
       this
 
 

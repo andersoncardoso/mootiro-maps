@@ -29,7 +29,22 @@
             type: 'skype',
             value: 'skypelogin'
           }
-        ]
+        ],
+        'geojson': {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "geometry": {
+                "type": "Point",
+                "coordinates": [-23.566743, -46.746802]
+              },
+              "type": "Feature",
+              "properties": {
+                type: 'User'
+              }
+            }
+          ]
+        }
       };
 
       User.prototype.permissions = {

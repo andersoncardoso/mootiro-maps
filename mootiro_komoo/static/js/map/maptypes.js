@@ -59,7 +59,7 @@
             ]
           }
         ], {
-          name: gettext('Clean')
+          name: i18n('Clean')
         });
       }
 

@@ -3,7 +3,8 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var Backbone, SearchBoxView, _;
+    var $, Backbone, Preview, SearchBoxView, _;
+    $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
     SearchBoxView = (function(_super) {
@@ -62,8 +63,38 @@
       return SearchBoxView;
 
     })(Backbone.View);
+    Preview = (function(_super) {
+
+      __extends(Preview, _super);
+
+      function Preview() {
+        Preview.__super__.constructor.apply(this, arguments);
+      }
+
+      Preview.prototype.initialize = function() {
+        var _this = this;
+        return require(['map.jquery'], function() {
+          var _ref, _ref2;
+          _this.map = _this.$el.komooMap({
+            type: 'preview',
+            width: (_ref = _this.options.width) != null ? _ref : '244px',
+            height: (_ref2 = _this.options.height) != null ? _ref2 : '175px',
+            geojson: _this.model.get('geojson')
+          });
+          return _this.render();
+        });
+      };
+
+      Preview.prototype.render = function() {};
+
+      return Preview;
+
+    })(Backbone.View);
     return {
-      SearchBoxView: SearchBoxView
+      internal: {
+        SearchBoxView: SearchBoxView
+      },
+      Preview: Preview
     };
   });
 

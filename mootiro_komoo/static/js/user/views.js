@@ -4,7 +4,7 @@
 
   define(function(require) {
     'use strict';
-    var $, ActionBar, Backbone, Profile, ReForm, Sidebar, Update, Updates, UserInfo, UserInfoForm, _;
+    var $, ActionBar, Backbone, Profile, ReForm, Sidebar, Update, Updates, UserInfo, UserInfoForm, mapViews, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
@@ -110,6 +110,7 @@
       return Profile;
 
     })(Backbone.View);
+    mapViews = require('map/views');
     Sidebar = (function(_super) {
 
       __extends(Sidebar, _super);
@@ -121,13 +122,25 @@
       Sidebar.prototype.initialize = function() {
         _.bindAll(this);
         this.template = _.template(require('text!templates/user/_sidebar.html'));
+        this.subViews = [];
+        this.mapPreview = new mapViews.Preview({
+          model: this.model
+        });
+        this.subViews.push(this.mapPreview);
         return this.render();
       };
 
       Sidebar.prototype.render = function() {
+        var view, _i, _len, _ref;
+        _ref = this.subViews;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          view.$el.detach();
+        }
         this.$el.html(this.template({
           user: this.model.toJSON()
         }));
+        this.$('#map-placeholder').append(this.mapPreview.$el);
         return this;
       };
 

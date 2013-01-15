@@ -1,5 +1,6 @@
 define (require) ->
 
+    $ = require 'jquery'
     _ = require 'underscore'
     Backbone = require 'backbone'
 
@@ -44,4 +45,23 @@ define (require) ->
                 position: position
             this
 
-    SearchBoxView: SearchBoxView
+
+    class Preview extends Backbone.View
+        initialize: ->
+            require ['map.jquery'], =>
+                @map = @$el.komooMap
+                    type: 'preview'
+                    width: @options.width ? '244px'
+                    height: @options.height ? '175px'
+                    geojson: @model.get 'geojson'
+                @render()
+
+        render: ->
+
+
+    return {
+        internal: {
+            SearchBoxView: SearchBoxView
+        }
+        Preview: Preview
+    }

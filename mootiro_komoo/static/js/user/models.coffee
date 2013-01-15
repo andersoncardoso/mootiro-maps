@@ -15,6 +15,7 @@ define (require) ->
         {type: 'phone', value: '12345678'}
         {type: 'skype', value: 'skypelogin'}
       ]  # FIXME: Remove this
+      'geojson': {"type": "FeatureCollection", "features": [{"geometry": {"type": "Point", "coordinates": [-23.566743, -46.746802]}, "type": "Feature", "properties": {type: 'User'}}]}  # FIXME: Remove this
 
     permissions:
       edit: (user) ->

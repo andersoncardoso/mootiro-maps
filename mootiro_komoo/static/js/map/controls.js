@@ -14,15 +14,15 @@
     MarkerClusterer = require('markerclusterer');
     if (window.komoo == null) window.komoo = {};
     if ((_base = window.komoo).event == null) _base.event = googleMaps.event;
-    _NEXT_STEP = gettext('Next Step');
-    _CANCEL = gettext('Cancel');
-    _CLOSE = gettext('Close');
-    _ADD_SHAPE = gettext('Add shape');
-    _ADD_LINE = gettext('Add line');
-    _ADD_POINT = gettext('Add point');
-    _SUM = gettext('Sum');
-    _CUT_OUT = gettext('Cut out');
-    _LOADING = gettext('Loading...');
+    _NEXT_STEP = i18n('Next Step');
+    _CANCEL = i18n('Cancel');
+    _CLOSE = i18n('Close');
+    _ADD_SHAPE = i18n('Add shape');
+    _ADD_LINE = i18n('Add line');
+    _ADD_POINT = i18n('Add point');
+    _SUM = i18n('Sum');
+    _CUT_OUT = i18n('Cut out');
+    _LOADING = i18n('Loading...');
     EMPTY = common.geometries.types.EMPTY;
     POINT = common.geometries.types.POINT;
     MULTIPOINT = common.geometries.types.MULTIPOINT;
@@ -81,7 +81,7 @@
         var _this = this;
         SearchBox.__super__.init.call(this);
         return require(['map/views'], function(Views) {
-          _this.view = new Views.SearchBoxView();
+          _this.view = new Views.internal.SearchBoxView();
           _this.box.append(_this.view.render().el);
           return _this.handleViewEvents();
         });
@@ -799,11 +799,10 @@
       };
 
       Balloon.prototype.createClusterContent = function(options) {
-        var body, feature, features, msg, title;
+        var body, feature, features, title;
         if (options == null) options = {};
         features = options.features || [];
-        msg = ngettext("%s Community", "%s Communities", features.length);
-        title = "<strong>" + (interpolate(msg, [features.length])) + "</strong>";
+        title = "<strong>" + features.length + " Communities</strong>";
         body = (function() {
           var _i, _len, _ref, _results;
           _ref = features.slice(0, 11);

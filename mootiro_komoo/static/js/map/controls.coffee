@@ -13,15 +13,15 @@ define (require) ->
     window.komoo.event ?= googleMaps.event
 
     # Defining translatable strings here as constantes to prevent an mysterious issue
-    _NEXT_STEP = gettext 'Next Step'
-    _CANCEL = gettext 'Cancel'
-    _CLOSE = gettext 'Close'
-    _ADD_SHAPE = gettext 'Add shape'
-    _ADD_LINE = gettext 'Add line'
-    _ADD_POINT = gettext 'Add point'
-    _SUM = gettext 'Sum'
-    _CUT_OUT = gettext 'Cut out'
-    _LOADING = gettext 'Loading...'
+    _NEXT_STEP = i18n 'Next Step'
+    _CANCEL = i18n 'Cancel'
+    _CLOSE = i18n 'Close'
+    _ADD_SHAPE = i18n 'Add shape'
+    _ADD_LINE = i18n 'Add line'
+    _ADD_POINT = i18n 'Add point'
+    _SUM = i18n 'Sum'
+    _CUT_OUT = i18n 'Cut out'
+    _LOADING = i18n 'Loading...'
 
     EMPTY = common.geometries.types.EMPTY
     POINT = common.geometries.types.POINT
@@ -66,7 +66,7 @@ define (require) ->
         init: ->
             super()
             require ['map/views'], (Views) =>
-                @view = new Views.SearchBoxView()
+                @view = new Views.internal.SearchBoxView()
                 @box.append @view.render().el
                 @handleViewEvents()
 
@@ -605,8 +605,9 @@ define (require) ->
 
         createClusterContent: (options = {}) ->
             features = options.features or []
-            msg = ngettext "%s Community", "%s Communities", features.length
-            title = "<strong>#{interpolate msg, [features.length]}</strong>"
+            #msg = ngettext "%s Community", "%s Communities", features.length
+            #title = "<strong>#{interpolate msg, [features.length]}</strong>"
+            title = "<strong>#{features.length} Communities</strong>"
             body = for feature in features[0..10]
                 "<li>#{feature.getProperty 'name'}</li>"
             body = "<ul>#{body.join('')}</ul>"

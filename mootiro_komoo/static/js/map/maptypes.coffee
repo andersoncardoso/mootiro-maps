@@ -36,7 +36,7 @@ define (require) ->
                     elementType: 'labels'
                     stylers: [ lightness: 30 ]
                 }
-                ], name: gettext 'Clean'
+                ], name: i18n 'Clean'
 
         setMap: (@map) ->
             @map.googleMap.mapTypes.set @id, @mapType
