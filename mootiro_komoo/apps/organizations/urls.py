@@ -4,7 +4,7 @@ from django.conf.urls.defaults import patterns, url
 from mootiro_komoo.urls import prepare_regex as pr
 
 
-urlpatterns = patterns('organization.views',
+urlpatterns = patterns('organizations.views',
     # url(r'^new/?$', 'new_organization', name='new_organization'),
     # url(r'^new/from_map/?$', 'new_organization_from_map',
     #             name='new_organization_from_map'),

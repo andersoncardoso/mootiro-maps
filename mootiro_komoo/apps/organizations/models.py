@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.utils.translation import ugettext as _
+from django.core.urlresolvers import reverse
 
 from main.models import BaseModel, CommonObject
 from komoo_map.models import POLYGON, POINT
@@ -22,12 +23,9 @@ class Organization(CommonObject):
     # logo_choice = models.CharField(max_length=3, choices=LOGO_CHOICES,
     #                     null=True, blank=True)
 
-    link = models.CharField(max_length=250, null=True, blank=True)
-    contact = models.TextField(null=True, blank=True)
-
     categories = models.ManyToManyField('OrganizationCategory', null=True,
                         blank=True)
-    target_audiences = TagField(namespace='target_audience')
+    target_audience = TagField(namespace='target_audience')
 
     class Map:
         editable = True
@@ -40,7 +38,7 @@ class Organization(CommonObject):
 
     @property
     def url(self):
-        return '/organization/%s' % self.id
+        return reverse('organization_view', kwargs={'id_': self.id})
 
     # ================== utils ============================
     def from_json(self):

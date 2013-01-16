@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.utils.translation import ugettext as _
+from django.core.urlresolvers import reverse
 
 from main.models import CommonObject
-from main.utils import build_obj_from_dict
-from jsonfield import JSONField
 from komoo_map.models import POLYGON, LINESTRING, POINT
 
 
@@ -28,8 +27,6 @@ class Resource(CommonObject):
     # kind still makes sense? new global 'area' tags?
     # kind = models.ForeignKey(ResourceKind, null=True, blank=True)
 
-    contact = JSONField(null=True, blank=True)
-
     class Map:
         title = _('Resource')
         editable = True
@@ -41,21 +38,19 @@ class Resource(CommonObject):
 
     @property
     def url(self):
-        return '/resource/%s' % self.id
+        return reverse('resource_view', kwargs={'id_': self.id})
 
     # ================== utils =============================
-    def from_dict(self, data):
-        super(Resource, self).from_dict(data)
-        build_obj_from_dict(self, data)
+    # def from_dict(self, data):
+    #     super(Resource, self).from_dict(data)
+    #     build_obj_from_dict(self, data)
 
-    def to_dict(self):
-        dict_ = super(Resource, self).to_dict()
-        dict_.update({
-            'contact': self.contact or {},
-        })
-        return dict_
+    # def to_dict(self):
+    #     dict_ = super(Resource, self).to_dict()
+    #     dict_.update({})
+    #     return dict_
 
-    def is_valid(self):
-        return False
+    # def is_valid(self):
+    #     return False
 
 

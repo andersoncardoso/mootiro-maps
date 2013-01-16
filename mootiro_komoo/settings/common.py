@@ -108,7 +108,7 @@ INSTALLED_APPS = [
     'komoo_comments',
     'resources',
     'authentication',
-    'organization',
+    'organizations',
     'investment',
     'moderation',
     'hotsite',
