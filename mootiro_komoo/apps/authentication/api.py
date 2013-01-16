@@ -71,19 +71,27 @@ class UsersHandler(ResourceHandler):
     """ /users/[id_] """
 
     def get(self, request, id_):
-        # FIXME: add 'contact' to default fields
         fields = get_fields_to_show(request,
-                ['id', 'name', 'email', 'url', 'is_admin'])
+                ['id', 'name', 'email', 'url', 'contact', 'about_me',
+                 'is_admin'])
         user = request.user if id_ == 'me' else User.get_by_id(id_)
 
         if not user:
             return JsonResponseNotFound()
 
-        return JsonResponse(user.to_cleaned_dict(fields=fields,
-                                                 user=request.user))
+        user_data = user.to_cleaned_dict(fields=fields, user=request.user)
+        return JsonResponse(user_data)
 
     def put(self, request, id_):
         """ Updates user data """
+        json_data = get_json_data(request)
+        user = User.get_by_id(id_)
+        if not user:
+            JsonResponseNotFound()
+
+        print '===> USER\n', json_data
+        user.from_dict(json_data)
+        user.save()
         return JsonResponse({})
 
 
