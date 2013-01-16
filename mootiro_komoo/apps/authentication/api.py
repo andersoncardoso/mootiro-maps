@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 
 
 from main.utils import (ResourceHandler, JsonResponse, JsonResponseNotFound,
-        get_json_data, get_fields_to_show)
+        JsonResponseError, get_json_data, get_fields_to_show)
 
 from .models import User, Login
 from .utils import login as auth_login
@@ -58,7 +58,7 @@ class UserHandler(ResourceHandler):
                 user, json_data, form_validates)
 
         if not form_validates:
-            return JsonResponse({'errors': user.errors}, status_code=400)
+            return JsonResponseError(user.errors)
         else:
             user.is_active = False
             user.set_password(json_data.get('password'))
@@ -84,6 +84,8 @@ class UsersHandler(ResourceHandler):
 
     def put(self, request, id_):
         """ Updates user data """
+        # TODO: Permission validation
+
         json_data = get_json_data(request)
         user = User.get_by_id(id_)
         if not user:
@@ -91,6 +93,10 @@ class UsersHandler(ResourceHandler):
 
         print '===> USER\n', json_data
         user.from_dict(json_data)
+
+        if not user.is_valid(ignore=['password']):
+            return JsonResponseError(user.errors)
+
         user.save()
         return JsonResponse({})
 
@@ -128,7 +134,7 @@ class LoginHandler(ResourceHandler):
         login = Login()
         login.from_dict({'email': email, 'password': password})
         if not login.is_valid():
-            return JsonResponse({'errors': login.errors}, status_code=400)
+            return JsonResponseError(login.errors, status_code=401)
         else:
             user = login.user
             auth_login(request, user)

@@ -60,7 +60,7 @@
             formId: 'user-info',
             submit_label: i18n('Save')
           });
-          this.listenTo(this.userInfoViews['edit'], 'submit', this.onSubmit);
+          this.listenTo(this.userInfoViews['edit'], 'success', this.onSuccess);
         }
         _ref = this.userInfoViews;
         for (mode in _ref) {
@@ -103,7 +103,7 @@
         return this.render();
       };
 
-      Profile.prototype.onSubmit = function() {
+      Profile.prototype.onSuccess = function() {
         return Backbone.trigger('user::profile', this.model.id);
       };
 

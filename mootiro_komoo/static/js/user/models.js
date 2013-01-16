@@ -21,15 +21,6 @@
 
       User.prototype.defaults = {
         'about_me': '',
-        'contact': [
-          {
-            type: 'phone',
-            value: '12345678'
-          }, {
-            type: 'skype',
-            value: 'skypelogin'
-          }
-        ],
         'geojson': {
           "type": "FeatureCollection",
           "features": [

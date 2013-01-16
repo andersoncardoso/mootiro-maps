@@ -140,16 +140,15 @@ class User(GeoRefModel, BaseDAOMixin, PermissionMixin):
                     for v in fields_and_defaults}
         return dict_
 
-    def is_valid(self):
+    def is_valid(self, ignore=[]):
         self.errors = {}
         valid = True
 
-        if not self.name:
-            valid, self.errors['name'] = False, _('Required field')
-        if not self.email:
-            valid, self.errors['email'] = False, _('Required field')
-        if not self.password:
-            valid, self.errors['password'] = False, _('Required field')
+        # verify required fields
+        required = ['name', 'email', 'password']
+        for field in required:
+            if not field in ignore and not getattr(self, field, None):
+                valid, self.errors[field] = False, _('Required field')
 
         if not self.id:
             # new User

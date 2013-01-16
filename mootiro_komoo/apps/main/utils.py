@@ -393,12 +393,19 @@ class JsonResponse(HttpResponse):
             self.status_code = status_code
 
 
-class JsonResponseNotFound(JsonResponse):
+class JsonResponseError(JsonResponse):
+    """ Json Response for errors """
+    def __init__(self, error={}, status_code=400):
+        super(JsonResponseError, self).__init__(
+                {'errors': error}, status_code=status_code)
+
+
+class JsonResponseNotFound(JsonResponseError):
     """ Json Response for 404 Not Found error """
     def __init__(self, msg=''):
         err = 'Not found'
         super(JsonResponseNotFound, self).__init__(
-                {'error': err if not msg else '{}: {}'.format(err, msg)},
+                err if not msg else '{}: {}'.format(err, msg),
                 status_code=404)
 
 

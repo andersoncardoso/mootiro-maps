@@ -43,7 +43,7 @@ define (require) ->
           model: @model
           formId: 'user-info'
           submit_label: i18n 'Save'
-        @listenTo @userInfoViews['edit'], 'submit', @onSubmit
+        @listenTo @userInfoViews['edit'], 'success', @onSuccess
 
       for mode, view of @userInfoViews
         @subViews.push view
@@ -76,7 +76,7 @@ define (require) ->
       @userInfoViews[@mode].render()
       @render()
 
-    onSubmit: () ->
+    onSuccess: () ->
       Backbone.trigger 'user::profile', @model.id
 
 
