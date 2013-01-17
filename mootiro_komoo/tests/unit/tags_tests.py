@@ -62,8 +62,10 @@ class TagTest(unittest.TestCase):
             'target_audience': ['A', 'C']
         }
 
-        self.assertEqual(['A', 'B'], tg.tags.by_namespace('common'))
-        self.assertEqual(['A', 'C'], tg.tags.by_namespace('target_audience'))
+        self.assertEqual(set(['A', 'B']),
+                         set(tg.tags.by_namespace('common')))
+        self.assertEqual(set(['A', 'C']),
+                         set(tg.tags.by_namespace('target_audience')))
 
         A_tags = Tag.objects.filter(name='A')
         self.assertEqual(2, A_tags.count())
@@ -72,7 +74,7 @@ class TagTest(unittest.TestCase):
                                 for tag in A_tags])
 
         tg.tags.remove('A', namespace='target_audience')
-        self.assertEqual(['C'], tg.tags['target_audience'])
-        self.assertEqual(['A', 'B'], tg.tags['common'])
+        self.assertEqual(set(['C']), set(tg.tags['target_audience']))
+        self.assertEqual(set(['A', 'B']), set(tg.tags['common']))
 
 

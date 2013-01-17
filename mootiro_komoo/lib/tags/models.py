@@ -105,8 +105,8 @@ class _TagList(dict):
         self.descriptor = descriptor
         self.instance = instance
 
-    def add(self, tag):
-        return self.descriptor.add_tag(self.instance, tag)
+    def add(self, tag, namespace=COMMON_NAMESPACE):
+        return self.descriptor.add_tag(self.instance, tag, namespace=namespace)
 
     def remove(self, tag, namespace=COMMON_NAMESPACE):
         self.descriptor.remove_tag(self.instance, tag, namespace=namespace)
