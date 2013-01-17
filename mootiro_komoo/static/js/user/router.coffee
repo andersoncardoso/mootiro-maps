@@ -46,4 +46,5 @@ define (require) ->
       @navigate "users/#{id}/edit"
       @goTo new pages.Edit(id)
 
+
   new UserRouter()

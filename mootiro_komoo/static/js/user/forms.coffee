@@ -39,7 +39,6 @@ define (require) ->
     ]
 
 
-
   # Form for inline edition
   class UserInfoForm extends reForm.Form
     template: require 'text!templates/forms/_inline_form.html'

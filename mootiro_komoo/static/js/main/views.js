@@ -56,6 +56,8 @@
         UpperBar.__super__.constructor.apply(this, arguments);
       }
 
+      UpperBar.prototype.template = _.template(require('text!templates/main/_upper_bar.html'));
+
       UpperBar.prototype.events = {
         'click .login': 'login',
         'click .logout': 'logout',
@@ -63,10 +65,12 @@
       };
 
       UpperBar.prototype.initialize = function() {
+        var _this = this;
         _.bindAll(this);
-        this.template = _.template(require('text!templates/main/_upper_bar.html'));
         this.listenTo(this.model, 'change', this.render);
-        window.current = this.model;
+        this.listenTo(Backbone, 'user::edited', function(id) {
+          if (_this.model.id === id) return _this.model.fetch();
+        });
         return this.render();
       };
 
@@ -106,26 +110,37 @@
         Header.__super__.constructor.apply(this, arguments);
       }
 
+      Header.prototype.template = _.template(require('text!templates/main/_header.html'));
+
       Header.prototype.events = {
         'click .logo a': 'root'
       };
 
       Header.prototype.initialize = function() {
         _.bindAll(this);
-        this.template = _.template(require('text!templates/main/_header.html'));
-        this.upperBar = new UpperBar({
-          model: this.model
-        });
-        this.subViews = [this.upperBar];
+        this.subViews = [];
+        this.subViews.push(new UpperBar({
+          model: this.model,
+          parentSelector: '#upper-bar-container'
+        }));
         return this.render();
       };
 
       Header.prototype.render = function() {
-        this.upperBar.$el.detach();
+        var view, _i, _j, _len, _len2, _ref, _ref2;
+        _ref = this.subViews;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          view.$el.detach();
+        }
         this.$el.html(this.template({
           user: this.model.toJSON()
         }));
-        this.$('#upper-bar-container').append(this.upperBar.$el);
+        _ref2 = this.subViews;
+        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+          view = _ref2[_j];
+          this.$(view.options.parentSelector).append(view.$el);
+        }
         return this;
       };
 
@@ -145,9 +160,10 @@
         Footer.__super__.constructor.apply(this, arguments);
       }
 
+      Footer.prototype.template = _.template(require('text!templates/main/_footer.html'));
+
       Footer.prototype.initialize = function() {
         _.bindAll(this);
-        this.template = _.template(require('text!templates/main/_footer.html'));
         return this.render();
       };
 
@@ -166,6 +182,8 @@
       function ActionBar() {
         ActionBar.__super__.constructor.apply(this, arguments);
       }
+
+      ActionBar.prototype.template = _.template(require('text!templates/main/_action_bar.html'));
 
       ActionBar.prototype.tagName = 'ul';
 
@@ -197,7 +215,6 @@
 
       ActionBar.prototype.initialize = function() {
         _.bindAll(this);
-        this.template = _.template(require('text!templates/main/_action_bar.html'));
         this.mode = this.options.mode;
         return this.render();
       };

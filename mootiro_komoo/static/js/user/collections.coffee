@@ -8,7 +8,7 @@ define (require) ->
 
   Update = require('update/models').Update
 
-  PaginatedUpdates = Backbone.Paginator.requestPager.extend
+  class PaginatedUpdates extends Backbone.Paginator.requestPager
     model: Update
 
     paginator_core:
@@ -31,11 +31,6 @@ define (require) ->
       @totalPages = Math.ceil response.count / @perPage
       @totalRecords = parseInt response.count
       results
-
-    sync: ->
-        @trigger 'request'
-        Backbone.Paginator.requestPager.prototype.sync.apply(this, arguments)
-        .done => @trigger 'sync'
 
 
   PaginatedUpdates: PaginatedUpdates

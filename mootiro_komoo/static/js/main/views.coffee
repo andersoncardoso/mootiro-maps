@@ -27,6 +27,7 @@ define (require) ->
 
 
   class UpperBar extends Backbone.View
+    template: _.template require 'text!templates/main/_upper_bar.html'
     events:
       'click .login': 'login'
       'click .logout': 'logout'
@@ -34,9 +35,10 @@ define (require) ->
 
     initialize: () ->
       _.bindAll this
-      @template = _.template require 'text!templates/main/_upper_bar.html'
       @listenTo @model, 'change', @render
-      window.current = @model
+      @listenTo Backbone, 'user::edited', (id) =>
+        # Update the upper bar when logged user is edited
+        @model.fetch() if @model.id is id
       @render()
 
     render: ->
@@ -60,21 +62,22 @@ define (require) ->
 
 
   class Header extends Backbone.View
+    template: _.template require 'text!templates/main/_header.html'
     events:
       'click .logo a': 'root'
 
     initialize: ->
       _.bindAll this
-      @template = _.template require 'text!templates/main/_header.html'
-      @upperBar = new UpperBar
+      @subViews = []
+      @subViews.push new UpperBar
         model: @model
-      @subViews = [@upperBar]
+        parentSelector: '#upper-bar-container'
       @render()
 
     render: ->
-      @upperBar.$el.detach()
+      view.$el.detach() for view in @subViews
       @$el.html @template user: @model.toJSON()
-      @$('#upper-bar-container').append @upperBar.$el
+      @$(view.options.parentSelector).append view.$el for view in @subViews
       this
 
     root: (e) ->
@@ -83,9 +86,9 @@ define (require) ->
 
 
   class Footer extends Backbone.View
+    template: _.template require 'text!templates/main/_footer.html'
     initialize: ->
       _.bindAll this
-      @template = _.template require 'text!templates/main/_footer.html'
       @render()
 
     render: ->
@@ -94,8 +97,8 @@ define (require) ->
 
 
   class ActionBar extends Backbone.View
+    template: _.template require 'text!templates/main/_action_bar.html'
     tagName: 'ul'
-
     events:
       'click a': 'do'
 
@@ -110,7 +113,6 @@ define (require) ->
 
     initialize: ->
       _.bindAll this
-      @template = _.template require 'text!templates/main/_action_bar.html'
       @mode = @options.mode
       @render()
 

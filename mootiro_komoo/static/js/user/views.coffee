@@ -13,9 +13,9 @@ define (require) ->
   #### Profile Main View ####
 
   class UserInfo extends Backbone.View
+    template: _.template require 'text!templates/user/_user_info.html'
     initialize: ->
       _.bindAll this
-      @template = _.template require 'text!templates/user/_user_info.html'
       @listenTo @model, 'change', @render
       @render()
 
@@ -24,10 +24,9 @@ define (require) ->
 
 
   class Profile extends Backbone.View
+    template: _.template require 'text!templates/user/_profile.html'
     initialize: ->
-      window.model = @model
       _.bindAll this
-      @template = _.template require 'text!templates/user/_profile.html'
 
       @subViews = []
 
@@ -56,8 +55,7 @@ define (require) ->
       @setMode(@options.mode ? 'view')
 
     render: ->
-      for view in @subViews
-        view.$el.detach()
+      view.$el.detach() for view in @subViews
 
       @$el.html @template
         user: @model.toJSON()
@@ -77,8 +75,7 @@ define (require) ->
       @render()
 
     onSuccess: () ->
-      Backbone.trigger 'user::profile', @model.id
-
+      Backbone.trigger 'user::profile user::edited', @model.id
 
 
   #### Profile Sidebar ####
@@ -86,40 +83,32 @@ define (require) ->
   mapViews = require 'map/views'
 
   class Sidebar extends Backbone.View
+    template: _.template require 'text!templates/user/_sidebar.html'
     initialize: ->
       _.bindAll this
-      @template = _.template require 'text!templates/user/_sidebar.html'
-
       @subViews = []
-
-      @mapPreview = new mapViews.Preview
+      @subViews.push new mapViews.Preview
         model: @model
-      @subViews.push @mapPreview
-
+        parentSelector: '.map.box'
       @render()
 
     render: ->
-      for view in @subViews
-        view.$el.detach()
-
-      @$el.html @template
-        user: @model.toJSON()
-
-      @$('.map.box').append @mapPreview.$el
+      view.$el.detach() for view in @subViews
+      @$el.html @template user: @model.toJSON()
+      @$(view.options.parentSelector).append view.$el for view in @subViews
       this
 
 
   #### Profile Blocks ####
 
   class Update extends Backbone.View
+    template: _.template require 'text!templates/user/_update_item.html'
     tagName: 'li'
-
     events:
       'click .see-on-map': 'seeOnMap'
 
     initialize: ->
       _.bindAll this
-      @template = _.template require 'text!templates/user/_update_item.html'
       @listenTo @model, 'change', @render
       @render()
 
@@ -128,8 +117,7 @@ define (require) ->
           @model.get('type')?.toLowerCase(),
           @model.get('action')?.toLowerCase()
       ]
-      @$el.html @template
-        update: @model.toJSON()
+      @$el.html @template update: @model.toJSON()
       this
 
     seeOnMap: (e) ->
@@ -139,65 +127,27 @@ define (require) ->
 
 
   class Updates extends Backbone.View
-    events:
-      'click a.previous': 'previousPage'
-      'click a.next': 'nextPage'
-      'keypress .current-page': 'goTo'
+    template: _.template require 'text!templates/user/_updates_block.html'
 
     initialize: ->
       _.bindAll this
-      @template = _.template require 'text!templates/user/_updates_block.html'
-      List = require 'widgets/list'
-      @listView = new List
+      listWidgets = require 'widgets/list'
+      @subViews = []
+      @subViews.push new listWidgets.List
         collection: @collection
         className: 'updates list'
+        parentSelector: '.list-container'
         ItemView: Update
-      @subViews = [@listView]
-      @listenTo @collection, 'reset', @update
+      @subViews.push new listWidgets.Pagination
+        collection: @collection
+        parentSelector: '.list-container'
       @render()
 
     render: ->
-      @listView.$el.detach()  # Dont lost the updates element
+      view.$el.detach() for view in @subViews
       @$el.html @template(@collection)
-      @$('.list-container').prepend @listView.$el
+      @$(view.options.parentSelector).prepend view.$el for view in @subViews.reverse()
       this
-
-    update: ->
-      @$('.current-page').val @collection.currentPage + 1
-      @$('.total-pages').text @collection.totalPages
-
-      if @collection.currentPage is 0
-        @$('.previous').addClass 'disabled'
-      else
-        @$('.previous').removeClass 'disabled'
-
-      if @collection.currentPage is @collection.totalPages - 1
-        @$('.next').addClass 'disabled'
-      else
-        @$('.next').removeClass 'disabled'
-
-
-    previousPage: (e) ->
-      e?.preventDefault?()
-      if @collection.currentPage > @collection.firstPage
-        @collection.requestPreviousPage()
-      this
-
-    nextPage: (e) ->
-      e?.preventDefault?()
-      if @collection.currentPage < @collection.totalPages - 1
-        @collection.requestNextPage()
-      this
-
-    goTo: (e) ->
-      if e.keyCode isnt 13 then return
-
-      page = parseInt @$('.current-page').val(), 10
-      if _.isNaN(page) or page <= 0 or page > @collection.totalPages
-        @update()
-        return
-
-      @collection.goTo (page - 1)
 
 
   Profile: Profile
