@@ -1,10 +1,6 @@
-<form action="" method="post" class="inline-form closed" id="<%= formId %>" >
+<form action="" method="post" id="<%= formId %>" >
   <div>
-    <input type="submit" name="submit" value="<%= submit_label %>" />
-    <a href="#" class="button cancel"><%= i18n('Cancel') %></a>
+    <input type="submit" name="submit" value="<%=submit_label%>" />
+    <input type="button" class="cancel" value="<%=i18n('Cancel')%>" />
   </div>
 </form>
-<div class="inline-form display open">
-  <a href="#" class="edit" title="<%= i18n('Edit') %>">Editar</a>
-  <div class="content"></div>
-</div>
