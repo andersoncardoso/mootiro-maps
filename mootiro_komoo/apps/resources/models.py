@@ -2,30 +2,35 @@
 from __future__ import unicode_literals
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from django.db import models
 
 from main.models import CommonObject
+from main.utils import build_obj_from_dict
 from komoo_map.models import POLYGON, LINESTRING, POINT
 
 
-# class ResourceKind(models.Model):
-#     """Kind of Resources"""
-#     name = models.CharField(max_length=128)
-#
-#     def __unicode__(self):
-#         return self.name
-#
-#     @classmethod
-#     def favorites(cls, number=10):
-#         return ResourceKind.objects.all(
-#             ).exclude(name='').annotate(count=models.Count('resource__id')
-#             ).order_by('-count', 'slug')[:number]
+RESOURCE_TYPE = (
+    ('computer', _('Computer Lab')),
+    ('park', _('Park')),
+    ('sports', _('Sports Club')),
+    ('social', _('Social Service')),
+    ('equipment', _('Equipment')),
+    ('others', _('Others')),
+)
 
 
 class Resource(CommonObject):
+    """
+    Resources
+
+    Inherits from CommonObject (common_object_type=resource)
+    Extra Data:
+        resource_type: which kind of resource it represents. Default: others
+    """
     common_object_type = 'resource'
 
-    # kind still makes sense? new global 'area' tags?
-    # kind = models.ForeignKey(ResourceKind, null=True, blank=True)
+    resource_type = models.CharField(max_length=100, null=True, blank=True,
+                                     choices=RESOURCE_TYPE, default='others')
 
     class Map:
         title = _('Resource')
@@ -33,7 +38,6 @@ class Resource(CommonObject):
         background_color = '#28CB05'
         border_color = '#1D9104'
         geometries = (POLYGON, LINESTRING, POINT)
-        form_view_name = 'new_resource_from_map'
         zindex = 15
 
     @property
@@ -41,16 +45,19 @@ class Resource(CommonObject):
         return reverse('resource_view', kwargs={'id_': self.id})
 
     # ================== utils =============================
-    # def from_dict(self, data):
-    #     super(Resource, self).from_dict(data)
-    #     build_obj_from_dict(self, data)
+    def from_dict(self, data):
+        super(Resource, self).from_dict(data)
+        keys = ['resource_type', ]
+        build_obj_from_dict(self, data, keys)
 
-    # def to_dict(self):
-    #     dict_ = super(Resource, self).to_dict()
-    #     dict_.update({})
-    #     return dict_
+    def to_dict(self):
+        dict_ = super(Resource, self).to_dict()
+        dict_.update({
+            'organization_type': self.organization_type,
+        })
+        return dict_
 
-    # def is_valid(self):
-    #     return False
+    def is_valid(self):
+        return super(Resource, self).is_valid()
 
 

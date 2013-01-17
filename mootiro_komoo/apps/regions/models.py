@@ -13,7 +13,13 @@ from komoo_map.models import POLYGON
 
 
 REGION_TYPES = (
-    'Community',
+    ('urban', _('Urban Community | Slum')),
+    ('native', _('Native Community')),
+    ('rural', _('Rural Community')),
+    ('irregular', _('Irregular Settlement')),
+    ('social', _('Social Housing')),
+    ('district', _('quarter | district')),
+    ('others', _('Others')),
 )
 
 
@@ -21,15 +27,16 @@ class Region(CommonObject):
     """
     Organizational regions, like communities, neighborhoods and etc
 
-    Inherits from CommonObject (common_object_type=regions).
+    Inherits from CommonObject (common_object_type=region).
     Appends the extra_data below:
         population: an extimate of the number of people living in this region
         region_type: an classfications for the region kind. Default: Community
     """
-    common_object_type = 'regions'
+    common_object_type = 'region'
 
     population = models.IntegerField(null=True, blank=True)
-    region_type = models.CharField(max_length=1024, default='Community')
+    region_type = models.CharField(max_length=1024, choices=REGION_TYPES,
+                                   default='urban')
 
     class Map:
         title = _('Region')
@@ -37,7 +44,6 @@ class Region(CommonObject):
         background_color = '#ffc166'
         border_color = '#ff2e2e'
         geometries = (POLYGON, )
-        form_view_name = 'new_region'
         min_zoom_geometry = 10
         max_zoom_geometry = 100
         min_zoom_point = 0

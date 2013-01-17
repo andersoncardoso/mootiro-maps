@@ -17,11 +17,21 @@ ORGANIZATION_TYPES = (
     ('culture', _('Cultural Institution')),
     ('public', _('Public Institution')),
     ('enterprise', _('Enterprise')),
+    ('others', _('Others'))
 )
 
 
 class Organization(CommonObject):
-    """ Organizations """
+    """
+    Organizations
+
+    Inherits from CommonObject (common_object_type=organization)
+    Extra data:
+        organizatoin_type: identification for which kind of organization it
+                           represents. Default: ong
+    """
+    common_object_type = 'organization'
+
     organization_type = models.CharField(
             max_length=100, null=True, blank=True, choices=ORGANIZATION_TYPES,
             default='ong')
@@ -50,6 +60,9 @@ class Organization(CommonObject):
             'organization_type': self.organization_type
         })
         return data
+
+    def is_valid(self):
+        return super(Organization, self).is_valid()
 
 
 
