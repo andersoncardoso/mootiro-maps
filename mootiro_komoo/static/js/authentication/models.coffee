@@ -18,7 +18,7 @@ define (require) ->
       Backbone.sync 'read', this,
         data:
           next: next
-        success: (resp) =>
+        success: (model, resp, xhr) =>
           if resp.redirect
             if window.location.pathname is resp.redirect
               window.location.reload()

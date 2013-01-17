@@ -151,8 +151,7 @@
         this.options = options;
         _.bindAll(this);
         this.model = new models.LogoutModel({});
-        window.logoutmodel = this.model;
-        return typeof console !== "undefined" && console !== null ? console.log('heree???') : void 0;
+        return window.logoutmodel = this.model;
       };
 
       LogoutView.prototype.logout = function(next) {

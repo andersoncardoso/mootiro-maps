@@ -45,7 +45,7 @@
           data: {
             next: next
           },
-          success: function(resp) {
+          success: function(model, resp, xhr) {
             if (resp.redirect) {
               if (window.location.pathname === resp.redirect) {
                 return window.location.reload();
