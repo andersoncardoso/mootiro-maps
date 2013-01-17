@@ -1,4 +1,4 @@
-require ['map/geometries'], (geometries) ->
+define ['map/geometries'], (geometries) ->
 
     module 'Map Geometries'
 

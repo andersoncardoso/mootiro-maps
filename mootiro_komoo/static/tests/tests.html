@@ -1,17 +1,19 @@
 <html>
   <head>
-    <script type="text/javascript">
-      var KomooNS = KomooNS || {};
-      KomooNS.require_baseUrl = '../js.build';
-    </script>
-    <script type="text/javascript" src="../lib/django-js-utils/dutils.js"></script>
-    <script type="text/javascript" src="../lib/django-js-utils/dutils.conf.urls.js"></script>
-    <script type="text/javascript" src="../js/config.js"></script>
-    <script type="text/javascript" data-main="" src="../lib/require.js"></script>
     <link rel="stylesheet" href="../lib/qunit/qunit.css" type="text/css" media="screen" />
     <script type="text/javascript" src="../lib/qunit/qunit.js"></script>
-    <script type="text/javascript" src="test-features.js"></script>
-    <script type="text/javascript" src="test-geometries.js"></script>
+    <script type="text/javascript">
+      QUnit.config.urlConfig.push({
+        id: "min",
+        label: "Minified source",
+        tooltip: "Load minified source files instead of the regular unminified ones."
+      });
+
+      var KomooNS = KomooNS || {};
+KomooNS.require_baseUrl = (window.location.search.search('min=true') != -1) ? '../js.build' :'../js';
+    </script>
+    <script type="text/javascript" src="../js/config.js"></script>
+    <script type="text/javascript" data-main="common" src="../lib/require.js"></script>
     <!--
     <script type="text/javascript" src="test-widgets.js"></script>
     <script type="text/javascript" src="test-project.js"></script>
@@ -24,5 +26,14 @@
     <h2 id="qunit-userAgent"></h2>
     <ol id="qunit-tests"></ol>
     <div id="qunit-fixture">test markup, will be hidden</div>
+    <script type="text/javascript">
+      QUnit.config.autostart = false;
+      require(['common'], function () { require([
+          'tests/test-features',
+          'tests/test-geometries',
+        ], function () {
+          QUnit.start();
+      });});
+    </script>
   </body>
 </html>

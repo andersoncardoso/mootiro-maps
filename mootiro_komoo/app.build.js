@@ -7,7 +7,7 @@
 
     paths: {
         'lib': '../static/lib',
-        'jquery': '../static/lib/jquery-1.7.1.min',
+        'jquery': '../static/lib/jquery-1.9.0.min',
         'underscore': '../static/lib/underscore-min',
         'backbone': '../static/lib/backbone-min',
         'backbone.paginator': '../static/lib/backbone.paginator.min',

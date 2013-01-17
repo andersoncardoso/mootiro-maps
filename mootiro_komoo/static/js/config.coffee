@@ -6,10 +6,11 @@ config =
     waitSeconds: 10
     paths:
         'lib': '../lib'
+        'tests': '../tests'
         'text': '../lib/requirejs/text'
         'templates': '../templates'
         'ad-gallery': '../ad_gallery/jquery.ad-gallery.min'
-        'jquery': '../lib/jquery-1.7.1.min'
+        'jquery': '../lib/jquery-1.9.0.min'
         'underscore': '../lib/underscore-min'
         'backbone': '../lib/backbone-min'
         'backbone.paginator': '../lib/backbone.paginator.min'
@@ -19,7 +20,7 @@ config =
         'propertyParser': '../lib/requirejs/propertyParser'
         'infobox': 'map/vendor/infobox_packed'
         'markerclusterer': 'map/vendor/markerclusterer_packed'
-        'sinon': '../lib/sinon-1.5.0'
+        'sinon': '../lib/sinon-1.5.2'
         'dutils': '../lib/django-js-utils/dutils'
         'urls': '../lib/django-js-utils/dutils.conf.urls'
     shim:
