@@ -6,7 +6,7 @@ var fs         = require('fs'),
     exec       = require('child_process').exec,
     fs_watcher = require('./fs_watcher');
 
-var baseDir = 'static/js/';
+var baseDir = ['static/js', 'static/tests'];
 
 
 var formatedDate = function(date){
@@ -41,22 +41,30 @@ var compileCoffee = function(filepath) {
 };
 
 var compileAll = function() {
-  walker = walk.walk('static/js', {followLinks: false});
-  walker.on("file", function (root, fileStats, next) {
-    filepath = root + '/' + fileStats.name;
-    if (fileStats.name.match(/.*\.coffee$/)){
-      compileCoffee(filepath);
-    }
-    next();
-  });
+  var walker, dir, i;
+  for (i=0; i<baseDir.length; i++) {
+    dir = baseDir[i];
+    walker = walk.walk(dir, {followLinks: false});
+    walker.on("file", function (root, fileStats, next) {
+      filepath = root + '/' + fileStats.name;
+      if (fileStats.name.match(/.*\.coffee$/)){
+        compileCoffee(filepath);
+      }
+      next();
+    });
+  }
 };
 
 // compile all or watch
 if (argv.all){
   compileAll();
 } else {
-  fs_watcher.watch('static/js', /.*\.coffee$/, function (path, curr, prev) {
+  var dir, i;
+  for (i=0; i<baseDir.length; i++) {
+    dir = baseDir[i];
+    fs_watcher.watch(dir, /.*\.coffee$/, function (path, curr, prev) {
       compileCoffee(path);
-  });
+    });
+  }
 }
 

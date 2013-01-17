@@ -139,7 +139,7 @@ def test_js(
         apps=" ".join(['komoo_map'])):
     """Run javascript tests"""
     # TODO fix this properly
-    local('phantomjs scripts/run-qunit.js static/tests/tests.html')
+    local('phantomjs scripts/run-qunit.js static/tests/tests.html?noglobals=true')
 
 
 def js_urls():
