@@ -27,7 +27,7 @@ class CommonDataMixinTest(unittest.TestCase):
         obj.creator = self.user
         obj.extra_data = {'bla': 'ble', 'some_number': 3}
         obj.id = 1
-        obj.tags = ['tag1', 'tag2', 'tag3']
+        obj.tags = {'common': ['tag1', 'tag2', 'tag3']}
         obj.creation_date = datetime.datetime(2012, 12, 14, 15, 23, 30, 0)
         return obj
 
@@ -52,7 +52,7 @@ class CommonDataMixinTest(unittest.TestCase):
             'last_editor': None,
             'last_update': None,
             'extra_data': {'bla': 'ble', 'some_number': 3},
-            'tags': ['tag1', 'tag2', 'tag3'],
+            'tags': {'common': ['tag1', 'tag2', 'tag3']},
         }
         self.assertDictEqual(expected_dict, obj.to_dict())
 
@@ -65,7 +65,7 @@ class CommonDataMixinTest(unittest.TestCase):
             'last_editor': None,
             'last_update': None,
             'extra_data': {'bla': 'ble', 'some_number': 3},
-            'tags': ['tag1', 'tag2', 'tag3'],
+            'tags': {'common': ['tag1', 'tag2', 'tag3']},
         }
         obj = MyClass()
         obj.id = 1
@@ -75,7 +75,7 @@ class CommonDataMixinTest(unittest.TestCase):
         self.assertEqual(self.user, obj.creator)
         self.assertEqual(datetime.datetime(2012, 12, 14, 15, 23, 30, 0),
                          obj.creation_date)
-        self.assertEqual(['tag1', 'tag2', 'tag3'], obj.tags)
+        self.assertEqual({'common': ['tag1', 'tag2', 'tag3']}, obj.tags)
 
 
 class GenericRelationsTest(unittest.TestCase):

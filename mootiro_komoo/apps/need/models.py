@@ -8,7 +8,6 @@ from django.template.defaultfilters import slugify
 
 from main.models import CommonObject
 from komoo_map.models import POLYGON, LINESTRING, POINT
-from tags.models import TagField
 
 
 class NeedCategory(models.Model):
@@ -45,7 +44,6 @@ class Need(CommonObject):
     common_object_type = 'need'
 
     categories = models.ManyToManyField(NeedCategory)
-    target_audience = TagField(namespace='target_audience')
 
     class Map:
         title = _('Need')

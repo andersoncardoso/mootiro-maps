@@ -1,28 +1,66 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.db import IntegrityError
+
+
+COMMON_NAMESPACE = 'common'
+
+
+class TagNamespace(models.Model):
+    """ Namespace for Tags """
+    name = models.CharField(max_length=128, unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    @classmethod
+    def add(cls, namespace):
+        namespace, created = TagNamespace.objects.get_or_create(
+                        name=namespace)
+        return namespace
 
 
 class Tag(models.Model):
-    """ Namespaced tags """
-    name = models.CharField(max_length=1024)
-    namespace = models.CharField(max_length=128, default='tag')
-
-    class Meta:
-        unique_together = (("name", "namespace"),)
+    """ Tags with namespace """
+    name = models.CharField(max_length=128)
+    namespace = models.ForeignKey(TagNamespace)
 
     @classmethod
-    def add(cls, tag, namespace='tag'):
+    def add(cls, tag_name, namespace=COMMON_NAMESPACE):
         """ add a tag given its 'name'. Tags are unique by namespace """
-        obj, created = cls.objects.get_or_create(name=tag, namespace=namespace)
-        return obj
+        tag_namespace, created = TagNamespace.objects.get_or_create(
+                        name=namespace)
+        tag, created = cls.objects.get_or_create(
+                        name=tag_name, namespace=tag_namespace)
+        return tag
 
     @classmethod
-    def get_by_name(cls, tag_name, namespace='tag'):
+    def get_by_name(cls, tag_name, namespace=COMMON_NAMESPACE):
         try:
-            tag = Tag.objects.get(name=tag_name, namespace=namespace)
+            tag = Tag.objects.get(name=tag_name, namespace__name=namespace)
         except Exception:
             tag = None
         return tag
+
+    def save(self, *args, **kwargs):
+        try:
+            namespace = self.namespace
+        except:
+            namespace = None
+        if not namespace:
+            tag_namespace, cr = TagNamespace.objects.get_or_create(
+                    name=COMMON_NAMESPACE)
+            self.namespace = tag_namespace
+
+        ts = Tag.objects.filter(
+                name=self.name, namespace=self.namespace)
+        if ts.exists():
+            raise IntegrityError(
+                    'Tag with this name and namespace already exists')
+        return super(Tag, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return self.name
 
 
 class TaggedObject(models.Model):
@@ -32,14 +70,24 @@ class TaggedObject(models.Model):
     object_table = models.CharField(max_length=512)
 
     @classmethod
-    def get_tags_for_object(cls, obj, namespace='tag'):
+    def get_tags_for_object(cls, obj):
         """ get all tags for and object """
         return [
             tagged_obj.tag for tagged_obj in TaggedObject.objects.filter(
                 object_id=getattr(obj, 'id', None),
                 object_table='{}.{}'.format(obj._meta.app_label,
+                    obj.__class__.__name__)
+            )]
+
+    @classmethod
+    def get_tags_for_object_by_namespace(cls, obj, namespace=COMMON_NAMESPACE):
+        """ get all tags for and object by tag namespace """
+        return [
+            tagged_obj.tag for tagged_obj in TaggedObject.objects.filter(
+                object_id=getattr(obj, 'id', None),
+                object_table='{}.{}'.format(obj._meta.app_label,
                     obj.__class__.__name__),
-                tag__namespace=namespace
+                tag__namespace__name=namespace
         )]
 
     @classmethod
@@ -51,7 +99,7 @@ class TaggedObject(models.Model):
             tag=tag)
 
 
-class _TagList(list):
+class _TagList(dict):
     """ utility extended list for tags in TagField descriptor"""
     def __init__(self, descriptor, instance):
         self.descriptor = descriptor
@@ -60,8 +108,11 @@ class _TagList(list):
     def add(self, tag):
         return self.descriptor.add_tag(self.instance, tag)
 
-    def remove(self, tag):
-        self.descriptor.remove_tag(self.instance, tag)
+    def remove(self, tag, namespace=COMMON_NAMESPACE):
+        self.descriptor.remove_tag(self.instance, tag, namespace=namespace)
+
+    def by_namespace(self, namespace):
+        return self.descriptor.get_tags_by_namespace(self.instance, namespace)
 
 
 class TagField(object):
@@ -73,77 +124,84 @@ class TagField(object):
     usage:
         class MyClass(models.Model):
             tags = TagField()
-            target = TagField(namespace='target_audience')
 
         obj = MyClass()
         obj.tags
-        # returns []
+        # returns {'common': []}
 
-        obj.tags = ['tag A', 'tag B']
+        obj.tags = {'common': ['tag A', 'tag B']}
         # creates and saves tags to object
 
         obj.tags
-        # returns ['tag A', 'tag B']
+        # returns {'common': ['tag A', 'tag B']}
 
         obj.tags.add('tag C')
         obj.tags.remove('tag A')
         obj.tags
-        # returns ['tag B', 'tag C']
+        # returns {'common': ['tag B', 'tag C']}
 
-        obj.target
+        obj.tags.by_namespace('target_audience')
         # returns []
 
-        obj.target.add('tag C')
-        # Now we have a 'tag C' for the default namespace 'tag' and other for
-        # the 'target_audience' namespace
+        obj.tags.add('tag C', namespace='target_audience')
+        # Now we have a 'tag C' for the default namespace 'common' and other
+        # for the 'target_audience' namespace
     """
-
-    def __init__(self, namespace='tag'):
-        self.namespace = namespace
-
     def __get__(self, instance, owner):
         tag_list = _TagList(self, instance)
-        for tag in TaggedObject.get_tags_for_object(
-                    instance, namespace=self.namespace):
-
-            tag_list.append(tag.name)
+        tag_list[COMMON_NAMESPACE] = []
+        for tag in TaggedObject.get_tags_for_object(instance):
+            if not tag.namespace.name in tag_list:
+                tag_list[tag.namespace.name] = [tag.name, ]
+            else:
+                tag_list[tag.namespace.name].append(tag.name)
         return tag_list
 
     def __set__(self, instance, new_tags):
         # del old tags
         self.__delete__(instance)
 
-        # create new tags
-        for tag in new_tags:
-            self.add_tag(instance, tag)
+        for namespace, tag_list in new_tags.iteritems():
+            for tag in tag_list:
+                self.add_tag(instance, tag, namespace=namespace)
 
     def __delete__(self, instance):
         tags = [
             tagged_obj for tagged_obj in TaggedObject.objects.filter(
                 object_id=getattr(instance, 'id', None),
                 object_table='{}.{}'.format(instance._meta.app_label,
-                    instance.__class__.__name__),
-                tag__namespace=self.namespace
+                    instance.__class__.__name__)
         )]
         for tag in tags:
             tag.delete()
 
-    def add_tag(self, instance, tag):
-        tag_obj = Tag.add(tag, namespace=self.namespace)
+    def add_tag(self, instance, tag, namespace=COMMON_NAMESPACE):
+        tag_obj = Tag.add(tag, namespace=namespace)
         TaggedObject.add_tag_to_object(tag_obj, instance)
         return tag_obj
 
-    def remove_tag(self, instance, tag):
+    def remove_tag(self, instance, tag, namespace=COMMON_NAMESPACE):
         if isinstance(tag, basestring):
-            tag = Tag.get_by_name(tag, namespace=self.namespace)
+            tag = Tag.get_by_name(tag, namespace=namespace)
         elif not isinstance(tag, Tag):
             tag = None
 
-        if tag and tag.namespace == self.namespace:
+        if tag:
             TaggedObject.objects.filter(
                     object_id=getattr(instance, 'id', None),
                     object_table='{}.{}'.format(instance._meta.app_label,
                         instance.__class__.__name__),
                     tag=tag
             ).delete()
+
+    def get_tags_by_namespace(self, instance, namespace):
+        tag_namespace, cr = TagNamespace.objects.get_or_create(name=namespace)
+        tags = [
+            tagged_obj.tag.name for tagged_obj in TaggedObject.objects.filter(
+                object_id=getattr(instance, 'id', None),
+                object_table='{}.{}'.format(instance._meta.app_label,
+                    instance.__class__.__name__),
+                tag__namespace=tag_namespace
+        )]
+        return tags
 

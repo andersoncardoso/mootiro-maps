@@ -5,14 +5,15 @@ from ..test_utils import setup_env
 setup_env()
 
 from django.db import IntegrityError
-from tags.models import Tag, TaggedObject
-from tests.models import TestTaggedClass, TestNamespaceTaggedClass
+from tags.models import Tag, TagNamespace, TaggedObject
+from tests.models import TestTaggedClass
 
 
 class TagTest(unittest.TestCase):
 
     def _clean_all_tags(self):
         Tag.objects.all().delete()
+        TagNamespace.objects.all().delete()
         TaggedObject.objects.all().delete()
 
     def tag_unique_name_test(self):
@@ -27,11 +28,11 @@ class TagTest(unittest.TestCase):
         obj.save()
 
         # tags start empty
-        self.assertEqual([], obj.tags)
+        self.assertEqual({'common': []}, obj.tags)
 
         # implicitly create and set tags
-        obj.tags = ['A', 'B']
-        self.assertEqual(['A', 'B'], obj.tags)
+        obj.tags = {'common': ['A', 'B']}
+        self.assertDictEqual({'common': ['A', 'B']}, obj.tags)
         tagA = Tag.get_by_name('A')
         tagB = Tag.get_by_name('B')
         self.assertTrue(tagA)
@@ -47,29 +48,31 @@ class TagTest(unittest.TestCase):
         obj.tags.remove('A')
         self.assertEqual(3, Tag.objects.all().count())
         self.assertIn('A', [tag.name for tag in Tag.objects.all()])
-        self.assertEqual(['B', 'C'], obj.tags)
+        self.assertEqual({'common': ['B', 'C']}, obj.tags)
 
     def namespaced_tags_test(self):
         self._clean_all_tags()
-        tg = TestNamespaceTaggedClass()
+        tg = TestTaggedClass()
         tg.save()
 
-        self.assertEqual([], tg.tags)
-        self.assertEqual([], tg.target_audience)
+        self.assertEqual({'common': []}, tg.tags)
 
-        tg.tags = ['A', 'B']
-        tg.target_audience = ['A', 'C']
+        tg.tags = {
+            'common': ['A', 'B'],
+            'target_audience': ['A', 'C']
+        }
 
-        self.assertEqual(['A', 'B'], tg.tags)
-        self.assertEqual(['A', 'C'], tg.target_audience)
+        self.assertEqual(['A', 'B'], tg.tags.by_namespace('common'))
+        self.assertEqual(['A', 'C'], tg.tags.by_namespace('target_audience'))
 
         A_tags = Tag.objects.filter(name='A')
         self.assertEqual(2, A_tags.count())
-        self.assertTrue('tag' in [tag.namespace for tag in A_tags])
-        self.assertTrue('target_audience' in [tag.namespace for tag in A_tags])
+        self.assertTrue('common' in [tag.namespace.name for tag in A_tags])
+        self.assertTrue('target_audience' in [tag.namespace.name
+                                for tag in A_tags])
 
-        tg.target_audience.remove('A')
-        self.assertEqual(['C'], tg.target_audience)
-        self.assertEqual(['A', 'B'], tg.tags)
+        tg.tags.remove('A', namespace='target_audience')
+        self.assertEqual(['C'], tg.tags['target_audience'])
+        self.assertEqual(['A', 'B'], tg.tags['common'])
 
 
