@@ -5,27 +5,26 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
-from main.models import BaseModel, CommonObject
+from main.models import CommonObject
+from main.utils import build_obj_from_dict
 from komoo_map.models import POLYGON, POINT
-from tags.models import TagField
 
 
-LOGO_CHOICES = (
-    ('UP', 'Uploaded'),
-    ('CAT', 'Category'),
+ORGANIZATION_TYPES = (
+    ('school', _('School')),
+    ('ong', _('ONG')),
+    ('health', _('Health Service')),
+    ('culture', _('Cultural Institution')),
+    ('public', _('Public Institution')),
+    ('enterprise', _('Enterprise')),
 )
 
 
 class Organization(CommonObject):
-    # logo = models.ForeignKey(UploadedFile, null=True, blank=True)
-    # logo_category = models.ForeignKey('OrganizationCategory', null=True,
-    #                    blank=True, related_name='organization_category_logo')
-    # logo_choice = models.CharField(max_length=3, choices=LOGO_CHOICES,
-    #                     null=True, blank=True)
-
-    categories = models.ManyToManyField('OrganizationCategory', null=True,
-                        blank=True)
-    target_audience = TagField(namespace='target_audience')
+    """ Organizations """
+    organization_type = models.CharField(
+            max_length=100, null=True, blank=True, choices=ORGANIZATION_TYPES,
+            default='ong')
 
     class Map:
         editable = True
@@ -34,46 +33,48 @@ class Organization(CommonObject):
         background_color = '#3a61d6'
         border_color = '#1f49b2'
         geometries = (POLYGON, POINT)
-        form_view_name = 'new_organization_from_map'
 
     @property
     def url(self):
         return reverse('organization_view', kwargs={'id_': self.id})
 
     # ================== utils ============================
-    def from_json(self):
-        pass
+    def from_dict(self, data):
+        super(Organization, self).from_json(data)
+        keys = ['organization_type', ]
+        build_obj_from_dict(self, data, keys)
 
-    def to_json(self):
-        return {}
+    def to_dict(self):
+        data = super(Organization, self).to_dict()
+        data.update({
+            'organization_type': self.organization_type
+        })
+        return data
 
 
-class OrganizationCategory(BaseModel):
-    name = models.CharField(max_length=320, unique=True)
 
-    def __unicode__(self):
-        return unicode(self.name)
-
-    # "culture-and-arts.png",
-    # "education.png",
-    # "environment.png",
-    # "health.png",
-    # "housing.png",
-    # "research.png",
-    # "self-help.png",
-    # "social-services.png",
-    # "sports-and-recreation.png",
-    # "emergency-aid-disaster-relief.png",
-    # "animal-protection.png",
-    # "community-development.png",
-    # "income-generation.png",
-    # "human-rights-promotion.png",
-    # "law-and-legal-services.png",
-    # "voluntarism-promotion.png",
-    # "promotion-of-civil-society-organizations.png",
-    # "fundraising-and-grant-making-organization.png",
-    # "peace-promotion.png",
-    # "cultural-exchange.png",
-    # "development-assistance.png",
+# Old categories to be used as alternative logos:
+#
+# "culture-and-arts.png",
+# "education.png",
+# "environment.png",
+# "health.png",
+# "housing.png",
+# "research.png",
+# "self-help.png",
+# "social-services.png",
+# "sports-and-recreation.png",
+# "emergency-aid-disaster-relief.png",
+# "animal-protection.png",
+# "community-development.png",
+# "income-generation.png",
+# "human-rights-promotion.png",
+# "law-and-legal-services.png",
+# "voluntarism-promotion.png",
+# "promotion-of-civil-society-organizations.png",
+# "fundraising-and-grant-making-organization.png",
+# "peace-promotion.png",
+# "cultural-exchange.png",
+# "development-assistance.png",
 
 
