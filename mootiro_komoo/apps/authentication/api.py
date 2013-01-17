@@ -34,7 +34,7 @@ def _user_form_specific_validations(user, json_data, form_validates):
             'You must accept the license agrement')
     if not json_data.get('password') == json_data.get('password_confirm'):
         form_validates = False
-        user.errors['password_confirm'] = _(''
+        user.errors['password_confirm'] = _(
                 'Passwords did not match')
     return form_validates
 
@@ -84,21 +84,23 @@ class UsersHandler(ResourceHandler):
 
     def put(self, request, id_):
         """ Updates user data """
-        # TODO: Permission validation
 
         json_data = get_json_data(request)
         user = User.get_by_id(id_)
         if not user:
             JsonResponseNotFound()
 
-        print '===> USER\n', json_data
-        user.from_dict(json_data)
+        if user.can_edit(request.user):
+            user.from_dict(json_data)
+            if not user.is_valid(ignore=['password']):
+                return JsonResponseError(user.errors)
 
-        if not user.is_valid(ignore=['password']):
-            return JsonResponseError(user.errors)
-
-        user.save()
-        return JsonResponse({})
+            user.save()
+            return JsonResponse({})
+        else:
+            return JsonResponseError({
+                'all': _('You don\'t have permission for this operation')
+            })
 
 
 class UserUpdateHandler(ResourceHandler):
