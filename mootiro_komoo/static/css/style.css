@@ -1841,22 +1841,16 @@ form small.error {
   background-color: #f1beb8;
   color: #8e291c;
   border-radius: 3px;
-  width: 97%;
+  width: 100%;
   display: block;
 }
 form .field-container.half-box-left {
   display: inline-block;
   width: 48%;
 }
-form .field-container.half-box-left small.error {
-  width: 94%;
-}
 form .field-container.half-box-right {
   width: 48%;
   float: right;
-}
-form .field-container.half-box-right small.error {
-  width: 94%;
 }
 /* Search form */
 form.search {
@@ -3100,9 +3094,6 @@ body > #footer-container > .footer .license {
 }
 .login_form input {
   width: 100%;
-}
-.login_form small.error {
-  width: 94%;
 }
 #form_register input[type=submit] {
   width: 100%;

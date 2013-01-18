@@ -380,6 +380,15 @@ class CommonObject(GeoRefModel, BaseModel, CommonDataMixin):
         super(CommonObject, self).from_dict(data)
         self.id = getattr(data, 'id', None)
 
+    def is_valid(self, ignore=[]):
+        self.errors = {}
+        valid = True
+        require = ['common_object_type', 'name', 'creator']
+        for field in require:
+            if not field in ignore and not getattr(self, field, None):
+                valid, self.errors[field] = False, _('Required field')
+        return valid
+
     def __init__(self, *args, **kwargs):
         super(CommonObject, self).__init__(*args, **kwargs)
         if hasattr(self, 'common_object_type') and self.common_object_type:
