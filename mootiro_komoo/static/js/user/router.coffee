@@ -6,7 +6,7 @@ define (require) ->
 
   pages = require('./pages')
 
-  window.pageManager = require 'page_manager'
+  pageManager = require 'page_manager'
 
 
   class UserRouter extends Backbone.Router
@@ -23,9 +23,11 @@ define (require) ->
       Backbone.on 'user::profile', @profile
       Backbone.on 'user::edit', @edit
 
-    goTo: (page) ->
-      page.render().fail (e) ->
-        Backbone.trigger 'main::error', e.status, e.statusText
+    goTo: (url, page) ->
+      $.when(pageManager.canClose()).done =>
+        @navigate url
+        $.when(page.render()).fail (e) ->
+          Backbone.trigger 'main::error', e.status, e.statusText
 
     user: ->
       if not KomooNS?.isAuthenticated
@@ -39,12 +41,10 @@ define (require) ->
         Backbone.trigger 'auth::loginRequired', next
 
     profile: (id) ->
-      @navigate "users/#{id}"
-      @goTo new pages.Profile(id)
+      @goTo "users/#{id}", new pages.Profile(id)
 
     edit: (id) ->
-      @navigate "users/#{id}/edit"
-      @goTo new pages.Edit(id)
+      @goTo "users/#{id}/edit", new pages.Edit(id)
 
 
   new UserRouter()

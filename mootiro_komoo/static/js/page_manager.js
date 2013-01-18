@@ -1,6 +1,7 @@
 (function() {
 
   define(function(require) {
+    'use strict';
     var $, Page, PageManager, _;
     $ = require('jquery');
     _ = require('underscore');
@@ -30,6 +31,11 @@
           return typeof view.onOpen === "function" ? view.onOpen() : void 0;
         };
         return _([this.actionBar, this.sidebar, this.mainContent]).each(onOpen);
+      };
+
+      Page.prototype.canClose = function() {
+        var _ref, _ref2, _ref3, _ref4, _ref5, _ref6;
+        return (_ref = ((_ref2 = ((_ref3 = (_ref4 = this.actionBar) != null ? typeof _ref4.canClose === "function" ? _ref4.canClose() : void 0 : void 0) != null ? _ref3 : true) && ((_ref5 = this.sidebar) != null ? typeof _ref5.conClose === "function" ? _ref5.conClose() : void 0 : void 0)) != null ? _ref2 : true) && ((_ref6 = this.mainContent) != null ? typeof _ref6.canClose === "function" ? _ref6.canClose() : void 0 : void 0)) != null ? _ref : true;
       };
 
       Page.prototype.close = function() {
@@ -63,6 +69,21 @@
       PageManager.prototype.Page = Page;
 
       PageManager.prototype.currentPage = null;
+
+      PageManager.prototype.canClose = function() {
+        var dfd, _ref, _ref2;
+        dfd = new $.Deferred();
+        if ((_ref = (_ref2 = this.currentPage) != null ? typeof _ref2.canClose === "function" ? _ref2.canClose() : void 0 : void 0) != null ? _ref : true) {
+          dfd.resolve();
+        } else {
+          if (window.confirm("You haven't saved your changes yet. Do you want to leave without finishing?")) {
+            dfd.resolve();
+          } else {
+            dfd.reject();
+          }
+        }
+        return dfd.promise();
+      };
 
       PageManager.prototype.open = function(page) {
         if (!page || page === this.currentPage) return;

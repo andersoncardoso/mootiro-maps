@@ -91,6 +91,11 @@
         return this;
       };
 
+      Profile.prototype.canClose = function() {
+        var _ref;
+        return !((_ref = this.userInfoViews[this.mode]) != null ? typeof _ref.wasChanged === "function" ? _ref.wasChanged() : void 0 : void 0);
+      };
+
       Profile.prototype.setMode = function(mode) {
         this.mode = mode;
         if (!this.model.hasPermission(this.mode) || !(this.userInfoViews[this.mode] != null)) {

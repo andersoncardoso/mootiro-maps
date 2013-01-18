@@ -4,11 +4,11 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, UserRouter, pages, _;
+    var Backbone, UserRouter, pageManager, pages, _;
     _ = require('underscore');
     Backbone = require('backbone');
     pages = require('./pages');
-    window.pageManager = require('page_manager');
+    pageManager = require('page_manager');
     UserRouter = (function(_super) {
 
       __extends(UserRouter, _super);
@@ -33,9 +33,13 @@
         return Backbone.on('user::edit', this.edit);
       };
 
-      UserRouter.prototype.goTo = function(page) {
-        return page.render().fail(function(e) {
-          return Backbone.trigger('main::error', e.status, e.statusText);
+      UserRouter.prototype.goTo = function(url, page) {
+        var _this = this;
+        return $.when(pageManager.canClose()).done(function() {
+          _this.navigate(url);
+          return $.when(page.render()).fail(function(e) {
+            return Backbone.trigger('main::error', e.status, e.statusText);
+          });
         });
       };
 
@@ -55,13 +59,11 @@
       };
 
       UserRouter.prototype.profile = function(id) {
-        this.navigate("users/" + id);
-        return this.goTo(new pages.Profile(id));
+        return this.goTo("users/" + id, new pages.Profile(id));
       };
 
       UserRouter.prototype.edit = function(id) {
-        this.navigate("users/" + id + "/edit");
-        return this.goTo(new pages.Edit(id));
+        return this.goTo("users/" + id + "/edit", new pages.Edit(id));
       };
 
       return UserRouter;

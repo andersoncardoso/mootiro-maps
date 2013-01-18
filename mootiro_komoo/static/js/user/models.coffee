@@ -4,27 +4,25 @@ define (require) ->
   _ = require 'underscore'
   Backbone = require 'backbone'
   PermissionMixin = require('main/mixins').PermissionMixin
+  Updates = require('./collections').PaginatedUpdates
   urls = require 'urls'
 
+
   class User extends Backbone.Model
+    _.extend @prototype, PermissionMixin
+
+    permissions:
+      edit: (user) ->
+        user instanceof User and (user.isSuperuser() or user.get('id') is @get('id'))
+
     urlRoot: urls.resolve 'user_api'
 
     defaults:
       'about_me': ''
       'geojson': {"type": "FeatureCollection", "features": [{"geometry": {"type": "Point", "coordinates": [-23.566743, -46.746802]}, "type": "Feature", "properties": {type: 'User'}}]}  # FIXME: Remove this
 
-    permissions:
-      edit: (user) ->
-        user instanceof User and
-          (user.isSuperuser() or user.get('id') is @get('id'))
-
     getUpdates: ->
-      if @updates? then return @updates
-
-      Updates = require('./collections').PaginatedUpdates
-      @updates = new Updates([], user: this)
-      window.collection = @updates
-      return @updates
+      return @updates ? (@updates = new Updates([], user: this))
 
     goToProfile: ->
       Backbone.trigger 'user::profile', @id
@@ -35,9 +33,6 @@ define (require) ->
     isSuperuser: ->
       # TODO: implement
       false
-
-
-  _.extend User.prototype, PermissionMixin
 
   return {
     User: User

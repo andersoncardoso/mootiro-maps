@@ -65,6 +65,9 @@ define (require) ->
       @$('#user-updates-container').append @updatesView.$el
       this
 
+    canClose: ->
+      not @userInfoViews[@mode]?.wasChanged?()
+
     setMode: (@mode) ->
       if not @model.hasPermission(@mode) or not @userInfoViews[@mode]?
         console?.log "Mode '#{@mode}' not allowed, changing to 'view'."

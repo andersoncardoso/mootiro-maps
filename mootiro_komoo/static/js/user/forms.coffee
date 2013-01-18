@@ -63,6 +63,10 @@ define (require) ->
       }
     ]
 
+    wasChanged: ->
+      not _.isEqual @get(), _.pick(@model.toJSON(), _.pluck(@fields, 'name'))
+
+
   return {
     UserInfoForm: UserInfoForm
   }

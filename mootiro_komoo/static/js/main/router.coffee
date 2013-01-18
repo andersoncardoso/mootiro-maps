@@ -4,6 +4,7 @@ define (require) ->
   _ = require 'underscore'
   Backbone = require 'backbone'
 
+  pageManager = require 'page_manager'
   pages = require('./pages')
 
 
@@ -19,9 +20,14 @@ define (require) ->
       Backbone.on 'main::root', @root
       Backbone.on 'main::error', @error
 
+    goTo: (url, page) ->
+      $.when(pageManager.canClose()).done =>
+        @navigate url
+        $.when(page.render()).fail (e) ->
+          Backbone.trigger 'main::error', e.status, e.statusText
+
     root: ->
-      pages.root.render()
-      @navigate ''
+      @goTo '', pages.root
 
     error: (code, msg) ->
       pages.error.render()

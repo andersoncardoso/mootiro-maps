@@ -94,6 +94,10 @@
         }
       ];
 
+      UserInfoForm.prototype.wasChanged = function() {
+        return !_.isEqual(this.get(), _.pick(this.model.toJSON(), _.pluck(this.fields, 'name')));
+      };
+
       return UserInfoForm;
 
     })(reForm.Form);

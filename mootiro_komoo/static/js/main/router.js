@@ -4,9 +4,10 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, MainRouter, pages, _;
+    var Backbone, MainRouter, pageManager, pages, _;
     _ = require('underscore');
     Backbone = require('backbone');
+    pageManager = require('page_manager');
     pages = require('./pages');
     MainRouter = (function(_super) {
 
@@ -30,9 +31,18 @@
         return Backbone.on('main::error', this.error);
       };
 
+      MainRouter.prototype.goTo = function(url, page) {
+        var _this = this;
+        return $.when(pageManager.canClose()).done(function() {
+          _this.navigate(url);
+          return $.when(page.render()).fail(function(e) {
+            return Backbone.trigger('main::error', e.status, e.statusText);
+          });
+        });
+      };
+
       MainRouter.prototype.root = function() {
-        pages.root.render();
-        return this.navigate('');
+        return this.goTo('', pages.root);
       };
 
       MainRouter.prototype.error = function(code, msg) {

@@ -4,10 +4,11 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, PermissionMixin, User, urls, _;
+    var Backbone, PermissionMixin, Updates, User, urls, _;
     _ = require('underscore');
     Backbone = require('backbone');
     PermissionMixin = require('main/mixins').PermissionMixin;
+    Updates = require('./collections').PaginatedUpdates;
     urls = require('urls');
     User = (function(_super) {
 
@@ -16,6 +17,14 @@
       function User() {
         User.__super__.constructor.apply(this, arguments);
       }
+
+      _.extend(User.prototype, PermissionMixin);
+
+      User.prototype.permissions = {
+        edit: function(user) {
+          return user instanceof User && (user.isSuperuser() || user.get('id') === this.get('id'));
+        }
+      };
 
       User.prototype.urlRoot = urls.resolve('user_api');
 
@@ -38,21 +47,11 @@
         }
       };
 
-      User.prototype.permissions = {
-        edit: function(user) {
-          return user instanceof User && (user.isSuperuser() || user.get('id') === this.get('id'));
-        }
-      };
-
       User.prototype.getUpdates = function() {
-        var Updates;
-        if (this.updates != null) return this.updates;
-        Updates = require('./collections').PaginatedUpdates;
-        this.updates = new Updates([], {
+        var _ref;
+        return (_ref = this.updates) != null ? _ref : (this.updates = new Updates([], {
           user: this
-        });
-        window.collection = this.updates;
-        return this.updates;
+        }));
       };
 
       User.prototype.goToProfile = function() {
@@ -70,7 +69,6 @@
       return User;
 
     })(Backbone.Model);
-    _.extend(User.prototype, PermissionMixin);
     return {
       User: User
     };

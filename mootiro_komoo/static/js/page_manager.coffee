@@ -1,4 +1,6 @@
 define (require) ->
+  'use strict'
+
   $ = require 'jquery'
   _ = require 'underscore'
 
@@ -24,6 +26,12 @@ define (require) ->
         view.onOpen?()
 
       _([@actionBar, @sidebar, @mainContent]).each onOpen
+
+
+    canClose: ->
+      @actionBar?.canClose?() ? true and
+      @sidebar?.conClose?() ? true and
+      @mainContent?.canClose?() ? true
 
     close: ->
       # Remove DOM and unbind some events to avoid memory leak
@@ -56,6 +64,20 @@ define (require) ->
   class PageManager
     Page: Page
     currentPage: null
+
+    canClose: ->
+      dfd = new $.Deferred()
+      if @currentPage?.canClose?() ? true
+        # Can close without problems
+        dfd.resolve()
+      else
+        # Ask for confirmation to leave the page
+        # FIXME: Customize the confirm dialog
+        if window.confirm "You haven't saved your changes yet. Do you want to leave without finishing?"
+          dfd.resolve()
+        else
+          dfd.reject()
+      dfd.promise()
 
     open: (page) ->
       if not page or page is @currentPage then return
