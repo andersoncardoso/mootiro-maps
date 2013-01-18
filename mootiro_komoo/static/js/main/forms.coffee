@@ -51,7 +51,7 @@ define (require) ->
           row[key] = widget.get()
           isEmpty = false if row[key]
         value.push(row) if not isEmpty
-      value
+      if not _.isEmpty value then value else null
 
     clear: ->
       for field in @renderedFields

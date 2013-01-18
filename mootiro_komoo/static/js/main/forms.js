@@ -67,7 +67,11 @@
           }
           if (!isEmpty) value.push(row);
         }
-        return value;
+        if (!_.isEmpty(value)) {
+          return value;
+        } else {
+          return null;
+        }
       };
 
       MultiWidget.prototype.clear = function() {

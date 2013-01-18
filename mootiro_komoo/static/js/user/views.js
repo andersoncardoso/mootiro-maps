@@ -62,6 +62,7 @@
             submit_label: i18n('Save')
           });
           this.listenTo(this.userInfoViews['edit'], 'success', this.onSuccess);
+          this.listenTo(this.userInfoViews['edit'], 'cancel', this.onCancel);
         }
         _ref = this.userInfoViews;
         for (mode in _ref) {
@@ -111,6 +112,10 @@
 
       Profile.prototype.onSuccess = function() {
         return Backbone.trigger('user::profile user::edited', this.model.id);
+      };
+
+      Profile.prototype.onCancel = function() {
+        return Backbone.trigger('user::profile', this.model.id);
       };
 
       return Profile;

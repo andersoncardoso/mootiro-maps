@@ -94,6 +94,16 @@
         }
       ];
 
+      UserInfoForm.prototype.events = {
+        'click .cancel': 'onCancelClick'
+      };
+
+      UserInfoForm.prototype.onCancelClick = function(e) {
+        if (e != null) e.preventDefault();
+        this.set(this.model.toJSON());
+        return this.trigger('cancel');
+      };
+
       UserInfoForm.prototype.wasChanged = function() {
         return !_.isEqual(this.get(), _.pick(this.model.toJSON(), _.pluck(this.fields, 'name')));
       };

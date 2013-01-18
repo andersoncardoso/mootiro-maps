@@ -43,6 +43,7 @@ define (require) ->
           formId: 'user-info'
           submit_label: i18n 'Save'
         @listenTo @userInfoViews['edit'], 'success', @onSuccess
+        @listenTo @userInfoViews['edit'], 'cancel', @onCancel
 
       for mode, view of @userInfoViews
         @subViews.push view
@@ -79,6 +80,9 @@ define (require) ->
 
     onSuccess: () ->
       Backbone.trigger 'user::profile user::edited', @model.id
+
+    onCancel: () ->
+      Backbone.trigger 'user::profile', @model.id
 
 
   #### Profile Sidebar ####

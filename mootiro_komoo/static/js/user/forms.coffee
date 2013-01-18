@@ -63,6 +63,14 @@ define (require) ->
       }
     ]
 
+    events:
+      'click .cancel': 'onCancelClick'
+
+    onCancelClick: (e) ->
+      e?.preventDefault()
+      @set @model.toJSON()
+      @trigger 'cancel'
+
     wasChanged: ->
       not _.isEqual @get(), _.pick(@model.toJSON(), _.pluck(@fields, 'name'))
 
