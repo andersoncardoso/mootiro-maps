@@ -25,6 +25,9 @@
       } else {
         KomooNS.user = new User({});
       }
+      Backbone.on('session::change', function() {
+        return typeof console !== "undefined" && console !== null ? console.log('SESSION ID DONT MATCH') : void 0;
+      });
       header = new mainViews.Header({
         el: '#header-container',
         model: KomooNS.user

@@ -5,60 +5,64 @@ define (require) ->
   _ = require 'underscore'
 
   class Page
-    actionBar: null
-    sidebar: null
-    mainContent: null
-
     constructor: (views={}) ->
-      @actionBar = views.actionBar
-      @sidebar = views.sidebar
-      @mainContent = views.mainContent
+      @views = [
+        {name: 'actionBar',   parentSelector: '#action-bar'}
+        {name: 'sidebar',     parentSelector: '#sidebar'}
+        {name: 'mainContent', parentSelector: '#main-content'}
+      ]
+      @setViews views
+
+    setViews: (views) ->
+      for view in @views
+        if view.instance?
+          @_removeView view.instance
+        view.instance = views[view.name]
 
     open: ->
-      $('#action-bar').append @actionBar?.$el
-      $('#sidebar').append @sidebar?.$el
-      $('#main-content').append @mainContent?.$el
-
       onOpen = (view) ->
         if not view then return
-        if view.subViews
-          _.each view.subViews, onOpen
+        onOpen v for v in view.subViews if view.subViews
         view.onOpen?()
 
-      _([@actionBar, @sidebar, @mainContent]).each onOpen
+      for view in @views
+        $(view.parentSelector).append view.instance?.$el
+        onOpen view.instance
 
 
     canClose: ->
-      @actionBar?.canClose?() ? true and
-      @sidebar?.conClose?() ? true and
-      @mainContent?.canClose?() ? true
+      canClose = true
+      (canClose = canClose and view.instance?.canClose?() ? true) for view in @views
+      canClose
+
+    _removeView: (view) ->
+      if not view then return
+
+      if view.subViews
+        # Clear all sub views
+        @_removeView v for v in view.subViews if view.subViews
+        view.subViews = undefined
+        # Clear reForm forms
+        @_removeView v for v in view.instances if view.instances
+        view.instances = undefined
+      # Call views custom method
+      view.onClose?()
+      # Clear all DOM events
+      view.unbind()
+      # Remove DOM and clear model/collection events
+      view.remove()
+      # Remove references to detached DOM elements
+      view.$el = undefined
+      view.el = undefined
+      # Remove references to model and collection
+      view.model = undefined
+      view.collection = undefined
 
     close: ->
       # Remove DOM and unbind some events to avoid memory leak
-      clear = (view) ->
-        if not view then return
-
-        if view.subViews
-          # Clear all sub views
-          _.each view.subViews, clear
-          delete view.subViews
-          # Clear reForm forms
-          _.each view.instances, clear
-          delete view.instances
-        # Call views custom method
-        view.onClose?()
-        # Clear all DOM events
-        view.unbind()
-        # Remove DOM and clear model/collection events
-        view.remove()
-        # Remove references to detached DOM elements
-        delete view.$el
-        delete view.el
-        # Remove references to model and collection
-        delete view.model
-        delete view.collection
-
-      _([@actionBar, @sidebar, @mainContent]).each clear
+      for view in @views
+        @_removeView view.instance
+        #view.instance = null
 
 
   class PageManager

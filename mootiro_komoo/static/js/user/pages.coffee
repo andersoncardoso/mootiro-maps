@@ -31,14 +31,12 @@ define (require) ->
 
   class Profile extends pageManager.Page
     constructor: (@userId, @mode='view') ->
+      super
       @id = "user::profile::#{@userId}"
 
     setMode: (mode) ->
       if @mode is mode and mode is 'edit' then mode = null
-
-      @actionBar.setMode mode
-      #@sidebar.setMode mode
-      @mainContent.setMode mode
+      view.instance?.setMode?(mode) for view in @views
       @mode = mode
 
       if mode is null then Backbone.trigger 'user::profile', @userId
@@ -63,9 +61,10 @@ define (require) ->
           model: user
           mode: @mode
 
-        @actionBar = new views.ActionBar data
-        @sidebar = new views.Sidebar data
-        @mainContent = new views.Profile data
+        @setViews
+          actionBar: new views.ActionBar data
+          sidebar: new views.Sidebar data
+          mainContent: new views.Profile data
 
         pageManager.open this
 

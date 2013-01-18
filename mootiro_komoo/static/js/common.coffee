@@ -54,33 +54,34 @@ define (require) ->
                 break
     cookieValue
 
+  sameOrigin = (url) ->
+    # url could be relative or scheme relative or absolute
+    host = document.location.host  # host + port
+    protocol = document.location.protocol
+    sr_origin = '//' + host
+    origin = protocol + sr_origin
+    # Allow absolute or scheme relative URLs to same origin
+    return (url is origin or url.slice(0, origin.length + 1) is origin + '/') or
+      (url is sr_origin or url.slice(0, sr_origin.length + 1) is sr_origin + '/') or
+      # or any other URL that isn't scheme relative or absolute
+      # i.e relative.
+      (not /^(\/\/|http:|https:).*/.test(url))
+
+  safeMethod = (method) ->
+    /^(GET|HEAD|OPTIONS|TRACE)$/.test(method)
 
   # Add csrf token to ajax requests
   jQuery(document).ajaxSend (event, xhr, settings) ->
-    sameOrigin = (url) ->
-      # url could be relative or scheme relative or absolute
-      host = document.location.host  # host + port
-      protocol = document.location.protocol
-      sr_origin = '//' + host
-      origin = protocol + sr_origin
-      # Allow absolute or scheme relative URLs to same origin
-      return (
-               url is origin or
-               url.slice(0, origin.length + 1) is origin + '/'
-             ) or (
-               url is sr_origin or
-               url.slice(0, sr_origin.length + 1) is sr_origin + '/'
-             ) or (
-               # or any other URL that isn't scheme relative or absolute
-               # i.e relative.
-               not (/^(\/\/|http:|https:).*/.test(url))
-             )
+    console.log '===>', xhr
+    if not safeMethod(settings.type) and sameOrigin(settings.url)
+      xhr.setRequestHeader "X-CSRFToken", getCookie('csrftoken')
 
-      safeMethod = (method) ->
-          /^(GET|HEAD|OPTIONS|TRACE)$/.test(method)
-
-      if not safeMethod(settings.type) and sameOrigin(settings.url)
-          xhr.setRequestHeader "X-CSRFToken", getCookie('csrftoken')
+  lastSessionId = getCookie('sessionid')
+  jQuery(document).ajaxComplete (event, xhr, settings) ->
+    sessionId = getCookie('sessionid')
+    if sameOrigin(settings.url) and lastSessionId isnt sessionId
+      Backbone.trigger 'session::change'
+    lastSessionId = sessionId
 
 
   ##

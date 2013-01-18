@@ -38,13 +38,20 @@
       function Profile(userId, mode) {
         this.userId = userId;
         this.mode = mode != null ? mode : 'view';
+        Profile.__super__.constructor.apply(this, arguments);
         this.id = "user::profile::" + this.userId;
       }
 
       Profile.prototype.setMode = function(mode) {
+        var view, _i, _len, _ref, _ref2;
         if (this.mode === mode && mode === 'edit') mode = null;
-        this.actionBar.setMode(mode);
-        this.mainContent.setMode(mode);
+        _ref = this.views;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          if ((_ref2 = view.instance) != null) {
+            if (typeof _ref2.setMode === "function") _ref2.setMode(mode);
+          }
+        }
         this.mode = mode;
         if (mode === null) return Backbone.trigger('user::profile', this.userId);
       };
@@ -66,9 +73,11 @@
             model: user,
             mode: _this.mode
           };
-          _this.actionBar = new views.ActionBar(data);
-          _this.sidebar = new views.Sidebar(data);
-          _this.mainContent = new views.Profile(data);
+          _this.setViews({
+            actionBar: new views.ActionBar(data),
+            sidebar: new views.Sidebar(data),
+            mainContent: new views.Profile(data)
+          });
           pageManager.open(_this);
           return dfd.resolve();
         }).fail(function(jqXHR) {

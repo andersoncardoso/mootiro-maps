@@ -31,6 +31,10 @@ define (require) ->
     else
       KomooNS.user = new User {}
 
+    Backbone.on 'session::change', () ->
+      # TODO: Revalidate the logged user
+      console?.log 'SESSION ID DONT MATCH'
+
     header = new mainViews.Header
       el: '#header-container'
       model: KomooNS.user

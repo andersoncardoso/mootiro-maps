@@ -1,7 +1,7 @@
 (function() {
 
   define(function(require) {
-    var App, Backbone, jQuery;
+    var App, Backbone, jQuery, lastSessionId, safeMethod, sameOrigin;
     App = require('app');
     jQuery = require('jquery');
     Backbone = require('backbone');
@@ -53,37 +53,45 @@
       }
       return cookieValue;
     };
-    return jQuery(document).ajaxSend(function(event, xhr, settings) {
-      var safeMethod, sameOrigin;
-      sameOrigin = function(url) {
-        var host, origin, protocol, sr_origin;
-        host = document.location.host;
-        protocol = document.location.protocol;
-        sr_origin = '//' + host;
-        origin = protocol + sr_origin;
-        return (url === origin || url.slice(0, origin.length + 1) === origin + '/') || (url === sr_origin || url.slice(0, sr_origin.length + 1) === sr_origin + '/') || (!(/^(\/\/|http:|https:).*/.test(url)));
-      };
-      safeMethod = function(method) {
-        return /^(GET|HEAD|OPTIONS|TRACE)$/.test(method);
-      };
+    sameOrigin = function(url) {
+      var host, origin, protocol, sr_origin;
+      host = document.location.host;
+      protocol = document.location.protocol;
+      sr_origin = '//' + host;
+      origin = protocol + sr_origin;
+      return (url === origin || url.slice(0, origin.length + 1) === origin + '/') || (url === sr_origin || url.slice(0, sr_origin.length + 1) === sr_origin + '/') || (!/^(\/\/|http:|https:).*/.test(url));
+    };
+    safeMethod = function(method) {
+      return /^(GET|HEAD|OPTIONS|TRACE)$/.test(method);
+    };
+    jQuery(document).ajaxSend(function(event, xhr, settings) {
+      console.log('===>', xhr);
       if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
         return xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
       }
     });
+    lastSessionId = getCookie('sessionid');
+    jQuery(document).ajaxComplete(function(event, xhr, settings) {
+      var sessionId;
+      sessionId = getCookie('sessionid');
+      if (sameOrigin(settings.url) && lastSessionId !== sessionId) {
+        Backbone.trigger('session::change');
+      }
+      return lastSessionId = sessionId;
+    });
+    return window.getUrlVars = function() {
+      var hash, hashes, vars, _i, _len;
+      vars = [];
+      hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+      if (typeof console !== "undefined" && console !== null) console.log(hashes);
+      for (_i = 0, _len = hashes.length; _i < _len; _i++) {
+        hash = hashes[_i];
+        hash = hash.split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+      }
+      return vars;
+    };
   });
-
-  window.getUrlVars = function() {
-    var hash, hashes, vars, _i, _len;
-    vars = [];
-    hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    if (typeof console !== "undefined" && console !== null) console.log(hashes);
-    for (_i = 0, _len = hashes.length; _i < _len; _i++) {
-      hash = hashes[_i];
-      hash = hash.split('=');
-      vars.push(hash[0]);
-      vars[hash[0]] = hash[1];
-    }
-    return vars;
-  };
 
 }).call(this);
