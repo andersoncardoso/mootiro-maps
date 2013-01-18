@@ -34,15 +34,14 @@ define (require) ->
       @id = "user::profile::#{@userId}"
 
     setMode: (mode) ->
-      if @mode is mode
-        if mode is 'edit'
-          Backbone.trigger 'user::profile', @userId
-        return
+      if @mode is mode and mode is 'edit' then mode = null
 
       @actionBar.setMode mode
       #@sidebar.setMode mode
       @mainContent.setMode mode
       @mode = mode
+
+      if mode is null then Backbone.trigger 'user::profile', @userId
 
     render: ->
       # Deferred object to router know when the page is ready or if occurred

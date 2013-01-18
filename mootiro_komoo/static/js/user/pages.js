@@ -42,13 +42,11 @@
       }
 
       Profile.prototype.setMode = function(mode) {
-        if (this.mode === mode) {
-          if (mode === 'edit') Backbone.trigger('user::profile', this.userId);
-          return;
-        }
+        if (this.mode === mode && mode === 'edit') mode = null;
         this.actionBar.setMode(mode);
         this.mainContent.setMode(mode);
-        return this.mode = mode;
+        this.mode = mode;
+        if (mode === null) return Backbone.trigger('user::profile', this.userId);
       };
 
       Profile.prototype.render = function() {

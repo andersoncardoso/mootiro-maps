@@ -98,7 +98,7 @@
 
       Profile.prototype.setMode = function(mode) {
         this.mode = mode;
-        if (!this.model.hasPermission(this.mode) || !(this.userInfoViews[this.mode] != null)) {
+        if (this.mode && !this.model.hasPermission(this.mode) || !(this.userInfoViews[this.mode] != null)) {
           if (typeof console !== "undefined" && console !== null) {
             console.log("Mode '" + this.mode + "' not allowed, changing to 'view'.");
           }

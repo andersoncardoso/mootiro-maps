@@ -69,7 +69,7 @@ define (require) ->
       not @userInfoViews[@mode]?.wasChanged?()
 
     setMode: (@mode) ->
-      if not @model.hasPermission(@mode) or not @userInfoViews[@mode]?
+      if @mode and not @model.hasPermission(@mode) or not @userInfoViews[@mode]?
         console?.log "Mode '#{@mode}' not allowed, changing to 'view'."
         Backbone.trigger 'user::profile', @model.id
         return
