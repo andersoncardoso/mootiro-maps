@@ -241,5 +241,9 @@ class CommonObjectTestCase(unittest.TestCase):
         self.assertDictEqual(expected, obj_dict)
 
     def is_valid_test(self):
-        pass
+        TestCommonObjectModel.objects.all().delete()
+        obj = TestCommonObjectModel()
+        obj.from_dict(self.expected_dict)
+        obj.save()
+        self.assertTrue(obj.is_valid())
 
