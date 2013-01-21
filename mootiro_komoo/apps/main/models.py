@@ -101,10 +101,27 @@ class CommonDataMixin(models.Model, BaseDAOMixin):
 
     def from_dict(self, data):
         keys = [
-            'name', 'description', 'creator', 'creation_date', 'last_editor',
-            'last_update', 'tags', 'extra_data']
+            'name', 'description', 'creator', 'last_editor',
+            'last_update', 'extra_data']
         date_keys = ['creation_date', 'last_update']
-        build_obj_from_dict(self, data, keys, date_keys)
+        ignore_keys = ['id', ]
+
+        if self.id:
+            keys.append('tags')
+            keys.append('creation_date')
+        else:
+            self._postponed = getattr(self, '_postponed', [])
+
+            self._postponed.append(
+                    ('tags', data.get('tags', {'common': []})))
+            ignore_keys.append('tags')
+
+            self._postponed.append(
+                    ('creation_date', data.get('creation_date', None)))
+            ignore_keys.append('creation_date')
+
+        build_obj_from_dict(self, data, keys, date_keys,
+                            ignore_keys=ignore_keys)
 
     def is_valid(self):
         self.errors = {}
@@ -112,6 +129,13 @@ class CommonDataMixin(models.Model, BaseDAOMixin):
         if not self.name:
             validates, self.errors['name'] = False, _('Required field')
         return validates
+
+    def save(self, *args, **kwargs):
+        r = super(CommonDataMixin, self).save(*args, **kwargs)
+        if self.id and hasattr(self, '_postponed'):
+            for item in self._postponed:
+                setattr(self, item[0], item[1])
+        return r
 
 
 #
@@ -378,7 +402,8 @@ class CommonObject(GeoRefModel, BaseModel, CommonDataMixin):
 
     def from_dict(self, data):
         super(CommonObject, self).from_dict(data)
-        self.id = getattr(data, 'id', None)
+        if 'id' in data:
+            self.id = data['id']
 
     def is_valid(self, ignore=[]):
         self.errors = {}
