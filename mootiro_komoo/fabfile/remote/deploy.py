@@ -58,7 +58,8 @@ def deploy(migration_script=''):
 
 def deploy_to_staging(deploy_info):
     '''Staging deploy strategy.'''
-    down()
+    with quiet():
+        down()
     checkout(deploy_info['to_commit'])
     install_requirements()
     if deploy_info['migration_script']:
@@ -69,7 +70,8 @@ def deploy_to_staging(deploy_info):
 
 def deploy_to_production(deploy_info):
     '''Production deploy strategy.'''
-    down()
+    with quiet():
+        down()
     backup_db()
     checkout(deploy_info['to_commit'])
     install_requirements()
