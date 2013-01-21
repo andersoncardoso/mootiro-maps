@@ -6,7 +6,9 @@ from ..test_utils import setup_env, create_test_user
 setup_env()
 
 from main.models import CommonDataMixin, GenericRelation, GenericRef
-from tests.models import TestModelA, TestModelB
+from tests.models import TestModelA, TestModelB, TestCommonObjectModel
+
+DATETIME_OBJ = datetime.datetime(2012, 12, 14, 15, 23, 30, 0)
 
 
 class MyClass(CommonDataMixin):
@@ -169,4 +171,75 @@ class GenericRelationsTest(unittest.TestCase):
                          a1.relations.filter_by_model(TestModelA
                              ).paginated(page=2, per_page=1))
 
+
+class CommonObjectTestCase(unittest.TestCase):
+    @property
+    def expected_empty_dict(self):
+        return {
+            'id': None,
+            'name': '',
+            'description': '',
+            'tags': {'common': []},
+            'creator': None,
+            'creation_date': None,
+            'last_editor': None,
+            'last_update': None,
+            'extra_data': None
+        }
+
+    @property
+    def expected_dict(self):
+        return {
+            'id': 1,
+            'name': 'test_object',
+            'description': 'test test',
+            'tags': {'common': ['tagA', ], 'target_audience': ['tagB', ]},
+            'creator': self.test_user,
+            'creation_date': DATETIME_OBJ,
+            'last_editor': None,
+            'last_update': None,
+            'extra_data': None
+        }
+
+    test_user = create_test_user()
+
+    def _create_obj(self):
+        TestCommonObjectModel.objects.all().delete()
+        obj = TestCommonObjectModel(
+            id=1,
+            name='test_object',
+            description='test test',
+            creator=self.test_user
+        )
+        obj.save()
+        obj.tags = {'common': ['tagA', ], 'target_audience': ['tagB', ]}
+        obj.creation_date = DATETIME_OBJ
+        obj.save()
+        return obj
+
+    def to_dict_test(self):
+        co = TestCommonObjectModel()
+        self.assertEqual(self.expected_empty_dict, co.to_dict())
+
+        obj = self._create_obj()
+        expected = self.expected_dict
+        del expected['last_update']
+        obj_dict = obj.to_dict()
+        del obj_dict['last_update']
+        self.assertDictEqual(expected, obj_dict)
+
+    def from_dict_test(self):
+        TestCommonObjectModel.objects.all().delete()
+        obj = TestCommonObjectModel()
+        obj.from_dict(self.expected_dict)
+        obj.save()
+
+        expected = self.expected_dict
+        del expected['last_update']
+        obj_dict = obj.to_dict()
+        del obj_dict['last_update']
+        self.assertDictEqual(expected, obj_dict)
+
+    def is_valid_test(self):
+        pass
 

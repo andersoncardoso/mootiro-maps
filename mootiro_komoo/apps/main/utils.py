@@ -410,14 +410,14 @@ class JsonResponseNotFound(JsonResponseError):
 
 
 def build_obj_from_dict(obj, data, expected_keys=[], datetime_keys=[],
-                        exclude_keys=[]):
+                        ignore_keys=[]):
     """ utility function for being use with .from_dict() methods """
     for key, val in data.iteritems():
-        if key in expected_keys:
+        if key in ignore_keys:
+            continue
+        elif key in expected_keys:
             if key in datetime_keys and isinstance(val, basestring):
                 setattr(obj, key, iso_to_datetime(val))
-            elif key in exclude_keys:
-                continue
             else:
                 setattr(obj, key, val)
         else:
