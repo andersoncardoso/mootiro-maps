@@ -4,6 +4,7 @@ import sys
 import unittest
 import requests
 import datetime
+from copy import deepcopy
 # from django.core.management import setup_environ
 
 
@@ -64,6 +65,18 @@ def create_test_user():
     user.creation_date = datetime.datetime(2012, 12, 14, 15, 23, 30, 0)
     user.save()
     return user
+
+const = type('Const', (), {})
+const.DATETIME_OBJ = datetime.datetime(2012, 12, 14, 15, 23, 30, 0)
+const.EMPTY_TAGS = {'common': [], }
+
+
+def filter_dict(data, keys):
+    data = deepcopy(data)
+    for k in keys:
+        if k in data:
+            del data[k]
+    return data
 
 
 class Client(object):

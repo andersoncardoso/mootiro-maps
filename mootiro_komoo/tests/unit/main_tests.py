@@ -2,13 +2,12 @@
 from __future__ import unicode_literals
 import unittest
 import datetime
-from ..test_utils import setup_env, create_test_user
+from ..test_utils import setup_env, create_test_user, const
 setup_env()
 
-from main.models import CommonDataMixin, GenericRelation, GenericRef
+from main.utils import filter_dict
+from main.models import CommonDataMixin, GenericRelation
 from tests.models import TestModelA, TestModelB, TestCommonObjectModel
-
-DATETIME_OBJ = datetime.datetime(2012, 12, 14, 15, 23, 30, 0)
 
 
 class MyClass(CommonDataMixin):
@@ -81,14 +80,6 @@ class CommonDataMixinTest(unittest.TestCase):
 
 
 class GenericRelationsTest(unittest.TestCase):
-    def _clean_all(self):
-        # GenericRelation.objects.all().delete()
-        # GenericRef.objects.all().delete()
-        pass
-
-    def setUp(self):
-        self._clean_all()
-
     def empty_relations_test(self):
         obj_A = TestModelA(name='A')
         obj_A.save()
@@ -143,7 +134,7 @@ class GenericRelationsTest(unittest.TestCase):
         a1.relations.add(b)
 
         relations_with_TestModelA = a1.relations.filter_by_model(TestModelA)
-        self.assertEquals(set([(a2, ''), (a3, ''), ]), 
+        self.assertEquals(set([(a2, ''), (a3, ''), ]),
                           set(relations_with_TestModelA))
 
         relations_with_TestModelB = a1.relations.filter_by_model(TestModelB)
@@ -192,31 +183,25 @@ class CommonObjectTestCase(unittest.TestCase):
     @property
     def expected_dict(self):
         return {
-            'id': 1,
             'name': 'test_object',
             'description': 'test test',
             'tags': {'common': ['tagA', ], 'target_audience': ['tagB', ]},
             'creator': self.test_user,
-            'creation_date': DATETIME_OBJ,
             'last_editor': None,
-            'last_update': None,
             'extra_data': None
         }
 
     test_user = create_test_user()
 
     def _create_obj(self):
-        # TestCommonObjectModel.objects.all().delete()
         obj = TestCommonObjectModel(
-            id=1,
             name='test_object',
             description='test test',
             creator=self.test_user,
-            creation_date=DATETIME_OBJ
+            creation_date=const.DATETIME_OBJ
         )
         obj.save()
         obj.tags = {'common': ['tagA', ], 'target_audience': ['tagB', ]}
-        # obj.creation_date = DATETIME_OBJ
         obj.save()
         return obj
 
@@ -226,9 +211,8 @@ class CommonObjectTestCase(unittest.TestCase):
 
         obj = self._create_obj()
         expected = self.expected_dict
-        del expected['last_update']
-        obj_dict = obj.to_dict()
-        del obj_dict['last_update']
+        obj_dict = filter_dict(obj.to_dict(),
+                               ['last_update', 'creation_date', 'id'])
         self.assertDictEqual(expected, obj_dict)
 
     def from_dict_test(self):
@@ -237,13 +221,10 @@ class CommonObjectTestCase(unittest.TestCase):
         obj.from_dict(self.expected_dict)
         obj.save()
 
-        # kludge for fixing creation_date =/
-        obj.creation_date = self.expected_dict['creation_date']
-
-        expected = self.expected_dict
-        del expected['last_update']
-        obj_dict = obj.to_dict()
-        del obj_dict['last_update']
+        expected = filter_dict(self.expected_dict,
+                               ['last_update', 'creation_date', 'id'])
+        obj_dict = filter_dict(obj.to_dict(),
+                               ['last_update', 'creation_date', 'id'])
         self.assertDictEqual(expected, obj_dict)
 
     def is_valid_test(self):
