@@ -13,16 +13,20 @@
 
       __extends(Profile, _super);
 
-      function Profile(model, mode) {
-        this.model = model;
-        this.mode = mode != null ? mode : 'view';
+      function Profile() {
         Profile.__super__.constructor.apply(this, arguments);
-        this.id = "user::profile::" + this.model.id;
       }
+
+      Profile.prototype.initialize = function() {
+        var _ref;
+        this.mode = (_ref = this.options.mode) != null ? _ref : 'view';
+        this.id = "user::profile::" + this.model.id;
+        return Profile.__super__.initialize.apply(this, arguments);
+      };
 
       Profile.prototype.setMode = function(mode) {
         var view, _i, _len, _ref, _ref2;
-        if (this.mode === mode && mode === 'edit') mode = null;
+        if (this.mode === mode) return;
         _ref = this.views;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
@@ -31,12 +35,13 @@
           }
         }
         this.mode = mode;
-        if (mode === null) return this.model.goToProfile();
+        if (mode === null) return this.model.view();
       };
 
       Profile.prototype.render = function() {
         var dfd, _ref,
           _this = this;
+        Profile.__super__.render.apply(this, arguments);
         dfd = new $.Deferred();
         if (((_ref = pageManager.currentPage) != null ? _ref.id : void 0) === this.id) {
           pageManager.currentPage.setMode(this.mode);
@@ -70,10 +75,14 @@
 
       __extends(Edit, _super);
 
-      function Edit(model, mode) {
-        if (mode == null) mode = 'edit';
-        Edit.__super__.constructor.call(this, model, mode);
+      function Edit() {
+        Edit.__super__.constructor.apply(this, arguments);
       }
+
+      Edit.prototype.initialize = function() {
+        this.options.mode = 'edit';
+        return Edit.__super__.initialize.apply(this, arguments);
+      };
 
       return Edit;
 

@@ -24,7 +24,7 @@ define (require) ->
     getUpdates: ->
       return @updates ? (@updates = new Updates([], user: this))
 
-    goToProfile: ->
+    view: ->
       Backbone.trigger 'open:detail', this if @id?
 
     edit: ->

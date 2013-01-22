@@ -8,18 +8,20 @@ define (require) ->
   views = require './views'
 
   class Profile extends pageManager.Page
-    constructor: (@model, @mode='view') ->
-      super
+    initialize: ->
+      @mode = @options.mode ? 'view'
       @id = "user::profile::#{@model.id}"
+      super
 
     setMode: (mode) ->
-      if @mode is mode and mode is 'edit' then mode = null
+      if @mode is mode then return
       view.instance?.setMode?(mode) for view in @views
       @mode = mode
 
-      if mode is null then @model.goToProfile()
+      if mode is null then @model.view()
 
     render: ->
+      super
       # Deferred object to router know when the page is ready or if occurred
       # an error
       dfd = new $.Deferred()
@@ -44,8 +46,8 @@ define (require) ->
           mainContent: new views.Profile data
 
         pageManager.open this
-
         dfd.resolve()
+
       .fail (jqXHR) ->
         dfd.reject jqXHR
 
@@ -53,8 +55,9 @@ define (require) ->
 
 
   class Edit extends Profile
-    constructor: (model, mode='edit') ->
-      super model, mode
+    initialize: ->
+      @options.mode = 'edit'
+      super
 
   Profile: Profile
   Edit: Edit

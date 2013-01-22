@@ -37,23 +37,16 @@ define (require) ->
       if not user?
         console?.log 'User id not specified'
         return
-
-      if _.isNumber(user) or _.isString(user)
-        user = new User id: user
-
-      if not user instanceof User
-        return
-
-      return user
+      user = new User id: user if _.isNumber(user) or _.isString(user)
+      return if user instanceof User then user else null
 
     detail: (model) ->
       user = @getUser model
-      console.log '--->', (model is user), [model.id, user.id]
-      @goTo "users/#{user.id}", new pages.Profile(user)
+      @goTo "users/#{user.id}", new pages.Profile(model: user)
 
     edit: (model) ->
       user = @getUser model
-      @goTo "users/#{user.id}/edit", new pages.Edit(user)
+      @goTo "users/#{user.id}/edit", new pages.Edit(model: user)
 
 
   new UserRouter()

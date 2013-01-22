@@ -58,21 +58,27 @@
             id: user
           });
         }
-        if (!user instanceof User) return;
-        return user;
+        if (user instanceof User) {
+          return user;
+        } else {
+          return null;
+        }
       };
 
       UserRouter.prototype.detail = function(model) {
         var user;
         user = this.getUser(model);
-        console.log('--->', model === user, [model.id, user.id]);
-        return this.goTo("users/" + user.id, new pages.Profile(user));
+        return this.goTo("users/" + user.id, new pages.Profile({
+          model: user
+        }));
       };
 
       UserRouter.prototype.edit = function(model) {
         var user;
         user = this.getUser(model);
-        return this.goTo("users/" + user.id + "/edit", new pages.Edit(user));
+        return this.goTo("users/" + user.id + "/edit", new pages.Edit({
+          model: user
+        }));
       };
 
       return UserRouter;

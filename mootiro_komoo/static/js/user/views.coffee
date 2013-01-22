@@ -72,7 +72,7 @@ define (require) ->
     setMode: (@mode) ->
       if @mode and not @model.hasPermission(@mode) or not @userInfoViews[@mode]?
         console?.log "Mode '#{@mode}' not allowed, changing to 'view'."
-        @model.goToProfile()
+        @model.view()
         return
 
       @userInfoViews[@mode].render()
@@ -80,10 +80,10 @@ define (require) ->
 
     onSuccess: () ->
       Backbone.trigger 'change', @model
-      @model.goToProfile()
+      @model.view()
 
     onCancel: () ->
-      @model.goToProfile()
+      @model.view()
 
 
   #### Profile Sidebar ####

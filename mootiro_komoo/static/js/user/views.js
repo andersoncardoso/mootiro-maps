@@ -103,7 +103,7 @@
           if (typeof console !== "undefined" && console !== null) {
             console.log("Mode '" + this.mode + "' not allowed, changing to 'view'.");
           }
-          this.model.goToProfile();
+          this.model.view();
           return;
         }
         this.userInfoViews[this.mode].render();
@@ -112,11 +112,11 @@
 
       Profile.prototype.onSuccess = function() {
         Backbone.trigger('change', this.model);
-        return this.model.goToProfile();
+        return this.model.view();
       };
 
       Profile.prototype.onCancel = function() {
-        return this.model.goToProfile();
+        return this.model.view();
       };
 
       return Profile;

@@ -3,32 +3,40 @@ define (require) ->
 
   $ = require 'jquery'
   _ = require 'underscore'
+  Backbone = require 'backbone'
 
-  class Page
-    constructor: (views={}) ->
+  class Page extends Backbone.View
+    className: 'page'
+    template: _.template require 'text!templates/main/_page.html'
+
+    initialize: ->
       @views = [
         {name: 'actionBar',   parentSelector: '#action-bar'}
         {name: 'sidebar',     parentSelector: '#sidebar'}
         {name: 'mainContent', parentSelector: '#main-content'}
       ]
-      @setViews views
+      @setViews @options.views
 
-    setViews: (views) ->
+    render: ->
+      @$el.html @template {}
+
+    setViews: (views=[]) ->
       for view in @views
         if view.instance?
           @_removeView view.instance
         view.instance = views[view.name]
 
     open: ->
+      @render()
+
       onOpen = (view) ->
         if not view then return
         onOpen v for v in view.subViews if view.subViews
         view.onOpen?()
 
       for view in @views
-        $(view.parentSelector).append view.instance?.$el
+        @$(view.parentSelector).append view.instance?.$el
         onOpen view.instance
-
 
     canClose: ->
       canClose = true
@@ -52,6 +60,7 @@ define (require) ->
       # Remove DOM and clear model/collection events
       view.remove()
       # Remove references to detached DOM elements
+      view.$el.detach()
       view.$el = undefined
       view.el = undefined
       # Remove references to model and collection
@@ -63,6 +72,8 @@ define (require) ->
       for view in @views
         @_removeView view.instance
         #view.instance = null
+      @remove()
+      @$el = undefined
 
 
   class PageManager
@@ -88,12 +99,14 @@ define (require) ->
 
       @close @currentPage
       @currentPage = page
+      $('#content').append @currentPage.$el
       @currentPage.open()
 
     close: (page) ->
       if not page then return
 
       page.close()
+      $('#content').html('')
       if @currentPage is page
         @currentPage = null
 

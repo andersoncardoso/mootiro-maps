@@ -58,7 +58,7 @@ define (require) ->
     profile: (e) ->
       e?.preventDefault()
       newModel = new @model.constructor(@model.toJSON())
-      newModel.goToProfile()
+      newModel.view()
       this
 
 
@@ -128,9 +128,8 @@ define (require) ->
 
     do: (e) ->
       e.preventDefault()
-      action = $(e.target).attr 'data-action'
-      if _.isFunction @model[action]
-        @model[action]()
+      action = if $(e.target).hasClass 'active' then 'view' else $(e.target).attr 'data-action'
+      @model[action]() if _.isFunction @model[action]
 
     setMode: (@mode) ->
       @$('.active').removeClass 'active'

@@ -54,7 +54,7 @@
         }));
       };
 
-      User.prototype.goToProfile = function() {
+      User.prototype.view = function() {
         if (this.id != null) return Backbone.trigger('open:detail', this);
       };
 

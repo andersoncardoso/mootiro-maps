@@ -99,7 +99,7 @@
         var newModel;
         if (e != null) e.preventDefault();
         newModel = new this.model.constructor(this.model.toJSON());
-        newModel.goToProfile();
+        newModel.view();
         return this;
       };
 
@@ -237,7 +237,7 @@
       ActionBar.prototype["do"] = function(e) {
         var action;
         e.preventDefault();
-        action = $(e.target).attr('data-action');
+        action = $(e.target).hasClass('active') ? 'view' : $(e.target).attr('data-action');
         if (_.isFunction(this.model[action])) return this.model[action]();
       };
 

@@ -1,14 +1,26 @@
 (function() {
+  var __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
     'use strict';
-    var $, Page, PageManager, _;
+    var $, Backbone, Page, PageManager, _;
     $ = require('jquery');
     _ = require('underscore');
-    Page = (function() {
+    Backbone = require('backbone');
+    Page = (function(_super) {
 
-      function Page(views) {
-        if (views == null) views = {};
+      __extends(Page, _super);
+
+      function Page() {
+        Page.__super__.constructor.apply(this, arguments);
+      }
+
+      Page.prototype.className = 'page';
+
+      Page.prototype.template = _.template(require('text!templates/main/_page.html'));
+
+      Page.prototype.initialize = function() {
         this.views = [
           {
             name: 'actionBar',
@@ -21,11 +33,16 @@
             parentSelector: '#main-content'
           }
         ];
-        this.setViews(views);
-      }
+        return this.setViews(this.options.views);
+      };
+
+      Page.prototype.render = function() {
+        return this.$el.html(this.template({}));
+      };
 
       Page.prototype.setViews = function(views) {
         var view, _i, _len, _ref, _results;
+        if (views == null) views = [];
         _ref = this.views;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -38,6 +55,7 @@
 
       Page.prototype.open = function() {
         var onOpen, view, _i, _len, _ref, _ref2, _results;
+        this.render();
         onOpen = function(view) {
           var v, _i, _len, _ref;
           if (!view) return;
@@ -54,7 +72,7 @@
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
-          $(view.parentSelector).append((_ref2 = view.instance) != null ? _ref2.$el : void 0);
+          this.$(view.parentSelector).append((_ref2 = view.instance) != null ? _ref2.$el : void 0);
           _results.push(onOpen(view.instance));
         }
         return _results;
@@ -95,6 +113,7 @@
         if (typeof view.onClose === "function") view.onClose();
         view.unbind();
         view.remove();
+        view.$el.detach();
         view.$el = void 0;
         view.el = void 0;
         view.model = void 0;
@@ -102,19 +121,19 @@
       };
 
       Page.prototype.close = function() {
-        var view, _i, _len, _ref, _results;
+        var view, _i, _len, _ref;
         _ref = this.views;
-        _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
-          _results.push(this._removeView(view.instance));
+          this._removeView(view.instance);
         }
-        return _results;
+        this.remove();
+        return this.$el = void 0;
       };
 
       return Page;
 
-    })();
+    })(Backbone.View);
     PageManager = (function() {
 
       function PageManager() {}
@@ -142,12 +161,14 @@
         if (!page || page === this.currentPage) return;
         this.close(this.currentPage);
         this.currentPage = page;
+        $('#content').append(this.currentPage.$el);
         return this.currentPage.open();
       };
 
       PageManager.prototype.close = function(page) {
         if (!page) return;
         page.close();
+        $('#content').html('');
         if (this.currentPage === page) return this.currentPage = null;
       };
 
