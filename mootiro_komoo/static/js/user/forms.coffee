@@ -2,8 +2,8 @@ define (require) ->
   'use strict'
 
   reForm = require 'reForm'
-  mainForms = require 'main/forms'
-  MultiWidget = mainForms.MultiWidget
+  forms = require 'core/forms'
+  MultiWidget = forms.MultiWidget
 
 
   class ContactWidget extends MultiWidget

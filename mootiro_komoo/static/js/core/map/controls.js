@@ -80,7 +80,7 @@
       SearchBox.prototype.init = function() {
         var _this = this;
         SearchBox.__super__.init.call(this);
-        return require(['map/views'], function(Views) {
+        return require(['./views'], function(Views) {
           _this.view = new Views.internal.SearchBoxView();
           _this.box.append(_this.view.render().el);
           return _this.handleViewEvents();

@@ -4,10 +4,10 @@
 
   define(function(require) {
     'use strict';
-    var ContactWidget, MultiWidget, UserInfoForm, mainForms, reForm;
+    var ContactWidget, MultiWidget, UserInfoForm, forms, reForm;
     reForm = require('reForm');
-    mainForms = require('main/forms');
-    MultiWidget = mainForms.MultiWidget;
+    forms = require('core/forms');
+    MultiWidget = forms.MultiWidget;
     ContactWidget = (function(_super) {
 
       __extends(ContactWidget, _super);

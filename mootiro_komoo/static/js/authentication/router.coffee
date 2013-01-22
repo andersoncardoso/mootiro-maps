@@ -65,8 +65,8 @@ define (require) ->
         modal_id: 'verification-modal-box'
 
     bindExternalEvents: ->
-      Backbone.on 'auth::loginRequired', @_loginRequired
-      Backbone.on 'auth::logout', @logout
+      Backbone.on 'login', @_loginRequired
+      Backbone.on 'logout', @logout
 
 
     # ============ callbacks ======================

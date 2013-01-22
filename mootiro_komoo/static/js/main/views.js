@@ -85,13 +85,13 @@
 
       UpperBar.prototype.login = function(e) {
         if (e != null) e.preventDefault();
-        Backbone.trigger('auth::loginRequired', window.location.href);
+        Backbone.trigger('login', window.location.href);
         return this;
       };
 
       UpperBar.prototype.logout = function(e) {
         if (e != null) e.preventDefault();
-        Backbone.trigger('auth::logout', window.location.href);
+        Backbone.trigger('logout', window.location.href);
         return this;
       };
 
@@ -150,7 +150,7 @@
 
       Header.prototype.root = function(e) {
         if (e != null) e.preventDefault();
-        return Backbone.trigger('main::root');
+        return Backbone.trigger('open:root');
       };
 
       return Header;

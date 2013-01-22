@@ -4,7 +4,7 @@ define (require) ->
   $ = require 'jquery'
   Backbone = require 'backbone'
 
-  pageManager = require 'page_manager'
+  pageManager = require 'core/page_manager'
   views = require './views'
 
   class Profile extends pageManager.Page

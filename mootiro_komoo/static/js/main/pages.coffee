@@ -1,7 +1,7 @@
 define (require) ->
   'use strict'
 
-  pageManager = require 'page_manager'
+  pageManager = require 'core/page_manager'
 
   root =
     render: ->

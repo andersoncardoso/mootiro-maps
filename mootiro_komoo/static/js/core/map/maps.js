@@ -56,7 +56,7 @@
           map: this
         });
         this.components = {};
-        this.addComponent('map/controls::Location');
+        this.addComponent('core/map/controls::Location');
         im = this.initGoogleMap(this.options.googleMapOptions);
         ft = this.initFeatureTypes();
         he = this.handleEvents();
@@ -473,9 +473,9 @@
 
       function UserEditor(options) {
         UserEditor.__super__.constructor.call(this, options);
-        this.addComponent('map/maptypes::CleanMapType', 'mapType');
-        this.addComponent('map/controls::DrawingManager', 'drawing');
-        this.addComponent('map/controls::SearchBox');
+        this.addComponent('core/map/maptypes::CleanMapType', 'mapType');
+        this.addComponent('core/map/controls::DrawingManager', 'drawing');
+        this.addComponent('core/map/controls::SearchBox');
       }
 
       return UserEditor;
@@ -487,15 +487,15 @@
 
       function Editor(options) {
         Editor.__super__.constructor.call(this, options);
-        this.addComponent('map/maptypes::CleanMapType');
-        this.addComponent('map/controls::SaveLocation');
-        this.addComponent('map/controls::StreetView');
-        this.addComponent('map/controls::DrawingManager');
-        this.addComponent('map/controls::DrawingControl');
-        this.addComponent('map/controls::GeometrySelector');
-        this.addComponent('map/controls::SupporterBox');
-        this.addComponent('map/controls::PerimeterSelector');
-        this.addComponent('map/controls::SearchBox');
+        this.addComponent('core/map/maptypes::CleanMapType');
+        this.addComponent('core/map/controls::SaveLocation');
+        this.addComponent('core/map/controls::StreetView');
+        this.addComponent('core/map/controls::DrawingManager');
+        this.addComponent('core/map/controls::DrawingControl');
+        this.addComponent('core/map/controls::GeometrySelector');
+        this.addComponent('core/map/controls::SupporterBox');
+        this.addComponent('core/map/controls::PerimeterSelector');
+        this.addComponent('core/map/controls::SearchBox');
       }
 
       return Editor;
@@ -531,14 +531,14 @@
 
       function StaticMap(options) {
         StaticMap.__super__.constructor.call(this, options);
-        this.addComponent('map/maptypes::CleanMapType', 'mapType');
-        this.addComponent('map/controls::AutosaveLocation');
-        this.addComponent('map/controls::StreetView');
-        this.addComponent('map/controls::Tooltip', 'tooltip');
-        this.addComponent('map/controls::InfoWindow', 'infoWindow');
-        this.addComponent('map/controls::SupporterBox');
-        this.addComponent('map/controls::LicenseBox');
-        this.addComponent('map/controls::SearchBox');
+        this.addComponent('core/map/maptypes::CleanMapType', 'mapType');
+        this.addComponent('core/map/controls::AutosaveLocation');
+        this.addComponent('core/map/controls::StreetView');
+        this.addComponent('core/map/controls::Tooltip', 'tooltip');
+        this.addComponent('core/map/controls::InfoWindow', 'infoWindow');
+        this.addComponent('core/map/controls::SupporterBox');
+        this.addComponent('core/map/controls::LicenseBox');
+        this.addComponent('core/map/controls::SearchBox');
       }
 
       StaticMap.prototype.loadGeoJson = function(geojson, panTo, attach) {
@@ -564,8 +564,8 @@
 
       function AjaxMap(options) {
         AjaxMap.__super__.constructor.call(this, options);
-        this.addComponent('map/providers::FeatureProvider', 'provider');
-        this.addComponent('map/controls::FeatureClusterer', 'clusterer', {
+        this.addComponent('core/map/providers::FeatureProvider', 'provider');
+        this.addComponent('core/map/controls::FeatureClusterer', 'clusterer', {
           featureType: 'Community',
           map: this
         });
@@ -581,10 +581,10 @@
       function AjaxEditor(options) {
         var _ref;
         AjaxEditor.__super__.constructor.call(this, options);
-        this.addComponent('map/controls::DrawingManager');
-        this.addComponent('map/controls::DrawingControl');
-        this.addComponent('map/controls::GeometrySelector');
-        this.addComponent('map/controls::PerimeterSelector');
+        this.addComponent('core/map/controls::DrawingManager');
+        this.addComponent('core/map/controls::DrawingControl');
+        this.addComponent('core/map/controls::GeometrySelector');
+        this.addComponent('core/map/controls::PerimeterSelector');
         if (!(options != null ? (_ref = options.geojson) != null ? _ref.features : void 0 : void 0)) {
           if (!this.goToSavedLocation()) this.goToUserLocation();
         }

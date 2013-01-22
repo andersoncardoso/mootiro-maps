@@ -65,7 +65,7 @@ define (require) ->
 
         init: ->
             super()
-            require ['map/views'], (Views) =>
+            require ['./views'], (Views) =>
                 @view = new Views.internal.SearchBoxView()
                 @box.append @view.render().el
                 @handleViewEvents()

@@ -41,7 +41,7 @@ define (require) ->
                         # FIXME
                         $this.parent().parent().find('.see-on-map').hide()
                         return
-                    require ['map/maps'], (maps) =>
+                    require ['core/map/maps'], (maps) =>
                         map = maps.makeMap opts
                         map.subscribe 'features_loaded', (features) =>
                             $this.trigger 'features_loaded', features

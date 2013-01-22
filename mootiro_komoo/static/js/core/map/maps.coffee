@@ -42,7 +42,7 @@ define (require) ->
             @features = Collections.makeFeatureCollectionPlus map: @
 
             @components = {}
-            @addComponent 'map/controls::Location'
+            @addComponent 'core/map/controls::Location'
 
             im = @initGoogleMap @options.googleMapOptions
             ft = @initFeatureTypes()
@@ -331,24 +331,24 @@ define (require) ->
         constructor: (options) ->
             super options
 
-            @addComponent 'map/maptypes::CleanMapType', 'mapType'
-            @addComponent 'map/controls::DrawingManager', 'drawing'
-            @addComponent 'map/controls::SearchBox'
+            @addComponent 'core/map/maptypes::CleanMapType', 'mapType'
+            @addComponent 'core/map/controls::DrawingManager', 'drawing'
+            @addComponent 'core/map/controls::SearchBox'
 
 
     class Editor extends Map
         constructor: (options) ->
             super options
 
-            @addComponent 'map/maptypes::CleanMapType'
-            @addComponent 'map/controls::SaveLocation'
-            @addComponent 'map/controls::StreetView'
-            @addComponent 'map/controls::DrawingManager'
-            @addComponent 'map/controls::DrawingControl'
-            @addComponent 'map/controls::GeometrySelector'
-            @addComponent 'map/controls::SupporterBox'
-            @addComponent 'map/controls::PerimeterSelector'
-            @addComponent 'map/controls::SearchBox'
+            @addComponent 'core/map/maptypes::CleanMapType'
+            @addComponent 'core/map/controls::SaveLocation'
+            @addComponent 'core/map/controls::StreetView'
+            @addComponent 'core/map/controls::DrawingManager'
+            @addComponent 'core/map/controls::DrawingControl'
+            @addComponent 'core/map/controls::GeometrySelector'
+            @addComponent 'core/map/controls::SupporterBox'
+            @addComponent 'core/map/controls::PerimeterSelector'
+            @addComponent 'core/map/controls::SearchBox'
 
 
     class Preview extends Map
@@ -368,14 +368,14 @@ define (require) ->
         constructor: (options) ->
             super options
 
-            @addComponent 'map/maptypes::CleanMapType', 'mapType'
-            @addComponent 'map/controls::AutosaveLocation'
-            @addComponent 'map/controls::StreetView'
-            @addComponent 'map/controls::Tooltip', 'tooltip'
-            @addComponent 'map/controls::InfoWindow', 'infoWindow'
-            @addComponent 'map/controls::SupporterBox'
-            @addComponent 'map/controls::LicenseBox'
-            @addComponent 'map/controls::SearchBox'
+            @addComponent 'core/map/maptypes::CleanMapType', 'mapType'
+            @addComponent 'core/map/controls::AutosaveLocation'
+            @addComponent 'core/map/controls::StreetView'
+            @addComponent 'core/map/controls::Tooltip', 'tooltip'
+            @addComponent 'core/map/controls::InfoWindow', 'infoWindow'
+            @addComponent 'core/map/controls::SupporterBox'
+            @addComponent 'core/map/controls::LicenseBox'
+            @addComponent 'core/map/controls::SearchBox'
 
         loadGeoJson: (geojson, panTo = false, attach = true) ->
             features = super geojson, panTo, attach
@@ -388,18 +388,18 @@ define (require) ->
         constructor: (options) ->
             super options
 
-            @addComponent 'map/providers::FeatureProvider', 'provider'
-            @addComponent 'map/controls::FeatureClusterer', 'clusterer', {featureType: 'Community', map: this}
+            @addComponent 'core/map/providers::FeatureProvider', 'provider'
+            @addComponent 'core/map/controls::FeatureClusterer', 'clusterer', {featureType: 'Community', map: this}
 
 
     class AjaxEditor extends AjaxMap
         constructor: (options) ->
             super options
 
-            @addComponent 'map/controls::DrawingManager'
-            @addComponent 'map/controls::DrawingControl'
-            @addComponent 'map/controls::GeometrySelector'
-            @addComponent 'map/controls::PerimeterSelector'
+            @addComponent 'core/map/controls::DrawingManager'
+            @addComponent 'core/map/controls::DrawingControl'
+            @addComponent 'core/map/controls::GeometrySelector'
+            @addComponent 'core/map/controls::PerimeterSelector'
 
             if not options?.geojson?.features
                 if not @goToSavedLocation()

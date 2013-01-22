@@ -1,1 +1,1 @@
-(function(){define(["require","page_manager"],function(e){var t,n,r;return n=e("page_manager"),r={render:function(){var e;return e=new n.Page,n.open(e)}},t={render:function(){var e;return e=new n.Page,n.open(e)}},{root:r,error:t}})}).call(this);
+(function(){define(["require","core/page_manager"],function(e){var t,n,r;return n=e("core/page_manager"),r={render:function(){var e;return e=new n.Page,n.open(e)}},t={render:function(){var e;return e=new n.Page,n.open(e)}},{root:r,error:t}})}).call(this);

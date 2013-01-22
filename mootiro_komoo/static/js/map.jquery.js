@@ -54,7 +54,7 @@
               $this.parent().parent().find('.see-on-map').hide();
               return;
             }
-            return require(['map/maps'], function(maps) {
+            return require(['core/map/maps'], function(maps) {
               var map;
               map = maps.makeMap(opts);
               map.subscribe('features_loaded', function(features) {
