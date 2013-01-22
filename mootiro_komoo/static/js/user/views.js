@@ -103,7 +103,7 @@
           if (typeof console !== "undefined" && console !== null) {
             console.log("Mode '" + this.mode + "' not allowed, changing to 'view'.");
           }
-          Backbone.trigger('user::profile', this.model.id);
+          this.model.goToProfile();
           return;
         }
         this.userInfoViews[this.mode].render();
@@ -111,11 +111,12 @@
       };
 
       Profile.prototype.onSuccess = function() {
-        return Backbone.trigger('user::profile user::edited', this.model.id);
+        Backbone.trigger('change', this.model);
+        return this.model.goToProfile();
       };
 
       Profile.prototype.onCancel = function() {
-        return Backbone.trigger('user::profile', this.model.id);
+        return this.model.goToProfile();
       };
 
       return Profile;
@@ -198,7 +199,6 @@
         if (e != null) {
           if (typeof e.preventDefault === "function") e.preventDefault();
         }
-        Backbone.trigger('map::see-on-map', this.model);
         return this;
       };
 

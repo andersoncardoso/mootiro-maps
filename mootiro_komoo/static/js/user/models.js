@@ -55,11 +55,11 @@
       };
 
       User.prototype.goToProfile = function() {
-        return Backbone.trigger('user::profile', this.id);
+        if (this.id != null) return Backbone.trigger('open:detail', this);
       };
 
       User.prototype.edit = function() {
-        return Backbone.trigger('user::edit', this.id);
+        if (this.id != null) return Backbone.trigger('open:edit', this);
       };
 
       User.prototype.isSuperuser = function() {

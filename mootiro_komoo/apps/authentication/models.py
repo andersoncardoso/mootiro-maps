@@ -208,7 +208,10 @@ class AnonymousUser(object):
     id = None
 
     def to_dict(self):
-        return {}
+        return {'id': None}
+
+    def to_cleaned_dict(self, *args, **kwargs):
+        return self.to_dict()
 
     # dummy fix for django weirdness =/
     def get_and_delete_messages(self):

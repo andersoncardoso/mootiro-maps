@@ -4,42 +4,20 @@
 
   define(function(require) {
     'use strict';
-    var $, Backbone, Edit, Profile, getUser, pageManager, views;
+    var $, Backbone, Edit, Profile, pageManager, views;
     $ = require('jquery');
     Backbone = require('backbone');
     pageManager = require('page_manager');
     views = require('./views');
-    getUser = function(id) {
-      var User, user;
-      if (!(id != null)) {
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('User id not specified');
-        }
-        return;
-      }
-      User = require('./models').User;
-      user = new User();
-      user.id = id;
-      user.on('request', function(model) {
-        return Backbone.trigger('app::working', model);
-      });
-      user.on('sync', function(model, resp, options) {
-        return Backbone.trigger('app::done', model);
-      });
-      user.on('error', function(model, error) {
-        if (error.status != null) return Backbone.trigger('app::done', model);
-      });
-      return user;
-    };
     Profile = (function(_super) {
 
       __extends(Profile, _super);
 
-      function Profile(userId, mode) {
-        this.userId = userId;
+      function Profile(model, mode) {
+        this.model = model;
         this.mode = mode != null ? mode : 'view';
         Profile.__super__.constructor.apply(this, arguments);
-        this.id = "user::profile::" + this.userId;
+        this.id = "user::profile::" + this.model.id;
       }
 
       Profile.prototype.setMode = function(mode) {
@@ -53,11 +31,11 @@
           }
         }
         this.mode = mode;
-        if (mode === null) return Backbone.trigger('user::profile', this.userId);
+        if (mode === null) return this.model.goToProfile();
       };
 
       Profile.prototype.render = function() {
-        var dfd, user, _ref,
+        var dfd, _ref,
           _this = this;
         dfd = new $.Deferred();
         if (((_ref = pageManager.currentPage) != null ? _ref.id : void 0) === this.id) {
@@ -65,12 +43,11 @@
           dfd.resolve();
           return dfd.promise();
         }
-        user = getUser(this.userId);
-        window.user = user;
-        user.fetch().done(function() {
+        window.user = this.model;
+        this.model.fetch().done(function() {
           var data;
           data = {
-            model: user,
+            model: _this.model,
             mode: _this.mode
           };
           _this.setViews({
@@ -93,16 +70,15 @@
 
       __extends(Edit, _super);
 
-      function Edit(userId, mode) {
+      function Edit(model, mode) {
         if (mode == null) mode = 'edit';
-        Edit.__super__.constructor.call(this, userId, mode);
+        Edit.__super__.constructor.call(this, model, mode);
       }
 
       return Edit;
 
     })(Profile);
     return {
-      getUser: getUser,
       Profile: Profile,
       Edit: Edit
     };

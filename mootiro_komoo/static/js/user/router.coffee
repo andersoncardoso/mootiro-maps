@@ -4,15 +4,16 @@ define (require) ->
   _ = require 'underscore'
   Backbone = require 'backbone'
 
-  pages = require('./pages')
-
   pageManager = require 'page_manager'
+
+  pages = require './pages'
+  User = require('./models').User
 
 
   class UserRouter extends Backbone.Router
     routes:
       'users(/)': 'user'
-      'users/:id(/)': 'profile'
+      'users/:id(/)': 'detail'
       'users/:id/edit(/)': 'edit'
 
     initialize: ->
@@ -20,31 +21,39 @@ define (require) ->
       @bindExternalEvents()
 
     bindExternalEvents: ->
-      Backbone.on 'user::profile', @profile
-      Backbone.on 'user::edit', @edit
+      Backbone.on 'open:detail', @detail
+      Backbone.on 'open:edit', @edit
 
     goTo: (url, page) ->
       $.when(pageManager.canClose()).done =>
         @navigate url
         $.when(page.render()).fail (e) ->
-          Backbone.trigger 'main::error', e.status, e.statusText
+          Backbone.trigger 'error', e.status, e.statusText
 
     user: ->
-      if not KomooNS?.isAuthenticated
-        url = window.location
-        if url.search and url.search.indexOf('next') > -1
-          # get search parameters into a object
-          queryString = {}
-          url.search.replace new RegExp("([^?=&]+)(=([^&]*))?", "g"),
-            ($0, $1, $2, $3) -> queryString[$1] = $3
-          next = queryString['next']
-        Backbone.trigger 'auth::loginRequired', next
 
-    profile: (id) ->
-      @goTo "users/#{id}", new pages.Profile(id)
+    getUser: (user) ->
+      # Create the user instance
+      if not user?
+        console?.log 'User id not specified'
+        return
 
-    edit: (id) ->
-      @goTo "users/#{id}/edit", new pages.Edit(id)
+      if _.isNumber(user) or _.isString(user)
+        user = new User id: user
+
+      if not user instanceof User
+        return
+
+      return user
+
+    detail: (model) ->
+      user = @getUser model
+      console.log '--->', (model is user), [model.id, user.id]
+      @goTo "users/#{user.id}", new pages.Profile(user)
+
+    edit: (model) ->
+      user = @getUser model
+      @goTo "users/#{user.id}/edit", new pages.Edit(user)
 
 
   new UserRouter()

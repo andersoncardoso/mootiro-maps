@@ -36,9 +36,9 @@ define (require) ->
     initialize: () ->
       _.bindAll this
       @listenTo @model, 'change', @render
-      @listenTo Backbone, 'user::edited', (id) =>
+      @listenTo Backbone, 'change', (model) =>
         # Update the upper bar when logged user is edited
-        @model.fetch() if @model.id is id
+        @model.fetch() if @model.id is model.id and @model.constructor is model.constructor
       @render()
 
     render: ->
@@ -57,7 +57,8 @@ define (require) ->
 
     profile: (e) ->
       e?.preventDefault()
-      @model.goToProfile()
+      newModel = new @model.constructor(@model.toJSON())
+      newModel.goToProfile()
       this
 
 
@@ -114,6 +115,7 @@ define (require) ->
     initialize: ->
       _.bindAll this
       @mode = @options.mode
+      @listenTo Backbone, 'login logout change:session', @render
       @render()
 
     render: ->
