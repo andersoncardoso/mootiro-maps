@@ -79,180 +79,183 @@ hr {
 }
 
 /** Main content container **/
-body > .content-box > .page {
-    .clearfix;
-    width: @content-width;
+body > .content-box {
     min-height: 300px;
-    margin: 0 auto 10px;
 
-    /* Left bar with icons */
-    > .action-bar {
-        .column(1);
+    > .page {
+        .clearfix;
+        width: @content-width;
+        margin: 0 auto 10px;
 
-        @size: 35px;
+        /* Left bar with icons */
+        > .action-bar {
+            .column(1);
 
-        ul {
-            padding: 0px;
-            text-align: center;
-        }
+            @size: 35px;
 
-        a {
-            .border-radius();
-
-            width: @size;
-            height: @size;
-            display: block;
-            overflow: hidden;
-            margin: 1px 0px;
-            padding: 7px 5px 8px 10px;
-            /* Text should be invisible */
-            color: transparent;
-
-            &.active,
-            &:active {
-                .transition(all, 0s);
-                background-color: @action-active-bg;
-            }
-
-        }
-
-        /* Little hack to force action bar width */
-        &:after {
-            content: ".";
-            color: transparent;
-        }
-
-
-        /* Actions */
-        @icon-size: 16px;
-        @icon-sprite: 'sprite.png';
-        .delete {
-            .action-item(@icon-sprite, @icon-size, 0);
-        }
-        .rate,
-        .star {
-            .action-item(@icon-sprite, @icon-size, 1);
-        }
-        .report {
-            .action-item(@icon-sprite, @icon-size, 2);
-        }
-        .feed {
-            .action-item(@icon-sprite, @icon-size, 3);
-        }
-        .discuss {
-            .action-item(@icon-sprite, @icon-size, 4);
-        }
-        .history {
-            .action-item(@icon-sprite, @icon-size, 5);
-        }
-        .edit {
-            .action-item(@icon-sprite, @icon-size, 6);
-        }
-    }
-
-
-    /** Sidebar **/
-    > .sidebar {
-        .column(5);
-
-        float: left;
-
-        > *,
-        > div > * {
-            margin-bottom: 15px;
-        }
-
-        /* Little hack to force sidebar width */
-        &:after {
-            content: ".";
-            color: transparent;
-        }
-
-        > .button,
-        > div > .button {
-            display: block;
-            margin: 15px 0;
-        }
-
-    }
-
-
-    /** Main content **/
-    > .main {
-        .column(16);
-
-        float: right;
-
-        > .content {
-            padding-left: 10px;
-
-            > p {
-                clear: both;
-            }
-
-            h1.title {
-                margin-top: 0px;
-            }
-
-            article {
-                margin-top: 15px !important;
-                margin-bottom: 15px !important;
-
-                h1 {
-                    .h2-font;
-
-                    margin: 10px 0px 10px;
-                }
-
-                > .content {
-                    margin: 0px;
-                }
-            }
-
-            .contact-info {
-                .clearfix;
-
-                margin: 0px;
+            ul {
                 padding: 0px;
-
-                > li,
-                > .contact {
-                    .row(16);
-                    .column(5, 16);
-
-                    margin: 0px 15px 5px 0px;
-                }
+                text-align: center;
             }
 
-            #user-info-container {
-                .inline-form {
-                   margin-top: -50px;
+            a {
+                .border-radius();
 
-                    > .field-container:first-child,
+                width: @size;
+                height: @size;
+                display: block;
+                overflow: hidden;
+                margin: 1px 0px;
+                padding: 7px 5px 8px 10px;
+                /* Text should be invisible */
+                color: transparent;
+
+                &.active,
+                &:active {
+                    .transition(all, 0s);
+                    background-color: @action-active-bg;
+                }
+
+            }
+
+            /* Little hack to force action bar width */
+            &:after {
+                content: ".";
+                color: transparent;
+            }
+
+
+            /* Actions */
+            @icon-size: 16px;
+            @icon-sprite: 'sprite.png';
+            .delete {
+                .action-item(@icon-sprite, @icon-size, 0);
+            }
+            .rate,
+            .star {
+                .action-item(@icon-sprite, @icon-size, 1);
+            }
+            .report {
+                .action-item(@icon-sprite, @icon-size, 2);
+            }
+            .feed {
+                .action-item(@icon-sprite, @icon-size, 3);
+            }
+            .discuss {
+                .action-item(@icon-sprite, @icon-size, 4);
+            }
+            .history {
+                .action-item(@icon-sprite, @icon-size, 5);
+            }
+            .edit {
+                .action-item(@icon-sprite, @icon-size, 6);
+            }
+        }
+
+
+        /** Sidebar **/
+        > .sidebar {
+            .column(5);
+
+            float: left;
+
+            > *,
+            > div > * {
+                margin-bottom: 15px;
+            }
+
+            /* Little hack to force sidebar width */
+            &:after {
+                content: ".";
+                color: transparent;
+            }
+
+            > .button,
+            > div > .button {
+                display: block;
+                margin: 15px 0;
+            }
+
+        }
+
+
+        /** Main content **/
+        > .main {
+            .column(16);
+
+            float: right;
+
+            > .content {
+                padding-left: 10px;
+
+                > p {
+                    clear: both;
+                }
+
+                h1.title {
+                    margin-top: 0px;
+                }
+
+                article {
+                    margin-top: 15px !important;
+                    margin-bottom: 15px !important;
+
+                    h1 {
+                        .h2-font;
+
+                        margin: 10px 0px 10px;
+                    }
+
                     > .content {
-                        margin-top: 45px;
+                        margin: 0px;
                     }
                 }
-            }
 
-            .user-updates {
-                .border-radius(10px);
-                .border-fake(1px, @main-bg);
+                .contact-info {
+                    .clearfix;
 
-                padding: 5px 0px;
-                margin-top: 50px !important;
+                    margin: 0px;
+                    padding: 0px;
 
-                h1 {
-                    margin: 5px 10px;
+                    > li,
+                    > .contact {
+                        .row(16);
+                        .column(5, 16);
+
+                        margin: 0px 15px 5px 0px;
+                    }
                 }
 
-                .list {
-                    min-height: 275px;
+                #user-info-container {
+                    .inline-form {
+                       margin-top: -50px;
+
+                        > .field-container:first-child,
+                        > .content {
+                            margin-top: 45px;
+                        }
+                    }
                 }
 
+                .user-updates {
+                    .border-radius(10px);
+                    .border-fake(1px, @main-bg);
+
+                    padding: 5px 0px;
+                    margin-top: 50px !important;
+
+                    h1 {
+                        margin: 5px 10px;
+                    }
+
+                    .list {
+                        min-height: 275px;
+                    }
+
+                }
             }
+
         }
-
     }
 }
 

@@ -106,10 +106,12 @@ hr {
   background-color: #fff89e;
 }
 /** Main content container **/
+body > .content-box {
+  min-height: 300px;
+}
 body > .content-box > .page {
   *zoom: 1;
   width: 1150px;
-  min-height: 300px;
   margin: 0 auto 10px;
   /* Left bar with icons */
 
