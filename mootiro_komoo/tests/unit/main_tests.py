@@ -2,13 +2,12 @@
 from __future__ import unicode_literals
 import unittest
 import datetime
-from ..test_utils import setup_env, create_test_user
+from ..test_utils import setup_env, create_test_user, const
 setup_env()
 
-from main.models import CommonDataMixin, GenericRelation, GenericRef
+from main.utils import filter_dict
+from main.models import CommonDataMixin, GenericRelation
 from tests.models import TestModelA, TestModelB, TestCommonObjectModel
-
-DATETIME_OBJ = datetime.datetime(2012, 12, 14, 15, 23, 30, 0)
 
 
 class MyClass(CommonDataMixin):
@@ -135,7 +134,7 @@ class GenericRelationsTest(unittest.TestCase):
         a1.relations.add(b)
 
         relations_with_TestModelA = a1.relations.filter_by_model(TestModelA)
-        self.assertEquals(set([(a2, ''), (a3, ''), ]), 
+        self.assertEquals(set([(a2, ''), (a3, ''), ]),
                           set(relations_with_TestModelA))
 
         relations_with_TestModelB = a1.relations.filter_by_model(TestModelB)
@@ -199,19 +198,12 @@ class CommonObjectTestCase(unittest.TestCase):
             name='test_object',
             description='test test',
             creator=self.test_user,
-            creation_date=DATETIME_OBJ
+            creation_date=const.DATETIME_OBJ
         )
         obj.save()
         obj.tags = {'common': ['tagA', ], 'target_audience': ['tagB', ]}
         obj.save()
         return obj
-
-    def _remove_unecessary_data(self, data):
-        keys = ['last_update', 'creation_date', 'id']
-        for k in keys:
-            if k in data:
-                del data[k]
-        return data
 
     def to_dict_test(self):
         co = TestCommonObjectModel()
@@ -219,7 +211,8 @@ class CommonObjectTestCase(unittest.TestCase):
 
         obj = self._create_obj()
         expected = self.expected_dict
-        obj_dict = self._remove_unecessary_data(obj.to_dict())
+        obj_dict = filter_dict(obj.to_dict(),
+                               ['last_update', 'creation_date', 'id'])
         self.assertDictEqual(expected, obj_dict)
 
     def from_dict_test(self):
@@ -228,8 +221,10 @@ class CommonObjectTestCase(unittest.TestCase):
         obj.from_dict(self.expected_dict)
         obj.save()
 
-        expected = self._remove_unecessary_data(self.expected_dict)
-        obj_dict = self._remove_unecessary_data(obj.to_dict())
+        expected = filter_dict(self.expected_dict,
+                               ['last_update', 'creation_date', 'id'])
+        obj_dict = filter_dict(obj.to_dict(),
+                               ['last_update', 'creation_date', 'id'])
         self.assertDictEqual(expected, obj_dict)
 
     def is_valid_test(self):

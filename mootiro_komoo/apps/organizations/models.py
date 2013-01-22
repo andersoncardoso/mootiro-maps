@@ -6,7 +6,7 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
 from main.models import CommonObject
-from main.utils import build_obj_from_dict
+from main.utils import build_obj_from_dict, filter_dict
 from komoo_map.models import POLYGON, POINT
 
 
@@ -50,9 +50,9 @@ class Organization(CommonObject):
 
     # ================== utils ============================
     def from_dict(self, data):
-        super(Organization, self).from_json(data)
         keys = ['organization_type', ]
         build_obj_from_dict(self, data, keys)
+        super(Organization, self).from_dict(data)
 
     def to_dict(self):
         data = super(Organization, self).to_dict()
