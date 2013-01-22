@@ -38,6 +38,8 @@ urlpatterns += patterns('authentication.api',
 
         url(r'^api/users/(?P<id_>\d+)/?$', UsersHandler.dispatch,
                 name='user_info_api'),
+        url(r'^api/users/(me)/?$', UsersHandler.dispatch,
+                name='logged_user_info_api'),
         url(r'^api/users/(?P<id_>\d+)/update/?$', UserUpdateHandler.dispatch,
                 name='user_update_api'),
 )

@@ -68,8 +68,10 @@
         var _this = this;
         _.bindAll(this);
         this.listenTo(this.model, 'change', this.render);
-        this.listenTo(Backbone, 'user::edited', function(id) {
-          if (_this.model.id === id) return _this.model.fetch();
+        this.listenTo(Backbone, 'change', function(model) {
+          if (_this.model.id === model.id && _this.model.constructor === model.constructor) {
+            return _this.model.fetch();
+          }
         });
         return this.render();
       };
@@ -94,8 +96,10 @@
       };
 
       UpperBar.prototype.profile = function(e) {
+        var newModel;
         if (e != null) e.preventDefault();
-        this.model.goToProfile();
+        newModel = new this.model.constructor(this.model.toJSON());
+        newModel.goToProfile();
         return this;
       };
 
@@ -216,6 +220,7 @@
       ActionBar.prototype.initialize = function() {
         _.bindAll(this);
         this.mode = this.options.mode;
+        this.listenTo(Backbone, 'login logout change:session', this.render);
         return this.render();
       };
 

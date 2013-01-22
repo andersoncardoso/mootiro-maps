@@ -72,17 +72,18 @@ define (require) ->
     setMode: (@mode) ->
       if @mode and not @model.hasPermission(@mode) or not @userInfoViews[@mode]?
         console?.log "Mode '#{@mode}' not allowed, changing to 'view'."
-        Backbone.trigger 'user::profile', @model.id
+        @model.goToProfile()
         return
 
       @userInfoViews[@mode].render()
       @render()
 
     onSuccess: () ->
-      Backbone.trigger 'user::profile user::edited', @model.id
+      Backbone.trigger 'change', @model
+      @model.goToProfile()
 
     onCancel: () ->
-      Backbone.trigger 'user::profile', @model.id
+      @model.goToProfile()
 
 
   #### Profile Sidebar ####
@@ -129,7 +130,6 @@ define (require) ->
 
     seeOnMap: (e) ->
       e?.preventDefault?()
-      Backbone.trigger 'map::see-on-map', @model
       this
 
 

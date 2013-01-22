@@ -25,10 +25,10 @@ define (require) ->
       return @updates ? (@updates = new Updates([], user: this))
 
     goToProfile: ->
-      Backbone.trigger 'user::profile', @id
+      Backbone.trigger 'open:detail', this if @id?
 
     edit: ->
-      Backbone.trigger 'user::edit', @id
+      Backbone.trigger 'open:edit', this if @id?
 
     isSuperuser: ->
       # TODO: implement

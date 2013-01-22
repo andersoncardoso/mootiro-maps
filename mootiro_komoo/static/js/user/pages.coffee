@@ -7,39 +7,17 @@ define (require) ->
   pageManager = require 'page_manager'
   views = require './views'
 
-  getUser = (id) ->
-    if not id?
-      console?.log 'User id not specified'
-      return
-
-    # Create the user instance
-    User = require('./models').User
-    user = new User()
-    user.id = id
-
-    # Display and hide the working feedback
-    user.on 'request', (model) ->
-      Backbone.trigger 'app::working', model
-    user.on 'sync', (model, resp, options) ->
-      Backbone.trigger 'app::done', model
-    user.on 'error', (model, error) ->
-      if error.status?
-        Backbone.trigger 'app::done', model
-
-    return user
-
-
   class Profile extends pageManager.Page
-    constructor: (@userId, @mode='view') ->
+    constructor: (@model, @mode='view') ->
       super
-      @id = "user::profile::#{@userId}"
+      @id = "user::profile::#{@model.id}"
 
     setMode: (mode) ->
       if @mode is mode and mode is 'edit' then mode = null
       view.instance?.setMode?(mode) for view in @views
       @mode = mode
 
-      if mode is null then Backbone.trigger 'user::profile', @userId
+      if mode is null then @model.goToProfile()
 
     render: ->
       # Deferred object to router know when the page is ready or if occurred
@@ -52,13 +30,12 @@ define (require) ->
         return dfd.promise()
 
       # Get the user
-      user = getUser @userId
-      window.user = user
-      user.fetch().done =>
+      window.user = @model
+      @model.fetch().done =>
         # Use Page class and page manager to avoid memory leak and centralize some
         # common tasks
         data =
-          model: user
+          model: @model
           mode: @mode
 
         @setViews
@@ -76,9 +53,8 @@ define (require) ->
 
 
   class Edit extends Profile
-    constructor: (userId, mode='edit') ->
-      super userId, mode
+    constructor: (model, mode='edit') ->
+      super model, mode
 
-  getUser: getUser
   Profile: Profile
   Edit: Edit

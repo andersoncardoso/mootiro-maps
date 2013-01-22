@@ -4,11 +4,12 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, UserRouter, pageManager, pages, _;
+    var Backbone, User, UserRouter, pageManager, pages, _;
     _ = require('underscore');
     Backbone = require('backbone');
-    pages = require('./pages');
     pageManager = require('page_manager');
+    pages = require('./pages');
+    User = require('./models').User;
     UserRouter = (function(_super) {
 
       __extends(UserRouter, _super);
@@ -19,7 +20,7 @@
 
       UserRouter.prototype.routes = {
         'users(/)': 'user',
-        'users/:id(/)': 'profile',
+        'users/:id(/)': 'detail',
         'users/:id/edit(/)': 'edit'
       };
 
@@ -29,8 +30,8 @@
       };
 
       UserRouter.prototype.bindExternalEvents = function() {
-        Backbone.on('user::profile', this.profile);
-        return Backbone.on('user::edit', this.edit);
+        Backbone.on('open:detail', this.detail);
+        return Backbone.on('open:edit', this.edit);
       };
 
       UserRouter.prototype.goTo = function(url, page) {
@@ -38,32 +39,40 @@
         return $.when(pageManager.canClose()).done(function() {
           _this.navigate(url);
           return $.when(page.render()).fail(function(e) {
-            return Backbone.trigger('main::error', e.status, e.statusText);
+            return Backbone.trigger('error', e.status, e.statusText);
           });
         });
       };
 
-      UserRouter.prototype.user = function() {
-        var next, queryString, url;
-        if (!(typeof KomooNS !== "undefined" && KomooNS !== null ? KomooNS.isAuthenticated : void 0)) {
-          url = window.location;
-          if (url.search && url.search.indexOf('next') > -1) {
-            queryString = {};
-            url.search.replace(new RegExp("([^?=&]+)(=([^&]*))?", "g"), function($0, $1, $2, $3) {
-              return queryString[$1] = $3;
-            });
-            next = queryString['next'];
+      UserRouter.prototype.user = function() {};
+
+      UserRouter.prototype.getUser = function(user) {
+        if (!(user != null)) {
+          if (typeof console !== "undefined" && console !== null) {
+            console.log('User id not specified');
           }
-          return Backbone.trigger('auth::loginRequired', next);
+          return;
         }
+        if (_.isNumber(user) || _.isString(user)) {
+          user = new User({
+            id: user
+          });
+        }
+        if (!user instanceof User) return;
+        return user;
       };
 
-      UserRouter.prototype.profile = function(id) {
-        return this.goTo("users/" + id, new pages.Profile(id));
+      UserRouter.prototype.detail = function(model) {
+        var user;
+        user = this.getUser(model);
+        console.log('--->', model === user, [model.id, user.id]);
+        return this.goTo("users/" + user.id, new pages.Profile(user));
       };
 
-      UserRouter.prototype.edit = function(id) {
-        return this.goTo("users/" + id + "/edit", new pages.Edit(id));
+      UserRouter.prototype.edit = function(model) {
+        var user;
+        user = this.getUser(model);
+        return this.goTo("users/" + user.id + "/edit", new pages.Edit(user));
       };
 
       return UserRouter;
