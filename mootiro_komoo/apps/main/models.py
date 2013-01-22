@@ -101,24 +101,19 @@ class CommonDataMixin(models.Model, BaseDAOMixin):
 
     def from_dict(self, data):
         keys = [
-            'name', 'description', 'creator', 'last_editor',
+            'name', 'description', 'creator', 'last_editor', 'creation_date',
             'last_update', 'extra_data']
         date_keys = ['creation_date', 'last_update']
         ignore_keys = ['id', ]
 
         if self.id:
             keys.append('tags')
-            keys.append('creation_date')
         else:
             self._postponed = getattr(self, '_postponed', [])
 
             self._postponed.append(
                     ('tags', data.get('tags', {'common': []})))
             ignore_keys.append('tags')
-
-            self._postponed.append(
-                    ('creation_date', data.get('creation_date', None)))
-            ignore_keys.append('creation_date')
 
         build_obj_from_dict(self, data, keys, date_keys,
                             ignore_keys=ignore_keys)
@@ -176,6 +171,11 @@ class GenericRelation(BaseModel):
     obj2 = models.ForeignKey(GenericRef, related_name='relations_for_obj2')
 
     relation_type = models.CharField(max_length=1024, null=True, blank=True)
+
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['creation_date', ]
 
     @classmethod
     def has_relation(cls, obj1, obj2):

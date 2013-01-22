@@ -51,7 +51,7 @@ def ensure_empty_db():
 
 def create_test_user():
     """utility function for creating a test user"""
-    User.objects.all().delete()
+    # User.objects.all().delete()
     user = User()
     user.id = 1
     user.name = 'Test User'
@@ -61,7 +61,6 @@ def create_test_user():
         {'type': 'phone', 'value':'1234567890'},
         {'type': 'skype', 'value': 'skype_from_test_user'},
     ]
-    user.save()
     user.creation_date = datetime.datetime(2012, 12, 14, 15, 23, 30, 0)
     user.save()
     return user
