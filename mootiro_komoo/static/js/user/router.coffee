@@ -4,7 +4,7 @@ define (require) ->
   _ = require 'underscore'
   Backbone = require 'backbone'
 
-  pageManager = require 'page_manager'
+  pageManager = require 'core/page_manager'
 
   pages = require './pages'
   User = require('./models').User

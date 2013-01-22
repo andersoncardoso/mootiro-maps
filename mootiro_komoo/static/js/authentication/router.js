@@ -78,8 +78,8 @@
       };
 
       LoginApp.prototype.bindExternalEvents = function() {
-        Backbone.on('auth::loginRequired', this._loginRequired);
-        return Backbone.on('auth::logout', this.logout);
+        Backbone.on('login', this._loginRequired);
+        return Backbone.on('logout', this.logout);
       };
 
       LoginApp.prototype.registerLinkCB = function() {

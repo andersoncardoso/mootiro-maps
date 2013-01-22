@@ -1,4 +1,4 @@
-define ['map/geometries'], (geometries) ->
+define ['core/map/geometries'], (geometries) ->
 
     module 'Map Geometries'
 

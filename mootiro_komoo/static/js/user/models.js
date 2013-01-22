@@ -7,7 +7,7 @@
     var Backbone, PermissionMixin, Updates, User, urls, _;
     _ = require('underscore');
     Backbone = require('backbone');
-    PermissionMixin = require('main/mixins').PermissionMixin;
+    PermissionMixin = require('core/mixins').PermissionMixin;
     Updates = require('./collections').PaginatedUpdates;
     urls = require('urls');
     User = (function(_super) {

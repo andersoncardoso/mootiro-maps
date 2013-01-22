@@ -3,7 +3,7 @@ define (require) ->
 
   _ = require 'underscore'
   Backbone = require 'backbone'
-  PermissionMixin = require('main/mixins').PermissionMixin
+  PermissionMixin = require('core/mixins').PermissionMixin
   Updates = require('./collections').PaginatedUpdates
   urls = require 'urls'
 

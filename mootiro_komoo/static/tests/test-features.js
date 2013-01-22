@@ -1,6 +1,6 @@
 (function() {
 
-  require(['map/features'], function(features) {
+  require(['core/map/features'], function(features) {
     var _this = this;
     module('Map Features');
     test('Basic requirements', function() {

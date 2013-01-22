@@ -1,4 +1,4 @@
-require ['map/features'], (features) ->
+require ['core/map/features'], (features) ->
 
     module 'Map Features'
 

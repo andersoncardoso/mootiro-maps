@@ -1,6 +1,6 @@
 (function() {
 
-  define(['map/geometries'], function(geometries) {
+  define(['core/map/geometries'], function(geometries) {
     module('Map Geometries');
     test('Basic requirements', function() {
       expect(2);

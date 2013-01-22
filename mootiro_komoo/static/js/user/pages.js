@@ -7,7 +7,7 @@
     var $, Backbone, Edit, Profile, pageManager, views;
     $ = require('jquery');
     Backbone = require('backbone');
-    pageManager = require('page_manager');
+    pageManager = require('core/page_manager');
     views = require('./views');
     Profile = (function(_super) {
 

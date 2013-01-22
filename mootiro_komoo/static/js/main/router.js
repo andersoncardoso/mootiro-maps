@@ -7,7 +7,7 @@
     var Backbone, MainRouter, pageManager, pages, _;
     _ = require('underscore');
     Backbone = require('backbone');
-    pageManager = require('page_manager');
+    pageManager = require('core/page_manager');
     pages = require('./pages');
     MainRouter = (function(_super) {
 
@@ -27,8 +27,8 @@
       };
 
       MainRouter.prototype.bindExternalEvents = function() {
-        Backbone.on('main::root', this.root);
-        return Backbone.on('main::error', this.error);
+        Backbone.on('open:root', this.root);
+        return Backbone.on('open:error', this.error);
       };
 
       MainRouter.prototype.goTo = function(url, page) {
@@ -36,7 +36,7 @@
         return $.when(pageManager.canClose()).done(function() {
           _this.navigate(url);
           return $.when(page.render()).fail(function(e) {
-            return Backbone.trigger('main::error', e.status, e.statusText);
+            return Backbone.trigger('open:error', e.status, e.statusText);
           });
         });
       };

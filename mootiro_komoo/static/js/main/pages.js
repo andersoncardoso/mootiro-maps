@@ -3,7 +3,7 @@
   define(function(require) {
     'use strict';
     var error, pageManager, root;
-    pageManager = require('page_manager');
+    pageManager = require('core/page_manager');
     root = {
       render: function() {
         var rootPage;

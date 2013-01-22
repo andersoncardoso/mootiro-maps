@@ -47,12 +47,12 @@ define (require) ->
 
     login: (e) ->
       e?.preventDefault()
-      Backbone.trigger 'auth::loginRequired', window.location.href
+      Backbone.trigger 'login', window.location.href
       this
 
     logout: (e) ->
       e?.preventDefault()
-      Backbone.trigger 'auth::logout', window.location.href
+      Backbone.trigger 'logout', window.location.href
       this
 
     profile: (e) ->
@@ -83,7 +83,7 @@ define (require) ->
 
     root: (e) ->
       e?.preventDefault()
-      Backbone.trigger 'main::root'
+      Backbone.trigger 'open:root'
 
 
   class Footer extends Backbone.View

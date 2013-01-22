@@ -7,7 +7,7 @@
     var Backbone, User, UserRouter, pageManager, pages, _;
     _ = require('underscore');
     Backbone = require('backbone');
-    pageManager = require('page_manager');
+    pageManager = require('core/page_manager');
     pages = require('./pages');
     User = require('./models').User;
     UserRouter = (function(_super) {
