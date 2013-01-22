@@ -3,13 +3,13 @@ lib/reveal/reveal.css
 ----------------
 lib/reveal/reveal.css
 
-lib/qunit/qunit.css
+lib/jquery-plugins/tagsinput/jquery.tagsinput.css
 ----------------
-lib/qunit/qunit.css
+lib/jquery-plugins/tagsinput/jquery.tagsinput.css
 
-lib/jquery-plugins/tagsinput/jquery.tagsinput.css
+lib/qunit/qunit.css
 ----------------
-lib/jquery-plugins/tagsinput/jquery.tagsinput.css
+lib/qunit/qunit.css
 
 common.js
 ----------------
@@ -31,6 +31,7 @@ text!templates/main/_header.html
 text!templates/main/_footer.html
 text!templates/main/_action_bar.html
 main/views.js
+text!templates/main/_page.html
 core/page_manager.js
 main/pages.js
 main/router.js
