@@ -109,7 +109,7 @@ INSTALLED_APPS = [
     'resources',
     'authentication',
     'organizations',
-    'investment',
+    'investments',
     'moderation',
     'hotsite',
     'signatures',
