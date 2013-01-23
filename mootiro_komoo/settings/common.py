@@ -104,7 +104,7 @@ INSTALLED_APPS = [
     'komoo_map',
     'regions',
     'issues',
-    'proposal',
+    'proposals',
     'komoo_comments',
     'resources',
     'authentication',
