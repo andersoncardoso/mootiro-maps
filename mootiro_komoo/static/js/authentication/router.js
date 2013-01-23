@@ -152,9 +152,7 @@
       return LoginApp;
 
     })(Backbone.Router);
-    return {
-      loginApp: new LoginApp({})
-    };
+    return LoginApp;
   });
 
 }).call(this);

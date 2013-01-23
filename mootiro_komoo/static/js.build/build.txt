@@ -13,6 +13,8 @@ lib/qunit/qunit.css
 
 common.js
 ----------------
+common.js
+i18n.js
 jquery.js
 underscore.js
 backbone.js
@@ -24,7 +26,6 @@ urls.js
 update/models.js
 user/collections.js
 user/models.js
-i18n.js
 text.js
 text!templates/main/_upper_bar.html
 text!templates/main/_header.html
@@ -79,7 +80,7 @@ user/views.js
 user/pages.js
 user/router.js
 services/analytics.js
-common.js
+core/app.js
 app.js
 services/facebook.js
 core/map/component.js

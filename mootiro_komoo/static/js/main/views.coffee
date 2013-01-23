@@ -11,7 +11,16 @@ define (require) ->
     className: 'feedback'
 
     initialize: ->
+      _.bindAll this
       @$el.hide()
+
+      @count = 0
+      @listenTo Backbone, 'working', =>
+        @count++
+        @display 'Working...'
+      @listenTo Backbone, 'done', =>
+        if --@count is 0
+          @close()
       @render()
 
     display: (msg) ->
@@ -33,7 +42,7 @@ define (require) ->
       'click .logout': 'logout'
       'click .user': 'profile'
 
-    initialize: () ->
+    initialize: ->
       _.bindAll this
       @listenTo @model, 'change', @render
       @listenTo Backbone, 'change', (model) =>

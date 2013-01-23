@@ -21,7 +21,17 @@
       Feedback.prototype.className = 'feedback';
 
       Feedback.prototype.initialize = function() {
+        var _this = this;
+        _.bindAll(this);
         this.$el.hide();
+        this.count = 0;
+        this.listenTo(Backbone, 'working', function() {
+          _this.count++;
+          return _this.display('Working...');
+        });
+        this.listenTo(Backbone, 'done', function() {
+          if (--_this.count === 0) return _this.close();
+        });
         return this.render();
       };
 

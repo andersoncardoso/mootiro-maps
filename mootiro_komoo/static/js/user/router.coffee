@@ -49,4 +49,4 @@ define (require) ->
       @goTo "users/#{user.id}/edit", new pages.Edit(model: user)
 
 
-  new UserRouter()
+  return UserRouter

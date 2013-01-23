@@ -125,6 +125,4 @@ define (require) ->
         @loginBox, @registerBox, @verifiedBox, @notVerifiedBox]
 
 
-  return {
-      loginApp: new LoginApp {}
-  }
+  return LoginApp

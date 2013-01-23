@@ -34,4 +34,4 @@ define (require) ->
       alert "#{code} #{msg} <TODO: render the error page>"
 
 
-  return new MainRouter()
+  return MainRouter

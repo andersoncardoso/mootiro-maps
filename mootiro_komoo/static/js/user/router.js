@@ -84,7 +84,7 @@
       return UserRouter;
 
     })(Backbone.Router);
-    return new UserRouter();
+    return UserRouter;
   });
 
 }).call(this);

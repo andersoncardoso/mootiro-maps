@@ -1,9 +1,10 @@
 (function() {
 
   define(function(require) {
-    var common;
-    common = require('common');
-    return common.initializeApp();
+    var App, app;
+    App = require('core/app').App;
+    app = new App;
+    return app;
   });
 
 }).call(this);

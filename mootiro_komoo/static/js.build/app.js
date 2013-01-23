@@ -1,1 +1,1 @@
-(function(){define(["require","common"],function(e){var t;return t=e("common"),t.initializeApp()})}).call(this);
+(function(){define(["require","core/app"],function(e){var t,n;return t=e("core/app").App,n=new t,n})}).call(this);

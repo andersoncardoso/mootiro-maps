@@ -62,7 +62,8 @@ config = {
       deps: ['dutils'],
       exports: 'dutils.urls'
     }
-  }
+  },
+  deps: ['common', 'i18n']
 };
 
 if (typeof requirejs !== "undefined" && requirejs !== null) {

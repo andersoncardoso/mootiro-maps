@@ -53,7 +53,7 @@
       return MainRouter;
 
     })(Backbone.Router);
-    return new MainRouter();
+    return MainRouter;
   });
 
 }).call(this);
