@@ -48,5 +48,6 @@ class OrganizationModelTestCase(unittest.TestCase):
         self.assertDictEqual(org_dict, self.expected_dict)
 
     def is_valid_test(self):
-        pass
+        org = self._create_organization()
+        self.assertTrue(org.is_valid())
 

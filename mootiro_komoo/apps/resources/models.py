@@ -53,7 +53,7 @@ class Resource(CommonObject):
     def to_dict(self):
         dict_ = super(Resource, self).to_dict()
         dict_.update({
-            'organization_type': self.organization_type,
+            'resource_type': self.resource_type,
         })
         return dict_
 

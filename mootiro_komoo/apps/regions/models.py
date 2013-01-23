@@ -79,7 +79,7 @@ class Region(CommonObject):
                 validates = False
                 self.errors['population'] = _('Must be an integer')
         if getattr(self, 'region_type', None):
-            if not self.region_type in REGION_TYPES:
+            if not self.region_type in [reg[0] for reg in REGION_TYPES]:
                 validates = False
                 self.errors['region_type'] = _('Invalid region type')
         return validates
