@@ -53,7 +53,6 @@ config =
   deps:
     [
       'common'
-      'i18n'
     ]
 
 requirejs?.config config
