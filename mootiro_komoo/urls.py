@@ -35,9 +35,9 @@ urlpatterns = patterns('',
     url(r'', include('regions.urls')),
     url(r'', include('organizations.urls')),
     url(r'', include('resources.urls')),
+    url(r'', include('issues.urls')),
 
     # prefixed apps urls
-    url(r'^need/', include('need.urls')),
     url(r'^proposal/', include('proposal.urls')),
     url(r'^comments/', include('komoo_comments.urls')),
     url(r'^investment/', include('investment.urls')),

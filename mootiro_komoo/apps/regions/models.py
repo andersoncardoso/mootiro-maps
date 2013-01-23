@@ -35,7 +35,7 @@ class Region(CommonObject):
     common_object_type = 'region'
 
     population = models.IntegerField(null=True, blank=True)
-    region_type = models.CharField(max_length=1024, choices=REGION_TYPES,
+    region_type = models.CharField(max_length=100, choices=REGION_TYPES,
                                    default='urban')
 
     class Map:
