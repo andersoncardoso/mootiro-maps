@@ -22,7 +22,8 @@ config =
     'markerclusterer': 'core/map/vendor/markerclusterer_packed'
     'sinon': '../lib/sinon-1.5.2'
     'dutils': '../lib/django-js-utils/dutils'
-    'urls': '../lib/django-js-utils/dutils.conf.urls'
+    'dutils_urls': '../lib/django-js-utils/dutils.conf.urls'
+    'urls': 'core/urls'
   shim:
     'ad-gallery':
       deps: ['jquery']
@@ -47,7 +48,7 @@ config =
       exports: 'sinon'
     'dutils':
       exports: 'dutils'
-    'urls':
+    'dutils_urls':
       deps: ['dutils']
       exports: 'dutils.urls'
   deps:

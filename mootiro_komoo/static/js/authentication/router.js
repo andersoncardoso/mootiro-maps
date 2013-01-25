@@ -4,10 +4,11 @@
 
   define(function(require) {
     'use strict';
-    var $, Backbone, LoginApp, ModalBox, reForm, views, _;
+    var $, Backbone, LoginApp, ModalBox, app, reForm, views, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
+    app = require('app');
     reForm = require('reForm');
     views = require('./views');
     ModalBox = require('widgets/modal');
@@ -78,8 +79,8 @@
       };
 
       LoginApp.prototype.bindExternalEvents = function() {
-        Backbone.on('login', this._loginRequired);
-        return Backbone.on('logout', this.logout);
+        app.on('login', this._loginRequired);
+        return app.on('logout', this.logout);
       };
 
       LoginApp.prototype.registerLinkCB = function() {

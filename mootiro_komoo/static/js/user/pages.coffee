@@ -9,49 +9,31 @@ define (require) ->
 
   class Profile extends pageManager.Page
     initialize: ->
+      super
       @mode = @options.mode ? 'view'
       @id = "user::profile::#{@model.id}"
-      super
+      data =
+        model: @model
+        mode: @mode
 
-    setMode: (mode) ->
-      if @mode is mode then return
-      view.instance?.setMode?(mode) for view in @views
-      @mode = mode
-
-      if mode is null then @model.view()
-
-    render: ->
-      super
-      # Deferred object to router know when the page is ready or if occurred
-      # an error
-      dfd = new $.Deferred()
-
-      if pageManager.currentPage?.id is @id
-        pageManager.currentPage.setMode @mode
-        dfd.resolve()
-        return dfd.promise()
-
-      # Get the user
-      window.user = @model
-      @model.fetch().done =>
-        # Use Page class and page manager to avoid memory leak and centralize some
-        # common tasks
-        data =
-          model: @model
-          mode: @mode
-
+      if pageManager.currentPage?.id isnt @id
         @setViews
           actionBar: new views.ActionBar data
           sidebar: new views.Sidebar data
           mainContent: new views.Profile data
 
-        pageManager.open this
-        dfd.resolve()
+    open: ->
+      if pageManager.currentPage?.id is @id
+        pageManager.currentPage.setMode @mode
+        return
+      super
 
-      .fail (jqXHR) ->
-        dfd.reject jqXHR
+    setMode: (mode) ->
+      if @mode is mode then return
+      view.instance?.setMode?(mode) for view in @_views
+      @mode = mode
 
-      dfd.promise()
+      if mode is null then @model.view()
 
 
   class Edit extends Profile

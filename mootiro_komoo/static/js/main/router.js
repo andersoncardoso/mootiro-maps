@@ -4,9 +4,10 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, MainRouter, pageManager, pages, _;
+    var Backbone, MainRouter, app, pageManager, pages, _;
     _ = require('underscore');
     Backbone = require('backbone');
+    app = require('app');
     pageManager = require('core/page_manager');
     pages = require('./pages');
     MainRouter = (function(_super) {
@@ -27,8 +28,8 @@
       };
 
       MainRouter.prototype.bindExternalEvents = function() {
-        Backbone.on('open:root', this.root);
-        return Backbone.on('open:error', this.error);
+        app.on('open:root', this.root);
+        return app.on('open:error', this.error);
       };
 
       MainRouter.prototype.goTo = function(url, page) {
@@ -36,7 +37,7 @@
         return $.when(pageManager.canClose()).done(function() {
           _this.navigate(url);
           return $.when(page.render()).fail(function(e) {
-            return Backbone.trigger('open:error', e.status, e.statusText);
+            return app.trigger('open:error', e.status, e.statusText);
           });
         });
       };

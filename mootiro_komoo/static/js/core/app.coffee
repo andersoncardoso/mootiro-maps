@@ -1,32 +1,41 @@
 define (require) ->
-  jQuery = require 'jquery'
+  'use strict'
+
+  $ = require 'jquery'
+  _ = require 'underscore'
   Backbone = require 'backbone'
   storage = require 'storage'
-  User = require('user/models').User
-  mainViews = require 'main/views'
+
+  pageManager = require 'core/page_manager'
 
 
   class App
+    _.extend @prototype, Backbone.Events
     constructor: ->
-
       $.when(
-        @handleModulesError()
         @interceptAjaxRequests()
+        @handleModulesError()
         @initializeUser()
-        @drawLayout()
         @initializeRouters()
         @initializeAnalytics()
-      ).done ->
-        Backbone.trigger 'initialize'
+      ).done => $.when(@drawLayout()).done => @trigger 'initialize'
+
+    goTo: (url, page) ->
+      $.when(pageManager.canClose()).done =>
+        if page?
+          @routers[0].navigate url
+          pageManager.open page
+        else
+          @routers[0].navigate url, trigger: true
 
     handleModulesError: ->
-      requirejs.onError = (err) ->
+      requirejs.onError = (err) =>
         if err.requireType == 'timeout'
           # TODO: i18n me
           alert "Timeout: Ocorreu uma falha ao carregar alguns serviços externos. Partes do Mootiro Maps poderão não funcionar corretamente."
          else
            throw err
-          Backbone.trigger 'error', err
+          @trigger 'error', err
       true
 
     interceptAjaxRequests: ->
@@ -47,58 +56,66 @@ define (require) ->
         /^(GET|HEAD|OPTIONS|TRACE)$/.test(method)
 
       # Add csrf token to ajax requests
-      jQuery(document).ajaxSend (event, xhr, settings) ->
+      $(document).ajaxSend (event, xhr, settings) ->
         if not safeMethod(settings.type) and sameOrigin(settings.url)
           xhr.setRequestHeader "X-CSRFToken", storage.cookie.get('csrftoken')
 
       # Verify if the session id changed
       lastSessionId = storage.cookie.get 'sessionid'
-      jQuery(document).ajaxSuccess (event, xhr, settings) ->
+      $(document).ajaxSuccess (event, xhr, settings) =>
         sessionId = storage.cookie.get 'sessionid'
         if sameOrigin(settings.url) and lastSessionId isnt sessionId
-          Backbone.trigger 'change:session', sessionId
+          @trigger 'change:session', sessionId
         lastSessionId = sessionId
 
       # Display the "working..." feedback while network requests are made
-      jQuery(document).ajaxStart -> Backbone.trigger 'working'
-      jQuery(document).ajaxStop -> Backbone.trigger 'done'
+      $(document).ajaxStart => @trigger 'working'
+      $(document).ajaxStop => @trigger 'done'
       true
 
     initializeUser: ->
+      dfd = new $.Deferred()
       # Create the logged in user model
-      if KomooNS.isAuthenticated
-        KomooNS.user = new User KomooNS.user_data
-      else
-        KomooNS.user = new User {}
+      require ['user/models'], (userModels) =>
+        User = userModels.User
+        if KomooNS.isAuthenticated
+          KomooNS.user = new User KomooNS.user_data
+        else
+          KomooNS.user = new User {}
 
-      # Update the logged in user if session changed
-      Backbone.on 'change:session', (sessionId) ->
-        KomooNS.user.clear()
-        KomooNS.user.set 'id', 'me'
-        KomooNS.user.fetch success: (model) ->
-          KomooNS.isAuthenticated = model.get('id') isnt null
-          model.trigger 'change'
-      true
+        # Update the logged in user if session changed
+        @on 'change:session', (sessionId) ->
+          KomooNS.user.clear()
+          KomooNS.user.set 'id', 'me'
+          KomooNS.user.fetch success: (model) ->
+            KomooNS.isAuthenticated = model.get('id') isnt null
+            model.trigger 'change'
+        dfd.resolve true
+      dfd.promise()
 
     drawLayout: ->
-      # Create the facebook DOM element
-      $('body').prepend $ '<div id="fb-root" />'
+      dfd = new $.Deferred()
+      require ['main/views'], (mainViews) =>
+        # Create the facebook DOM element
+        $('body').prepend $ '<div id="fb-root" />'
 
-      # Draw layout blocks
+        # Draw layout blocks
 
-      # Feedback block
-      feedback = new mainViews.Feedback
-        el: '#feedback-container'
+        # Feedback block
+        feedback = new mainViews.Feedback
+          el: '#feedback-container'
 
-      # Header block
-      header = new mainViews.Header
-        el: '#header-container'
-        model: KomooNS.user
+        # Header block
+        header = new mainViews.Header
+          el: '#header-container'
+          model: KomooNS.user
 
-      # Footer block
-      footer = new mainViews.Footer
-        el: '#footer-container'
-      true
+        # Footer block
+        footer = new mainViews.Footer
+          el: '#footer-container'
+        true
+        dfd.resolve true
+      dfd.promise()
 
     initializeRouters: ->
       dfd = new $.Deferred()
@@ -114,6 +131,8 @@ define (require) ->
           # Instantiate all routers
           for router in arguments
             @routers.push new router
+
+          window.routers = @routers
 
           Backbone.history.start
             pushState: true,

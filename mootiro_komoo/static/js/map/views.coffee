@@ -4,13 +4,15 @@ define (require) ->
     _ = require 'underscore'
     Backbone = require 'backbone'
 
+    app = require 'app'
+
     mapElementCache = null
 
     require 'map.jquery'
     class Preview extends Backbone.View
         initialize: ->
             _.bindAll this
-            @listenTo Backbone, 'error', @onError
+            @listenTo app, 'error', @onError
 
             if mapElementCache
                 @map = mapElementCache

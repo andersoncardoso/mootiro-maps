@@ -4,49 +4,31 @@ define (require) ->
   _ = require 'underscore'
   Backbone = require 'backbone'
 
-  pageManager = require 'core/page_manager'
+  app = require 'app'
+  urls = require 'urls'
 
   pages = require './pages'
-  User = require('./models').User
+  models = require './models'
 
 
   class UserRouter extends Backbone.Router
-    routes:
-      'users(/)': 'user'
-      'users/:id(/)': 'detail'
-      'users/:id/edit(/)': 'edit'
+    routes: {}
+    @prototype.routes[urls.route 'user_view'] = 'detail'
+    @prototype.routes[urls.route 'user_edit'] = 'edit'
 
     initialize: ->
       _.bindAll this
-      @bindExternalEvents()
 
-    bindExternalEvents: ->
-      Backbone.on 'open:detail', @detail
-      Backbone.on 'open:edit', @edit
+    goTo: (view, id, Page) ->
+      user = models.getUser id
+      user.fetch().done =>
+        app.goTo urls.resolve(view, id_: user.id), new Page(model: user)
 
-    goTo: (url, page) ->
-      $.when(pageManager.canClose()).done =>
-        @navigate url
-        $.when(page.render()).fail (e) ->
-          Backbone.trigger 'error', e.status, e.statusText
+    detail: (id) ->
+      @goTo 'user_view', id, pages.Profile
 
-    user: ->
-
-    getUser: (user) ->
-      # Create the user instance
-      if not user?
-        console?.log 'User id not specified'
-        return
-      user = new User id: user if _.isNumber(user) or _.isString(user)
-      return if user instanceof User then user else null
-
-    detail: (model) ->
-      user = @getUser model
-      @goTo "users/#{user.id}", new pages.Profile(model: user)
-
-    edit: (model) ->
-      user = @getUser model
-      @goTo "users/#{user.id}/edit", new pages.Edit(model: user)
+    edit: (id) ->
+      @goTo 'user_edit', id, pages.Edit
 
 
   return UserRouter

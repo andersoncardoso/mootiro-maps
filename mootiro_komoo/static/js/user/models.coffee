@@ -3,9 +3,21 @@ define (require) ->
 
   _ = require 'underscore'
   Backbone = require 'backbone'
-  PermissionMixin = require('core/mixins').PermissionMixin
-  Updates = require('./collections').PaginatedUpdates
+
+  app = require 'app'
   urls = require 'urls'
+  PermissionMixin = require('core/mixins').PermissionMixin
+
+  Updates = require('./collections').PaginatedUpdates
+
+
+  getUser = (user) ->
+    # Create the user instance
+    if not user?
+      console?.log 'User id not specified'
+      return
+    user = new User id: user if _.isNumber(user) or _.isString(user)
+    return if user instanceof User then user else null
 
 
   class User extends Backbone.Model
@@ -25,15 +37,16 @@ define (require) ->
       return @updates ? (@updates = new Updates([], user: this))
 
     view: ->
-      Backbone.trigger 'open:detail', this if @id?
+      app.goTo urls.resolve 'user_view', id_: @id
 
     edit: ->
-      Backbone.trigger 'open:edit', this if @id?
+      app.goTo urls.resolve 'user_edit', id_: @id
 
     isSuperuser: ->
       # TODO: implement
       false
 
   return {
+    getUser: getUser
     User: User
   }

@@ -20,7 +20,8 @@
         'infobox': 'empty:',
         'markerclusterer': 'empty:',
         'dutils': '../static/lib/django-js-utils/dutils',
-        'urls': '../static/lib/django-js-utils/dutils.conf.urls'
+        'dutils_urls': '../static/lib/django-js-utils/dutils.conf.urls',
+        'urls': '../static/js/core/urls'
     },
     shim: {
         'underscore': {
@@ -41,7 +42,7 @@
         'dutils': {
             exports: 'dutils'
         },
-        'urls': {
+        'dutils_urls': {
             deps: ['dutils'],
             exports: 'dutils.urls'
         }

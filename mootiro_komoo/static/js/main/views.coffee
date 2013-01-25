@@ -5,6 +5,8 @@ define (require) ->
   _ = require 'underscore'
   Backbone = require 'backbone'
 
+  app = require 'app'
+
 
   class Feedback extends Backbone.View
     tagName: 'span'
@@ -14,13 +16,10 @@ define (require) ->
       _.bindAll this
       @$el.hide()
 
-      @count = 0
-      @listenTo Backbone, 'working', =>
-        @count++
-        @display 'Working...'
-      @listenTo Backbone, 'done', =>
-        if --@count is 0
-          @close()
+      @listenTo app, 'working', =>
+        #@display 'Working...'
+      @listenTo app, 'done', =>
+        @close()
       @render()
 
     display: (msg) ->
@@ -45,7 +44,7 @@ define (require) ->
     initialize: ->
       _.bindAll this
       @listenTo @model, 'change', @render
-      @listenTo Backbone, 'change', (model) =>
+      @listenTo app, 'change', (model) =>
         # Update the upper bar when logged user is edited
         @model.fetch() if @model.id is model.id and @model.constructor is model.constructor
       @render()
@@ -56,12 +55,12 @@ define (require) ->
 
     login: (e) ->
       e?.preventDefault()
-      Backbone.trigger 'login', window.location.href
+      app.trigger 'login', window.location.href
       this
 
     logout: (e) ->
       e?.preventDefault()
-      Backbone.trigger 'logout', window.location.href
+      app.trigger 'logout', window.location.href
       this
 
     profile: (e) ->
@@ -92,7 +91,7 @@ define (require) ->
 
     root: (e) ->
       e?.preventDefault()
-      Backbone.trigger 'open:root'
+      app.trigger 'open:root'
 
 
   class Footer extends Backbone.View
@@ -124,7 +123,8 @@ define (require) ->
     initialize: ->
       _.bindAll this
       @mode = @options.mode
-      @listenTo Backbone, 'login logout change:session', @render
+      @listenTo @model, 'change', @render
+      @listenTo app, 'login logout change:session', @render
       @render()
 
     render: ->

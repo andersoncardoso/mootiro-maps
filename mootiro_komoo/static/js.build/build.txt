@@ -3,13 +3,13 @@ lib/reveal/reveal.css
 ----------------
 lib/reveal/reveal.css
 
-lib/jquery-plugins/tagsinput/jquery.tagsinput.css
+lib/qunit/qunit.css
 ----------------
-lib/jquery-plugins/tagsinput/jquery.tagsinput.css
+lib/qunit/qunit.css
 
-lib/qunit/qunit.css
+lib/jquery-plugins/tagsinput/jquery.tagsinput.css
 ----------------
-lib/qunit/qunit.css
+lib/jquery-plugins/tagsinput/jquery.tagsinput.css
 
 common.js
 ----------------
@@ -19,21 +19,22 @@ jquery.js
 underscore.js
 backbone.js
 storage.js
+text.js
+text!templates/main/_page.html
+core/page_manager.js
+dutils.js
+dutils_urls.js
+urls.js
 core/mixins.js
 backbone/paginator.js
-dutils.js
-urls.js
 update/models.js
 user/collections.js
 user/models.js
-text.js
 text!templates/main/_upper_bar.html
 text!templates/main/_header.html
 text!templates/main/_footer.html
 text!templates/main/_action_bar.html
 main/views.js
-text!templates/main/_page.html
-core/page_manager.js
 main/pages.js
 main/router.js
 reForm.js

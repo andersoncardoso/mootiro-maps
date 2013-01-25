@@ -21,7 +21,7 @@
       Page.prototype.template = _.template(require('text!templates/main/_page.html'));
 
       Page.prototype.initialize = function() {
-        this.views = [
+        this._views = [
           {
             name: 'actionBar',
             parentSelector: '#action-bar'
@@ -33,7 +33,7 @@
             parentSelector: '#main-content'
           }
         ];
-        return this.setViews(this.options.views);
+        if (this.options.views != null) return this.setViews(this.options.views);
       };
 
       Page.prototype.render = function() {
@@ -42,8 +42,7 @@
 
       Page.prototype.setViews = function(views) {
         var view, _i, _len, _ref, _results;
-        if (views == null) views = [];
-        _ref = this.views;
+        _ref = this._views;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
@@ -68,10 +67,11 @@
           }
           return typeof view.onOpen === "function" ? view.onOpen() : void 0;
         };
-        _ref = this.views;
+        _ref = this._views;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
+          console.log(view.instance);
           this.$(view.parentSelector).append((_ref2 = view.instance) != null ? _ref2.$el : void 0);
           _results.push(onOpen(view.instance));
         }
@@ -81,7 +81,7 @@
       Page.prototype.canClose = function() {
         var canClose, view, _i, _len, _ref, _ref2, _ref3;
         canClose = true;
-        _ref = this.views;
+        _ref = this._views;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
           canClose = (_ref2 = canClose && ((_ref3 = view.instance) != null ? typeof _ref3.canClose === "function" ? _ref3.canClose() : void 0 : void 0)) != null ? _ref2 : true;
@@ -122,7 +122,7 @@
 
       Page.prototype.close = function() {
         var view, _i, _len, _ref;
-        _ref = this.views;
+        _ref = this._views;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
           this._removeView(view.instance);
@@ -143,12 +143,17 @@
       PageManager.prototype.currentPage = null;
 
       PageManager.prototype.canClose = function() {
-        var dfd, _ref, _ref2;
+        var dfd, _base, _ref, _ref2;
         dfd = new $.Deferred();
-        if ((_ref = (_ref2 = this.currentPage) != null ? typeof _ref2.canClose === "function" ? _ref2.canClose() : void 0 : void 0) != null ? _ref : true) {
+        if (this.currentPage === null || ((_ref = this.currentPage) != null ? _ref.toClose : void 0)) {
+          return true;
+        }
+        this.currentPage.toClose = false;
+        if ((_ref2 = typeof (_base = this.currentPage).canClose === "function" ? _base.canClose() : void 0) != null ? _ref2 : true) {
           dfd.resolve();
         } else {
           if (window.confirm("You haven't saved your changes yet. Do you want to leave without finishing?")) {
+            this.currentPage.toClose = true;
             dfd.resolve();
           } else {
             dfd.reject();
@@ -158,11 +163,16 @@
       };
 
       PageManager.prototype.open = function(page) {
+        var _ref;
         if (!page || page === this.currentPage) return;
-        this.close(this.currentPage);
-        this.currentPage = page;
-        $('#content').append(this.currentPage.$el);
-        return this.currentPage.open();
+        if (page.id === ((_ref = this.currentPage) != null ? _ref.id : void 0)) {
+          return page.open();
+        } else {
+          this.close(this.currentPage);
+          $('#content').append(page.$el);
+          page.open();
+          return this.currentPage = page;
+        }
       };
 
       PageManager.prototype.close = function(page) {

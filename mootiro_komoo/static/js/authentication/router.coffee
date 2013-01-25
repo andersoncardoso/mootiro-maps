@@ -5,6 +5,8 @@ define (require) ->
   _ = require 'underscore'
   Backbone = require 'backbone'
 
+  app = require 'app'
+
   reForm = require 'reForm'
   views = require './views'
   ModalBox = require 'widgets/modal'
@@ -65,8 +67,8 @@ define (require) ->
         modal_id: 'verification-modal-box'
 
     bindExternalEvents: ->
-      Backbone.on 'login', @_loginRequired
-      Backbone.on 'logout', @logout
+      app.on 'login', @_loginRequired
+      app.on 'logout', @logout
 
 
     # ============ callbacks ======================

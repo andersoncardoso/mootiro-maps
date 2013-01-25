@@ -4,11 +4,12 @@
 
   define(function(require) {
     'use strict';
-    var $, ActionBar, Backbone, Profile, ReForm, Sidebar, Update, Updates, UserInfo, UserInfoForm, mapViews, _;
+    var $, ActionBar, Backbone, Profile, ReForm, Sidebar, Update, Updates, UserInfo, UserInfoForm, app, mapViews, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
     ReForm = require('reForm');
+    app = require('app');
     ActionBar = require('main/views').ActionBar;
     UserInfoForm = require('./forms').UserInfoForm;
     UserInfo = (function(_super) {
@@ -55,15 +56,13 @@
             model: this.model
           })
         };
-        if (this.model.hasPermission('edit')) {
-          this.userInfoViews['edit'] = new UserInfoForm({
-            model: this.model,
-            formId: 'user-info',
-            submit_label: i18n('Save')
-          });
-          this.listenTo(this.userInfoViews['edit'], 'success', this.onSuccess);
-          this.listenTo(this.userInfoViews['edit'], 'cancel', this.onCancel);
-        }
+        this.userInfoViews['edit'] = new UserInfoForm({
+          model: this.model,
+          formId: 'user-info',
+          submit_label: i18n('Save')
+        });
+        this.listenTo(this.userInfoViews['edit'], 'success', this.onSuccess);
+        this.listenTo(this.userInfoViews['edit'], 'cancel', this.onCancel);
         _ref = this.userInfoViews;
         for (mode in _ref) {
           view = _ref[mode];
@@ -111,7 +110,7 @@
       };
 
       Profile.prototype.onSuccess = function() {
-        Backbone.trigger('change', this.model);
+        app.trigger('change', this.model);
         return this.model.view();
       };
 

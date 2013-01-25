@@ -6,6 +6,8 @@ define (require) ->
   Backbone = require 'backbone'
   ReForm = require 'reForm'
 
+  app = require 'app'
+
   ActionBar = require('main/views').ActionBar
   UserInfoForm = require('./forms').UserInfoForm
 
@@ -37,13 +39,12 @@ define (require) ->
           model: @model
 
       ## Edit mode
-      if @model.hasPermission 'edit'
-        @userInfoViews['edit'] = new UserInfoForm
-          model: @model
-          formId: 'user-info'
-          submit_label: i18n 'Save'
-        @listenTo @userInfoViews['edit'], 'success', @onSuccess
-        @listenTo @userInfoViews['edit'], 'cancel', @onCancel
+      @userInfoViews['edit'] = new UserInfoForm
+        model: @model
+        formId: 'user-info'
+        submit_label: i18n 'Save'
+      @listenTo @userInfoViews['edit'], 'success', @onSuccess
+      @listenTo @userInfoViews['edit'], 'cancel', @onCancel
 
       for mode, view of @userInfoViews
         @subViews.push view
@@ -79,7 +80,7 @@ define (require) ->
       @render()
 
     onSuccess: () ->
-      Backbone.trigger 'change', @model
+      app.trigger 'change', @model
       @model.view()
 
     onCancel: () ->

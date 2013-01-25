@@ -1,34 +1,56 @@
 (function() {
 
   define(function(require) {
-    var App, Backbone, User, jQuery, mainViews, storage;
-    jQuery = require('jquery');
+    'use strict';
+    var $, App, Backbone, pageManager, storage, _;
+    $ = require('jquery');
+    _ = require('underscore');
     Backbone = require('backbone');
     storage = require('storage');
-    User = require('user/models').User;
-    mainViews = require('main/views');
+    pageManager = require('core/page_manager');
     App = (function() {
 
+      _.extend(App.prototype, Backbone.Events);
+
       function App() {
-        $.when(this.handleModulesError(), this.interceptAjaxRequests(), this.initializeUser(), this.drawLayout(), this.initializeRouters(), this.initializeAnalytics()).done(function() {
-          return Backbone.trigger('initialize');
+        var _this = this;
+        $.when(this.interceptAjaxRequests(), this.handleModulesError(), this.initializeUser(), this.initializeRouters(), this.initializeAnalytics()).done(function() {
+          return $.when(_this.drawLayout()).done(function() {
+            return _this.trigger('initialize');
+          });
         });
       }
 
+      App.prototype.goTo = function(url, page) {
+        var _this = this;
+        return $.when(pageManager.canClose()).done(function() {
+          if (page != null) {
+            _this.routers[0].navigate(url);
+            return pageManager.open(page);
+          } else {
+            return _this.routers[0].navigate(url, {
+              trigger: true
+            });
+          }
+        });
+      };
+
       App.prototype.handleModulesError = function() {
+        var _this = this;
         requirejs.onError = function(err) {
           if (err.requireType === 'timeout') {
             alert("Timeout: Ocorreu uma falha ao carregar alguns serviços externos. Partes do Mootiro Maps poderão não funcionar corretamente.");
           } else {
             throw err;
           }
-          return Backbone.trigger('error', err);
+          return _this.trigger('error', err);
         };
         return true;
       };
 
       App.prototype.interceptAjaxRequests = function() {
-        var lastSessionId, safeMethod, sameOrigin;
+        var lastSessionId, safeMethod, sameOrigin,
+          _this = this;
         sameOrigin = function(url) {
           var host, origin, protocol, sr_origin;
           host = document.location.host;
@@ -40,62 +62,77 @@
         safeMethod = function(method) {
           return /^(GET|HEAD|OPTIONS|TRACE)$/.test(method);
         };
-        jQuery(document).ajaxSend(function(event, xhr, settings) {
+        $(document).ajaxSend(function(event, xhr, settings) {
           if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
             return xhr.setRequestHeader("X-CSRFToken", storage.cookie.get('csrftoken'));
           }
         });
         lastSessionId = storage.cookie.get('sessionid');
-        jQuery(document).ajaxSuccess(function(event, xhr, settings) {
+        $(document).ajaxSuccess(function(event, xhr, settings) {
           var sessionId;
           sessionId = storage.cookie.get('sessionid');
           if (sameOrigin(settings.url) && lastSessionId !== sessionId) {
-            Backbone.trigger('change:session', sessionId);
+            _this.trigger('change:session', sessionId);
           }
           return lastSessionId = sessionId;
         });
-        jQuery(document).ajaxStart(function() {
-          return Backbone.trigger('working');
+        $(document).ajaxStart(function() {
+          return _this.trigger('working');
         });
-        jQuery(document).ajaxStop(function() {
-          return Backbone.trigger('done');
+        $(document).ajaxStop(function() {
+          return _this.trigger('done');
         });
         return true;
       };
 
       App.prototype.initializeUser = function() {
-        if (KomooNS.isAuthenticated) {
-          KomooNS.user = new User(KomooNS.user_data);
-        } else {
-          KomooNS.user = new User({});
-        }
-        Backbone.on('change:session', function(sessionId) {
-          KomooNS.user.clear();
-          KomooNS.user.set('id', 'me');
-          return KomooNS.user.fetch({
-            success: function(model) {
-              KomooNS.isAuthenticated = model.get('id') !== null;
-              return model.trigger('change');
-            }
+        var dfd,
+          _this = this;
+        dfd = new $.Deferred();
+        require(['user/models'], function(userModels) {
+          var User;
+          User = userModels.User;
+          if (KomooNS.isAuthenticated) {
+            KomooNS.user = new User(KomooNS.user_data);
+          } else {
+            KomooNS.user = new User({});
+          }
+          _this.on('change:session', function(sessionId) {
+            KomooNS.user.clear();
+            KomooNS.user.set('id', 'me');
+            return KomooNS.user.fetch({
+              success: function(model) {
+                KomooNS.isAuthenticated = model.get('id') !== null;
+                return model.trigger('change');
+              }
+            });
           });
+          return dfd.resolve(true);
         });
-        return true;
+        return dfd.promise();
       };
 
       App.prototype.drawLayout = function() {
-        var feedback, footer, header;
-        $('body').prepend($('<div id="fb-root" />'));
-        feedback = new mainViews.Feedback({
-          el: '#feedback-container'
+        var dfd,
+          _this = this;
+        dfd = new $.Deferred();
+        require(['main/views'], function(mainViews) {
+          var feedback, footer, header;
+          $('body').prepend($('<div id="fb-root" />'));
+          feedback = new mainViews.Feedback({
+            el: '#feedback-container'
+          });
+          header = new mainViews.Header({
+            el: '#header-container',
+            model: KomooNS.user
+          });
+          footer = new mainViews.Footer({
+            el: '#footer-container'
+          });
+          true;
+          return dfd.resolve(true);
         });
-        header = new mainViews.Header({
-          el: '#header-container',
-          model: KomooNS.user
-        });
-        footer = new mainViews.Footer({
-          el: '#footer-container'
-        });
-        return true;
+        return dfd.promise();
       };
 
       App.prototype.initializeRouters = function() {
@@ -110,6 +147,7 @@
               router = arguments[_i];
               _this.routers.push(new router);
             }
+            window.routers = _this.routers;
             Backbone.history.start({
               pushState: true,
               root: '/'

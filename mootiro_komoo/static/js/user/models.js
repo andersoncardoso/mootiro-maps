@@ -4,12 +4,31 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, PermissionMixin, Updates, User, urls, _;
+    var Backbone, PermissionMixin, Updates, User, app, getUser, urls, _;
     _ = require('underscore');
     Backbone = require('backbone');
+    app = require('app');
+    urls = require('urls');
     PermissionMixin = require('core/mixins').PermissionMixin;
     Updates = require('./collections').PaginatedUpdates;
-    urls = require('urls');
+    getUser = function(user) {
+      if (!(user != null)) {
+        if (typeof console !== "undefined" && console !== null) {
+          console.log('User id not specified');
+        }
+        return;
+      }
+      if (_.isNumber(user) || _.isString(user)) {
+        user = new User({
+          id: user
+        });
+      }
+      if (user instanceof User) {
+        return user;
+      } else {
+        return null;
+      }
+    };
     User = (function(_super) {
 
       __extends(User, _super);
@@ -55,11 +74,15 @@
       };
 
       User.prototype.view = function() {
-        if (this.id != null) return Backbone.trigger('open:detail', this);
+        return app.goTo(urls.resolve('user_view', {
+          id_: this.id
+        }));
       };
 
       User.prototype.edit = function() {
-        if (this.id != null) return Backbone.trigger('open:edit', this);
+        return app.goTo(urls.resolve('user_edit', {
+          id_: this.id
+        }));
       };
 
       User.prototype.isSuperuser = function() {
@@ -70,6 +93,7 @@
 
     })(Backbone.Model);
     return {
+      getUser: getUser,
       User: User
     };
   });

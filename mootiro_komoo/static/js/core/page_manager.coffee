@@ -10,18 +10,18 @@ define (require) ->
     template: _.template require 'text!templates/main/_page.html'
 
     initialize: ->
-      @views = [
+      @_views = [
         {name: 'actionBar',   parentSelector: '#action-bar'}
         {name: 'sidebar',     parentSelector: '#sidebar'}
         {name: 'mainContent', parentSelector: '#main-content'}
       ]
-      @setViews @options.views
+      @setViews @options.views if @options.views?
 
     render: ->
       @$el.html @template {}
 
-    setViews: (views=[]) ->
-      for view in @views
+    setViews: (views) ->
+      for view in @_views
         if view.instance?
           @_removeView view.instance
         view.instance = views[view.name]
@@ -34,13 +34,14 @@ define (require) ->
         onOpen v for v in view.subViews if view.subViews
         view.onOpen?()
 
-      for view in @views
+      for view in @_views
+        console.log view.instance
         @$(view.parentSelector).append view.instance?.$el
         onOpen view.instance
 
     canClose: ->
       canClose = true
-      (canClose = canClose and view.instance?.canClose?() ? true) for view in @views
+      (canClose = canClose and view.instance?.canClose?() ? true) for view in @_views
       canClose
 
     _removeView: (view) ->
@@ -69,7 +70,7 @@ define (require) ->
 
     close: ->
       # Remove DOM and unbind some events to avoid memory leak
-      for view in @views
+      for view in @_views
         @_removeView view.instance
         #view.instance = null
       @remove()
@@ -82,13 +83,16 @@ define (require) ->
 
     canClose: ->
       dfd = new $.Deferred()
-      if @currentPage?.canClose?() ? true
+      return true if @currentPage is null or @currentPage?.toClose
+      @currentPage.toClose = false
+      if @currentPage.canClose?() ? true
         # Can close without problems
         dfd.resolve()
       else
         # Ask for confirmation to leave the page
         # FIXME: Customize the confirm dialog
         if window.confirm "You haven't saved your changes yet. Do you want to leave without finishing?"
+          @currentPage.toClose = true
           dfd.resolve()
         else
           dfd.reject()
@@ -97,10 +101,13 @@ define (require) ->
     open: (page) ->
       if not page or page is @currentPage then return
 
-      @close @currentPage
-      @currentPage = page
-      $('#content').append @currentPage.$el
-      @currentPage.open()
+      if page.id is @currentPage?.id
+        page.open()
+      else
+        @close @currentPage
+        $('#content').append page.$el
+        page.open()
+        @currentPage = page
 
     close: (page) ->
       if not page then return

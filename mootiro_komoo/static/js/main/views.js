@@ -4,10 +4,11 @@
 
   define(function(require) {
     'use strict';
-    var $, ActionBar, Backbone, Feedback, Footer, Header, UpperBar, _;
+    var $, ActionBar, Backbone, Feedback, Footer, Header, UpperBar, app, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
+    app = require('app');
     Feedback = (function(_super) {
 
       __extends(Feedback, _super);
@@ -24,13 +25,9 @@
         var _this = this;
         _.bindAll(this);
         this.$el.hide();
-        this.count = 0;
-        this.listenTo(Backbone, 'working', function() {
-          _this.count++;
-          return _this.display('Working...');
-        });
-        this.listenTo(Backbone, 'done', function() {
-          if (--_this.count === 0) return _this.close();
+        this.listenTo(app, 'working', function() {});
+        this.listenTo(app, 'done', function() {
+          return _this.close();
         });
         return this.render();
       };
@@ -78,7 +75,7 @@
         var _this = this;
         _.bindAll(this);
         this.listenTo(this.model, 'change', this.render);
-        this.listenTo(Backbone, 'change', function(model) {
+        this.listenTo(app, 'change', function(model) {
           if (_this.model.id === model.id && _this.model.constructor === model.constructor) {
             return _this.model.fetch();
           }
@@ -95,13 +92,13 @@
 
       UpperBar.prototype.login = function(e) {
         if (e != null) e.preventDefault();
-        Backbone.trigger('login', window.location.href);
+        app.trigger('login', window.location.href);
         return this;
       };
 
       UpperBar.prototype.logout = function(e) {
         if (e != null) e.preventDefault();
-        Backbone.trigger('logout', window.location.href);
+        app.trigger('logout', window.location.href);
         return this;
       };
 
@@ -160,7 +157,7 @@
 
       Header.prototype.root = function(e) {
         if (e != null) e.preventDefault();
-        return Backbone.trigger('open:root');
+        return app.trigger('open:root');
       };
 
       return Header;
@@ -230,7 +227,8 @@
       ActionBar.prototype.initialize = function() {
         _.bindAll(this);
         this.mode = this.options.mode;
-        this.listenTo(Backbone, 'login logout change:session', this.render);
+        this.listenTo(this.model, 'change', this.render);
+        this.listenTo(app, 'login logout change:session', this.render);
         return this.render();
       };
 

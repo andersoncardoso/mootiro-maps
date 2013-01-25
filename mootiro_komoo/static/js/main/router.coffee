@@ -4,7 +4,9 @@ define (require) ->
   _ = require 'underscore'
   Backbone = require 'backbone'
 
+  app = require 'app'
   pageManager = require 'core/page_manager'
+
   pages = require('./pages')
 
 
@@ -17,14 +19,14 @@ define (require) ->
       @bindExternalEvents()
 
     bindExternalEvents: ->
-      Backbone.on 'open:root', @root
-      Backbone.on 'open:error', @error
+      app.on 'open:root', @root
+      app.on 'open:error', @error
 
     goTo: (url, page) ->
       $.when(pageManager.canClose()).done =>
         @navigate url
         $.when(page.render()).fail (e) ->
-          Backbone.trigger 'open:error', e.status, e.statusText
+          app.trigger 'open:error', e.status, e.statusText
 
     root: ->
       @goTo '', pages.root

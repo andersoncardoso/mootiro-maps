@@ -4,12 +4,13 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, User, UserRouter, pageManager, pages, _;
+    var Backbone, UserRouter, app, models, pages, urls, _;
     _ = require('underscore');
     Backbone = require('backbone');
-    pageManager = require('core/page_manager');
+    app = require('app');
+    urls = require('urls');
     pages = require('./pages');
-    User = require('./models').User;
+    models = require('./models');
     UserRouter = (function(_super) {
 
       __extends(UserRouter, _super);
@@ -18,67 +19,35 @@
         UserRouter.__super__.constructor.apply(this, arguments);
       }
 
-      UserRouter.prototype.routes = {
-        'users(/)': 'user',
-        'users/:id(/)': 'detail',
-        'users/:id/edit(/)': 'edit'
-      };
+      UserRouter.prototype.routes = {};
+
+      UserRouter.prototype.routes[urls.route('user_view')] = 'detail';
+
+      UserRouter.prototype.routes[urls.route('user_edit')] = 'edit';
 
       UserRouter.prototype.initialize = function() {
-        _.bindAll(this);
-        return this.bindExternalEvents();
+        return _.bindAll(this);
       };
 
-      UserRouter.prototype.bindExternalEvents = function() {
-        Backbone.on('open:detail', this.detail);
-        return Backbone.on('open:edit', this.edit);
-      };
-
-      UserRouter.prototype.goTo = function(url, page) {
-        var _this = this;
-        return $.when(pageManager.canClose()).done(function() {
-          _this.navigate(url);
-          return $.when(page.render()).fail(function(e) {
-            return Backbone.trigger('error', e.status, e.statusText);
-          });
+      UserRouter.prototype.goTo = function(view, id, Page) {
+        var user,
+          _this = this;
+        user = models.getUser(id);
+        return user.fetch().done(function() {
+          return app.goTo(urls.resolve(view, {
+            id_: user.id
+          }), new Page({
+            model: user
+          }));
         });
       };
 
-      UserRouter.prototype.user = function() {};
-
-      UserRouter.prototype.getUser = function(user) {
-        if (!(user != null)) {
-          if (typeof console !== "undefined" && console !== null) {
-            console.log('User id not specified');
-          }
-          return;
-        }
-        if (_.isNumber(user) || _.isString(user)) {
-          user = new User({
-            id: user
-          });
-        }
-        if (user instanceof User) {
-          return user;
-        } else {
-          return null;
-        }
+      UserRouter.prototype.detail = function(id) {
+        return this.goTo('user_view', id, pages.Profile);
       };
 
-      UserRouter.prototype.detail = function(model) {
-        var user;
-        user = this.getUser(model);
-        return this.goTo("users/" + user.id, new pages.Profile({
-          model: user
-        }));
-      };
-
-      UserRouter.prototype.edit = function(model) {
-        var user;
-        user = this.getUser(model);
-        return this.goTo("users/" + user.id + "/edit", new pages.Edit({
-          model: user
-        }));
+      UserRouter.prototype.edit = function(id) {
+        return this.goTo('user_edit', id, pages.Edit);
       };
 
       return UserRouter;

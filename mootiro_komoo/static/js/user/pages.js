@@ -18,16 +18,36 @@
       }
 
       Profile.prototype.initialize = function() {
-        var _ref;
+        var data, _ref, _ref2;
+        Profile.__super__.initialize.apply(this, arguments);
         this.mode = (_ref = this.options.mode) != null ? _ref : 'view';
         this.id = "user::profile::" + this.model.id;
-        return Profile.__super__.initialize.apply(this, arguments);
+        data = {
+          model: this.model,
+          mode: this.mode
+        };
+        if (((_ref2 = pageManager.currentPage) != null ? _ref2.id : void 0) !== this.id) {
+          return this.setViews({
+            actionBar: new views.ActionBar(data),
+            sidebar: new views.Sidebar(data),
+            mainContent: new views.Profile(data)
+          });
+        }
+      };
+
+      Profile.prototype.open = function() {
+        var _ref;
+        if (((_ref = pageManager.currentPage) != null ? _ref.id : void 0) === this.id) {
+          pageManager.currentPage.setMode(this.mode);
+          return;
+        }
+        return Profile.__super__.open.apply(this, arguments);
       };
 
       Profile.prototype.setMode = function(mode) {
         var view, _i, _len, _ref, _ref2;
         if (this.mode === mode) return;
-        _ref = this.views;
+        _ref = this._views;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
           if ((_ref2 = view.instance) != null) {
@@ -36,36 +56,6 @@
         }
         this.mode = mode;
         if (mode === null) return this.model.view();
-      };
-
-      Profile.prototype.render = function() {
-        var dfd, _ref,
-          _this = this;
-        Profile.__super__.render.apply(this, arguments);
-        dfd = new $.Deferred();
-        if (((_ref = pageManager.currentPage) != null ? _ref.id : void 0) === this.id) {
-          pageManager.currentPage.setMode(this.mode);
-          dfd.resolve();
-          return dfd.promise();
-        }
-        window.user = this.model;
-        this.model.fetch().done(function() {
-          var data;
-          data = {
-            model: _this.model,
-            mode: _this.mode
-          };
-          _this.setViews({
-            actionBar: new views.ActionBar(data),
-            sidebar: new views.Sidebar(data),
-            mainContent: new views.Profile(data)
-          });
-          pageManager.open(_this);
-          return dfd.resolve();
-        }).fail(function(jqXHR) {
-          return dfd.reject(jqXHR);
-        });
-        return dfd.promise();
       };
 
       return Profile;
