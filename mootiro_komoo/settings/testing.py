@@ -111,7 +111,7 @@ DATABASES = {
     }
 }
 
-LANGUAGE_CODE = 'pt-br'
+LANGUAGE_CODE = 'en-us'
 
 from local_settings import USER_PASSWORD_SALT, EMAIL_HOST_PASSWORD
 

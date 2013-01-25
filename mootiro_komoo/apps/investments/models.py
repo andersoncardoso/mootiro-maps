@@ -2,11 +2,14 @@
 from __future__ import unicode_literals  # unicode by default
 
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
-
+from main.utils import build_obj_from_dict
 from main.models import BaseModel, CommonObject
+
+from organizations.models import Organization
+
 
 INVESTOR_TYPE = (
         ('ORG', _('Organization')),
@@ -14,7 +17,10 @@ INVESTOR_TYPE = (
 )
 
 INVESTMENT_TYPE = (
-    ('', _('')),
+    ('donation', _('Donation')),
+    ('goods', _('Goods')),
+    ('volunteering', _('Volunteering')),
+    ('public', _('Public Investment')),
 )
 
 CURRENCIES_CHOICES = (
@@ -28,10 +34,45 @@ class Investor(BaseModel):
     """ The giver part on an investment. """
     investor_type = models.CharField(max_length=3, choices=INVESTOR_TYPE,
                                      default='PER')
-    name = models.CharField(max_length=512, blank=True, null=True)
-    organization = models.IntegerField()
+    person_name = models.CharField(max_length=512, blank=True, null=True)
+    organization_id = models.IntegerField(null=True, blank=True)
 
-    # TODO fix-me
+    @property
+    def name(self):
+        if self.investor_type == 'ORG':
+            return Organization.get_by_id(self.organization_id).name
+        elif self.investor_type == 'PER':
+            return self.person_name or _('Anonymous')
+
+    # ======================= Utils =============================
+
+    def to_dict(self):
+        return {
+            'investor_type': self.investor_type,
+            'name': self.name,
+            'person_name': self.person_name,
+            'organization_id': self.organization_id
+        }
+
+    def from_dict(self, data):
+        keys = ['investor_type', 'person_name', 'organization_id']
+        build_obj_from_dict(self, data, keys)
+
+    def is_valid(self):
+        self.errors = {}
+        validates = True
+        if not getattr(self, 'investor_type', None):
+            validates = False
+            self.errors['investor_type'] = ('Required field')
+
+        if getattr(self, 'investor_type', None) == 'ORG' and \
+           (not self.organization_id or not Organization.get_by_id(
+               self.organization_id)):
+
+            validates = False
+            self.errors['organization_id'] = _('Invalid Organization')
+
+        return validates
 
 
 class Investment(CommonObject):
@@ -41,13 +82,48 @@ class Investment(CommonObject):
     """
     common_object_type = 'investment'
 
-    investment_type = models.CharField(max_length=100, choices=INVESTMENT_TYPE)
+    investment_type = models.CharField(max_length=100, choices=INVESTMENT_TYPE,
+                default='donation')
     value = models.DecimalField(decimal_places=2, max_digits=14, null=True,
                 blank=True)
     currency = models.CharField(max_length=3, choices=CURRENCIES_CHOICES,
-                null=True, blank=True)
+                default='BRL', null=True, blank=True)
 
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
+
+    investor = models.ForeignKey(Investor)
+
+    invested_object_table = models.CharField(max_length=512)
+    invested_object_id = models.IntegerField()
+
+    @property
+    def url(self):
+        return reverse('investment_view', kwargs={'id_': self.id})
+
+    def set_invested_object(self, obj):
+        self.invested_object_table = obj.table_ref
+        self.invested_object_id = obj.id
+
+    # ======================= Utils =============================
+
+    def from_dict(self, data):
+        super(Investment, self).from_dict(data)
+        keys = ['investment_type', 'value', 'currency', 'start_date',
+                'end_date', 'investor', 'invested_object_table',
+                'invested_object_id']
+        date_keys = ['start_date', 'end_date']
+        build_obj_from_dict(self, data, keys, date_keys)
+
+    def to_dict(self):
+        data = super(Investment, self).to_dic()
+        data.update({})
+        return data
+
+    def is_valid(self):
+        self.errors = {}
+        validates = super(Investment, self).is_valid()
+        # custom validations here
+        return validates
 
 
