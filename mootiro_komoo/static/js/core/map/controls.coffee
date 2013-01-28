@@ -66,7 +66,7 @@ define (require) ->
         init: ->
             super()
             require ['./views'], (Views) =>
-                @view = new Views.internal.SearchBoxView()
+                @view = new Views.SearchBoxView()
                 @box.append @view.render().el
                 @handleViewEvents()
 
@@ -74,7 +74,7 @@ define (require) ->
             @view.on 'search', (location) =>
                 type = location.type
                 position = location.position
-                @map.publish 'goto', position, no
+                @map.publish 'goto', position, yes
 
 
     class SupporterBox extends Box
@@ -82,7 +82,9 @@ define (require) ->
 
         init: ->
             super()
-            @box.append $("#map-supporters-content").show()
+            require ['./views'], (Views) =>
+                @view = new Views.SupportersView()
+                @box.append @view.render().el
 
 
     class LicenseBox extends Box

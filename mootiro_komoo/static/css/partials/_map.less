@@ -1,35 +1,72 @@
 #map-searchbox {
     margin: 5px;
+
+    form {
+        margin: 0;
+        padding: 0;
+    }
+
+    .search {
+        margin-top: -8px;
+    }
+
+    input {
+        display: inline-block;
+        height: auto;
+        padding: 4px;
+        color: inherit;
+        background: rgba(255, 255, 255, 0.8)
+    }
+
+    .location-type {
+        width: auto;
+        height: 26px;
+    }
+
+    .address {
+        width: 135px;
+    }
+
+    .input-container {
+        display: inline-block;
+        width: 135px;
+    }
+
+   .lat, .lng {
+      width: 65px;
+    }
+
 }
 
-#map-searchbox form {
-    margin: 0;
-    padding: 0;
+#map-license {
+    color: black;
+    font-size: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 2px 5px;
+    margin: 0 300px 1px 0;
+    line-height: 14px;
 }
 
-#map-searchbox .search {
-    margin-top: -8px;
+
+#map-supporters {
+    .border-radius(4px, 0, 0, 4px);
+    .box-shadow(0px, 0px, 5px, rgba(0, 0, 0, 0.5));
+    background: #dceff4;
+    padding: 5px;
+    margin-bottom: 10px;
 }
 
-#map-searchbox input {
-    height: auto;
-    padding: 4px;
-    color: inherit;
-    background: rgba(255, 255, 255, 0.8)
+#map-supporters-content h3 {
+    font-size: 14px;
+    margin: 0px 0px 0px 5px;
 }
 
-#map-searchbox .location-type {
-    width: auto;
+#map-supporters-content img {
+    margin: 12px; /* 4*x, x=3 */
 }
 
-#map-searchbox .address {
-    width: 135px;
-}
-#map-searchbox .input-container {
-    display: inline-block;
-    width: 145px;
-}
-#map-searchbox .lat,
-#map-searchbox .lng {
-    width: 61px;
+
+#map-container {
+    /* FIXME */
+    height: 600px;
 }

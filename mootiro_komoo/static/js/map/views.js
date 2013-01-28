@@ -35,10 +35,10 @@
           height: (_ref6 = this.options.height) != null ? _ref6 : '150px'
         });
         if (mapElementCache[this.type] != null) {
-          this.map = mapElementCache[this.type];
+          this.mapElement = mapElementCache[this.type];
           this.loaded = true;
         } else {
-          this.map = $('<div>');
+          this.mapElement = $('<div>');
           this.loaded = false;
         }
         this.render();
@@ -47,21 +47,21 @@
 
       Base.prototype.render = function() {
         var _this = this;
-        this.map.detach();
+        this.mapElement.detach();
         this.$el.html("<div class=\"loading\">" + (i18n('Loading...')) + "</div>");
-        this.map.one('features_loaded', function(e) {
-          _this.map.fadeTo(0, 0);
+        this.mapElement.one('features_loaded', function(e) {
+          _this.mapElement.fadeTo(0, 0);
           _this.$el.empty().css({
             height: '100%'
-          }).append(_this.map);
+          }).append(_this.mapElement);
           _this.refresh().fadeTo(100, 1);
-          mapElementCache[_this.type] = _this.map;
+          mapElementCache[_this.type] = _this.mapElement;
           return _this.loaded = true;
         });
         if (!this.loaded) {
-          this.map.komooMap(this.mapData);
+          this.mapElement.komooMap(this.mapData);
         } else {
-          this.map.komooMap('geojson', this.model.get('geojson'));
+          this.mapElement.komooMap('geojson', this.model.get('geojson'));
         }
         return this;
       };
@@ -77,14 +77,18 @@
       };
 
       Base.prototype.remove = function() {
-        this.map.detach().unbind();
-        this.map.komooMap('clear');
+        this.mapElement.detach().unbind();
+        this.mapElement.komooMap('clear');
         this.stopListening();
         return Base.__super__.remove.apply(this, arguments);
       };
 
       Base.prototype.refresh = function() {
-        return this.map.komooMap('refresh').komooMap('center');
+        return this.mapElement.komooMap('refresh').komooMap('center');
+      };
+
+      Base.prototype.getMap = function() {
+        return this.mapElement.data('map');
       };
 
       return Base;
@@ -133,8 +137,8 @@
           mapType: 'roadmap',
           zoom: (_ref = this.options.zoom) != null ? _ref : 16,
           geojson: (_ref2 = (_ref3 = this.options.geojson) != null ? _ref3 : (_ref4 = this.model) != null ? _ref4.get('geojson') : void 0) != null ? _ref2 : {},
-          width: (_ref5 = this.options.width) != null ? _ref5 : '1000px',
-          height: (_ref6 = this.options.height) != null ? _ref6 : '500px'
+          width: (_ref5 = this.options.width) != null ? _ref5 : '100%',
+          height: (_ref6 = this.options.height) != null ? _ref6 : '100%'
         };
         return Editor.__super__.initialize.apply(this, arguments);
       };

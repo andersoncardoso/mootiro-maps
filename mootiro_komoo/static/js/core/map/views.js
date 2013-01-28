@@ -3,10 +3,28 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var $, Backbone, SearchBoxView, _;
+    var $, Backbone, SearchBoxView, SupportersView, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
+    SupportersView = (function(_super) {
+
+      __extends(SupportersView, _super);
+
+      function SupportersView() {
+        SupportersView.__super__.constructor.apply(this, arguments);
+      }
+
+      SupportersView.prototype.template = _.template(require('text!templates/map/_supporters.html'));
+
+      SupportersView.prototype.render = function() {
+        this.$el.html(this.template({}));
+        return this;
+      };
+
+      return SupportersView;
+
+    })(Backbone.View);
     SearchBoxView = (function(_super) {
 
       __extends(SearchBoxView, _super);
@@ -15,19 +33,15 @@
         SearchBoxView.__super__.constructor.apply(this, arguments);
       }
 
+      SearchBoxView.prototype.template = _.template(require('text!templates/map/_searchbox.html'));
+
       SearchBoxView.prototype.events = {
         'click .search': 'onSearchBtnClick',
         'change .location-type': 'onTypeChange'
       };
 
-      SearchBoxView.prototype.initialize = function() {
-        return this.template = _.template(require('text!templates/map/_searchbox.html'));
-      };
-
       SearchBoxView.prototype.render = function() {
-        var renderedContent;
-        renderedContent = this.template();
-        this.$el.html(renderedContent);
+        this.$el.html(this.template({}));
         return this;
       };
 
@@ -64,9 +78,8 @@
 
     })(Backbone.View);
     return {
-      internal: {
-        SearchBoxView: SearchBoxView
-      }
+      SearchBoxView: SearchBoxView,
+      SupportersView: SupportersView
     };
   });
 

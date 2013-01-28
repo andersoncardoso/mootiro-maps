@@ -22,30 +22,30 @@ define (require) ->
         height: @options.height ? '150px'
 
       if mapElementCache[@type]?
-        @map = mapElementCache[@type]
+        @mapElement = mapElementCache[@type]
         @loaded = true
       else
-        @map = $('<div>')
+        @mapElement = $('<div>')
         @loaded = false
       @render()
       window.pm = this
 
     render: ->
-      @map.detach()
+      @mapElement.detach()
       @$el.html """<div class="loading">#{i18n('Loading...')}</div>"""
 
-      @map.one 'features_loaded', (e) =>
-        @map.fadeTo 0, 0
-        @$el.empty().css(height: '100%').append @map
+      @mapElement.one 'features_loaded', (e) =>
+        @mapElement.fadeTo 0, 0
+        @$el.empty().css(height: '100%').append @mapElement
         @refresh().fadeTo 100, 1
-        mapElementCache[@type] = @map
+        mapElementCache[@type] = @mapElement
         @loaded = true
 
       if not @loaded
-        @map.komooMap @mapData
+        @mapElement.komooMap @mapData
 
       else
-        @map.komooMap('geojson', @model.get('geojson'))
+        @mapElement.komooMap('geojson', @model.get('geojson'))
       this
 
     onError: (err) ->
@@ -56,13 +56,17 @@ define (require) ->
       @refresh()
 
     remove: ->
-      @map.detach().unbind()
-      @map.komooMap('clear')
+      @mapElement.detach().unbind()
+      @mapElement.komooMap('clear')
       @stopListening()
       super
 
     refresh: ->
-      @map.komooMap('refresh').komooMap('center')
+      @mapElement.komooMap('refresh').komooMap('center')
+
+    getMap: ->
+      @mapElement.data('map')
+
 
   class Preview extends Base
     type: 'preview'
@@ -85,8 +89,8 @@ define (require) ->
         mapType: 'roadmap'
         zoom: @options.zoom ? 16
         geojson: @options.geojson ? @model?.get('geojson') ? {}
-        width: @options.width ? '1000px'
-        height: @options.height ? '500px'
+        width: @options.width ? '100%'
+        height: @options.height ? '100%'
       super
 
 

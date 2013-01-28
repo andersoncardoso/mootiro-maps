@@ -146,6 +146,21 @@ trans =
   'Cancel':
     'pt-br': 'Cancelar'
 
+  'Go':
+    'pt-br': 'Ir'
+
+  'Clean':
+    'pt-br': 'Limpo'
+
+  'Coordinate':
+    'pt-br': 'Coordenada'
+
+  'Latitude':
+    'pt-br': 'Latitude'
+
+  'Longitude':
+    'pt-br': 'Longitude'
+
 
 window.i18n = (str) ->
   lang = KomooNS.lang

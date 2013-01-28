@@ -274,9 +274,10 @@
       MapEditor.prototype.initialize = function() {
         _.bindAll(this);
         this.subViews = [];
-        this.subViews.push(new mapViews.Editor({
+        this.mapEditor = new mapViews.Editor({
           parentSelector: '#map-container'
-        }));
+        });
+        this.subViews.push(this.mapEditor);
         return this.render();
       };
 
@@ -294,6 +295,10 @@
           this.$(view.options.parentSelector).append(view.$el);
         }
         return this;
+      };
+
+      MapEditor.prototype.getMap = function() {
+        return this.mapEditor.getMap();
       };
 
       return MapEditor;

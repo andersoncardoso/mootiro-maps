@@ -4,17 +4,23 @@ define (require) ->
     _ = require 'underscore'
     Backbone = require 'backbone'
 
+
+    class SupportersView extends Backbone.View
+        template: _.template require 'text!templates/map/_supporters.html'
+
+        render: () ->
+            @$el.html @template {}
+            this
+
+
     class SearchBoxView extends Backbone.View
+        template: _.template require 'text!templates/map/_searchbox.html'
         events:
             'click .search': 'onSearchBtnClick'
             'change .location-type': 'onTypeChange'
 
-        initialize: () ->
-            @template = _.template require 'text!templates/map/_searchbox.html'
-
         render: () ->
-            renderedContent = @template()
-            @$el.html renderedContent
+            @$el.html @template {}
             this
 
         onTypeChange: () ->
@@ -47,7 +53,6 @@ define (require) ->
 
 
     return {
-        internal: {
-            SearchBoxView: SearchBoxView
-        }
+        SearchBoxView: SearchBoxView
+        SupportersView: SupportersView
     }

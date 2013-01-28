@@ -153,8 +153,9 @@ define (require) ->
     initialize: ->
       _.bindAll this
       @subViews = []
-      @subViews.push new mapViews.Editor
+      @mapEditor = new mapViews.Editor
         parentSelector: '#map-container'
+      @subViews.push @mapEditor
       @render()
 
     render: ->
@@ -162,6 +163,9 @@ define (require) ->
       @$el.html @template {}
       @$(view.options.parentSelector).append view.$el for view in @subViews
       this
+
+    getMap: ->
+      @mapEditor.getMap()
 
 
   Header: Header

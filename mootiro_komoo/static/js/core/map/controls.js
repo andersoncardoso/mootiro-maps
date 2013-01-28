@@ -81,7 +81,7 @@
         var _this = this;
         SearchBox.__super__.init.call(this);
         return require(['./views'], function(Views) {
-          _this.view = new Views.internal.SearchBoxView();
+          _this.view = new Views.SearchBoxView();
           _this.box.append(_this.view.render().el);
           return _this.handleViewEvents();
         });
@@ -93,7 +93,7 @@
           var position, type;
           type = location.type;
           position = location.position;
-          return _this.map.publish('goto', position, false);
+          return _this.map.publish('goto', position, true);
         });
       };
 
@@ -111,8 +111,12 @@
       SupporterBox.prototype.id = "map-supporters";
 
       SupporterBox.prototype.init = function() {
+        var _this = this;
         SupporterBox.__super__.init.call(this);
-        return this.box.append($("#map-supporters-content").show());
+        return require(['./views'], function(Views) {
+          _this.view = new Views.SupportersView();
+          return _this.box.append(_this.view.render().el);
+        });
       };
 
       return SupporterBox;

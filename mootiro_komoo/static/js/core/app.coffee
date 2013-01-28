@@ -129,6 +129,7 @@ define (require) ->
             'main/router',
             'authentication/router',
             'user/router'
+            'map/router'
             # Add your router module here
         ], =>
           # Instantiate all routers
@@ -152,11 +153,18 @@ define (require) ->
     initializeMapEditor: ->
       dfd = new $.Deferred()
       require ['main/views'], (mainViews) =>
+        $('#map-editor-container').hide()
         mapEditor = new mainViews.MapEditor
           el: '#map-editor-container'
+        @mapEditor = mapEditor.getMap()
         dfd.resolve true
       dfd.promise()
 
+    showMainMap: ->
+      $('#map-editor-container').show()
+
+    hideMainMap: ->
+      $('#map-editor-container').hide()
 
 
   return {

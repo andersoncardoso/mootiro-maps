@@ -141,7 +141,7 @@
         dfd = new $.Deferred();
         this.routers = [];
         $(function() {
-          return require(['main/router', 'authentication/router', 'user/router'], function() {
+          return require(['main/router', 'authentication/router', 'user/router', 'map/router'], function() {
             var router, _i, _len;
             for (_i = 0, _len = arguments.length; _i < _len; _i++) {
               router = arguments[_i];
@@ -175,12 +175,22 @@
         dfd = new $.Deferred();
         require(['main/views'], function(mainViews) {
           var mapEditor;
+          $('#map-editor-container').hide();
           mapEditor = new mainViews.MapEditor({
             el: '#map-editor-container'
           });
+          _this.mapEditor = mapEditor.getMap();
           return dfd.resolve(true);
         });
         return dfd.promise();
+      };
+
+      App.prototype.showMainMap = function() {
+        return $('#map-editor-container').show();
+      };
+
+      App.prototype.hideMainMap = function() {
+        return $('#map-editor-container').hide();
       };
 
       return App;
