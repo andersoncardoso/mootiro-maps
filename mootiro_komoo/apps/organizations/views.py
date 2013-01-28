@@ -1,5 +1,25 @@
-# # -*- coding: utf-8 -*-
-# from __future__ import unicode_literals
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+import logging
+
+from annoying.decorators import render_to
+
+
+logger = logging.getLogger(__name__)
+
+
+@render_to('global.html')
+def organizations_root(request):
+    '''Intended to only load a backbone router.'''
+    return {}
+
+
+
+
+
+
+
+
 # import logging
 # import json
 # import markdown

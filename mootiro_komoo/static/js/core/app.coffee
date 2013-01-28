@@ -23,9 +23,11 @@ define (require) ->
     goTo: (url, page) ->
       $.when(pageManager.canClose()).done =>
         if page?
+          console.log 'ife'
           @routers[0].navigate url
           pageManager.open page
         else
+          console.log 'else'
           @routers[0].navigate url, trigger: true
 
     handleModulesError: ->
@@ -126,6 +128,7 @@ define (require) ->
             'main/router',
             'authentication/router',
             'user/router'
+            'organizations/router',
             # Add your router module here
         ], =>
           # Instantiate all routers

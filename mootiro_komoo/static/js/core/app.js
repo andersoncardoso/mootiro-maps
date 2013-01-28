@@ -25,9 +25,11 @@
         var _this = this;
         return $.when(pageManager.canClose()).done(function() {
           if (page != null) {
+            console.log('ife');
             _this.routers[0].navigate(url);
             return pageManager.open(page);
           } else {
+            console.log('else');
             return _this.routers[0].navigate(url, {
               trigger: true
             });
@@ -141,7 +143,7 @@
         dfd = new $.Deferred();
         this.routers = [];
         $(function() {
-          return require(['main/router', 'authentication/router', 'user/router'], function() {
+          return require(['main/router', 'authentication/router', 'user/router', 'organizations/router'], function() {
             var router, _i, _len;
             for (_i = 0, _len = arguments.length; _i < _len; _i++) {
               router = arguments[_i];

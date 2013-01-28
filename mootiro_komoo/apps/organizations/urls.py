@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.conf.urls.defaults import patterns, url
-from mootiro_komoo.urls import prepare_regex as pr
+from django.conf.urls.defaults import url, patterns
 
 
+#
+# views urls
 urlpatterns = patterns('organizations.views',
-    # url(r'^new/?$', 'new_organization', name='new_organization'),
+    url(r'^organizations/?$', 'organizations_root', name='organizations_root'),
+    url(r'^organizations/new/?$', 'organizations_root', name='organizations_root'),
+)
+
+# urlpatterns = patterns('organizations.views',
     # url(r'^new/from_map/?$', 'new_organization_from_map',
     #             name='new_organization_from_map'),
     # url(r'^$', 'organization_list', name='organization_list'),
@@ -22,5 +27,5 @@ urlpatterns = patterns('organizations.views',
     # url(pr(r'^ID/related/?$'), 'related_items',
     #             name='view_organization_related_items'),
     # url(pr(r'^ID/?$'), 'show', name='view_organization'),
-)
+# )
 
