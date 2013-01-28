@@ -97,7 +97,6 @@ class InvestmentModelTest(unittest.TestCase):
         return inv
 
     def investment_test(self):
-        self.maxDiff = None
         investor = self._create_investor()
         obj = OrganizationModelTestCase._create_organization()
 
@@ -127,7 +126,7 @@ class InvestmentModelTest(unittest.TestCase):
             start_date=const.DATETIME_OBJ,
             investor=investor
         )
-        inv.set_invested_object(obj)
+        inv.invested_object = obj
 
         inv_dict = filter_dict(inv.to_dict(),
                 ['id', 'last_update', 'last_editor', 'creation_date'])
