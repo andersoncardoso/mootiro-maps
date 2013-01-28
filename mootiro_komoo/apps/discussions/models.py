@@ -4,6 +4,7 @@ from django.db import models
 
 from authentication.models import User
 from main.models import BaseModel
+from main.utils import get_model_from_table_ref
 
 
 class Comment(BaseModel):
@@ -20,6 +21,17 @@ class Comment(BaseModel):
     object_table = models.CharField(max_length=100)
     object_id = models.IntegerField()
 
+    def _set_object(self, obj):
+        self.object_table = obj.table_ref
+        self.object_id = obj.id
+
+    def _get_object(self):
+        model = get_model_from_table_ref(self.object_table)
+        obj = model.get_by_id(self.object_id)
+        return obj
+
+    object = property(_get_object, _set_object)
+
     class Meta:
         ordering = ['creation_date']
 
@@ -33,10 +45,6 @@ class Comment(BaseModel):
         return cls.objects \
                     .filter(object_table=obj.table_red, object_id=obj.id) \
                     .count()
-
-    def set_object(self, obj):
-        self.object_table = obj.table_ref
-        self.object_id = obj.id
 
     @classmethod
     def nested_discussion_for_object(self, obj, parent=None):

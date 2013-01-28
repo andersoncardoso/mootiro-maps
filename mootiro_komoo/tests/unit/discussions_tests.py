@@ -20,11 +20,12 @@ class DiscussionTestCase(unittest.TestCase):
             comment=comment,
             parent=parent,
         )
-        comment.set_object(obj)
+        comment.object = obj
         comment.save()
         return comment
 
     def _compare_nested(self, expected, nested):
+        # evil nested comparison
         for idx, comm in enumerate(nested):
             expected_dict = filter_dict(expected[idx], ['nested_comments'])
             comm_dict = filter_dict(comm,
@@ -95,7 +96,6 @@ class DiscussionTestCase(unittest.TestCase):
         nested_discussion = Comment.nested_discussion_for_object(obj)
         self.assertEqual(len(expected), len(nested_discussion))
 
-        # evil nested comparison
         self._compare_nested(expected, nested_discussion)
 
 
