@@ -291,12 +291,14 @@ class JsonResponse(HttpResponse):
     """
     Creates a Json Response. The Http status code can be changed.
     usage:
+    ```
         def my_view(request):
             # some code
             return JsonResponse(my_data_dict)
         def my_other_view(request):
             # some code
             return JsonResponse(my_errors_dict, status_code=400)
+    ```
     """
     def __init__(self, data={}, status_code=None):
         content = to_json(data)

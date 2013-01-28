@@ -31,7 +31,21 @@ CURRENCIES_CHOICES = (
 
 
 class Investor(BaseModel):
-    """ The giver part on an investment. """
+    """
+    Investor for the investments model.
+    A Investor can be of two kinds. An organization registered on our system
+    which has a reference, or an non-registered 'person' (can be a
+    organization or anything else), which only has a name.
+    The Investor also can be anonymous. A anonymous investor is a 'Person'
+    without a  name.
+    Fields:
+        investor_type: kind of investor. Person (PER) or Organization (ORG)
+        person_name: name of the person, if the type is the same.
+        organization_id: reference for organization if the type is org.
+
+        name: property for easily retrieving a presentation name for the
+              investor in despite of its kind.
+    """
     investor_type = models.CharField(max_length=3, choices=INVESTOR_TYPE,
                                      default='PER')
     person_name = models.CharField(max_length=512, blank=True, null=True)
@@ -65,6 +79,7 @@ class Investor(BaseModel):
             validates = False
             self.errors['investor_type'] = ('Required field')
 
+        # If its a Org should have a valid reference
         if getattr(self, 'investor_type', None) == 'ORG' and \
            (not self.organization_id or not Organization.get_by_id(
                self.organization_id)):
@@ -77,8 +92,20 @@ class Investor(BaseModel):
 
 class Investment(CommonObject):
     """
-    A donation of money (or any other stuff) for either an Organization, a
-    Proposal or a Resource in the system.
+    A donation of money (or any other stuff) for any object in the system.
+    Fields:
+        investment_type: specific kind of investment.
+        value: donated amount
+        currency: type of currency for the value
+        stard_date: start date for the donation.
+        end_date: end date for the time range of the donation. If the donation
+                  dont have a time range, you can use only the start_date
+        investor: reference for the Investor table. Can be a Org or a person
+        invested_object_table: table ref for the invested object
+        invested_object_id: id for the invested obj.
+
+    You can easily set the invested type using the method
+    `set_invested_object(obj)`
     """
     common_object_type = 'investment'
 

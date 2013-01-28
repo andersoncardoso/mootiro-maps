@@ -9,7 +9,8 @@ from organizations.models import Organization
 
 
 class OrganizationModelTestCase(unittest.TestCase):
-
+    
+    @classmethod
     def _create_organization(self):
         it3s, created = Organization.objects.get_or_create(
             name='IT3S',
