@@ -15,7 +15,7 @@
       function App() {
         var _this = this;
         $.when(this.interceptAjaxRequests(), this.handleModulesError(), this.initializeUser(), this.initializeRouters(), this.initializeAnalytics()).done(function() {
-          return $.when(_this.drawLayout()).done(function() {
+          return $.when(_this.drawLayout(), _this.initializeMapEditor()).done(function() {
             return _this.trigger('initialize');
           });
         });
@@ -165,6 +165,20 @@
           return require(['services/analytics'], function(analytics) {
             return dfd.resolve(analytics.initialize());
           });
+        });
+        return dfd.promise();
+      };
+
+      App.prototype.initializeMapEditor = function() {
+        var dfd,
+          _this = this;
+        dfd = new $.Deferred();
+        require(['main/views'], function(mainViews) {
+          var mapEditor;
+          mapEditor = new mainViews.MapEditor({
+            el: '#map-editor-container'
+          });
+          return dfd.resolve(true);
         });
         return dfd.promise();
       };

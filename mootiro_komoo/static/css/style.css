@@ -3008,6 +3008,36 @@ form#user-info .field-container.about-me textarea {
   height: 100%;
   padding-bottom: 10%;
 }
+#map-searchbox {
+  margin: 5px;
+}
+#map-searchbox form {
+  margin: 0;
+  padding: 0;
+}
+#map-searchbox .search {
+  margin-top: -8px;
+}
+#map-searchbox input {
+  height: auto;
+  padding: 4px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.8);
+}
+#map-searchbox .location-type {
+  width: auto;
+}
+#map-searchbox .address {
+  width: 135px;
+}
+#map-searchbox .input-container {
+  display: inline-block;
+  width: 145px;
+}
+#map-searchbox .lat,
+#map-searchbox .lng {
+  width: 61px;
+}
 body > .footer,
 body > #footer-container > .footer {
   *zoom: 1;

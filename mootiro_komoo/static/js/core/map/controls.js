@@ -1286,7 +1286,9 @@
       SaveLocation.prototype.saveLocation = function(center, zoom) {
         if (center == null) center = this.map.googleMap.getCenter();
         if (zoom == null) zoom = this.map.getZoom();
-        utils.createCookie('lastLocation', center.toUrlValue(), 90);
+        if (center != null) {
+          utils.createCookie('lastLocation', center.toUrlValue(), 90);
+        }
         return utils.createCookie('lastZoom', zoom, 90);
       };
 

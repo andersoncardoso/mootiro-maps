@@ -18,7 +18,10 @@ define (require) ->
         @initializeUser()
         @initializeRouters()
         @initializeAnalytics()
-      ).done => $.when(@drawLayout()).done => @trigger 'initialize'
+      ).done => $.when(
+        @drawLayout()
+        @initializeMapEditor()
+      ).done => @trigger 'initialize'
 
     goTo: (url, page) ->
       $.when(pageManager.canClose()).done =>
@@ -145,6 +148,15 @@ define (require) ->
       $ -> require ['services/analytics'], (analytics) ->
           dfd.resolve analytics.initialize()
       dfd.promise()
+
+    initializeMapEditor: ->
+      dfd = new $.Deferred()
+      require ['main/views'], (mainViews) =>
+        mapEditor = new mainViews.MapEditor
+          el: '#map-editor-container'
+        dfd.resolve true
+      dfd.promise()
+
 
 
   return {

@@ -898,7 +898,7 @@ define (require) ->
 
         saveLocation: (center = @map.googleMap.getCenter(), zoom = @map.getZoom()) ->
             #console?.log 'Location saved:', center.toUrlValue()
-            utils.createCookie 'lastLocation', center.toUrlValue(), 90
+            utils.createCookie('lastLocation', center.toUrlValue(), 90) if center?
             utils.createCookie 'lastZoom', zoom, 90
 
         goToSavedLocation: ->

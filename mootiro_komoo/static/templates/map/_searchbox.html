@@ -1,14 +1,14 @@
 <form class'search-form' action="#">
   <select name="location-type" class="location-type">
-    <option value="address"><%= gettext('Address') %></option>
-    <option value="latLng"><%= gettext('Coordinate') %></option>
+    <option value="address"><%= i18n('Address') %></option>
+    <option value="latLng"><%= i18n('Coordinate') %></option>
   </select>
   <div class="address-container input-container">
-    <input type="text" name="address" value="" placeholder="<%= gettext('Address') %>" class="address" />
+    <input type="text" name="address" value="" placeholder="<%= i18n('Address') %>" class="address" />
   </div>
   <div class="latLng-container input-container" style="display: none;">
-    <input type="text" name="lat" value="" placeholder="<%= gettext('Latitude') %>"  class="lat" />
-    <input type="text" name="lng" value="" placeholder="<%= gettext('Longitude') %>" class="lng" />
+    <input type="text" name="lat" value="" placeholder="<%= i18n('Latitude') %>"  class="lat" />
+    <input type="text" name="lng" value="" placeholder="<%= i18n('Longitude') %>" class="lng" />
   </div>
-  <input type="submit" class="btn search" value="<%= gettext('Go') %>" />
+  <input type="submit" class="btn search" value="<%= i18n('Go') %>" />
   </form>

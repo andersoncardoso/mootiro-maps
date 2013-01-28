@@ -6,6 +6,7 @@ define (require) ->
   Backbone = require 'backbone'
 
   app = require 'app'
+  mapViews = require 'map/views'
 
 
   class Feedback extends Backbone.View
@@ -145,8 +146,27 @@ define (require) ->
       @$("a[data-action=#{mode}]").addClass 'active'
 
 
+  class MapEditor extends Backbone.View
+    template: _.template require 'text!templates/main/_map_editor.html'
+    className: 'map-editor'
+
+    initialize: ->
+      _.bindAll this
+      @subViews = []
+      @subViews.push new mapViews.Editor
+        parentSelector: '#map-container'
+      @render()
+
+    render: ->
+      view.$el.detach() for view in @subViews
+      @$el.html @template {}
+      @$(view.options.parentSelector).append view.$el for view in @subViews
+      this
+
+
   Header: Header
   Footer: Footer
   UpperBar: UpperBar
   ActionBar: ActionBar
   Feedback: Feedback
+  MapEditor: MapEditor

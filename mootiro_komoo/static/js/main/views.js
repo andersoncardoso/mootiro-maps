@@ -4,11 +4,12 @@
 
   define(function(require) {
     'use strict';
-    var $, ActionBar, Backbone, Feedback, Footer, Header, UpperBar, app, _;
+    var $, ActionBar, Backbone, Feedback, Footer, Header, MapEditor, UpperBar, app, mapViews, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
     app = require('app');
+    mapViews = require('map/views');
     Feedback = (function(_super) {
 
       __extends(Feedback, _super);
@@ -258,12 +259,53 @@
       return ActionBar;
 
     })(Backbone.View);
+    MapEditor = (function(_super) {
+
+      __extends(MapEditor, _super);
+
+      function MapEditor() {
+        MapEditor.__super__.constructor.apply(this, arguments);
+      }
+
+      MapEditor.prototype.template = _.template(require('text!templates/main/_map_editor.html'));
+
+      MapEditor.prototype.className = 'map-editor';
+
+      MapEditor.prototype.initialize = function() {
+        _.bindAll(this);
+        this.subViews = [];
+        this.subViews.push(new mapViews.Editor({
+          parentSelector: '#map-container'
+        }));
+        return this.render();
+      };
+
+      MapEditor.prototype.render = function() {
+        var view, _i, _j, _len, _len2, _ref, _ref2;
+        _ref = this.subViews;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          view.$el.detach();
+        }
+        this.$el.html(this.template({}));
+        _ref2 = this.subViews;
+        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+          view = _ref2[_j];
+          this.$(view.options.parentSelector).append(view.$el);
+        }
+        return this;
+      };
+
+      return MapEditor;
+
+    })(Backbone.View);
     return {
       Header: Header,
       Footer: Footer,
       UpperBar: UpperBar,
       ActionBar: ActionBar,
-      Feedback: Feedback
+      Feedback: Feedback,
+      MapEditor: MapEditor
     };
   });
 

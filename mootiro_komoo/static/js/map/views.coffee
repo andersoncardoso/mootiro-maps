@@ -1,70 +1,96 @@
 define (require) ->
 
-    $ = require 'jquery'
-    _ = require 'underscore'
-    Backbone = require 'backbone'
+  $ = require 'jquery'
+  _ = require 'underscore'
+  Backbone = require 'backbone'
 
-    app = require 'app'
+  app = require 'app'
+  require 'map.jquery'
 
-    mapElementCache = null
+  mapElementCache = {}
+  class Base extends Backbone.View
+    initialize: ->
+      _.bindAll this
+      @listenTo app, 'error', @onError
 
-    require 'map.jquery'
-    class Preview extends Backbone.View
-        initialize: ->
-            _.bindAll this
-            @listenTo app, 'error', @onError
+      @mapData ?=
+        type: @type
+        mapType: 'roadmap'
+        zoom: @options.zoom ? 16
+        geojson: @options.geojson ? @model?.get('geojson') ? {}
+        width: @options.width ? '244px'
+        height: @options.height ? '150px'
 
-            if mapElementCache
-                @map = mapElementCache
-                @loaded = true
-            else
-                @map = $('<div>')
-                @loaded = false
-            @render()
-            window.pm = this
+      if mapElementCache[@type]?
+        @map = mapElementCache[@type]
+        @loaded = true
+      else
+        @map = $('<div>')
+        @loaded = false
+      @render()
+      window.pm = this
 
-        onError: (err) ->
-            if not @loaded and err.message.indexOf 'goog!maps' > -1
-                @$el.html """<div class="loading">#{i18n('Map unavailable!')}</div>"""
+    render: ->
+      @map.detach()
+      @$el.html """<div class="loading">#{i18n('Loading...')}</div>"""
 
-        onOpen: ->
-            @refresh()
+      @map.one 'features_loaded', (e) =>
+        @map.fadeTo 0, 0
+        @$el.empty().css(height: '100%').append @map
+        @refresh().fadeTo 100, 1
+        mapElementCache[@type] = @map
+        @loaded = true
 
-        remove: ->
-            @map.detach().unbind()
-            @map.komooMap('clear')
-            @stopListening()
-            super
+      if not @loaded
+        @map.komooMap @mapData
 
-        refresh: ->
-            @map.komooMap('refresh').komooMap('center')
+      else
+        @map.komooMap('geojson', @model.get('geojson'))
+      this
 
-        render: ->
+    onError: (err) ->
+      if not @loaded and err.message.indexOf 'goog!maps' > -1
+        @$el.html """<div class="loading">#{i18n('Map unavailable!')}</div>"""
 
-            @map.detach()
-            @$el.html """<div class="loading">#{i18n('Loading...')}</div>"""
+    onOpen: ->
+      @refresh()
 
-            @map.one 'features_loaded', (e) =>
-                @map.fadeTo 0, 0
-                @$el.empty().css(height: '100%').append @map
-                @refresh().fadeTo 100, 1
-                mapElementCache = @map
-                @loaded = true
+    remove: ->
+      @map.detach().unbind()
+      @map.komooMap('clear')
+      @stopListening()
+      super
 
-            if not @loaded
-                @map.komooMap
-                    type: 'preview'
-                    mapType: 'roadmap'
-                    zoom: 16
-                    geojson: @model.get('geojson')
-                    width: @options.width ? '244px'
-                    height: @options.height ? '150px'
+    refresh: ->
+      @map.komooMap('refresh').komooMap('center')
 
-            else
-                @map.komooMap('geojson', @model.get('geojson'))
-            this
+  class Preview extends Base
+    type: 'preview'
+    initialize: ->
+      @mapData =
+        type: @type
+        mapType: 'roadmap'
+        zoom: @options.zoom ? 16
+        geojson: @model.get('geojson')
+        width: @options.width ? '244px'
+        height: @options.height ? '150px'
+      super
 
 
-    return {
-        Preview: Preview
-    }
+  class Editor extends Base
+    type: 'main'
+    initialize: ->
+      @mapData =
+        type: @type
+        mapType: 'roadmap'
+        zoom: @options.zoom ? 16
+        geojson: @options.geojson ? @model?.get('geojson') ? {}
+        width: @options.width ? '1000px'
+        height: @options.height ? '500px'
+      super
+
+
+  return {
+      Preview: Preview
+      Editor: Editor
+  }
