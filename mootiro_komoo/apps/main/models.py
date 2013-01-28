@@ -315,6 +315,7 @@ class RelationsField(object):
     """
     Relations descriptor.
     usage:
+    ```
         class MyClass(models.Model):
             relations = RelationsField()
 
@@ -335,6 +336,7 @@ class RelationsField(object):
 
         obj.relations.paginate(page=1, num=10)
         obj.relations.filter_by_type('relation_type1')
+    ```
     """
     def __get__(self, instance, owner):
         ref_obj = GenericRef.get_reference_for_object(instance)

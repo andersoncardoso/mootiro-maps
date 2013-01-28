@@ -97,7 +97,6 @@ class InvestmentModelTest(unittest.TestCase):
         return inv
 
     def investment_test(self):
-        self.maxDiff = None
         investor = self._create_investor()
         obj = OrganizationModelTestCase._create_organization()
 
