@@ -143,8 +143,17 @@ class Investment(CommonObject):
         build_obj_from_dict(self, data, keys, date_keys)
 
     def to_dict(self):
-        data = super(Investment, self).to_dic()
-        data.update({})
+        data = super(Investment, self).to_dict()
+        data.update({
+            'investment_type': self.investment_type,
+            'value': self.value,
+            'currency': self.currency,
+            'start_date': self.start_date,
+            'end_date': self.end_date,
+            'investor': self.investor,
+            'invested_object_table': self.invested_object_table,
+            'invested_object_id': self.invested_object_id,
+        })
         return data
 
     def is_valid(self):
