@@ -129,15 +129,17 @@ class GenericRelationsTest(unittest.TestCase):
 
         self.assertEqual([], a1.relations)
 
-        a1.relations.add(a2)
-        a1.relations.add(a3)
-        a1.relations.add(b)
+        a1_relations = a1.relations
+        a1_relations.add(a2)
+        a1_relations.add(a3)
+        a1_relations.add(b)
 
-        relations_with_TestModelA = a1.relations.filter_by_model(TestModelA)
+        a1_relations = a1.relations
+        relations_with_TestModelA = a1_relations.filter_by_model(TestModelA)
         self.assertEquals(set([(a2, ''), (a3, ''), ]),
                           set(relations_with_TestModelA))
 
-        relations_with_TestModelB = a1.relations.filter_by_model(TestModelB)
+        relations_with_TestModelB = a1_relations.filter_by_model(TestModelB)
         self.assertEquals([(b, ''), ], relations_with_TestModelB)
 
     def paginated_test(self):
@@ -148,21 +150,23 @@ class GenericRelationsTest(unittest.TestCase):
 
         self.assertEqual([], a1.relations)
 
-        a1.relations.add(a2)
-        a1.relations.add(a3)
-        a1.relations.add(b)
+        a1_relations = a1.relations
+        a1_relations.add(a2)
+        a1_relations.add(a3)
+        a1_relations.add(b)
+
+        a1_relations = a1.relations
 
         self.assertEqual([(a2, ''), (a3, ''), ],
-                         a1.relations.paginated(per_page=2))
+                         a1_relations.paginated(per_page=2))
         self.assertEqual([(b, ''), ],
-                         a1.relations.paginated(page=2, per_page=2))
+                         a1_relations.paginated(page=2, per_page=2))
 
+        a1_filtered_by_model_A = a1_relations.filter_by_model(TestModelA)
         self.assertEqual([(a2, ''), ],
-                         a1.relations.filter_by_model(TestModelA
-                             ).paginated(per_page=1))
+                         a1_filtered_by_model_A.paginated(per_page=1))
         self.assertEqual([(a3, ''), ],
-                         a1.relations.filter_by_model(TestModelA
-                             ).paginated(page=2, per_page=1))
+                         a1_filtered_by_model_A.paginated(page=2, per_page=1))
 
 
 class CommonObjectTestCase(unittest.TestCase):

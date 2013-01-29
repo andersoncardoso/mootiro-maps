@@ -5,7 +5,7 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
-from main.utils import build_obj_from_dict
+from main.utils import build_obj_from_dict, get_model_from_table_ref
 from main.models import BaseModel, CommonObject
 
 from organizations.models import Organization
@@ -128,9 +128,16 @@ class Investment(CommonObject):
     def url(self):
         return reverse('investment_view', kwargs={'id_': self.id})
 
-    def set_invested_object(self, obj):
+    def _set_invested_object(self, obj):
         self.invested_object_table = obj.table_ref
         self.invested_object_id = obj.id
+
+    def _get_invested_object(self):
+        model = get_model_from_table_ref(self.invested_object_table)
+        obj = models.get_by_id(self.invested_object_id)
+        return obj
+
+    invested_object = property(_get_invested_object, _set_invested_object)
 
     # ======================= Utils =============================
 
@@ -143,8 +150,17 @@ class Investment(CommonObject):
         build_obj_from_dict(self, data, keys, date_keys)
 
     def to_dict(self):
-        data = super(Investment, self).to_dic()
-        data.update({})
+        data = super(Investment, self).to_dict()
+        data.update({
+            'investment_type': self.investment_type,
+            'value': self.value,
+            'currency': self.currency,
+            'start_date': self.start_date,
+            'end_date': self.end_date,
+            'investor': self.investor,
+            'invested_object_table': self.invested_object_table,
+            'invested_object_id': self.invested_object_id,
+        })
         return data
 
     def is_valid(self):

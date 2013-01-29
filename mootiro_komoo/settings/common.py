@@ -105,7 +105,7 @@ INSTALLED_APPS = [
     'regions',
     'issues',
     'proposals',
-    'komoo_comments',
+    'discussions',
     'resources',
     'authentication',
     'organizations',
@@ -114,14 +114,11 @@ INSTALLED_APPS = [
     'hotsite',
     'signatures',
     'projects',
-    'discussion',
 ]
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
 
 # ========== Komoo ============================================================
-KOMOO_COMMENTS_WIDTH = 3
-KOMOO_COMMENTS_HEIGHT = 20
 KOMOO_DISABLE_MAP = False
 DELETE_HOURS = 24
 
