@@ -4,39 +4,52 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, OrganizationRouter, app, models, pages, urls, _;
+    var Backbone, OrganizationsRouter, app, orgModels, orgPages, _;
     _ = require('underscore');
     Backbone = require('backbone');
     app = require('app');
-    urls = require('urls');
-    pages = require('./pages');
-    models = require('./models');
-    OrganizationRouter = (function(_super) {
+    orgPages = require('./pages');
+    orgModels = require('./models');
+    OrganizationsRouter = (function(_super) {
 
-      __extends(OrganizationRouter, _super);
+      __extends(OrganizationsRouter, _super);
 
-      function OrganizationRouter() {
-        OrganizationRouter.__super__.constructor.apply(this, arguments);
+      function OrganizationsRouter() {
+        OrganizationsRouter.__super__.constructor.apply(this, arguments);
       }
 
-      OrganizationRouter.prototype.routes = {
-        'organizations(/)': 'list',
-        'organizations/new(/)': 'create',
-        'organizations/:id(/)': 'view'
+      OrganizationsRouter.prototype.routes = {
+        'organizations/new(/)': 'new',
+        'organizations/:id(/)': 'show'
       };
 
-      OrganizationRouter.prototype.initialize = function() {
+      OrganizationsRouter.prototype.initialize = function() {
         return _.bindAll(this);
       };
 
-      OrganizationRouter.prototype.create = function() {
-        return app.goTo('/organizations/new/', new pages.OrganizationPage());
+      OrganizationsRouter.prototype.show = function(id) {
+        var model;
+        model = new orgModels.Organization({
+          'id': id
+        });
+        model.fetch();
+        return app.goTo("/organizations/" + id, new orgPages.Show({
+          'model': model
+        }));
       };
 
-      return OrganizationRouter;
+      OrganizationsRouter.prototype["new"] = function() {
+        var model;
+        model = new orgModels.Organization({});
+        return app.goTo("/organizations/new", new orgPages.New({
+          'model': model
+        }));
+      };
+
+      return OrganizationsRouter;
 
     })(Backbone.Router);
-    return OrganizationRouter;
+    return OrganizationsRouter;
   });
 
 }).call(this);

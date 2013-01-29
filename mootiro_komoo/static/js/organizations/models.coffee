@@ -3,14 +3,17 @@ define (require) ->
 
   Backbone = require 'backbone'
   _ = require 'underscore'
-  
+
+  app = require 'app'
   PermissionMixin = require('core/mixins').PermissionMixin
+
 
   class Organization extends Backbone.Model
     _.extend @prototype, PermissionMixin
 
     urlRoot: '/api/organizations'
 
-  return {
-    Organization: Organization
-  }
+    edit: ->
+      app.goTo "organizations/#{@id}/edit"
+
+  return {Organization: Organization}

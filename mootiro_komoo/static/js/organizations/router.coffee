@@ -5,22 +5,26 @@ define (require) ->
   Backbone = require 'backbone'
 
   app = require 'app'
-  urls = require 'urls'
 
-  pages = require './pages'
-  models = require './models'
+  orgPages = require './pages'
+  orgModels = require './models'
 
 
-  class OrganizationRouter extends Backbone.Router
+  class OrganizationsRouter extends Backbone.Router
     routes:
-      'organizations(/)': 'list'
-      'organizations/new(/)': 'create'
-      'organizations/:id(/)': 'view'
+      'organizations/new(/)': 'new'
+      'organizations/:id(/)': 'show'
 
     initialize: ->
       _.bindAll this
 
-    create: ->
-      app.goTo('/organizations/new/', new pages.OrganizationPage())
+    show: (id) ->
+      model = new orgModels.Organization {'id': id}
+      model.fetch()
+      app.goTo("/organizations/#{id}", new orgPages.Show 'model': model)
 
-  return OrganizationRouter
+    new: ->
+      model = new orgModels.Organization {}  # no id, new object
+      app.goTo("/organizations/new", new orgPages.New 'model': model)
+
+  return OrganizationsRouter

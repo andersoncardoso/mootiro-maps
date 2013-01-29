@@ -4,40 +4,62 @@
 
   define(function(require) {
     'use strict';
-    var $, Backbone, OrganizationPage, mainViews, models, pageManager, views;
-    $ = require('jquery');
-    Backbone = require('backbone');
+    var New, Show, mainViews, orgModels, orgViews, pageManager;
     pageManager = require('core/page_manager');
-    views = require('./views');
     mainViews = require('main/views');
-    models = require('./models');
-    OrganizationPage = (function(_super) {
+    orgViews = require('./views');
+    orgModels = require('./models');
+    Show = (function(_super) {
 
-      __extends(OrganizationPage, _super);
+      __extends(Show, _super);
 
-      function OrganizationPage() {
-        OrganizationPage.__super__.constructor.apply(this, arguments);
+      function Show() {
+        Show.__super__.constructor.apply(this, arguments);
       }
 
-      OrganizationPage.prototype.initialize = function() {
+      Show.prototype.initialize = function() {
         var data;
-        OrganizationPage.__super__.initialize.apply(this, arguments);
-        this.id = "organization::edit::1";
+        Show.__super__.initialize.apply(this, arguments);
+        this.id = "organizations::view::" + this.model.id;
         data = {
-          model: new models.Organization()
+          'model': this.model
         };
         return this.setViews({
           actionBar: new mainViews.ActionBar(data),
-          sidebar: new views.OrganizationSidebarView(data),
-          mainContent: new views.OrganizationView(data)
+          sidebar: new orgViews.ShowSidebar(data),
+          mainContent: new orgViews.ShowMain(data)
         });
       };
 
-      return OrganizationPage;
+      return Show;
+
+    })(pageManager.Page);
+    New = (function(_super) {
+
+      __extends(New, _super);
+
+      function New() {
+        New.__super__.constructor.apply(this, arguments);
+      }
+
+      New.prototype.initialize = function() {
+        var data;
+        New.__super__.initialize.apply(this, arguments);
+        this.id = "organizations::new";
+        data = {
+          'model': this.model
+        };
+        return this.setViews({
+          mainContent: new orgViews.NewMain(data)
+        });
+      };
+
+      return New;
 
     })(pageManager.Page);
     return {
-      OrganizationPage: OrganizationPage
+      Show: Show,
+      New: New
     };
   });
 

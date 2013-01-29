@@ -4,15 +4,25 @@ define (require) ->
   $ = require 'jquery'
   _ = require 'underscore'
   Backbone = require 'backbone'
-  ReForm = require 'reForm'
 
-  app = require 'app'
+  orgForms = require('./forms')
 
-  forms = require('./forms')
+  # ==== Show Page Views ======================================================
+  class ShowMain extends Backbone.View
+    template: _.template require 'text!templates/organizations/_show_main.html'
+    
+    initialize: ->
+      _.bindAll this
+      @listenTo @model, 'change', @render
+      @render()
+
+    render: ->
+      @$el.html @template data: @model.toJSON()
+      this
 
 
-  class OrganizationView extends Backbone.View
-    template: _.template require 'text!templates/organizations/_main.html'
+  class ShowSidebar extends Backbone.View
+    template: _.template require 'text!templates/organizations/_show_sidebar.html'
     
     initialize: ->
       _.bindAll this
@@ -23,9 +33,9 @@ define (require) ->
       @$el.html @template {}
       this
 
-
-  class OrganizationSidebarView extends Backbone.View
-    template: _.template require 'text!templates/organizations/_sidebar.html'
+  # ==== New Page Views ======================================================
+  class NewMain extends Backbone.View
+    template: _.template require 'text!templates/organizations/_new_main.html'
     
     initialize: ->
       _.bindAll this
@@ -33,10 +43,12 @@ define (require) ->
       @render()
 
     render: ->
-      @$el.html @template {}
+      @$el.html @template data: @model.toJSON()
       this
+
 
   return {
-    OrganizationView: OrganizationView
-    OrganizationSidebarView: OrganizationSidebarView
+    ShowMain: ShowMain
+    ShowSidebar: ShowSidebar
+    NewMain: NewMain
   }

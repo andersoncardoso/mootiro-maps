@@ -1,25 +1,34 @@
 define (require) ->
   'use strict'
 
-  $ = require 'jquery'
-  Backbone = require 'backbone'
-
   pageManager = require 'core/page_manager'
-  views = require './views'
   mainViews = require 'main/views'
-  models = require './models'
+  
+  orgViews = require './views'
+  orgModels = require './models'
 
-  class OrganizationPage extends pageManager.Page
+
+  class Show extends pageManager.Page
     initialize: ->
       super
-      @id = "organization::edit::1"
-      data = {model: new models.Organization()}
-      @setViews ({
+      @id = "organizations::view::#{@model.id}"  # unique Page id
+      data = {'model': @model}
+      @setViews
         actionBar: new mainViews.ActionBar data
-        sidebar: new views.OrganizationSidebarView data
-        mainContent: new views.OrganizationView data
-      })
+        sidebar: new orgViews.ShowSidebar data
+        mainContent: new orgViews.ShowMain data
+
+
+  class New extends pageManager.Page
+    initialize: ->
+      super
+      @id = "organizations::new"
+      data = {'model': @model}
+      @setViews
+        mainContent: new orgViews.NewMain data
+
 
   return {
-    OrganizationPage: OrganizationPage
+    Show: Show
+    New: New
   }

@@ -9,15 +9,9 @@ logger = logging.getLogger(__name__)
 
 
 @render_to('global.html')
-def organizations_root(request):
-    '''Intended to only load a backbone router.'''
+def organizations_root(request, id_=''):
+    '''Just to load Backbone.'''
     return {}
-
-
-
-
-
-
 
 
 # import logging

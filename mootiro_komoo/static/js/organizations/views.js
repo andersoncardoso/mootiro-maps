@@ -4,64 +4,91 @@
 
   define(function(require) {
     'use strict';
-    var $, Backbone, OrganizationSidebarView, OrganizationView, ReForm, app, forms, _;
+    var $, Backbone, NewMain, ShowMain, ShowSidebar, orgForms, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
-    ReForm = require('reForm');
-    app = require('app');
-    forms = require('./forms');
-    OrganizationView = (function(_super) {
+    orgForms = require('./forms');
+    ShowMain = (function(_super) {
 
-      __extends(OrganizationView, _super);
+      __extends(ShowMain, _super);
 
-      function OrganizationView() {
-        OrganizationView.__super__.constructor.apply(this, arguments);
+      function ShowMain() {
+        ShowMain.__super__.constructor.apply(this, arguments);
       }
 
-      OrganizationView.prototype.template = _.template(require('text!templates/organizations/_main.html'));
+      ShowMain.prototype.template = _.template(require('text!templates/organizations/_show_main.html'));
 
-      OrganizationView.prototype.initialize = function() {
+      ShowMain.prototype.initialize = function() {
         _.bindAll(this);
         this.listenTo(this.model, 'change', this.render);
         return this.render();
       };
 
-      OrganizationView.prototype.render = function() {
-        this.$el.html(this.template({}));
+      ShowMain.prototype.render = function() {
+        this.$el.html(this.template({
+          data: this.model.toJSON()
+        }));
         return this;
       };
 
-      return OrganizationView;
+      return ShowMain;
 
     })(Backbone.View);
-    OrganizationSidebarView = (function(_super) {
+    ShowSidebar = (function(_super) {
 
-      __extends(OrganizationSidebarView, _super);
+      __extends(ShowSidebar, _super);
 
-      function OrganizationSidebarView() {
-        OrganizationSidebarView.__super__.constructor.apply(this, arguments);
+      function ShowSidebar() {
+        ShowSidebar.__super__.constructor.apply(this, arguments);
       }
 
-      OrganizationSidebarView.prototype.template = _.template(require('text!templates/organizations/_sidebar.html'));
+      ShowSidebar.prototype.template = _.template(require('text!templates/organizations/_show_sidebar.html'));
 
-      OrganizationSidebarView.prototype.initialize = function() {
+      ShowSidebar.prototype.initialize = function() {
         _.bindAll(this);
         this.listenTo(this.model, 'change', this.render);
         return this.render();
       };
 
-      OrganizationSidebarView.prototype.render = function() {
+      ShowSidebar.prototype.render = function() {
         this.$el.html(this.template({}));
         return this;
       };
 
-      return OrganizationSidebarView;
+      return ShowSidebar;
+
+    })(Backbone.View);
+    NewMain = (function(_super) {
+
+      __extends(NewMain, _super);
+
+      function NewMain() {
+        NewMain.__super__.constructor.apply(this, arguments);
+      }
+
+      NewMain.prototype.template = _.template(require('text!templates/organizations/_new_main.html'));
+
+      NewMain.prototype.initialize = function() {
+        _.bindAll(this);
+        this.listenTo(this.model, 'change', this.render);
+        return this.render();
+      };
+
+      NewMain.prototype.render = function() {
+        this.$el.html(this.template({
+          data: this.model.toJSON()
+        }));
+        return this;
+      };
+
+      return NewMain;
 
     })(Backbone.View);
     return {
-      OrganizationView: OrganizationView,
-      OrganizationSidebarView: OrganizationSidebarView
+      ShowMain: ShowMain,
+      ShowSidebar: ShowSidebar,
+      NewMain: NewMain
     };
   });
 
