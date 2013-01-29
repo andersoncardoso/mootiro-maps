@@ -7,7 +7,7 @@ define (require) ->
 
   orgForms = require('./forms')
 
-  # ==== Show Page Views ======================================================
+  # ===== Show Page Views =====================================================
   class ShowMain extends Backbone.View
     template: _.template require 'text!templates/organizations/_show_main.html'
     
@@ -33,7 +33,7 @@ define (require) ->
       @$el.html @template {}
       this
 
-  # ==== New Page Views ======================================================
+  # ===== New Page Views ======================================================
   class NewMain extends Backbone.View
     template: _.template require 'text!templates/organizations/_new_main.html'
     
@@ -43,7 +43,11 @@ define (require) ->
       @render()
 
     render: ->
-      @$el.html @template data: @model.toJSON()
+      @$el.html @template {}
+      formView = new orgForms.OrganizationForm({model: @model})
+      formView.render()
+      console.log formView.render().$el
+      @$('#form-container').append formView.$el
       this
 
 

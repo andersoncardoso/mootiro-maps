@@ -20,7 +20,8 @@
 
       OrganizationsRouter.prototype.routes = {
         'organizations/new(/)': 'new',
-        'organizations/:id(/)': 'show'
+        'organizations/:id(/)': 'show',
+        'organizations/:id/edit(/)': 'show'
       };
 
       OrganizationsRouter.prototype.initialize = function() {
@@ -45,6 +46,10 @@
           'model': model
         }));
       };
+
+      OrganizationsRouter.prototype.edit = function() {};
+
+      OrganizationsRouter.prototype.discuss = function() {};
 
       return OrganizationsRouter;
 

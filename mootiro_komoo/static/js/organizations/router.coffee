@@ -14,6 +14,7 @@ define (require) ->
     routes:
       'organizations/new(/)': 'new'
       'organizations/:id(/)': 'show'
+      'organizations/:id/edit(/)': 'show'
 
     initialize: ->
       _.bindAll this
@@ -26,5 +27,12 @@ define (require) ->
     new: ->
       model = new orgModels.Organization {}  # no id, new object
       app.goTo("/organizations/new", new orgPages.New 'model': model)
+
+    edit: ->
+      # TODO: implement
+
+    discuss: ->
+      # TODO: implement
+
 
   return OrganizationsRouter

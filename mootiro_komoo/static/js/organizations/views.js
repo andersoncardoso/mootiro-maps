@@ -76,9 +76,14 @@
       };
 
       NewMain.prototype.render = function() {
-        this.$el.html(this.template({
-          data: this.model.toJSON()
-        }));
+        var formView;
+        this.$el.html(this.template({}));
+        formView = new orgForms.OrganizationForm({
+          model: this.model
+        });
+        formView.render();
+        console.log(formView.render().$el);
+        this.$('#form-container').append(formView.$el);
         return this;
       };
 
