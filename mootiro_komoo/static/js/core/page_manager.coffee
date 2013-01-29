@@ -35,7 +35,6 @@ define (require) ->
         view.onOpen?()
 
       for view in @_views
-        console.log view.instance
         @$(view.parentSelector).append view.instance?.$el
         onOpen view.instance
 

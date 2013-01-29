@@ -71,7 +71,6 @@
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           view = _ref[_i];
-          console.log(view.instance);
           this.$(view.parentSelector).append((_ref2 = view.instance) != null ? _ref2.$el : void 0);
           _results.push(onOpen(view.instance));
         }
