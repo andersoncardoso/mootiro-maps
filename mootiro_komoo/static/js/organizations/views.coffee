@@ -12,7 +12,20 @@ define (require) ->
 
 
   class OrganizationView extends Backbone.View
-    template: _.template 'LALALALALA'
+    template: _.template require 'text!templates/organizations/_main.html'
+    
+    initialize: ->
+      _.bindAll this
+      @listenTo @model, 'change', @render
+      @render()
+
+    render: ->
+      @$el.html @template {}
+      this
+
+
+  class OrganizationSidebarView extends Backbone.View
+    template: _.template require 'text!templates/organizations/_sidebar.html'
     
     initialize: ->
       _.bindAll this
@@ -25,4 +38,5 @@ define (require) ->
 
   return {
     OrganizationView: OrganizationView
+    OrganizationSidebarView: OrganizationSidebarView
   }

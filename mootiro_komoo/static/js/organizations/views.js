@@ -4,7 +4,7 @@
 
   define(function(require) {
     'use strict';
-    var $, Backbone, OrganizationView, ReForm, app, forms, _;
+    var $, Backbone, OrganizationSidebarView, OrganizationView, ReForm, app, forms, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
@@ -19,7 +19,7 @@
         OrganizationView.__super__.constructor.apply(this, arguments);
       }
 
-      OrganizationView.prototype.template = _.template('LALALALALA');
+      OrganizationView.prototype.template = _.template(require('text!templates/organizations/_main.html'));
 
       OrganizationView.prototype.initialize = function() {
         _.bindAll(this);
@@ -35,8 +35,33 @@
       return OrganizationView;
 
     })(Backbone.View);
+    OrganizationSidebarView = (function(_super) {
+
+      __extends(OrganizationSidebarView, _super);
+
+      function OrganizationSidebarView() {
+        OrganizationSidebarView.__super__.constructor.apply(this, arguments);
+      }
+
+      OrganizationSidebarView.prototype.template = _.template(require('text!templates/organizations/_sidebar.html'));
+
+      OrganizationSidebarView.prototype.initialize = function() {
+        _.bindAll(this);
+        this.listenTo(this.model, 'change', this.render);
+        return this.render();
+      };
+
+      OrganizationSidebarView.prototype.render = function() {
+        this.$el.html(this.template({}));
+        return this;
+      };
+
+      return OrganizationSidebarView;
+
+    })(Backbone.View);
     return {
-      OrganizationView: OrganizationView
+      OrganizationView: OrganizationView,
+      OrganizationSidebarView: OrganizationSidebarView
     };
   });
 

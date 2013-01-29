@@ -6,17 +6,17 @@ define (require) ->
 
   pageManager = require 'core/page_manager'
   views = require './views'
+  mainViews = require 'main/views'
   models = require './models'
 
   class OrganizationPage extends pageManager.Page
     initialize: ->
       super
       @id = "organization::edit::1"
-      data =
-        model: new models.Organization()
+      data = {model: new models.Organization()}
       @setViews ({
-        # actionBar: new views.OrganizationView data
-        # sidebar: new views.OrganizationView data
+        actionBar: new mainViews.ActionBar data
+        sidebar: new views.OrganizationSidebarView data
         mainContent: new views.OrganizationView data
       })
 

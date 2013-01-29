@@ -4,8 +4,10 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, Organization;
+    var Backbone, Organization, PermissionMixin, _;
     Backbone = require('backbone');
+    _ = require('underscore');
+    PermissionMixin = require('core/mixins').PermissionMixin;
     Organization = (function(_super) {
 
       __extends(Organization, _super);
@@ -13,6 +15,8 @@
       function Organization() {
         Organization.__super__.constructor.apply(this, arguments);
       }
+
+      _.extend(Organization.prototype, PermissionMixin);
 
       Organization.prototype.urlRoot = '/api/organizations';
 

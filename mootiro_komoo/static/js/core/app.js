@@ -25,11 +25,9 @@
         var _this = this;
         return $.when(pageManager.canClose()).done(function() {
           if (page != null) {
-            console.log('ife');
             _this.routers[0].navigate(url);
             return pageManager.open(page);
           } else {
-            console.log('else');
             return _this.routers[0].navigate(url, {
               trigger: true
             });

@@ -4,11 +4,12 @@
 
   define(function(require) {
     'use strict';
-    var $, Backbone, OrganizationPage, models, pageManager, views;
+    var $, Backbone, OrganizationPage, mainViews, models, pageManager, views;
     $ = require('jquery');
     Backbone = require('backbone');
     pageManager = require('core/page_manager');
     views = require('./views');
+    mainViews = require('main/views');
     models = require('./models');
     OrganizationPage = (function(_super) {
 
@@ -26,6 +27,8 @@
           model: new models.Organization()
         };
         return this.setViews({
+          actionBar: new mainViews.ActionBar(data),
+          sidebar: new views.OrganizationSidebarView(data),
           mainContent: new views.OrganizationView(data)
         });
       };
