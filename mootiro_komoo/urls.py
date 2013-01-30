@@ -39,11 +39,10 @@ urlpatterns = patterns('',
     url(r'', include('proposals.urls')),
     url(r'', include('investments.urls')),
     url(r'', include('discussions.urls')),
+    url(r'', include('projects.urls')),
 
     # prefixed apps urls
     url(r'^moderation/', include('moderation.urls')),
-    url(r'^project/', include('projects.urls')),
-    url(r'^projects/', include('projects.api_urls')),
     url(r'^map_info/', include('komoo_map.urls')),
     url(r'^about/', include('hotsite.urls')),
     url(r'^about', 'hotsite.views.root'),
