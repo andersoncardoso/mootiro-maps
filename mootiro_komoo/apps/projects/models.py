@@ -18,6 +18,9 @@ class ProjectRelatedObject(BaseModel):
     object_table = models.CharField(max_length=100)
     object_id = models.IntegerField()
 
+    class Meta:
+        unique_together = (('project', 'object_table', 'object_id'), )
+
     def _set_object(self, obj):
         self.object_id = obj.id
         self.object_table = obj.table_ref
@@ -42,11 +45,11 @@ class ProjectRelatedObject(BaseModel):
         }
 
     def from_dict(self, data):
-        keys = ['id', 'project', 'object_table', 'object_id']
+        keys = ['id', 'project', 'project_id' 'object_table', 'object_id']
         build_obj_from_dict(self, data, keys)
 
     def is_valid(self):
-        validate, self.errors = True, {}
+        validates, self.errors = True, {}
         required = ['project', 'object']
         for item in required:
             if not getattr(self, item, None):
@@ -93,12 +96,13 @@ class Project(BaseModel, CommonDataMixin):
         """Returns a queryset for the objects for a given project"""
         return ProjectRelatedObject.get_for_project(self)
 
-    def save_related_object(self, related_object):
+    def add_related_object(self, related_object):
         obj, created = ProjectRelatedObject.get_or_create(
             project=self,
             object_table=related_object.table_ref,
             object_id=related_object.id
         )
+        return obj
 
     def to_dict(self):
         data = super(Project, self).to_dict()
@@ -112,6 +116,7 @@ class Project(BaseModel, CommonDataMixin):
         return data
 
     def from_dict(self, data):
+        super(Project, self).from_dict(data)
         keys = ['contact', 'public', 'public_discussion', 'region']
         ignore_keys = []
 
