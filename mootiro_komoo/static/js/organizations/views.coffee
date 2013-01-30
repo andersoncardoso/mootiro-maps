@@ -17,7 +17,7 @@ define (require) ->
       @render()
 
     render: ->
-      @$el.html @template data: @model.toJSON()
+      @$el.html @template obj: @model.toJSON()
       this
 
 
@@ -30,7 +30,7 @@ define (require) ->
       @render()
 
     render: ->
-      @$el.html @template {}
+      @$el.html @template obj: @model.toJSON()
       this
 
   # ===== New Page Views ======================================================
@@ -46,13 +46,42 @@ define (require) ->
       @$el.html @template {}
       formView = new orgForms.OrganizationForm({model: @model})
       formView.render()
-      console.log formView.render().$el
       @$('#form-container').append formView.$el
       this
 
+  # ===== Edit Page Views =====================================================
+  class EditMain extends Backbone.View
+    template: _.template require 'text!templates/organizations/_edit_main.html'
+    
+    initialize: ->
+      _.bindAll this
+      @listenTo @model, 'change', @render
+      @render()
+
+    render: ->
+      @$el.html @template data: @model.toJSON()
+      formView = new orgForms.OrganizationForm({model: @model})
+      formView.render()
+      @$('#form-container').append formView.$el
+      this
+
+
+  class EditSidebar extends Backbone.View
+    template: _.template require 'text!templates/organizations/_edit_sidebar.html'
+    
+    initialize: ->
+      _.bindAll this
+      @listenTo @model, 'change', @render
+      @render()
+
+    render: ->
+      @$el.html @template {}
+      this
 
   return {
     ShowMain: ShowMain
     ShowSidebar: ShowSidebar
     NewMain: NewMain
+    EditMain: EditMain
+    EditSidebar: EditSidebar
   }

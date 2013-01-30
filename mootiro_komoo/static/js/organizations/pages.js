@@ -4,7 +4,7 @@
 
   define(function(require) {
     'use strict';
-    var New, Show, mainViews, orgModels, orgViews, pageManager;
+    var Edit, New, Show, mainViews, orgModels, orgViews, pageManager;
     pageManager = require('core/page_manager');
     mainViews = require('main/views');
     orgViews = require('./views');
@@ -57,9 +57,35 @@
       return New;
 
     })(pageManager.Page);
+    Edit = (function(_super) {
+
+      __extends(Edit, _super);
+
+      function Edit() {
+        Edit.__super__.constructor.apply(this, arguments);
+      }
+
+      Edit.prototype.initialize = function() {
+        var data;
+        Edit.__super__.initialize.apply(this, arguments);
+        this.id = "organizations::edit::" + this.model.id;
+        data = {
+          'model': this.model
+        };
+        return this.setViews({
+          actionBar: new mainViews.ActionBar(data),
+          sidebar: new orgViews.EditSidebar(data),
+          mainContent: new orgViews.EditMain(data)
+        });
+      };
+
+      return Edit;
+
+    })(pageManager.Page);
     return {
       Show: Show,
-      New: New
+      New: New,
+      Edit: Edit
     };
   });
 

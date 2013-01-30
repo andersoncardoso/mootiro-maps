@@ -4,7 +4,8 @@
 
   define(function(require) {
     'use strict';
-    var OrganizationForm, reForm;
+    var OrganizationForm, app, reForm;
+    app = require('app');
     reForm = require('reForm');
     OrganizationForm = (function(_super) {
 
@@ -21,6 +22,18 @@
           label: i18n('Name')
         }
       ];
+
+      OrganizationForm.prototype.initialize = function() {
+        OrganizationForm.__super__.initialize.apply(this, arguments);
+        return this.bind('success', this.onSuccess);
+      };
+
+      OrganizationForm.prototype.onSuccess = function(data) {
+        console.log("OrganizationForm::onSuccess");
+        console.log(data);
+        app.trigger('change', this.model);
+        return this.model.show();
+      };
 
       return OrganizationForm;
 

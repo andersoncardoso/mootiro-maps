@@ -28,7 +28,19 @@ define (require) ->
         mainContent: new orgViews.NewMain data
 
 
+  class Edit extends pageManager.Page
+    initialize: ->
+      super
+      @id = "organizations::edit::#{@model.id}"
+      data = {'model': @model}
+      @setViews
+        actionBar: new mainViews.ActionBar data
+        sidebar: new orgViews.EditSidebar data
+        mainContent: new orgViews.EditMain data
+
+
   return {
     Show: Show
     New: New
+    Edit: Edit
   }
