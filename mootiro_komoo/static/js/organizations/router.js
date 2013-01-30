@@ -21,7 +21,7 @@
       OrganizationsRouter.prototype.routes = {
         'organizations/new(/)': 'new',
         'organizations/:id(/)': 'show',
-        'organizations/:id/edit(/)': 'show'
+        'organizations/:id/edit(/)': 'edit'
       };
 
       OrganizationsRouter.prototype.initialize = function() {
@@ -47,9 +47,16 @@
         }));
       };
 
-      OrganizationsRouter.prototype.edit = function() {};
-
-      OrganizationsRouter.prototype.discuss = function() {};
+      OrganizationsRouter.prototype.edit = function(id) {
+        var model;
+        model = new orgModels.Organization({
+          'id': id
+        });
+        model.fetch();
+        return app.goTo("/organizations/" + id + "/edit", new orgPages.Edit({
+          'model': model
+        }));
+      };
 
       return OrganizationsRouter;
 

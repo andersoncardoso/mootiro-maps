@@ -2,19 +2,25 @@
 from __future__ import unicode_literals
 from django.conf.urls.defaults import url, patterns
 
-from .api import OrganizationHandler
+from .api import OrganizationHandler, OrganizationsHandler
 
 
 # views urls
 urlpatterns = patterns('organizations.views',
-    url(r'^organizations/(?P<id_>\d+)/?$', 'organizations_root', name='organizations_root'),
-    url(r'^organizations/new/?$', 'organizations_root', name='organizations_root'),
+    url(r'^organizations/new/?$', 'organizations_root',
+            name='organizations_root'),
+    url(r'^organizations/(?P<id_>\d+)/?$', 'organizations_root',
+            name='organizations_root'),
+    url(r'^organizations/(?P<id_>\d+)/edit/?$', 'organizations_root',
+            name='organizations_root'),
 )
 
 # API urls
 urlpatterns += patterns('organizations.api',
-    url(r'^api/organizations/(?P<id_>\d+)/?$', OrganizationHandler.dispatch,
+    url(r'^api/organizations/?$', OrganizationsHandler.dispatch,
             name='organizations_api'),
+    url(r'^api/organizations/(?P<id_>\d+)/?$', OrganizationHandler.dispatch,
+            name='organization_api'),
 )
 
 

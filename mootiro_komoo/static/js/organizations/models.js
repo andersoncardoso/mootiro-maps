@@ -21,6 +21,10 @@
 
       Organization.prototype.urlRoot = '/api/organizations';
 
+      Organization.prototype.show = function() {
+        return app.goTo("/organizations/" + this.id);
+      };
+
       Organization.prototype.edit = function() {
         return app.goTo("organizations/" + this.id + "/edit");
       };

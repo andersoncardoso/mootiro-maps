@@ -4,7 +4,7 @@
 
   define(function(require) {
     'use strict';
-    var $, Backbone, NewMain, ShowMain, ShowSidebar, orgForms, _;
+    var $, Backbone, EditMain, EditSidebar, NewMain, ShowMain, ShowSidebar, orgForms, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
@@ -27,7 +27,7 @@
 
       ShowMain.prototype.render = function() {
         this.$el.html(this.template({
-          data: this.model.toJSON()
+          obj: this.model.toJSON()
         }));
         return this;
       };
@@ -52,7 +52,9 @@
       };
 
       ShowSidebar.prototype.render = function() {
-        this.$el.html(this.template({}));
+        this.$el.html(this.template({
+          obj: this.model.toJSON()
+        }));
         return this;
       };
 
@@ -82,7 +84,6 @@
           model: this.model
         });
         formView.render();
-        console.log(formView.render().$el);
         this.$('#form-container').append(formView.$el);
         return this;
       };
@@ -90,10 +91,68 @@
       return NewMain;
 
     })(Backbone.View);
+    EditMain = (function(_super) {
+
+      __extends(EditMain, _super);
+
+      function EditMain() {
+        EditMain.__super__.constructor.apply(this, arguments);
+      }
+
+      EditMain.prototype.template = _.template(require('text!templates/organizations/_edit_main.html'));
+
+      EditMain.prototype.initialize = function() {
+        _.bindAll(this);
+        this.listenTo(this.model, 'change', this.render);
+        return this.render();
+      };
+
+      EditMain.prototype.render = function() {
+        var formView;
+        this.$el.html(this.template({
+          data: this.model.toJSON()
+        }));
+        formView = new orgForms.OrganizationForm({
+          model: this.model
+        });
+        formView.render();
+        this.$('#form-container').append(formView.$el);
+        return this;
+      };
+
+      return EditMain;
+
+    })(Backbone.View);
+    EditSidebar = (function(_super) {
+
+      __extends(EditSidebar, _super);
+
+      function EditSidebar() {
+        EditSidebar.__super__.constructor.apply(this, arguments);
+      }
+
+      EditSidebar.prototype.template = _.template(require('text!templates/organizations/_edit_sidebar.html'));
+
+      EditSidebar.prototype.initialize = function() {
+        _.bindAll(this);
+        this.listenTo(this.model, 'change', this.render);
+        return this.render();
+      };
+
+      EditSidebar.prototype.render = function() {
+        this.$el.html(this.template({}));
+        return this;
+      };
+
+      return EditSidebar;
+
+    })(Backbone.View);
     return {
       ShowMain: ShowMain,
       ShowSidebar: ShowSidebar,
-      NewMain: NewMain
+      NewMain: NewMain,
+      EditMain: EditMain,
+      EditSidebar: EditSidebar
     };
   });
 
