@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
 from jsonfield import JSONField
 
 from main.models import BaseModel, CommonDataMixin
@@ -11,7 +12,7 @@ from authentication.models import User
 from regions.models import Region
 
 
-class ProjectRelatedObject(models.Model):
+class ProjectRelatedObject(BaseModel):
     project = models.ForeignKey('Project')
 
     object_table = models.CharField(max_length=100)
@@ -32,11 +33,33 @@ class ProjectRelatedObject(models.Model):
     def get_for_project(cls, project):
         return cls.objects.filter(project=project)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'project': self.project_id,
+            'object_table': self.object_table,
+            'object_id': self.object_id,
+        }
+
+    def from_dict(self, data):
+        keys = ['id', 'project', 'object_table', 'object_id']
+        build_obj_from_dict(self, data, keys)
+
+    def is_valid(self):
+        validate, self.errors = True, {}
+        required = ['project', 'object']
+        for item in required:
+            if not getattr(self, item, None):
+                validates = False
+                self.errors[item] = _('Field required')
+        return validates
+
 
 class Project(BaseModel, CommonDataMixin):
 
     contributors = models.ManyToManyField(User, null=True, blank=True,
             related_name='project_contributors')
+
     contact = JSONField(null=True, blank=True)
 
     public = models.BooleanField(default=True)
@@ -77,13 +100,11 @@ class Project(BaseModel, CommonDataMixin):
             object_id=related_object.id
         )
 
-    # ================== Utils =============================
-
     def to_dict(self):
         data = super(Project, self).to_dict()
         data.update({
             'contributors': [cont.id for cont in self.contributors.all()],
-            'contact': getattr(self, 'contact', {}),
+            'contact': self.contact or {},
             'public': self.public,
             'public_discussion': self.public_discussion,
             'region': self.region_id,

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from jsonfield import JSONField
 
 from main.models import CommonObject
 from main.utils import build_obj_from_dict, filter_dict
@@ -35,6 +36,7 @@ class Organization(CommonObject):
     organization_type = models.CharField(
             max_length=100, null=True, blank=True, choices=ORGANIZATION_TYPES,
             default='ong')
+    contact = JSONField(null=True, blank=True)
 
     class Map:
         editable = True
@@ -50,14 +52,15 @@ class Organization(CommonObject):
 
     # ================== utils ============================
     def from_dict(self, data):
-        keys = ['organization_type', ]
+        keys = ['organization_type', 'contact']
         build_obj_from_dict(self, data, keys)
         super(Organization, self).from_dict(data)
 
     def to_dict(self):
         data = super(Organization, self).to_dict()
         data.update({
-            'organization_type': self.organization_type
+            'organization_type': self.organization_type,
+            'contact': self.contact or {},
         })
         return data
 
