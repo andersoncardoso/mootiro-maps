@@ -2,8 +2,7 @@
 from __future__ import unicode_literals
 import logging
 
-from main.utils import (ResourceHandler, JsonResponse, JsonResponseNotFound,
-        JsonResponseError, get_json_data, get_fields_to_show)
+from main.utils import (ResourceHandler, JsonResponse, get_json_data)
 
 
 logger = logging.getLogger(__name__)
@@ -18,7 +17,7 @@ class OrganizationsHandler (ResourceHandler):
         # obj = Model(request.POST)
         # obj.save()
         # return JsonResponse(obj.to_dict())
-        
+
         print 'Create:', dict(request.POST)
         return JsonResponse(request.POST)
 
@@ -28,10 +27,10 @@ class OrganizationHandler(ResourceHandler):
 
     def get(self, request, id_):
         '''Show organizaton.'''
-        
+
         # obj = Model.get_by_id(id_)
         # return JsonResponse(obj.to_dict())
-        
+
         data = {
             'id': id_,
             'name': 'Abebubaba',

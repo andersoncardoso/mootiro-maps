@@ -14,7 +14,6 @@ def organizations_root(request, id_=''):
     return {}
 
 
-# import logging
 # import json
 # import markdown
 # 
@@ -38,8 +37,6 @@ def organizations_root(request, id_=''):
 #                         filtered_query)
 # from main.widgets import Autocomplete
 # from signatures.signals import send_notifications
-# 
-# logger = logging.getLogger(__name__)
 # 
 # 
 # @render_to('organization/list.html')
