@@ -7,6 +7,7 @@ define (require) ->
   app = require 'app'
   urls = require 'urls'
   PermissionMixin = require('core/mixins').PermissionMixin
+  mainModels = require 'main/models'
 
   Updates = require('./collections').PaginatedUpdates
 
@@ -20,7 +21,7 @@ define (require) ->
     return if user instanceof User then user else null
 
 
-  class User extends Backbone.Model
+  class User extends mainModels.CommonObject
     _.extend @prototype, PermissionMixin
 
     permissions:
@@ -28,6 +29,7 @@ define (require) ->
         user instanceof User and (user.isSuperuser() or user.get('id') is @get('id'))
 
     urlRoot: urls.resolve 'user_api'
+    navRoot: '/users'
 
     defaults:
       'about_me': ''

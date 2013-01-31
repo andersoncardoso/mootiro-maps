@@ -4,12 +4,13 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, PermissionMixin, Updates, User, app, getUser, urls, _;
+    var Backbone, PermissionMixin, Updates, User, app, getUser, mainModels, urls, _;
     _ = require('underscore');
     Backbone = require('backbone');
     app = require('app');
     urls = require('urls');
     PermissionMixin = require('core/mixins').PermissionMixin;
+    mainModels = require('main/models');
     Updates = require('./collections').PaginatedUpdates;
     getUser = function(user) {
       if (!(user != null)) {
@@ -46,6 +47,8 @@
       };
 
       User.prototype.urlRoot = urls.resolve('user_api');
+
+      User.prototype.navRoot = '/users';
 
       User.prototype.defaults = {
         'about_me': '',
@@ -91,7 +94,7 @@
 
       return User;
 
-    })(Backbone.Model);
+    })(mainModels.CommonObject);
     return {
       getUser: getUser,
       User: User
