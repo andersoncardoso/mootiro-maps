@@ -35,6 +35,7 @@ class OrganizationModelTestCase(unittest.TestCase):
             'extra_data': None,
             'tags': const.EMPTY_TAGS,
             'organization_type': 'ong',
+            'contact': {},
         }
 
     def to_dict_test(self):

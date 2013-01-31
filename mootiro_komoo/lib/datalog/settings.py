@@ -7,6 +7,7 @@ class Config:
     DEBUG = False
     SECRET_KEY = 'blabalblaeuamobatatinhafritacomcocacolablabalbba'
     MONGO_DBNAME = 'mootiro_datalog'
+    PORT = 8008
 
     _db = None
 

@@ -130,6 +130,7 @@ define (require) ->
             'authentication/router',
             'user/router'
             'map/router'
+            'organizations/router',
             # Add your router module here
         ], =>
           # Instantiate all routers

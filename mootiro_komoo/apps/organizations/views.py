@@ -1,6 +1,19 @@
-# # -*- coding: utf-8 -*-
-# from __future__ import unicode_literals
-# import logging
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+import logging
+
+from annoying.decorators import render_to
+
+
+logger = logging.getLogger(__name__)
+
+
+@render_to('global.html')
+def organizations_root(request, id_=''):
+    '''Just to load Backbone.'''
+    return {}
+
+
 # import json
 # import markdown
 # 
@@ -24,8 +37,6 @@
 #                         filtered_query)
 # from main.widgets import Autocomplete
 # from signatures.signals import send_notifications
-# 
-# logger = logging.getLogger(__name__)
 # 
 # 
 # @render_to('organization/list.html')

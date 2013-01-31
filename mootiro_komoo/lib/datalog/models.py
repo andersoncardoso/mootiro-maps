@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 from db import Model
+from utils import iso_to_datetime
+
+
+def valid_action(val):
+    return val in ('A', 'E', 'D')
 
 
 class Datalog(Model):
@@ -18,10 +23,23 @@ class Datalog(Model):
         }
     }
 
-    probable indexes:
+    indexes:
     user
     table_name and object_id
     time
     """
 
     collection_name = 'datalog'
+
+    structure = {
+        'table': unicode,
+        'object_id': int,
+        'user': int,
+        'action': unicode,
+        'time': iso_to_datetime,
+        'data': 'dynamic'
+    }
+
+    validators = {
+        'action': [valid_action, ]
+    }

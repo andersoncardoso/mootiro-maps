@@ -21,6 +21,7 @@ INVESTMENT_TYPE = (
     ('goods', _('Goods')),
     ('volunteering', _('Volunteering')),
     ('public', _('Public Investment')),
+    ('others', _('Others')),
 )
 
 CURRENCIES_CHOICES = (
@@ -110,7 +111,7 @@ class Investment(CommonObject):
     common_object_type = 'investment'
 
     investment_type = models.CharField(max_length=100, choices=INVESTMENT_TYPE,
-                default='donation')
+                default='others')
     value = models.DecimalField(decimal_places=2, max_digits=14, null=True,
                 blank=True)
     currency = models.CharField(max_length=3, choices=CURRENCIES_CHOICES,

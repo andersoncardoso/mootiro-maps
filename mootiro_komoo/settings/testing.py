@@ -67,11 +67,11 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': False
         },
-       'default': {
-           'handlers': ['console', 'log_file'],
-           'level': 'DEBUG',
-           'propagate': True
-       },
+        'default': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': True
+        },
     }
 }
 my_app_logger = {
@@ -79,7 +79,7 @@ my_app_logger = {
     'level': 'DEBUG',
     'propagate': True
 }
-for mod in ['views', 'models', 'forms', 'utils']:
+for mod in ['views', 'models', 'forms', 'utils', 'api']:
     LOGGING['loggers'].update({'{}.{}'.format(app, mod): my_app_logger
                     for app in os.listdir('apps/') + os.listdir('lib/')})
 
