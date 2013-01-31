@@ -101,7 +101,7 @@ class CommonDataMixin(models.Model, BaseDAOMixin):
 
     def from_dict(self, data):
         keys = [
-            'name', 'description', 'creator', 'last_editor', 'creation_date',
+            'name', 'description', 'last_editor', 'creation_date',
             'last_update', 'extra_data']
         date_keys = ['creation_date', 'last_update']
         ignore_keys = ['id', ]
@@ -109,6 +109,7 @@ class CommonDataMixin(models.Model, BaseDAOMixin):
         if self.id:
             keys.append('tags')
         else:
+            keys.append('creator')
             self._postponed = getattr(self, '_postponed', [])
 
             self._postponed.append(

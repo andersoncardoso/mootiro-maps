@@ -2,7 +2,10 @@
 from __future__ import unicode_literals
 import logging
 
-from main.utils import (ResourceHandler, JsonResponse, get_json_data)
+from main.utils import (ResourceHandler, JsonResponse, JsonResponseError,
+        get_json_data)
+
+from .models import Organization
 
 
 logger = logging.getLogger(__name__)
@@ -13,14 +16,17 @@ class OrganizationsHandler (ResourceHandler):
 
     def post(self, request):
         '''Create new organization.'''
+        json_data = get_json_data(request)
+        org = Organization()
+        org.from_dict(json_data)
+        org.creator = request.user
+        org.last_editor = request.user
 
-        # obj = Model(request.POST)
-        # obj.save()
-        # return JsonResponse(obj.to_dict())
+        if not org.is_valid():
+            return JsonResponseError(org.errors)
 
-        data = dict(request.POST, id=7)
-        print 'Create:', data
-        return JsonResponse(data)
+        org.save()
+        return JsonResponse(org.to_dict())
 
 
 class OrganizationHandler(ResourceHandler):
@@ -28,26 +34,15 @@ class OrganizationHandler(ResourceHandler):
 
     def get(self, request, id_):
         '''Show organizaton.'''
+        org = Organization.get_by_id(id_)
+        return JsonResponse(org.to_dict())
 
-        # obj = Model.get_by_id(id_)
-        # return JsonResponse(obj.to_dict())
-
-        data = {
-            'id': id_,
-            'name': 'Abebubaba',
-            'info': 'This id={} comes from python! :)'.format(id_)
-        }
-        return JsonResponse(data)
 
     def put(self, request, id_):
         '''Update organizaton.'''
-
-        # json_data = get_json_data(request)
-        # obj = Model.get_by_id(id_)
-        # obj.from_dict(json_data)
-        # obj.save()
-        # return JsonResponse({})
-
         json_data = get_json_data(request)
-        print 'Update:', json_data
-        return JsonResponse({})
+        json_data.update(last_editor=request.user)
+        org = Organization.get_by_id(id_)
+        org.from_dict(json_data)
+        org.save()
+        return JsonResponse(org.to_dict())
