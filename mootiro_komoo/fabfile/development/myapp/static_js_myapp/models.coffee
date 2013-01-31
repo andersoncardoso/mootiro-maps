@@ -1,18 +1,15 @@
 define (require) ->
   'use strict'
 
-  Backbone = require 'backbone'
-  _ = require 'underscore'
-
   app = require 'app'
-  PermissionMixin = require('core/mixins').PermissionMixin
+  mainModels = require 'main/models'
 
 
-  class Mymodel extends Backbone.Model
-    _.extend @prototype, PermissionMixin
+  class Mymodel extends mainModels.CommonObject
 
     # Your REST api url (see Backbone documentation)
     urlRoot: '/api/myapp'
+    navRoot: '/myapp'
 
     # FIXME: model redirecting page is ugly!
     edit: ->

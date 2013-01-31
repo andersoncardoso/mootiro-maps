@@ -1,20 +1,14 @@
 define (require) ->
   'use strict'
 
-  Backbone = require 'backbone'
-  _ = require 'underscore'
-
   app = require 'app'
-  PermissionMixin = require('core/mixins').PermissionMixin
+  mainModels = require 'main/models'
 
 
-  class Organization extends Backbone.Model
-    _.extend @prototype, PermissionMixin
+  class Organization extends mainModels.CommonObject
 
     urlRoot: '/api/organizations'
-
-    edit: ->
-      app.goTo "organizations/#{@id}/edit"
+    navRoot: '/organizations'
 
 
   return {Organization: Organization}

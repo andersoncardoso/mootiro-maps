@@ -13,6 +13,11 @@ define (require) ->
         widget: reForm.commonWidgets.TextWidget
         label: i18n 'Name'
       }
+      {
+        name: 'description'
+        widget: reForm.commonWidgets.TextWidget
+        label: i18n 'Description'
+      }
     ]
 
 
