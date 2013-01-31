@@ -18,8 +18,9 @@ class OrganizationsHandler (ResourceHandler):
         # obj.save()
         # return JsonResponse(obj.to_dict())
 
-        print 'Create:', dict(request.POST)
-        return JsonResponse(request.POST)
+        data = dict(request.POST, id=7)
+        print 'Create:', data
+        return JsonResponse(data)
 
 
 class OrganizationHandler(ResourceHandler):

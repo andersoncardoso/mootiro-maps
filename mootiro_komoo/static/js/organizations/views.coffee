@@ -44,9 +44,9 @@ define (require) ->
 
     render: ->
       @$el.html @template {}
-      formView = new orgForms.OrganizationForm({model: @model})
-      formView.render()
-      @$('#form-container').append formView.$el
+      @form = new orgForms.OrganizationForm({model: @model})
+      @form.render()
+      @$('#form-container').append @form.$el
       this
 
   # ===== Edit Page Views =====================================================
@@ -56,13 +56,13 @@ define (require) ->
     initialize: ->
       _.bindAll this
       @listenTo @model, 'change', @render
+      @form = new orgForms.OrganizationForm({model: @model})
       @render()
 
     render: ->
       @$el.html @template data: @model.toJSON()
-      formView = new orgForms.OrganizationForm({model: @model})
-      formView.render()
-      @$('#form-container').append formView.$el
+      @form.render()
+      @$('#form-container').append @form.$el
       this
 
 

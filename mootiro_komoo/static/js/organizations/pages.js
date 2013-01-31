@@ -4,7 +4,8 @@
 
   define(function(require) {
     'use strict';
-    var Edit, New, Show, mainViews, orgModels, orgViews, pageManager;
+    var Edit, New, Show, app, mainViews, orgModels, orgViews, pageManager;
+    app = require('app');
     pageManager = require('core/page_manager');
     mainViews = require('main/views');
     orgViews = require('./views');
@@ -43,14 +44,18 @@
       }
 
       New.prototype.initialize = function() {
-        var data;
+        var data, mainView;
         New.__super__.initialize.apply(this, arguments);
         this.id = "organizations::new";
         data = {
           'model': this.model
         };
-        return this.setViews({
-          mainContent: new orgViews.NewMain(data)
+        mainView = new orgViews.NewMain(data);
+        this.setViews({
+          mainContent: mainView
+        });
+        return this.listenTo(mainView.form, 'success', function() {
+          return app.goTo("organizations/" + this.model.id);
         });
       };
 
@@ -66,16 +71,20 @@
       }
 
       Edit.prototype.initialize = function() {
-        var data;
+        var data, mainView;
         Edit.__super__.initialize.apply(this, arguments);
         this.id = "organizations::edit::" + this.model.id;
         data = {
           'model': this.model
         };
-        return this.setViews({
+        mainView = new orgViews.EditMain(data);
+        this.setViews({
           actionBar: new mainViews.ActionBar(data),
           sidebar: new orgViews.EditSidebar(data),
-          mainContent: new orgViews.EditMain(data)
+          mainContent: mainView
+        });
+        return this.listenTo(mainView.form, 'success', function() {
+          return app.goTo("organizations/" + this.model.id);
         });
       };
 

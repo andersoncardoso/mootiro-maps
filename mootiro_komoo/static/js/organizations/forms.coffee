@@ -4,7 +4,7 @@ define (require) ->
   app = require 'app'
   reForm = require 'reForm'
 
-  #
+
   # Organization Form
   class OrganizationForm extends reForm.Form
     fields: [
@@ -15,15 +15,6 @@ define (require) ->
       }
     ]
 
-    initialize: ->
-      super
-      @bind 'success', @onSuccess
-
-    onSuccess: (data) ->
-      console.log "OrganizationForm::onSuccess"
-      console.log data
-      app.trigger 'change', @model
-      @model.show()
 
   return {
     OrganizationForm: OrganizationForm
