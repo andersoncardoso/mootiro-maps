@@ -2,10 +2,21 @@ define (require) ->
   'use strict'
 
   Backbone = require 'backbone'
+  _ = require 'underscore'
 
-  class Myapp extends Backbone.Model
-    urlRoot: urls.resolve 'myapp_api'
+  app = require 'app'
+  PermissionMixin = require('core/mixins').PermissionMixin
 
-  return {
-    Myapp: Myapp
-  }
+
+  class Mymodel extends Backbone.Model
+    _.extend @prototype, PermissionMixin
+
+    # Your REST api url (see Backbone documentation)
+    urlRoot: '/api/myapp'
+
+    # FIXME: model redirecting page is ugly!
+    edit: ->
+      app.goTo "myapp/#{@id}/edit"
+
+
+  return {Mymodel: Mymodel}

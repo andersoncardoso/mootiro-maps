@@ -9,6 +9,6 @@ logger = logging.getLogger(__name__)
 
 
 @render_to('global.html')
-def myapp_root(request):
-    '''Only loads backbone.'''
+def myapp_root(request, id_=''):
+    '''Just to load Backbone.'''
     return {}
