@@ -14,11 +14,11 @@ from regions.models import Region
 
 PROJECT_TYPE = (
     ('guide', _('Community Guide')),
-    ('network', -('Network')),
-    ('journalism', -('Data Journalism')),
-    ('diagnostics', -('Diagnostics')),
-    ('evaluation', -('Programme Evaluation')),
-    ('others', -('Others')),
+    ('network', _('Network')),
+    ('journalism', _('Data Journalism')),
+    ('diagnostics', _('Diagnostics')),
+    ('evaluation', _('Programme Evaluation')),
+    ('others', _('Others')),
 )
 
 
