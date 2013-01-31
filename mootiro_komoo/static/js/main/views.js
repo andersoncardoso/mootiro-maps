@@ -4,11 +4,12 @@
 
   define(function(require) {
     'use strict';
-    var $, ActionBar, Backbone, Feedback, Footer, Header, MapEditor, UpperBar, app, mapViews, _;
+    var $, ActionBar, Backbone, Feedback, Footer, Header, MapEditor, UpperBar, app, mapViews, urls, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
     app = require('app');
+    urls = require('urls');
     mapViews = require('map/views');
     Feedback = (function(_super) {
 
@@ -125,7 +126,12 @@
       Header.prototype.template = _.template(require('text!templates/main/_header.html'));
 
       Header.prototype.events = {
-        'click .logo a': 'root'
+        'click .logo a': 'root',
+        'click nav a': 'nav'
+      };
+
+      Header.prototype.urls = {
+        '.map': urls.resolve('map')
       };
 
       Header.prototype.initialize = function() {
@@ -138,6 +144,17 @@
         return this.render();
       };
 
+      Header.prototype.setUrls = function() {
+        var item, _results;
+        _results = [];
+        for (item in this.urls) {
+          _results.push(this.$("" + item + " a").attr({
+            href: this.urls[item]
+          }));
+        }
+        return _results;
+      };
+
       Header.prototype.render = function() {
         var view, _i, _j, _len, _len2, _ref, _ref2;
         _ref = this.subViews;
@@ -148,6 +165,7 @@
         this.$el.html(this.template({
           user: this.model.toJSON()
         }));
+        this.setUrls();
         _ref2 = this.subViews;
         for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
           view = _ref2[_j];
@@ -159,6 +177,13 @@
       Header.prototype.root = function(e) {
         if (e != null) e.preventDefault();
         return app.trigger('open:root');
+      };
+
+      Header.prototype.nav = function(e) {
+        var url;
+        if (e != null) e.preventDefault();
+        url = $(e.target).attr('href');
+        return app.goTo(url);
       };
 
       return Header;
@@ -272,13 +297,29 @@
       MapEditor.prototype.className = 'map-editor';
 
       MapEditor.prototype.initialize = function() {
+        var _this = this;
         _.bindAll(this);
         this.subViews = [];
         this.mapEditor = new mapViews.Editor({
           parentSelector: '#map-container'
         });
+        this.listenTo(this.mapEditor, 'initialize', function() {
+          return _this.trigger('initialize');
+        });
+        $(window).resize(this.resizeElement);
         this.subViews.push(this.mapEditor);
         return this.render();
+      };
+
+      MapEditor.prototype.resizeElement = function() {
+        var bottom, header, height, top;
+        header = $('#header-container');
+        top = header.offset().top + header.height();
+        bottom = $(document).height();
+        height = bottom - top;
+        return this.$('#map-editor').css({
+          height: height
+        });
       };
 
       MapEditor.prototype.render = function() {
@@ -294,6 +335,7 @@
           view = _ref2[_j];
           this.$(view.options.parentSelector).append(view.$el);
         }
+        this.resizeElement();
         return this;
       };
 

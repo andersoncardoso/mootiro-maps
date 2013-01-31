@@ -3,7 +3,11 @@ define (require) ->
   urls = require 'dutils_urls'
 
   route = (name) ->
-    dutils.conf.urls[name].replace(/^\/(.*)(\/)$/, '$1(/)').replace(/<([^>]*)>/g, ':$1')
+    # Converts Django urls to Backbone routes format
+
+    dutils.conf.urls[name].replace(/^\/(.*)(\/)$/, '$1(/)')  # Set trailing slash optional
+      .replace(/<([^>]*)>/g, ':$1')  # Convert django variables to backbone format
+      .replace(/\.\*/g, '*path')  # Convert wildcard
 
   return {
     resolve: urls.resolve

@@ -6,6 +6,7 @@ define (require) ->
   Backbone = require 'backbone'
 
   app = require 'app'
+  urls = require 'urls'
   mapViews = require 'map/views'
 
 
@@ -75,6 +76,10 @@ define (require) ->
     template: _.template require 'text!templates/main/_header.html'
     events:
       'click .logo a': 'root'
+      'click nav a': 'nav'
+
+    urls:
+      '.map': urls.resolve 'map'
 
     initialize: ->
       _.bindAll this
@@ -84,15 +89,24 @@ define (require) ->
         parentSelector: '#upper-bar-container'
       @render()
 
+    setUrls: ->
+      @$("#{item} a").attr href: @urls[item] for item of @urls
+
     render: ->
       view.$el.detach() for view in @subViews
       @$el.html @template user: @model.toJSON()
+      @setUrls()
       @$(view.options.parentSelector).append view.$el for view in @subViews
       this
 
     root: (e) ->
       e?.preventDefault()
       app.trigger 'open:root'
+
+    nav: (e) ->
+      e?.preventDefault()
+      url = $(e.target).attr 'href'
+      app.goTo url
 
 
   class Footer extends Backbone.View
@@ -155,13 +169,23 @@ define (require) ->
       @subViews = []
       @mapEditor = new mapViews.Editor
         parentSelector: '#map-container'
+      @listenTo @mapEditor, 'initialize', => @trigger 'initialize'
+      $(window).resize @resizeElement
       @subViews.push @mapEditor
       @render()
+
+    resizeElement: ->
+      header = $ '#header-container'
+      top = header.offset().top + header.height()
+      bottom = $(document).height()
+      height = bottom - top
+      @$('#map-editor').css height: height
 
     render: ->
       view.$el.detach() for view in @subViews
       @$el.html @template {}
       @$(view.options.parentSelector).append view.$el for view in @subViews
+      @resizeElement()
       this
 
     getMap: ->

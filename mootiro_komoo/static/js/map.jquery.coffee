@@ -3,31 +3,6 @@ define (require) ->
     $ = require 'jquery'
 
     (($) ->
-        fixMapSize = (e) ->
-            map = e.data.map
-            fixMapHeight map
-            fixMapWidth map
-            map.refresh()
-
-        fixMapHeight = (map, mapPanel = $('#map-panel')) ->
-            parent = $(map.element).parent()
-            height = parent.innerHeight()
-            $(map.element).height height
-            mapPanel.height height
-            panelInfo = $('.panel-info-wrapper')
-            if panelInfo
-                height -= panelInfo.height() + 30
-            $('.panel', mapPanel).height(height - 146)
-
-        fixMapWidth = (map, mapPanel = $('#map-panel')) ->
-            panelWidth = mapPanel.innerWidth()
-            try
-                panelLeft = mapPanel.position().left
-            catch err
-                panelLeft = 0
-
-            $(map.element).css marginLeft: panelWidth + panelLeft, width: 'auto'
-
         methods =
             init: (options) ->
                 @each ->
@@ -47,9 +22,6 @@ define (require) ->
                             $this.trigger 'features_loaded', features
                         $this.data 'map', map
                         if opts.mapType? then map.googleMap.setMapTypeId opts.mapType
-                        if opts.height is '100%'
-                            $(window).resize map: map, fixMapSize
-                            $(window).resize()
 
 
             edit: (feature) ->

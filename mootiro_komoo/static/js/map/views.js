@@ -19,7 +19,9 @@
       }
 
       Base.prototype.initialize = function() {
-        var _ref, _ref2, _ref3, _ref4, _ref5, _ref6;
+        var _ref, _ref2, _ref3, _ref4, _ref5, _ref6,
+          _this = this;
+        window.d = this;
         _.bindAll(this);
         this.listenTo(app, 'error', this.onError);
         if (this.mapData == null) {
@@ -41,6 +43,9 @@
           this.mapElement = $('<div>');
           this.loaded = false;
         }
+        this.mapElement.on('initialized', function() {
+          return _this.trigger('initialize');
+        });
         this.render();
         return window.pm = this;
       };

@@ -52,6 +52,7 @@ header.main {
     /** Menu **/
     nav {
         @item-width: 180px;
+        @item-height: 40px;
         @icon-size: 20px;
         @icon-sprite: 'sprite.png';
 
@@ -68,6 +69,7 @@ header.main {
             .border-radius(10px, 10px, 0px, 0px);
 
             display: inline-block;
+            height: @item-height;
 
             > a {
                 .transition(all, 0s); /* Removes transitional */
@@ -103,7 +105,7 @@ header.main {
                     z-index: 2;
                     width: 0px;
                     height: 0px;
-                    margin: (-@size * 2) auto 0px;
+                    margin: (-@size * 2 + 2) auto 0px;
                     border: @size solid transparent;
                     border-bottom-color: @content-bg;
                 }

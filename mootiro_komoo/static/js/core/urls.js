@@ -5,7 +5,7 @@
     dutils = require('dutils');
     urls = require('dutils_urls');
     route = function(name) {
-      return dutils.conf.urls[name].replace(/^\/(.*)(\/)$/, '$1(/)').replace(/<([^>]*)>/g, ':$1');
+      return dutils.conf.urls[name].replace(/^\/(.*)(\/)$/, '$1(/)').replace(/<([^>]*)>/g, ':$1').replace(/\.\*/g, '*path');
     };
     return {
       resolve: urls.resolve,

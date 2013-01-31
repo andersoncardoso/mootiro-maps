@@ -47,12 +47,9 @@ logger = logging.getLogger(__name__)
 # ENTITY_MODEL_REV = {v: k for k, v in ENTITY_MODEL.items()}
 
 
-@render_to('main/map.html')
-def map(request):
-    return {
-        'js_module': 'map/pages/map',  # Load map_page module using RequireJS
-        'geojson': {}
-    }
+@render_to('main/root.html')
+def map(request, *args, **kwargs):
+    return {}
 
 
 @render_to('main/root.html')

@@ -12,16 +12,20 @@ define (require) ->
   class App
     _.extend @prototype, Backbone.Events
     constructor: ->
+      @initialized = new $.Deferred()
       $.when(
         @interceptAjaxRequests()
         @handleModulesError()
         @initializeUser()
         @initializeRouters()
         @initializeAnalytics()
-      ).done => $.when(
-        @drawLayout()
-        @initializeMapEditor()
-      ).done => @trigger 'initialize'
+      ).done =>
+        $.when(
+          @drawLayout()
+          @initializeMapEditor()
+        ).done =>
+          @trigger 'initialize'
+          @initialized.resolve true
 
     goTo: (url, page) ->
       $.when(pageManager.canClose()).done =>
@@ -155,17 +159,20 @@ define (require) ->
       dfd = new $.Deferred()
       require ['main/views'], (mainViews) =>
         $('#map-editor-container').hide()
-        mapEditor = new mainViews.MapEditor
+        @mapEditor = new mainViews.MapEditor
           el: '#map-editor-container'
-        @mapEditor = mapEditor.getMap()
-        dfd.resolve true
+        @mapEditor.once 'initialize', => dfd.resolve true
       dfd.promise()
 
     showMainMap: ->
-      $('#map-editor-container').show()
+      $.when(@initialized).done =>
+        $('#map-editor-container').show()
+        @mapEditor.getMap().refresh()
 
     hideMainMap: ->
-      $('#map-editor-container').hide()
+      $.when(@initialize).done =>
+        $('#map-editor-container').hide()
+        @mapEditor.getMap().refresh()
 
 
   return {

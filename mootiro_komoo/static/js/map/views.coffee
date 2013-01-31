@@ -10,6 +10,7 @@ define (require) ->
   mapElementCache = {}
   class Base extends Backbone.View
     initialize: ->
+      window.d = this
       _.bindAll this
       @listenTo app, 'error', @onError
 
@@ -27,6 +28,8 @@ define (require) ->
       else
         @mapElement = $('<div>')
         @loaded = false
+      @mapElement.on 'initialized', =>
+        @trigger 'initialize'
       @render()
       window.pm = this
 

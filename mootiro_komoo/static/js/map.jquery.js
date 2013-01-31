@@ -4,39 +4,7 @@
     var $;
     $ = require('jquery');
     return (function($) {
-      var fixMapHeight, fixMapSize, fixMapWidth, methods;
-      fixMapSize = function(e) {
-        var map;
-        map = e.data.map;
-        fixMapHeight(map);
-        fixMapWidth(map);
-        return map.refresh();
-      };
-      fixMapHeight = function(map, mapPanel) {
-        var height, panelInfo, parent;
-        if (mapPanel == null) mapPanel = $('#map-panel');
-        parent = $(map.element).parent();
-        height = parent.innerHeight();
-        $(map.element).height(height);
-        mapPanel.height(height);
-        panelInfo = $('.panel-info-wrapper');
-        if (panelInfo) height -= panelInfo.height() + 30;
-        return $('.panel', mapPanel).height(height - 146);
-      };
-      fixMapWidth = function(map, mapPanel) {
-        var panelLeft, panelWidth;
-        if (mapPanel == null) mapPanel = $('#map-panel');
-        panelWidth = mapPanel.innerWidth();
-        try {
-          panelLeft = mapPanel.position().left;
-        } catch (err) {
-          panelLeft = 0;
-        }
-        return $(map.element).css({
-          marginLeft: panelWidth + panelLeft,
-          width: 'auto'
-        });
-      };
+      var methods;
       methods = {
         init: function(options) {
           return this.each(function() {
@@ -61,12 +29,8 @@
                 return $this.trigger('features_loaded', features);
               });
               $this.data('map', map);
-              if (opts.mapType != null) map.googleMap.setMapTypeId(opts.mapType);
-              if (opts.height === '100%') {
-                $(window).resize({
-                  map: map
-                }, fixMapSize);
-                return $(window).resize();
+              if (opts.mapType != null) {
+                return map.googleMap.setMapTypeId(opts.mapType);
               }
             });
           });

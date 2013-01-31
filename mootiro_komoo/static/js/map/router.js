@@ -22,12 +22,21 @@
 
       MapRouter.prototype.routes[urls.route('map')] = 'mainMap';
 
+      MapRouter.prototype.routes[urls.route('map_coords')] = 'mainMap';
+
       MapRouter.prototype.initialize = function() {
         return _.bindAll(this);
       };
 
-      MapRouter.prototype.mainMap = function() {
-        return app.goTo(urls.resolve('map'), new pages.MapPage());
+      MapRouter.prototype.mainMap = function(lat, lng, zoom) {
+        var data, url;
+        data = {
+          lat: lat,
+          lng: lng,
+          zoom: zoom
+        };
+        url = lat ? urls.resolve('map_coords', data) : urls.resolve('map');
+        return app.goTo(url, new pages.MapPage());
       };
 
       return MapRouter;

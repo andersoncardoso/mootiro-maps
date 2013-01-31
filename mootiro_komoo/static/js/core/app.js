@@ -14,9 +14,11 @@
 
       function App() {
         var _this = this;
+        this.initialized = new $.Deferred();
         $.when(this.interceptAjaxRequests(), this.handleModulesError(), this.initializeUser(), this.initializeRouters(), this.initializeAnalytics()).done(function() {
           return $.when(_this.drawLayout(), _this.initializeMapEditor()).done(function() {
-            return _this.trigger('initialize');
+            _this.trigger('initialize');
+            return _this.initialized.resolve(true);
           });
         });
       }
@@ -141,7 +143,7 @@
         dfd = new $.Deferred();
         this.routers = [];
         $(function() {
-          return require(['main/router', 'authentication/router', 'user/router', 'map/router',  'organizations/router'], function() {
+          return require(['main/router', 'authentication/router', 'user/router', 'map/router', 'organizations/router'], function() {
             var router, _i, _len;
             for (_i = 0, _len = arguments.length; _i < _len; _i++) {
               router = arguments[_i];
@@ -174,23 +176,31 @@
           _this = this;
         dfd = new $.Deferred();
         require(['main/views'], function(mainViews) {
-          var mapEditor;
           $('#map-editor-container').hide();
-          mapEditor = new mainViews.MapEditor({
+          _this.mapEditor = new mainViews.MapEditor({
             el: '#map-editor-container'
           });
-          _this.mapEditor = mapEditor.getMap();
-          return dfd.resolve(true);
+          return _this.mapEditor.once('initialize', function() {
+            return dfd.resolve(true);
+          });
         });
         return dfd.promise();
       };
 
       App.prototype.showMainMap = function() {
-        return $('#map-editor-container').show();
+        var _this = this;
+        return $.when(this.initialized).done(function() {
+          $('#map-editor-container').show();
+          return _this.mapEditor.getMap().refresh();
+        });
       };
 
       App.prototype.hideMainMap = function() {
-        return $('#map-editor-container').hide();
+        var _this = this;
+        return $.when(this.initialize).done(function() {
+          $('#map-editor-container').hide();
+          return _this.mapEditor.getMap().refresh();
+        });
       };
 
       return App;
