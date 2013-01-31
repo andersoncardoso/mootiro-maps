@@ -4,11 +4,9 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, Organization, PermissionMixin, app, _;
-    Backbone = require('backbone');
-    _ = require('underscore');
+    var Organization, app, mainModels;
     app = require('app');
-    PermissionMixin = require('core/mixins').PermissionMixin;
+    mainModels = require('main/models');
     Organization = (function(_super) {
 
       __extends(Organization, _super);
@@ -17,17 +15,13 @@
         Organization.__super__.constructor.apply(this, arguments);
       }
 
-      _.extend(Organization.prototype, PermissionMixin);
-
       Organization.prototype.urlRoot = '/api/organizations';
 
-      Organization.prototype.edit = function() {
-        return app.goTo("organizations/" + this.id + "/edit");
-      };
+      Organization.prototype.navRoot = '/organizations';
 
       return Organization;
 
-    })(Backbone.Model);
+    })(mainModels.CommonObject);
     return {
       Organization: Organization
     };

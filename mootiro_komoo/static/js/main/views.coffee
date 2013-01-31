@@ -139,7 +139,8 @@ define (require) ->
     do: (e) ->
       e.preventDefault()
       action = if $(e.target).hasClass 'active' then 'view' else $(e.target).attr 'data-action'
-      @model[action]() if _.isFunction @model[action]
+      # This comes from main/models::CommonObject
+      app.goTo @model[action + 'Url']?()
 
     setMode: (@mode) ->
       @$('.active').removeClass 'active'

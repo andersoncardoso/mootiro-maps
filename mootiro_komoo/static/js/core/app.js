@@ -141,7 +141,7 @@
         dfd = new $.Deferred();
         this.routers = [];
         $(function() {
-          return require(['main/router', 'authentication/router', 'user/router', 'map/router',  'organizations/router'], function() {
+          return require(['main/router', 'authentication/router', 'user/router', 'map/router', 'organizations/router'], function() {
             var router, _i, _len;
             for (_i = 0, _len = arguments.length; _i < _len; _i++) {
               router = arguments[_i];

@@ -244,10 +244,10 @@
       };
 
       ActionBar.prototype["do"] = function(e) {
-        var action;
+        var action, _base, _name;
         e.preventDefault();
         action = $(e.target).hasClass('active') ? 'view' : $(e.target).attr('data-action');
-        if (_.isFunction(this.model[action])) return this.model[action]();
+        return app.goTo(typeof (_base = this.model)[_name = action + 'Url'] === "function" ? _base[_name]() : void 0);
       };
 
       ActionBar.prototype.setMode = function(mode) {
