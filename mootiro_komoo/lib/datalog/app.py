@@ -28,7 +28,6 @@ def create_app(config):
     app = Flask('datalog')
     app.config.from_object(config)
 
-
     db = config.get_db()
 
     def call_end_request(response):

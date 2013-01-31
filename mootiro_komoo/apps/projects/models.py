@@ -12,6 +12,16 @@ from authentication.models import User
 from regions.models import Region
 
 
+PROJECT_TYPE = (
+    ('guide', _('Community Guide')),
+    ('network', -('Network')),
+    ('journalism', -('Data Journalism')),
+    ('diagnostics', -('Diagnostics')),
+    ('evaluation', -('Programme Evaluation')),
+    ('others', -('Others')),
+)
+
+
 class ProjectRelatedObject(BaseModel):
     project = models.ForeignKey('Project')
 
@@ -59,6 +69,9 @@ class ProjectRelatedObject(BaseModel):
 
 
 class Project(BaseModel, CommonDataMixin):
+
+    project_type = models.CharField(max_length=100, null=True, blank=True,
+                                    choices=PROJECT_TYPE, default='others')
 
     contributors = models.ManyToManyField(User, null=True, blank=True,
             related_name='project_contributors')

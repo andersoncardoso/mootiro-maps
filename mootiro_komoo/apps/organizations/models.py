@@ -35,7 +35,7 @@ class Organization(CommonObject):
 
     organization_type = models.CharField(
             max_length=100, null=True, blank=True, choices=ORGANIZATION_TYPES,
-            default='ong')
+            default='others')
     contact = JSONField(null=True, blank=True)
 
     class Map:

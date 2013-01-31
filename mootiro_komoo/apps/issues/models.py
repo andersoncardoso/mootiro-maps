@@ -14,6 +14,7 @@ ISSUE_TYPES = (
     ('problem', _('Problem')),
     ('challenge', _('Challenge')),
     ('violation', _('Violation')),
+    ('others', _('Others')),
 )
 
 
@@ -21,7 +22,7 @@ class Issue(CommonObject):
     common_object_type = 'issue'
 
     issue_type = models.CharField(max_length=100, null=True, blank=True,
-                                    choices=ISSUE_TYPES, default='need')
+                                    choices=ISSUE_TYPES, default='others')
 
     class Map:
         title = _('Need')
@@ -29,18 +30,7 @@ class Issue(CommonObject):
         background_color = '#f42c5e'
         border_color = '#d31e52'
         geometries = (POLYGON, LINESTRING, POINT)
-        categories = [
-            ('Culture'),
-            ('Education'),
-            ('Environment'),
-            ('Health'),
-            ('Housing'),
-            ('Local Economy'),
-            ('Mobility'),
-            ('Social Service'),
-            ('Sport'),
-            ('Security'),
-        ]
+        categories = []
 
     @property
     def url(self):
