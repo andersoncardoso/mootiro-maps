@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from flask import g, Flask, session
 
 from settings import config
+from db import connect as connect_models
 from views import app as app_views
 
 
@@ -58,6 +59,8 @@ def create_app(config):
 
     # register blueprints
     app.register_blueprint(app_views)
+
+    connect_models(config)
 
     return app
 

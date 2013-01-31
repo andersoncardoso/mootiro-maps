@@ -127,4 +127,4 @@ MAILGUN_API_URL = 'https://api.mailgun.net/v2/it3s.mailgun.org/messages'
 MAILGUN_API_KEY = 'override me on local_settings'
 
 # ========== Datalog ==========================================================
-DATALOG_SERVER = "http://localhost:5000/"
+DATALOG_SERVER = "http://localhost:8008/"
