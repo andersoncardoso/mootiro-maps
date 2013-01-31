@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import requests
 import simplejson
 import dateutil
+from dateutil.parser import parse as dateutil_parse
 import datetime
 from string import letters, digits
 from random import choice
@@ -26,7 +27,7 @@ def iso_to_datetime(iso_string):
     """ parses a ISO-8601 string into a python datetime object """
     if iso_string is None:
         return None
-    return dateutil.parser.parse(iso_string)
+    return dateutil_parse(iso_string)
 
 
 def create_geojson(objects, type_='FeatureCollection', convert=True,
@@ -273,14 +274,17 @@ def _to_json_default(obj):
     """
 
     # Geometries
-    if hasattr(obj, 'geojson'):
-        return simplejson.loads(obj.geojson)
+    if getattr(obj, 'geojson', None):
+        return simplejson.dumps(obj.geojson)
 
     # Datetime
     if isinstance(obj, datetime.datetime):
         return datetime_to_iso(obj)
 
-    raise TypeError(repr(obj) + ' is not JSON serializable')
+    try:
+        return obj.id
+    except Exception:
+        raise TypeError(repr(obj) + ' is not JSON serializable')
 
 
 def to_json(data):
