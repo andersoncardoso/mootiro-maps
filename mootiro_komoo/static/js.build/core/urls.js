@@ -1,1 +1,1 @@
-(function(){define(["require","dutils","dutils_urls"],function(e){var t,n,r;return t=e("dutils"),r=e("dutils_urls"),n=function(e){return t.conf.urls[e].replace(/^\/(.*)(\/)$/,"$1(/)").replace(/<([^>]*)>/g,":$1")},{resolve:r.resolve,route:n}})}).call(this);
+(function(){define(["require","dutils","dutils_urls"],function(e){var t,n,r;return t=e("dutils"),r=e("dutils_urls"),n=function(e){return t.conf.urls[e].replace(/^\/(.*)(\/)$/,"$1(/)").replace(/<([^>]*)>/g,":$1").replace(/\.\*/g,"*path")},{resolve:r.resolve,route:n}})}).call(this);
