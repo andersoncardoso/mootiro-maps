@@ -5,21 +5,33 @@ define (require) ->
   Backbone = require 'backbone'
 
   app = require 'app'
-  urls = require 'urls'
 
-  pages = require './pages'
-  models = require './models'
+  myappPages = require './pages'
+  myappModels = require './models'
 
 
   class MyappRouter extends Backbone.Router
     routes:
-      'myapp/:id(/)': 'view'
+      'myapp/new(/)': 'new'
+      'myapp/:id(/)': 'show'
+      'myapp/:id/edit(/)': 'edit'
 
     initialize: ->
       _.bindAll this
 
-    view: (id) ->
-      model = models.getUser id
-      app.goTo urls.resolve('myapp_root', id_: id), new pages.MyappPage(model: @model)
+    show: (id) ->
+      model = new myappModels.Mymodel {'id': id}
+      model.fetch()
+      app.goTo("/myapp/#{id}", new myappPages.Show 'model': model)
+
+    new: ->
+      model = new myappModels.Mymodel {}  # no id, new object
+      app.goTo("/myapp/new", new myappPages.New 'model': model)
+
+    edit: (id) ->
+      model = new myappModels.Mymodel {'id': id}
+      model.fetch()
+      app.goTo("/myapp/#{id}/edit", new myappPages.Edit 'model': model)
+
 
   return MyappRouter

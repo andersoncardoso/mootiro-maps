@@ -1,6 +1,8 @@
 define (require) ->
   'use strict'
 
+  app = require 'app'
+
   pageManager = require 'core/page_manager'
   mainViews = require 'main/views'
   
@@ -24,8 +26,13 @@ define (require) ->
       super
       @id = "organizations::new"
       data = {'model': @model}
+      mainView = new orgViews.NewMain data
       @setViews
-        mainContent: new orgViews.NewMain data
+        mainContent: mainView
+
+      # page flow events
+      @listenTo mainView.form, 'success',
+                () -> app.goTo("organizations/#{@model.id}")
 
 
   class Edit extends pageManager.Page
@@ -33,10 +40,15 @@ define (require) ->
       super
       @id = "organizations::edit::#{@model.id}"
       data = {'model': @model}
+      mainView = new orgViews.EditMain data
       @setViews
         actionBar: new mainViews.ActionBar data
         sidebar: new orgViews.EditSidebar data
-        mainContent: new orgViews.EditMain data
+        mainContent: mainView
+
+      # page flow events
+      @listenTo mainView.form, 'success',
+                () -> app.goTo("organizations/#{@model.id}")
 
 
   return {

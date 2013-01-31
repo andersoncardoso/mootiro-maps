@@ -13,10 +13,8 @@ define (require) ->
 
     urlRoot: '/api/organizations'
 
-    show: ->
-      app.goTo("/organizations/#{@id}")
-
     edit: ->
       app.goTo "organizations/#{@id}/edit"
+
 
   return {Organization: Organization}

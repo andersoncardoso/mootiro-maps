@@ -12,4 +12,5 @@ STEPS:
 5. Add your app urls entry point to urlpatterns in /urls.py
 6. Add 'myapp/router' on initializeRouters in core/app.coffee
 7. Run server and point your browser to localhost:8001/myapp
-8. Do not forget to change 'myapp' to an appropriate name for your app
+8. Do not forget to change 'myapp' to an appropriate name for your app in all
+   files and folders

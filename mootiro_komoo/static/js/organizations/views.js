@@ -78,13 +78,12 @@
       };
 
       NewMain.prototype.render = function() {
-        var formView;
         this.$el.html(this.template({}));
-        formView = new orgForms.OrganizationForm({
+        this.form = new orgForms.OrganizationForm({
           model: this.model
         });
-        formView.render();
-        this.$('#form-container').append(formView.$el);
+        this.form.render();
+        this.$('#form-container').append(this.form.$el);
         return this;
       };
 
@@ -104,19 +103,18 @@
       EditMain.prototype.initialize = function() {
         _.bindAll(this);
         this.listenTo(this.model, 'change', this.render);
+        this.form = new orgForms.OrganizationForm({
+          model: this.model
+        });
         return this.render();
       };
 
       EditMain.prototype.render = function() {
-        var formView;
         this.$el.html(this.template({
           data: this.model.toJSON()
         }));
-        formView = new orgForms.OrganizationForm({
-          model: this.model
-        });
-        formView.render();
-        this.$('#form-container').append(formView.$el);
+        this.form.render();
+        this.$('#form-container').append(this.form.$el);
         return this;
       };
 
