@@ -64,4 +64,4 @@ def create_app(config):
 
 if __name__ == '__main__':
     datalog = create_app(config)
-    datalog.run()
+    datalog.run(port=config.PORT)

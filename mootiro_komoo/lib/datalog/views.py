@@ -7,7 +7,7 @@ app = Blueprint('main', 'main')
 
 @app.route('/')
 def retrieve_data():
-    # curl -H "Content-type: application/json" -XGET http://localhost:5000 -d\
+    # curl -H "Content-type: application/json" -XGET http://localhost:8008 -d\
     #  '{
     #       "teste": "blaa"
     #   }'
@@ -18,11 +18,10 @@ def retrieve_data():
 
 @app.route('/', methods=['POST'])
 def add_data():
-    # requests.get('http://localhost:5000/',
+    # requests.get('http://localhost:8008/',
     #    headers={'Content-Type': 'application/json'},
     #    data=json.dumps({'teste': 'some stuff'}))
     print 'json:', request.json
-    print type(request.json)
-    # datalog = Datalog(request.json)
-    # datalog.save()
+    datalog = Datalog(request.json)
+    # datalog.upsert()
     return jsonify({'method': 'POST'})

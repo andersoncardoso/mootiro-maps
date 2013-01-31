@@ -25,3 +25,16 @@ class Datalog(Model):
     """
 
     collection_name = 'datalog'
+
+    # structure = {
+    #     'table_name': unicode,
+    #     'object_id': int,
+    #     'user': int,
+    #     'action': unicode,
+    #     # 'time': datetime_from_iso,
+    #     'data': dict
+    # }
+
+    # validators = {
+    #     'action': [valid_action, ]
+    # }
