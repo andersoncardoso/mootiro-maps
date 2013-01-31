@@ -33,14 +33,15 @@ def get_user_updates(user, page=1, num=None):
 
     return _datalog_request(params)
 
-
-@receiver(log_data)
-def log_data_receiver(sender, object, user, action):
-    data = {
-        'table': object.table_ref,
-        'object_id': object.id,
-        'user': user,
-        'action': action,
-        'data': object.to_dict()
-    }
-    datalog_request_task.delay(data, method='post')
+# Commented because it was causing fab run to fail. Ass: André.
+# TODO: fix it.
+# @receiver(log_data)
+# def log_data_receiver(sender, object, user, action):
+#     data = {
+#         'table': object.table_ref,
+#         'object_id': object.id,
+#         'user': user,
+#         'action': action,
+#         'data': object.to_dict()
+#     }
+#     datalog_request_task.delay(data, method='post')
