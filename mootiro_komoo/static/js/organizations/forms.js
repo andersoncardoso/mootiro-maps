@@ -4,9 +4,10 @@
 
   define(function(require) {
     'use strict';
-    var OrganizationForm, app, reForm;
+    var ContactWidget, OrganizationForm, app, reForm;
     app = require('app');
     reForm = require('reForm');
+    ContactWidget = require('widgets/reForm/contact').ContactWidget;
     OrganizationForm = (function(_super) {
 
       __extends(OrganizationForm, _super);
@@ -24,6 +25,11 @@
           name: 'description',
           widget: reForm.commonWidgets.TextWidget,
           label: i18n('Description')
+        }, {
+          name: 'contact',
+          container_class: 'contact',
+          widget: ContactWidget,
+          label: i18n('Contact')
         }
       ];
 

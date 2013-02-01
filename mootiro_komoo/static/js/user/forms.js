@@ -4,67 +4,9 @@
 
   define(function(require) {
     'use strict';
-    var ContactWidget, MultiWidget, UserInfoForm, forms, reForm;
+    var ContactWidget, UserInfoForm, reForm;
     reForm = require('reForm');
-    forms = require('core/forms');
-    MultiWidget = forms.MultiWidget;
-    ContactWidget = (function(_super) {
-
-      __extends(ContactWidget, _super);
-
-      function ContactWidget() {
-        ContactWidget.__super__.constructor.apply(this, arguments);
-      }
-
-      ContactWidget.prototype.fieldTemplate = "<div class=\"subfield-container <%=container_class%>\">\n  <div class=\"widget-container\"></div>\n</div>";
-
-      ContactWidget.prototype.fields = [
-        {
-          name: 'type',
-          container_class: 'type',
-          widget: reForm.commonWidgets.DropdownWidget,
-          args: {
-            choices: [
-              {
-                title: '',
-                value: ''
-              }, {
-                title: i18n('Address'),
-                value: 'address'
-              }, {
-                title: i18n('Phone'),
-                value: 'phone'
-              }, {
-                title: i18n('Email'),
-                value: 'email'
-              }, {
-                title: i18n('Website'),
-                value: 'website'
-              }, {
-                title: i18n('Skype'),
-                value: 'skype'
-              }, {
-                title: i18n('Facebook'),
-                value: 'facebook'
-              }, {
-                title: i18n('Google Plus'),
-                value: 'gplus'
-              }, {
-                title: i18n('Twitter'),
-                value: 'twitter'
-              }
-            ]
-          }
-        }, {
-          name: 'value',
-          container_class: 'value',
-          widget: reForm.commonWidgets.TextWidget
-        }
-      ];
-
-      return ContactWidget;
-
-    })(MultiWidget);
+    ContactWidget = require('widgets/reForm/contact').ContactWidget;
     UserInfoForm = (function(_super) {
 
       __extends(UserInfoForm, _super);

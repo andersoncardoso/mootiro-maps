@@ -37,6 +37,9 @@ define (require) ->
       @rows = 0
       @renderedFields = []
       super
+      # @listenTo @$el.(), event, callback) 
+      console.log "EU AMO JESUS"
+      console.log @, @$el
 
     set: (value) ->
       @clear()

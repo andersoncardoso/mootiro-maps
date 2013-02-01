@@ -38,8 +38,6 @@
         User.__super__.constructor.apply(this, arguments);
       }
 
-      _.extend(User.prototype, PermissionMixin);
-
       User.prototype.permissions = {
         edit: function(user) {
           return user instanceof User && (user.isSuperuser() || user.get('id') === this.get('id'));

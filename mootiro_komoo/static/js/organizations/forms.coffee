@@ -4,6 +4,8 @@ define (require) ->
   app = require 'app'
   reForm = require 'reForm'
 
+  ContactWidget = require('widgets/reForm/contact').ContactWidget
+
 
   # Organization Form
   class OrganizationForm extends reForm.Form
@@ -17,6 +19,12 @@ define (require) ->
         name: 'description'
         widget: reForm.commonWidgets.TextWidget
         label: i18n 'Description'
+      }
+      {
+        name: 'contact',
+        container_class: 'contact'
+        widget: ContactWidget,
+        label: i18n 'Contact'
       }
     ]
 

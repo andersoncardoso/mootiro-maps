@@ -86,6 +86,9 @@ trans =
   'See on map':
     'pt-br': 'Ver no mapa'
 
+  'Description':
+    'pt-br': 'Descrição'
+
   'About me':
     'pt-br': 'Sobre mim'
 

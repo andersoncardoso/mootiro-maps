@@ -22,7 +22,6 @@ define (require) ->
 
 
   class User extends mainModels.CommonObject
-    _.extend @prototype, PermissionMixin
 
     permissions:
       edit: (user) ->

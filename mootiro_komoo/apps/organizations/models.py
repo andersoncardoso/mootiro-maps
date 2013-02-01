@@ -46,10 +46,6 @@ class Organization(CommonObject):
         border_color = '#1f49b2'
         geometries = (POLYGON, POINT)
 
-    @property
-    def url(self):
-        return reverse('organization_view', kwargs={'id_': self.id})
-
     # ================== utils ============================
     def from_dict(self, data):
         keys = ['organization_type', 'contact']

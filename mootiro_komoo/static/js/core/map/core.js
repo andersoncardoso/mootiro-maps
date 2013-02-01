@@ -59,9 +59,6 @@
           }
           return _this.data.when(instance.init(opts)).done(function() {
             _this._components[component][id].instance = instance;
-            if (typeof console !== "undefined" && console !== null) {
-              console.log("Component '" + component + "' initialized");
-            }
             _this.publish("" + componentName + ":started", id);
             return dfd.resolve(instance);
           }).fail(function() {

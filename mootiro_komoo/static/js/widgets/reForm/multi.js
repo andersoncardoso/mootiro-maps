@@ -35,7 +35,9 @@
         this.options.type = 'json';
         this.rows = 0;
         this.renderedFields = [];
-        return MultiWidget.__super__.initialize.apply(this, arguments);
+        MultiWidget.__super__.initialize.apply(this, arguments);
+        console.log("EU AMO JESUS");
+        return console.log(this, this.$el);
       };
 
       MultiWidget.prototype.set = function(value) {

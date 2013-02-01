@@ -53,7 +53,7 @@ define (require) ->
                     # This component instance was initialized successfully
                     @_components[component][id].instance = instance
                     # lets send the news to everybody
-                    console?.log "Component '#{component}' initialized"
+                    # console?.log "Component '#{component}' initialized"
                     @publish "#{componentName}:started", id
                     dfd.resolve instance
                 ).fail(=>
