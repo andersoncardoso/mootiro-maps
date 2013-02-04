@@ -5,11 +5,11 @@ define (require) ->
   _ = require 'underscore'
 
   app = require 'app'
-  PermissionMixin = require('core/mixins').PermissionMixin
+  mixins = require 'core/mixins'
 
 
   class CommonObject extends Backbone.Model
-    _.extend @prototype, PermissionMixin
+    _.extend @prototype, mixins.PermissionMixin
 
     # Subclass responsability
     # navRoot = 'undefined'

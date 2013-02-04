@@ -1,30 +1,27 @@
 define (require) ->
   'use strict'
 
-  app = require 'app'
-  reForm = require 'reForm'
-
-  ContactWidget = require('widgets/reForm/contact').ContactWidget
+  form = require 'core/form'
 
 
   # Organization Form
-  class OrganizationForm extends reForm.Form
+  class OrganizationForm extends form.BaseForm
     fields: [
       {
         name: 'name'
-        widget: reForm.commonWidgets.TextWidget
         label: i18n 'Name'
+        widget: form.commonWidgets.TextWidget
       }
       {
         name: 'description'
-        widget: reForm.commonWidgets.TextWidget
         label: i18n 'Description'
+        widget: form.commonWidgets.TextWidget
       }
       {
         name: 'contact',
-        container_class: 'contact'
-        widget: ContactWidget,
         label: i18n 'Contact'
+        container_class: 'contact'
+        widget: form.widgets.ContactWidget
       }
     ]
 

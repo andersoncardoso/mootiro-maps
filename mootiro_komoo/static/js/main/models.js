@@ -4,11 +4,11 @@
 
   define(function(require) {
     'use strict';
-    var Backbone, CommonObject, PermissionMixin, app, _;
+    var Backbone, CommonObject, app, mixins, _;
     Backbone = require('backbone');
     _ = require('underscore');
     app = require('app');
-    PermissionMixin = require('core/mixins').PermissionMixin;
+    mixins = require('core/mixins');
     CommonObject = (function(_super) {
 
       __extends(CommonObject, _super);
@@ -17,7 +17,7 @@
         CommonObject.__super__.constructor.apply(this, arguments);
       }
 
-      _.extend(CommonObject.prototype, PermissionMixin);
+      _.extend(CommonObject.prototype, mixins.PermissionMixin);
 
       CommonObject.prototype.showUrl = function() {
         return "" + this.navRoot + "/" + this.id;

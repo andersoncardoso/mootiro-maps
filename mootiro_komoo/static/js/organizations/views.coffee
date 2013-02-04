@@ -10,7 +10,7 @@ define (require) ->
   # ===== Show Page Views =====================================================
   class ShowMain extends Backbone.View
     template: _.template require 'text!templates/organizations/_show_main.html'
-    
+
     initialize: ->
       _.bindAll this
       @listenTo @model, 'change', @render
@@ -23,7 +23,7 @@ define (require) ->
 
   class ShowSidebar extends Backbone.View
     template: _.template require 'text!templates/organizations/_show_sidebar.html'
-    
+
     initialize: ->
       _.bindAll this
       @listenTo @model, 'change', @render
@@ -36,39 +36,43 @@ define (require) ->
   # ===== New Page Views ======================================================
   class NewMain extends Backbone.View
     template: _.template require 'text!templates/organizations/_new_main.html'
-    
+
     initialize: ->
       _.bindAll this
       @listenTo @model, 'change', @render
+      @subViews = []
+      @form = new orgForms.OrganizationForm({model: @model})
+      @subViews.push @form
       @render()
 
     render: ->
+      view.$el.detach() for view in @subViews
       @$el.html @template {}
-      @form = new orgForms.OrganizationForm({model: @model})
-      @form.render()
       @$('#form-container').append @form.$el
       this
 
   # ===== Edit Page Views =====================================================
   class EditMain extends Backbone.View
     template: _.template require 'text!templates/organizations/_edit_main.html'
-    
+
     initialize: ->
       _.bindAll this
       @listenTo @model, 'change', @render
+      @subViews = []
       @form = new orgForms.OrganizationForm({model: @model})
+      @subViews.push @form
       @render()
 
     render: ->
+      view.$el.detach() for view in @subViews
       @$el.html @template data: @model.toJSON()
-      @form.render()
       @$('#form-container').append @form.$el
       this
 
 
   class EditSidebar extends Backbone.View
     template: _.template require 'text!templates/organizations/_edit_sidebar.html'
-    
+
     initialize: ->
       _.bindAll this
       @listenTo @model, 'change', @render

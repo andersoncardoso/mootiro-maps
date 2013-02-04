@@ -4,7 +4,7 @@
 
   define(function(require) {
     'use strict';
-    var $, ActionBar, Backbone, Profile, ReForm, Sidebar, Update, Updates, UserInfo, UserInfoForm, app, mapViews, _;
+    var $, ActionBar, Avatar, Backbone, Profile, ReForm, Sidebar, Update, Updates, UserInfo, UserInfoForm, app, mapViews, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
@@ -12,6 +12,7 @@
     app = require('app');
     ActionBar = require('main/views').ActionBar;
     UserInfoForm = require('./forms').UserInfoForm;
+    Avatar = require('widgets/avatar').Avatar;
     UserInfo = (function(_super) {
 
       __extends(UserInfo, _super);
@@ -23,7 +24,6 @@
       UserInfo.prototype.template = _.template(require('text!templates/user/_user_info.html'));
 
       UserInfo.prototype.initialize = function() {
-        _.bindAll(this);
         this.listenTo(this.model, 'change', this.render);
         return this.render();
       };
@@ -48,8 +48,7 @@
       Profile.prototype.template = _.template(require('text!templates/user/_profile.html'));
 
       Profile.prototype.initialize = function() {
-        var mode, view, _ref, _ref2;
-        _.bindAll(this);
+        var mode, view, _ref;
         this.subViews = [];
         this.userInfoViews = {
           view: new UserInfo({
@@ -72,7 +71,7 @@
           collection: this.model.getUpdates()
         });
         this.subViews.push(this.updatesView);
-        return this.setMode((_ref2 = this.options.mode) != null ? _ref2 : 'view');
+        return this.setMode();
       };
 
       Profile.prototype.render = function() {
@@ -97,7 +96,8 @@
       };
 
       Profile.prototype.setMode = function(mode) {
-        this.mode = mode;
+        var _ref;
+        this.mode = mode != null ? mode : (_ref = this.options.mode) != null ? _ref : 'show';
         if (this.mode && !this.model.hasPermission(this.mode) || !(this.userInfoViews[this.mode] != null)) {
           if (typeof console !== "undefined" && console !== null) {
             console.log("Mode '" + this.mode + "' not allowed, changing to 'view'.");
@@ -133,13 +133,19 @@
       Sidebar.prototype.template = _.template(require('text!templates/user/_sidebar.html'));
 
       Sidebar.prototype.initialize = function() {
-        _.bindAll(this);
         this.subViews = [];
+        this.subViews.push(new Avatar({
+          model: this.model,
+          mode: this.options.mode,
+          parentSelector: '.avatar.box'
+        }));
         this.subViews.push(new mapViews.Preview({
           model: this.model,
+          mode: this.options.mode,
           parentSelector: '.map.box'
         }));
-        return this.render();
+        this.render();
+        return this.setMode();
       };
 
       Sidebar.prototype.render = function() {
@@ -150,7 +156,7 @@
           view.$el.detach();
         }
         this.$el.html(this.template({
-          user: this.model.toJSON()
+          model: this.model.toJSON()
         }));
         _ref2 = this.subViews;
         for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
@@ -158,6 +164,18 @@
           this.$(view.options.parentSelector).append(view.$el);
         }
         return this;
+      };
+
+      Sidebar.prototype.setMode = function(mode) {
+        var view, _i, _len, _ref, _results;
+        this.mode = mode;
+        _ref = this.subViews;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          _results.push(typeof view.setMode === "function" ? view.setMode(this.mode) : void 0);
+        }
+        return _results;
       };
 
       return Sidebar;
@@ -180,7 +198,6 @@
       };
 
       Update.prototype.initialize = function() {
-        _.bindAll(this);
         this.listenTo(this.model, 'change', this.render);
         return this.render();
       };
@@ -216,7 +233,6 @@
 
       Updates.prototype.initialize = function() {
         var listWidgets;
-        _.bindAll(this);
         listWidgets = require('widgets/list');
         this.subViews = [];
         this.subViews.push(new listWidgets.List({

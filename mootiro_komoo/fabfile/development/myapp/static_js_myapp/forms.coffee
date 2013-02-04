@@ -2,16 +2,16 @@ define (require) ->
   'use strict'
 
   app = require 'app'
-  reForm = require 'reForm'
+  form = require 'core/form'
 
 
   # Mymodel Form
-  class MymodelForm extends reForm.Form
+  class MymodelForm extends form.BaseForm
     fields: [
       {
         name: 'name'
-        widget: reForm.commonWidgets.TextWidget
         label: i18n 'Name'
+        widget: form.commonWidgets.TextWidget
       }
 
       # more fields of your model ...

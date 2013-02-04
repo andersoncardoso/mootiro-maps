@@ -4,9 +4,8 @@
 
   define(function(require) {
     'use strict';
-    var ContactWidget, UserInfoForm, reForm;
-    reForm = require('reForm');
-    ContactWidget = require('widgets/reForm/contact').ContactWidget;
+    var UserInfoForm, form;
+    form = require('core/form');
     UserInfoForm = (function(_super) {
 
       __extends(UserInfoForm, _super);
@@ -15,44 +14,28 @@
         UserInfoForm.__super__.constructor.apply(this, arguments);
       }
 
-      UserInfoForm.prototype.template = require('text!templates/forms/_inline_form.html');
-
       UserInfoForm.prototype.fields = [
         {
           name: 'name',
+          label: i18n('Name'),
           container_class: 'name',
-          widget: reForm.commonWidgets.TextWidget,
-          label: i18n('Name')
+          widget: form.commonWidgets.TextWidget
         }, {
           name: 'contact',
+          label: i18n('Contact'),
           container_class: 'contact',
-          widget: ContactWidget,
-          label: i18n('Contact')
+          widget: form.widgets.ContactWidget
         }, {
           name: 'about_me',
+          label: i18n('About me'),
           container_class: 'about-me',
-          widget: reForm.commonWidgets.TextAreaWidget,
-          label: i18n('About me')
+          widget: form.commonWidgets.TextAreaWidget
         }
       ];
 
-      UserInfoForm.prototype.events = {
-        'click .cancel': 'onCancelClick'
-      };
-
-      UserInfoForm.prototype.onCancelClick = function(e) {
-        if (e != null) e.preventDefault();
-        this.set(this.model.toJSON());
-        return this.trigger('cancel');
-      };
-
-      UserInfoForm.prototype.wasChanged = function() {
-        return !_.isEqual(this.get(), _.pick(this.model.toJSON(), _.pluck(this.fields, 'name')));
-      };
-
       return UserInfoForm;
 
-    })(reForm.Form);
+    })(form.BaseForm);
     return {
       UserInfoForm: UserInfoForm
     };

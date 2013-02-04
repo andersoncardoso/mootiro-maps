@@ -11,13 +11,13 @@ define (require) ->
   ActionBar = require('main/views').ActionBar
   UserInfoForm = require('./forms').UserInfoForm
 
+  Avatar = require('widgets/avatar').Avatar
 
   #### Profile Main View ####
 
   class UserInfo extends Backbone.View
     template: _.template require 'text!templates/user/_user_info.html'
     initialize: ->
-      _.bindAll this
       @listenTo @model, 'change', @render
       @render()
 
@@ -28,8 +28,6 @@ define (require) ->
   class Profile extends Backbone.View
     template: _.template require 'text!templates/user/_profile.html'
     initialize: ->
-      _.bindAll this
-
       @subViews = []
 
       # Create the views for each mode
@@ -54,7 +52,7 @@ define (require) ->
         collection: @model.getUpdates()
       @subViews.push @updatesView
 
-      @setMode(@options.mode ? 'view')
+      @setMode()
 
     render: ->
       view.$el.detach() for view in @subViews
@@ -70,12 +68,13 @@ define (require) ->
     canClose: ->
       not @userInfoViews[@mode]?.wasChanged?()
 
-    setMode: (@mode) ->
+    setMode: (@mode=(@options.mode ? 'show')) ->
       if @mode and not @model.hasPermission(@mode) or not @userInfoViews[@mode]?
         console?.log "Mode '#{@mode}' not allowed, changing to 'view'."
         @model.view()
         return
 
+      # Render the sub view related to current mode (edit form is rendered here)
       @userInfoViews[@mode].render()
       @render()
 
@@ -94,18 +93,29 @@ define (require) ->
   class Sidebar extends Backbone.View
     template: _.template require 'text!templates/user/_sidebar.html'
     initialize: ->
-      _.bindAll this
       @subViews = []
+
+      @subViews.push new Avatar
+        model: @model
+        mode: @options.mode
+        parentSelector: '.avatar.box'
+
       @subViews.push new mapViews.Preview
         model: @model
+        mode: @options.mode
         parentSelector: '.map.box'
+
       @render()
+      @setMode()
 
     render: ->
       view.$el.detach() for view in @subViews
-      @$el.html @template user: @model.toJSON()
+      @$el.html @template model: @model.toJSON()
       @$(view.options.parentSelector).append view.$el for view in @subViews
       this
+
+    setMode: (@mode) ->
+      view.setMode?(@mode) for view in @subViews
 
 
   #### Profile Blocks ####
@@ -117,7 +127,6 @@ define (require) ->
       'click .see-on-map': 'seeOnMap'
 
     initialize: ->
-      _.bindAll this
       @listenTo @model, 'change', @render
       @render()
 
@@ -138,7 +147,6 @@ define (require) ->
     template: _.template require 'text!templates/user/_updates_block.html'
 
     initialize: ->
-      _.bindAll this
       listWidgets = require 'widgets/list'
       @subViews = []
       @subViews.push new listWidgets.List

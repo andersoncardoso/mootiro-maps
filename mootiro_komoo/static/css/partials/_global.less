@@ -603,6 +603,7 @@ a.see-on-map {
     }
 
     &.avatar {
+        padding: 0;
         text-align: center;
         background: transparent;
     }
@@ -612,6 +613,28 @@ a.see-on-map {
     }
 }
 
+
+.overlay {
+    @icon-size: 16px;
+    @icon-sprite: 'sprite.png';
+
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: @overlay-bg;
+
+    a, a:hover, a:visited {
+        .fg-from-bg(@overlay-bg);
+        background: transparent;
+
+        &.edit {
+            .icon(@icon-sprite, @icon-size, 6, 6);
+
+            position: relative;
+            top: 40%;
+        }
+    }
+}
 
 // /*** Old _globa.less ***/
 //
