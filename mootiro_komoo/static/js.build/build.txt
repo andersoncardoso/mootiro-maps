@@ -3,13 +3,13 @@ lib/reveal/reveal.css
 ----------------
 lib/reveal/reveal.css
 
-lib/jquery-plugins/tagsinput/jquery.tagsinput.css
+lib/qunit/qunit.css
 ----------------
-lib/jquery-plugins/tagsinput/jquery.tagsinput.css
+lib/qunit/qunit.css
 
-lib/qunit/qunit.css
+lib/jquery-plugins/tagsinput/jquery.tagsinput.css
 ----------------
-lib/qunit/qunit.css
+lib/jquery-plugins/tagsinput/jquery.tagsinput.css
 
 common.js
 ----------------
@@ -25,6 +25,7 @@ core/page_manager.js
 dutils.js
 dutils_urls.js
 urls.js
+text!templates/core/_edit_overlay.html
 core/mixins.js
 main/models.js
 backbone/paginator.js
@@ -69,9 +70,12 @@ utils.js
 text!templates/widgets/_modal_box.html
 widgets/modal.js
 authentication/router.js
-core/forms.js
+core/form_widgets.js
 text!templates/forms/_inline_form.html
+core/form.js
 user/forms.js
+text!templates/widgets/_avatar.html
+widgets/avatar.js
 text!templates/user/_user_info.html
 text!templates/user/_profile.html
 text!templates/user/_sidebar.html

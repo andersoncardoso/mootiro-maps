@@ -1,1 +1,0 @@
-(function(){require(["jquery","backbone","community/model","project/box"],function(e,t,n,r){var i,s;return i=new n.Community(KomooNS.object||{}),s=new r({model:i,collection:i.projects}),window.c=i,i.projects.length===0&&i.projects.fetch(),e("#projectsBox").append(s.render().$el)})}).call(this);
