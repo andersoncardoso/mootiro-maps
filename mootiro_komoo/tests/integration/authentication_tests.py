@@ -27,6 +27,7 @@ class LoginTestCase(IntegrationTest):
                 ))
         self.assertEqual(200, r.status_code)
 
+
 class UserCreationTestCase(IntegrationTest):
     def _clean_all_users(self):
         User.objects.all().delete()
@@ -62,7 +63,8 @@ class UserCreationTestCase(IntegrationTest):
             })
         )
         self.assertEqual(400, r.status_code)
-        returned_json = r.json()
+
+        returned_json = simplejson.loads(r.text)
         self.assertIn('errors', returned_json)
         self.assertIn('name', returned_json['errors'])
         self.assertIn('email', returned_json['errors'])
