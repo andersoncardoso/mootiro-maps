@@ -66,4 +66,5 @@ def create_app(config):
 
 if __name__ == '__main__':
     datalog = create_app(config)
+    print 'starting datalog with config: {}'.format(config.__name__)
     datalog.run(port=config.PORT)

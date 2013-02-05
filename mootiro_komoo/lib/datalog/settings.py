@@ -45,6 +45,7 @@ configs = {
     'dev': Development,
     'stage': Staging,
     'prod': Production,
+    'testing': Testing,
 }
 
 # We expect a environment variable DATALOG_CONFIG to tell us
