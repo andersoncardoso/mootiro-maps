@@ -16,7 +16,9 @@
         return this.$value.val('');
       },
       val: function() {
-        console.log('value', this.$value.val());
+        if (typeof console !== "undefined" && console !== null) {
+          console.log('value', this.$value.val());
+        }
         return this.$value.val();
       },
       render: function() {

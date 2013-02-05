@@ -20,7 +20,7 @@ define [
             @$value.val ''
 
         val: () ->
-            console.log 'value', @$value.val()
+            console?.log 'value', @$value.val()
             @$value.val()
 
         render: () ->

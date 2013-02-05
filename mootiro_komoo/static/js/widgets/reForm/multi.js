@@ -36,8 +36,7 @@
         this.rows = 0;
         this.renderedFields = [];
         MultiWidget.__super__.initialize.apply(this, arguments);
-        console.log("EU AMO JESUS");
-        return console.log(this, this.$el);
+        return typeof console !== "undefined" && console !== null ? console.log(this, this.$el) : void 0;
       };
 
       MultiWidget.prototype.set = function(value) {
