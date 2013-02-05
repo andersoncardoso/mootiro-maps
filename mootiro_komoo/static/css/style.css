@@ -1212,11 +1212,55 @@ a.see-on-map:hover:before {
   background: #fafaf9;
 }
 .box.avatar {
+  padding: 0;
   text-align: center;
   background: transparent;
 }
 .box.tags {
   background-color: transparent;
+}
+.overlay {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+}
+.overlay a,
+.overlay a:hover,
+.overlay a:visited {
+  color: #fff;
+  background: transparent;
+}
+.overlay a.edit,
+.overlay a:hover.edit,
+.overlay a:visited.edit {
+  display: inline-block;
+  position: relative;
+  top: 40%;
+}
+.overlay a.edit:before,
+.overlay a:hover.edit:before,
+.overlay a:visited.edit:before {
+  background: /* @menu-fg */ url(../img/sprite.png) no-repeat -36 0;
+  text-indent: 10000px;
+  content: '';
+  display: inline-block !important;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.overlay a.edit:before,
+.overlay a:hover.edit:before,
+.overlay a:visited.edit:before {
+  background: /* @menu-fg */ url(../img/sprite.png) no-repeat -96px -96px;
+  text-indent: 10000px;
+  content: '';
+  display: inline-block !important;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  vertical-align: middle;
 }
 /** Upper bar whit search bar, login links, config link, etc **/
 .upper-bar {
@@ -2883,28 +2927,28 @@ form#user-info .field-container.name input {
   font-family: Cambria, Georgia, serif;
   font-weight: bold;
 }
-form#user-info .field-container.contact .collection-container {
-  margin: 2px 0;
-}
-form#user-info .field-container.contact .collection-container div {
-  display: inline-block;
-}
-form#user-info .field-container.contact .collection-container select,
-form#user-info .field-container.contact .collection-container input {
-  display: inline;
-  height: auto;
-}
-form#user-info .field-container.contact .collection-container input {
-  padding: 6px 4px;
-}
-form#user-info .field-container.contact .collection-container select {
-  padding: 4px;
-}
 form#user-info .field-container.about-me textarea {
   width: 100%;
   height: 110px;
   padding: 5px;
   font: inherit;
+}
+form .field-container.contact .collection-container {
+  margin: 2px 0;
+}
+form .field-container.contact .collection-container div {
+  display: inline-block;
+}
+form .field-container.contact .collection-container select,
+form .field-container.contact .collection-container input {
+  display: inline;
+  height: auto;
+}
+form .field-container.contact .collection-container input {
+  padding: 6px 4px;
+}
+form .field-container.contact .collection-container select {
+  padding: 4px;
 }
 /** Dialog **/
 .dialog {

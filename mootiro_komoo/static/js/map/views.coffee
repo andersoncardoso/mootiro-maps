@@ -5,13 +5,13 @@ define (require) ->
   Backbone = require 'backbone'
 
   app = require 'app'
+  mixins = require 'core/mixins'
   require 'map.jquery'
 
   mapElementCache = {}
   class Base extends Backbone.View
     initialize: ->
       window.d = this
-      _.bindAll this
       @listenTo app, 'error', @onError
 
       @mapData ?=
@@ -19,8 +19,8 @@ define (require) ->
         mapType: 'roadmap'
         zoom: @options.zoom ? 16
         geojson: @options.geojson ? @model?.get('geojson') ? {}
-        width: @options.width ? '244px'
-        height: @options.height ? '150px'
+        width: @options.width ? '100%'
+        height: @options.height ? '100%'
 
       if mapElementCache[@type]?
         @mapElement = mapElementCache[@type]
@@ -43,12 +43,14 @@ define (require) ->
         @refresh().fadeTo 100, 1
         mapElementCache[@type] = @mapElement
         @loaded = true
+        @setMode @mode if @mode?
 
       if not @loaded
         @mapElement.komooMap @mapData
 
       else
         @mapElement.komooMap('geojson', @model.get('geojson'))
+
       this
 
     onError: (err) ->
@@ -72,16 +74,24 @@ define (require) ->
 
 
   class Preview extends Base
+    _.extend @prototype, mixins.EditOverlayMixin
     type: 'preview'
+    events:
+      'click .overlay > .edit': 'edit'
+
     initialize: ->
       @mapData =
         type: @type
         mapType: 'roadmap'
         zoom: @options.zoom ? 16
         geojson: @model.get('geojson')
-        width: @options.width ? '244px'
-        height: @options.height ? '150px'
+        width: @options.width ? '100%'
+        height: @options.height ? '100%'
       super
+
+    edit: (e) ->
+      e.preventDefault()
+      alert 'sss'
 
 
   class Editor extends Base

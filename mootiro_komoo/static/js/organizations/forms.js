@@ -4,10 +4,8 @@
 
   define(function(require) {
     'use strict';
-    var ContactWidget, OrganizationForm, app, reForm;
-    app = require('app');
-    reForm = require('reForm');
-    ContactWidget = require('widgets/reForm/contact').ContactWidget;
+    var OrganizationForm, form;
+    form = require('core/form');
     OrganizationForm = (function(_super) {
 
       __extends(OrganizationForm, _super);
@@ -19,23 +17,23 @@
       OrganizationForm.prototype.fields = [
         {
           name: 'name',
-          widget: reForm.commonWidgets.TextWidget,
-          label: i18n('Name')
+          label: i18n('Name'),
+          widget: form.commonWidgets.TextWidget
         }, {
           name: 'description',
-          widget: reForm.commonWidgets.TextWidget,
-          label: i18n('Description')
+          label: i18n('Description'),
+          widget: form.commonWidgets.TextWidget
         }, {
           name: 'contact',
+          label: i18n('Contact'),
           container_class: 'contact',
-          widget: ContactWidget,
-          label: i18n('Contact')
+          widget: form.widgets.ContactWidget
         }
       ];
 
       return OrganizationForm;
 
-    })(reForm.Form);
+    })(form.BaseForm);
     return {
       OrganizationForm: OrganizationForm
     };

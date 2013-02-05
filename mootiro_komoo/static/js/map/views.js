@@ -3,11 +3,12 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require) {
-    var $, Backbone, Base, Editor, Preview, app, mapElementCache, _;
+    var $, Backbone, Base, Editor, Preview, app, mapElementCache, mixins, _;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
     app = require('app');
+    mixins = require('core/mixins');
     require('map.jquery');
     mapElementCache = {};
     Base = (function(_super) {
@@ -22,7 +23,6 @@
         var _ref, _ref2, _ref3, _ref4, _ref5, _ref6,
           _this = this;
         window.d = this;
-        _.bindAll(this);
         this.listenTo(app, 'error', this.onError);
         if (this.mapData == null) {
           this.mapData = {
@@ -33,8 +33,8 @@
           mapType: 'roadmap',
           zoom: (_ref = this.options.zoom) != null ? _ref : 16,
           geojson: (_ref2 = (_ref3 = this.options.geojson) != null ? _ref3 : (_ref4 = this.model) != null ? _ref4.get('geojson') : void 0) != null ? _ref2 : {},
-          width: (_ref5 = this.options.width) != null ? _ref5 : '244px',
-          height: (_ref6 = this.options.height) != null ? _ref6 : '150px'
+          width: (_ref5 = this.options.width) != null ? _ref5 : '100%',
+          height: (_ref6 = this.options.height) != null ? _ref6 : '100%'
         });
         if (mapElementCache[this.type] != null) {
           this.mapElement = mapElementCache[this.type];
@@ -61,7 +61,8 @@
           }).append(_this.mapElement);
           _this.refresh().fadeTo(100, 1);
           mapElementCache[_this.type] = _this.mapElement;
-          return _this.loaded = true;
+          _this.loaded = true;
+          if (_this.mode != null) return _this.setMode(_this.mode);
         });
         if (!this.loaded) {
           this.mapElement.komooMap(this.mapData);
@@ -107,7 +108,13 @@
         Preview.__super__.constructor.apply(this, arguments);
       }
 
+      _.extend(Preview.prototype, mixins.EditOverlayMixin);
+
       Preview.prototype.type = 'preview';
+
+      Preview.prototype.events = {
+        'click .overlay > .edit': 'edit'
+      };
 
       Preview.prototype.initialize = function() {
         var _ref, _ref2, _ref3;
@@ -116,10 +123,15 @@
           mapType: 'roadmap',
           zoom: (_ref = this.options.zoom) != null ? _ref : 16,
           geojson: this.model.get('geojson'),
-          width: (_ref2 = this.options.width) != null ? _ref2 : '244px',
-          height: (_ref3 = this.options.height) != null ? _ref3 : '150px'
+          width: (_ref2 = this.options.width) != null ? _ref2 : '100%',
+          height: (_ref3 = this.options.height) != null ? _ref3 : '100%'
         };
         return Preview.__super__.initialize.apply(this, arguments);
+      };
+
+      Preview.prototype.edit = function(e) {
+        e.preventDefault();
+        return alert('sss');
       };
 
       return Preview;

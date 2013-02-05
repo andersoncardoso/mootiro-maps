@@ -74,15 +74,22 @@
       NewMain.prototype.initialize = function() {
         _.bindAll(this);
         this.listenTo(this.model, 'change', this.render);
+        this.subViews = [];
+        this.form = new orgForms.OrganizationForm({
+          model: this.model
+        });
+        this.subViews.push(this.form);
         return this.render();
       };
 
       NewMain.prototype.render = function() {
+        var view, _i, _len, _ref;
+        _ref = this.subViews;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          view.$el.detach();
+        }
         this.$el.html(this.template({}));
-        this.form = new orgForms.OrganizationForm({
-          model: this.model
-        });
-        this.form.render();
         this.$('#form-container').append(this.form.$el);
         return this;
       };
@@ -103,17 +110,24 @@
       EditMain.prototype.initialize = function() {
         _.bindAll(this);
         this.listenTo(this.model, 'change', this.render);
+        this.subViews = [];
         this.form = new orgForms.OrganizationForm({
           model: this.model
         });
+        this.subViews.push(this.form);
         return this.render();
       };
 
       EditMain.prototype.render = function() {
+        var view, _i, _len, _ref;
+        _ref = this.subViews;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          view = _ref[_i];
+          view.$el.detach();
+        }
         this.$el.html(this.template({
           data: this.model.toJSON()
         }));
-        this.form.render();
         this.$('#form-container').append(this.form.$el);
         return this;
       };

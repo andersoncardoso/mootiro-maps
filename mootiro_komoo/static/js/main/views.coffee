@@ -11,22 +11,24 @@ define (require) ->
 
 
   class Feedback extends Backbone.View
+    #
+    # Display 'working...' message while ajax requests
+    #
     tagName: 'span'
     className: 'feedback'
+    delay: 100  # ms
 
     initialize: ->
-      _.bindAll this
       @$el.hide()
-
       @listenTo app, 'working', =>
-        #@display 'Working...'
+        @open i18n 'Working...'
       @listenTo app, 'done', =>
         @close()
       @render()
 
-    display: (msg) ->
+    open: (msg) ->
       @$el.html msg
-      @delayed ?= setTimeout (=> @$el.css 'display': 'inline'), 100
+      @delayed ?= setTimeout (=> @$el.css 'display': 'inline'), @delay
       this
 
     close: ->
@@ -37,6 +39,9 @@ define (require) ->
 
 
   class UpperBar extends Backbone.View
+    #
+    # Render the user profile link, login/logout button and search bar.
+    #
     template: _.template require 'text!templates/main/_upper_bar.html'
     events:
       'click .login': 'login'
@@ -73,6 +78,9 @@ define (require) ->
 
 
   class Header extends Backbone.View
+    #
+    # Render the main menu links and the UpperBar
+    #
     template: _.template require 'text!templates/main/_header.html'
     events:
       'click .logo a': 'root'
@@ -101,7 +109,7 @@ define (require) ->
 
     root: (e) ->
       e?.preventDefault()
-      app.trigger 'open:root'
+      app.goTo ''  # Go to main page
 
     nav: (e) ->
       e?.preventDefault()
@@ -110,6 +118,9 @@ define (require) ->
 
 
   class Footer extends Backbone.View
+    #
+    # Render the footer
+    #
     template: _.template require 'text!templates/main/_footer.html'
     initialize: ->
       _.bindAll this
@@ -121,11 +132,15 @@ define (require) ->
 
 
   class ActionBar extends Backbone.View
+    #
+    # Render the generic action bar
+    #
     template: _.template require 'text!templates/main/_action_bar.html'
     tagName: 'ul'
     events:
       'click a': 'do'
 
+    # Default actions
     actions: [
       { action: 'edit',    label: i18n 'Edit' }
       { action: 'rate',    label: i18n 'Rate' }
@@ -151,12 +166,19 @@ define (require) ->
       this
 
     do: (e) ->
+      #
+      # This method is called when an action button is clicked
+      #
       e.preventDefault()
-      action = if $(e.target).hasClass 'active' then 'view' else $(e.target).attr 'data-action'
+
+      # Get the action from 'data-action' attribute
+      action = if $(e.target).hasClass 'active' then 'show' else $(e.target).attr 'data-action'
       # This comes from main/models::CommonObject
-      app.goTo @model[action + 'Url']?()
+      url = @model["#{action}Url"]?()
+      app.goTo url
 
     setMode: (@mode) ->
+      # Toggle buttons related to display modes (edit, history, discuss, etc)
       @$('.active').removeClass 'active'
       @$("a[data-action=#{mode}]").addClass 'active'
 
@@ -170,9 +192,10 @@ define (require) ->
       @subViews = []
       @mapEditor = new mapViews.Editor
         parentSelector: '#map-container'
-      @listenTo @mapEditor, 'initialize', => @trigger 'initialize'
-      $(window).resize @resizeElement
       @subViews.push @mapEditor
+      @listenTo @mapEditor, 'initialize', => @trigger 'initialize'
+      # Resize the map when browser is resized
+      $(window).resize @resizeElement
       @render()
 
     resizeElement: ->

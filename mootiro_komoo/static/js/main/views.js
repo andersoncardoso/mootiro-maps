@@ -23,18 +23,21 @@
 
       Feedback.prototype.className = 'feedback';
 
+      Feedback.prototype.delay = 100;
+
       Feedback.prototype.initialize = function() {
         var _this = this;
-        _.bindAll(this);
         this.$el.hide();
-        this.listenTo(app, 'working', function() {});
+        this.listenTo(app, 'working', function() {
+          return _this.open(i18n('Working...'));
+        });
         this.listenTo(app, 'done', function() {
           return _this.close();
         });
         return this.render();
       };
 
-      Feedback.prototype.display = function(msg) {
+      Feedback.prototype.open = function(msg) {
         var _this = this;
         this.$el.html(msg);
         if (this.delayed == null) {
@@ -42,7 +45,7 @@
             return _this.$el.css({
               'display': 'inline'
             });
-          }), 100);
+          }), this.delay);
         }
         return this;
       };
@@ -176,7 +179,7 @@
 
       Header.prototype.root = function(e) {
         if (e != null) e.preventDefault();
-        return app.trigger('open:root');
+        return app.goTo('');
       };
 
       Header.prototype.nav = function(e) {
@@ -269,10 +272,11 @@
       };
 
       ActionBar.prototype["do"] = function(e) {
-        var action, _base, _name;
+        var action, url, _base, _name;
         e.preventDefault();
-        action = $(e.target).hasClass('active') ? 'view' : $(e.target).attr('data-action');
-        return app.goTo(typeof (_base = this.model)[_name = action + 'Url'] === "function" ? _base[_name]() : void 0);
+        action = $(e.target).hasClass('active') ? 'show' : $(e.target).attr('data-action');
+        url = typeof (_base = this.model)[_name = "" + action + "Url"] === "function" ? _base[_name]() : void 0;
+        return app.goTo(url);
       };
 
       ActionBar.prototype.setMode = function(mode) {
@@ -303,11 +307,11 @@
         this.mapEditor = new mapViews.Editor({
           parentSelector: '#map-container'
         });
+        this.subViews.push(this.mapEditor);
         this.listenTo(this.mapEditor, 'initialize', function() {
           return _this.trigger('initialize');
         });
         $(window).resize(this.resizeElement);
-        this.subViews.push(this.mapEditor);
         return this.render();
       };
 
