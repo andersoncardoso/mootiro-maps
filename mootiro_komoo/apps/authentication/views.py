@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.http import Http404
 
 from annoying.decorators import render_to
-from lib.locker.models import Locker
+from locker.models import Locker
 from .models import User
 
 
@@ -28,9 +28,9 @@ def user_verification(request, key=''):
     Displays verification needed message if no key provided, or try to verify
     the user by the given key.
     '''
-    user_root_url = reverse('user_root')
+    user_root_ur = reverse('user_root')
     if not key:
-        return redirect(user_root_url + '#no-verified')
+        return redirect(reverse('not_verified'))
     user_id = Locker.withdraw(key=key)
     user = User.get_by_id(user_id)
     if not user:
@@ -39,7 +39,7 @@ def user_verification(request, key=''):
     if not user.is_active:
         user.is_active = True
         user.save()
-    return redirect(user_root_url + '#verified')
+    return redirect(reverse('verified'))
 
 
 @render_to('global.html')
@@ -52,7 +52,7 @@ def user_view(request, id_):
     if not user:
         raise Http404
 
-    user_data =  user.to_cleaned_dict(user=request.user)
+    user_data = user.to_cleaned_dict(user=request.user)
     # filter data
     return {
                 'KomooNS_data': {

@@ -8,10 +8,10 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from jsonfield import JSONField
 
-from lib.locker.models import Locker
 from main.utils import send_mail_async, build_obj_from_dict
 from main.mixins import PermissionMixin, BaseDAOMixin
 from main.datalog import get_user_updates
+from locker.models import Locker
 from komoo_map.models import GeoRefModel, POINT
 
 

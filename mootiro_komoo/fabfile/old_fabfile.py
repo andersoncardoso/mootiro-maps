@@ -94,7 +94,7 @@ def update_reForm():
 def kill_tasks(*tasks):
     """ Kill background tasks given a list o task names """
     if not tasks:
-        tasks = ['coffee_compiler', 'less_compiler', 'manage.py']
+        tasks = ['coffee_compiler', 'less_compiler', 'manage.py', 'datalog']
     for task in tasks:
         local(
             "ps -eo pid,args | grep %s | grep -v grep | "

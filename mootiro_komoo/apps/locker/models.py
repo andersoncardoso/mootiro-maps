@@ -4,7 +4,7 @@ from django.db import models
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from .utils import randstr
+from main.utils import randstr
 
 
 class Locker(models.Model):
