@@ -96,7 +96,6 @@ INSTALLED_APPS = [
     'fileupload',
     'gunicorn',
     'djcelery',
-    'lib.tags',
     'lib.locker',
 
     # our apps
@@ -114,6 +113,7 @@ INSTALLED_APPS = [
     'hotsite',
     'signatures',
     'projects',
+    'tags',
 ]
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
