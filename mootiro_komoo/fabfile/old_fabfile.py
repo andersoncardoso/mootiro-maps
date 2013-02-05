@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
+import os
 import logging
 from fabric.api import local
 
@@ -19,6 +20,7 @@ env_ = 'dev'
 def set_env(type_):
     global env_
     env_ = type_
+    os.environ['DATALOG_CONFIG'] = type_
 
 
 def dev():
@@ -105,9 +107,15 @@ def run_celery():
           .format(django_settings[env_]))
 
 
+def run_datalog():
+    """ Runs Datalog's Flask/MongoDB web server """
+    local('python lib/datalog/app.py &')
+
+
 def run(port=8001):
     """Runs django's development server"""
     run_celery()
+    run_datalog()
     if not env_ in ['dev', 'testing']:
         local(
             'python manage.py run_gunicorn --workers=2 '
@@ -139,7 +147,8 @@ def test_js(
         apps=" ".join(['komoo_map'])):
     """Run javascript tests"""
     # TODO fix this properly
-    local('phantomjs scripts/run-qunit.js static/tests/tests.html?noglobals=true')
+    local('phantomjs scripts/run-qunit.js '
+          'static/tests/tests.html?noglobals=true')
 
 
 def js_urls():
