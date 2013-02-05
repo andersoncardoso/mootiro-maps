@@ -87,7 +87,7 @@ define (require) ->
         container_class: 'row'
       # create a div to avoid detached elements
       renderedCollection = $('<div>').
-        html(_collectionTemplate args).children().detach();
+        html(_collectionTemplate args).children().detach()
 
       instances = {}
       for field in @fields.slice(0).reverse()
@@ -103,7 +103,7 @@ define (require) ->
         widget = new field.widget(args)
         instances[field.name] = widget
 
-        field = $('<div>').html(_fieldTemplate args).children().detach();
+        field = $('<div>').html(_fieldTemplate args).children().detach()
         field.find('.widget-container').append widget.render().el
         renderedCollection.prepend(field).data 'instances', instances
 
