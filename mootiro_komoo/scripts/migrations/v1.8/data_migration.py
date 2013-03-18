@@ -1,8 +1,14 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 from komoo_resource.models import Resource
-from tags.model import COMMON_NAMESPACE
+from tags.models import COMMON_NAMESPACE
 from main.models import GeoRefObject
+
+
+contact_info = u"""
+###Contato:
+
+{}
+
+"""
 
 
 def migrate_resources():
@@ -10,8 +16,10 @@ def migrate_resources():
         o = GeoRefObject()
         o.otype = 'resource'
         o.name = res.name
-        o.description = res.description
-        o.description += res.contact
+        o.description = getattr(res, 'description', '')
+        contact =  getattr(res, 'contact', '')
+        if contact:
+            o.description += contact_info.format(contact)
         o.contact = {}
         o.creator = res.creator
         o.creation_date = res.creation_date
@@ -31,5 +39,8 @@ def migrate_resources():
         for com in res.community.all():
             o.relations.add(com)  # , 'relation type????')
 
-        for inv in res.investment.all():
+        for inv in res.investments.all():
             o.relations.add(inv)  # , 'relation type????')
+
+
+migrate_resources()

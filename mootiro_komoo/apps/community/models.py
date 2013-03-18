@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 import reversion
+from main.mixins import BaseModel
 from django.template.defaultfilters import slugify
 from lib.taggit.managers import TaggableManager
 from komoo_map.models import GeoRefModel, POLYGON
@@ -15,7 +16,7 @@ from authentication.models import User
 from search.signals import index_object_for_search
 
 
-class Community(GeoRefModel):
+class Community(BaseModel, GeoRefModel):
     name = models.CharField(max_length=256, blank=False)
     # Auto-generated url slug. It's not editable via ModelForm.
     slug = models.SlugField(max_length=256, blank=False, db_index=True)
