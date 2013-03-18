@@ -31,4 +31,5 @@ def migrate_resources():
         for com in res.community.all():
             o.relations.add(com)  # , 'relation type????')
 
-        # investments??
+        for inv in res.investment.all():
+            o.relations.add(inv)  # , 'relation type????')
