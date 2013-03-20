@@ -16,6 +16,7 @@ from komoo_map.models import GeoRefModel, POLYGON, LINESTRING, POINT
 from investment.models import Investment
 from fileupload.models import UploadedFile
 from search.signals import index_object_for_search
+from main.models import GeoRefObject
 
 
 class ResourceKind(models.Model):
@@ -112,3 +113,75 @@ class Resource(GeoRefModel):
 
 if not reversion.is_registered(Resource):
     reversion.register(Resource)
+
+
+#==============================================================================
+
+# RESOURCE_TYPE = (
+#     ('computer', _('Computer Lab')),
+#     ('park', _('Park')),
+#     ('sports', _('Sports Club')),
+#     ('social', _('Social Service')),
+#     ('equipment', _('Equipment')),
+#     ('others', _('Others')),
+# )
+
+class ResourceManager(models.Manager):
+    def get_query_set(self):
+        return super(ResourceManager, self).get_query_set().filter(
+                otype='resource')
+
+
+class Resource_GRO(GeoRefObject):
+    objects = ResourceManager()
+
+    class Meta:
+        proxy = True
+
+    class Map:
+        title = _('Resource')
+        editable = True
+        background_color = '#28CB05'
+        border_color = '#1D9104'
+        geometries = (POLYGON, LINESTRING, POINT)
+        zindex = 15
+
+    # ================
+    # url properties hell
+
+    @property
+    def url(self):
+        return self.view_url()
+
+    @property
+    def view_url(self):
+        return reverse('view_resource', kwargs={'id': self.id})
+
+    @property
+    def edit_url(self):
+        return reverse('edit_resource', kwargs={'id': self.id})
+
+    @property
+    def admin_url(self):
+        return reverse('admin:{}_{}_change'.format(self._meta.app_label,
+            self._meta.module_name), args=[self.id])
+
+    @property
+    def new_investment_url(self):
+        return reverse('new_investment') + '?type=resource&obj={id}'.format(
+                id=self.id)
+
+    def files_set(self):
+        """ pseudo-reverse query for retrieving Resource Files"""
+        return UploadedFile.get_files_for(self)
+
+    image = "img/resource.png"
+    image_off = "img/resource-off.png"
+
+    def save(self, *args, **kwargs):
+        if not getattr(self, 'otype', None) == 'resource':
+            self.otype = 'resource'
+
+        r_ = super(Resource_GRO, self).save(*args, **kwargs)
+        # index_object_for_search.send(sender=self, obj=self)
+        return r_

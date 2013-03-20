@@ -68,7 +68,7 @@ class Tag(models.Model):
 class TaggedObject(models.Model):
     """ Tagged Generic Objects """
     tag = models.ForeignKey(Tag)
-    object_id = models.IntegerField()
+    object_id = models.CharField(max_length=24)
     object_table = models.CharField(max_length=512)
 
     @classmethod

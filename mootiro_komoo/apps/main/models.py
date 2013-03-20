@@ -5,6 +5,7 @@ from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator
 from jsonfield import JSONField
 
+from bson.objectid import ObjectId
 from authentication.models import User
 from komoo_map.models import GeoRefModel
 from tags.models import TagField, EMPTY_TAG
@@ -21,7 +22,7 @@ from .mixins import BaseModel
 class GenericRef(BaseModel):
     """ Generic Ref used for the GenericRelation Table """
     obj_table = models.CharField(max_length=1024)
-    obj_id = models.IntegerField()
+    obj_id = models.CharField(max_length=24)
 
     def get_object(self):
         """ get the 'true' object from the reference """
@@ -272,6 +273,8 @@ class GeoRefObject(GeoRefModel, BaseModel):
         to_dict: return a dict representation for the common attributes
 
     """
+    # bson.objectid.ObjectId
+    id = models.CharField(primary_key=True, max_length=24)
     name = models.CharField(max_length=512)
     description = models.TextField()
     otype = models.CharField(max_length=512)  # object type
@@ -348,6 +351,8 @@ class GeoRefObject(GeoRefModel, BaseModel):
         return validates
 
     def save(self, *args, **kwargs):
+        if not getattr(self, 'id', None):
+            self.id = str(ObjectId())
         r = super(GeoRefObject, self).save(*args, **kwargs)
         if self.id and hasattr(self, '_postponed'):
             for item in self._postponed:

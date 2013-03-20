@@ -1,4 +1,4 @@
-from komoo_resource.models import Resource
+from komoo_resource.models import Resource, Resource_GRO
 from tags.models import COMMON_NAMESPACE
 from main.models import GeoRefObject
 
@@ -13,11 +13,12 @@ contact_info = u"""
 
 def migrate_resources():
     for res in Resource.objects.all():
-        o = GeoRefObject()
-        o.otype = 'resource'
+        o = Resource_GRO()
+        # o = GeoRefObject()
+        # o.otype = 'resource'
         o.name = res.name
         o.description = getattr(res, 'description', '')
-        contact =  getattr(res, 'contact', '')
+        contact = getattr(res, 'contact', '')
         if contact:
             o.description += contact_info.format(contact)
         o.contact = {}
