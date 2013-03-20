@@ -1,11 +1,8 @@
 (function() {
-  var FormResource, Resource;
-
-  Resource = Backbone.Model.extend({
-    urlRoot: '/api/resources/'
-  });
+  var FormResource;
 
   FormResource = ReForm.Form.extend({
+    template: KomooNS.templates.formTemplate,
     fields: [
       {
         name: 'name',
@@ -29,7 +26,7 @@
     var form;
     form = new FormResource({
       formId: 'form_resource',
-      model: new Resource()
+      model: new KomooNS.models.Resource()
     });
     return $('#reForm-wrapper').html(form.render().el);
   });

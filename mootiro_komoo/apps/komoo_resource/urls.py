@@ -23,6 +23,6 @@ urlpatterns += patterns('komoo_resource.api',
         url(r'^api/resources/?$', ResourcesHandler.dispatch,
                 name='api_resources'),
 
-        url(r'^api/resources/(?P<id_>\d+)/?$', ResourcesIDHandler.dispatch,
+        url(r'^api/resources/(?P<id_>\w+)/?$', ResourcesIDHandler.dispatch,
                 name='api_resources_id'),
 )

@@ -179,7 +179,7 @@
         background: white url("../img/menu/newmenu/glass.png") no-repeat 98% center;
         padding-right: 6%;
         box-shadow: inset 0px 1px 3px 0px rgba(150, 150, 150, 0.5);
-        border: 1px solid #aaa; }
+        border: 1px solid #aaaaaa; }
     #top #search div#search-canvasloader-container {
       float: right;
       margin-top: 3px;
@@ -284,7 +284,7 @@ form#form_login {
       position: absolute;
       left: 50%;
       height: 45.5px;
-      border-left: 1px solid #333;
+      border-left: 1px solid #333333;
       width: 1px; }
     #login_box div#separator .vertical_line.top {
       top: 0; }
@@ -294,13 +294,13 @@ form#form_login {
 ul#external_providers, div#separator {
   float: left; }
 
-ul#external_providers, form {
+ul#external_providers {
   padding: 10px; }
 
 ul#external_providers {
   width: 224px; }
   ul#external_providers li {
-    margin: 15px 0; }
+    margin: 15px 0 30px; }
     ul#external_providers li button {
       width: 100%;
       padding: 3px 6px;
@@ -356,11 +356,11 @@ div.importsheet_controls a.insert {
 
 div.importsheet_missing_column {
   background: #daa;
-  border: 1px solid #b33;
+  border: 1px solid #bb3333;
   padding: 2px 5px; }
 
 #importsheet_simulation_results div.result {
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   padding: 5px 15px;
   margin: 15px 0;
   width: 940px;
@@ -381,11 +381,11 @@ div.importsheet_missing_column {
   margin: 5px; }
 #importsheet_simulation_results div.metadata div.errors, #importsheet_messages div.metadata div.errors {
   background: #daa;
-  border: 1px solid #b33;
+  border: 1px solid #bb3333;
   padding: 2px 5px; }
 #importsheet_simulation_results div.metadata div.warnings, #importsheet_messages div.metadata div.warnings {
   background: #ee8;
-  border: 1px solid #ed0;
+  border: 1px solid #eedd00;
   padding: 2px 5px; }
 #importsheet_simulation_results div.metadata a, #importsheet_messages div.metadata a {
   color: inherit;
@@ -455,7 +455,7 @@ div.importsheet_missing_column {
         display: inline-block;
         padding: 0.5em 1em;
         margin-bottom: 1em;
-        border-bottom: 1px solid #057D90;
+        border-bottom: 1px solid #057d90;
         width: 100%;
         font-size: 20px;
         text-align: center;

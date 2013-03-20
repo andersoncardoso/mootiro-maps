@@ -87,7 +87,7 @@ ul#external_providers, div#separator {
   float: left;
 }
 
-ul#external_providers, form {
+ul#external_providers {
   padding: 10px;
 }
 
@@ -95,7 +95,7 @@ ul#external_providers {
   width: $login_box_width * 0.4;
 
   li {
-    margin: 15px 0;
+    margin: 15px 0 30px;
 
     button {
       width: 100%;
