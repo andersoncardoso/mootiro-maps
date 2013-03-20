@@ -48,12 +48,12 @@ urlpatterns = patterns('',
     #url(r'', include('hotsite.urls')),
     url(r'', include('main.urls')),
     url(r'', include('search.urls')),
+    url(r'', include('komoo_resource.urls')),
 
     # prefixed apps urls
     url(r'^need/', include('need.urls')),
     url(r'^proposal/', include('proposal.urls')),
     url(r'^comments/', include('komoo_comments.urls')),
-    url(r'^resource/', include('komoo_resource.urls')),
     url(r'^organization/', include('organization.urls')),
     url(r'^investment/', include('investment.urls')),
     url(r'^moderation/', include('moderation.urls')),

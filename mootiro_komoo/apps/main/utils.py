@@ -271,46 +271,6 @@ def get_handler_method(request_handler, http_method):
         pass
 
 
-class ResourceHandler:
-    """
-    Base class for REST-like resources.
-    usage:
-
-      on views.py
-          ```
-              class SomeResource(ResourceHandler):
-
-                def get(self, request, document_id):
-                  # your view code for GET requests go here
-
-                def post(self, request, document_id):
-                  # your viewcode for POST request go here
-            ```
-
-      on urls.py
-        url('^my_resource/$', views.SomeResource.dispatch, name='resource')
-    """
-    http_methods = ['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'OPTIONS', 'TRACE']
-
-    @classmethod
-    def dispatch(cls, request, *args, **kwargs):
-        request_handler = cls()
-
-        if request.method in cls.http_methods:
-            handler_method = get_handler_method(request_handler,
-                                                request.method)
-            if handler_method:
-                return handler_method(request, *args, **kwargs)
-
-        methods = [method for method in cls.http_methods if get_handler_method(
-                                            request_handler, method)]
-        if len(methods) > 0:
-            # http 405: method not allowed
-            return HttpResponseNotAllowed(methods)
-        else:
-            raise Http404
-
-
 def randstr(l=10):
     chars = letters + digits
     s = ''
@@ -360,14 +320,14 @@ def parse_accept_header(request):
     return result
 
 
-class ResourceHandler:
+class APIHandler:
     """
     Base class for REST-like resources.
     usage:
 
       on views.py
       ```
-      class SomeResource(ResourceHandler):
+      class SomeResource(APIHandler):
 
         def get(self, request, document_id):
           # your view code for GET requests go here

@@ -27,7 +27,7 @@ from organization.models import Organization
 from komoo_resource.models import Resource
 from investment.models import Investment
 from komoo_project.models import Project
-from main.utils import create_geojson, ResourceHandler
+from main.utils import create_geojson, APIHandler
 from update.models import Update, News
 
 logger = logging.getLogger(__name__)
@@ -197,7 +197,7 @@ def get_geojson_from_hashlink(request):
 
 
 if settings.TESTING:
-    class TestResourceHandler(ResourceHandler):
+    class TestAPIHandler(APIHandler):
         """This is only a dummy handler used for testing"""
         def get(self, request):
             return HttpResponse('Resource::GET')

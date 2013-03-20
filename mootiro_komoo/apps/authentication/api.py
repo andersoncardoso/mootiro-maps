@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 
-from main.utils import (ResourceHandler, JsonResponse, JsonResponseNotFound,
+from main.utils import (APIHandler, JsonResponse, JsonResponseNotFound,
         JsonResponseError, get_json_data, get_fields_to_show)
 from main.datalog import log_data
 
@@ -40,7 +40,7 @@ def _user_form_specific_validations(user, json_data, form_validates):
     return form_validates
 
 
-class UserHandler(ResourceHandler):
+class UserHandler(APIHandler):
     """ /users """
 
     def post(self, request):
@@ -68,7 +68,7 @@ class UserHandler(ResourceHandler):
             return JsonResponse()
 
 
-class UsersHandler(ResourceHandler):
+class UsersHandler(APIHandler):
     """ /users/[id_] """
 
     def get(self, request, id_):
@@ -106,7 +106,7 @@ class UsersHandler(ResourceHandler):
             })
 
 
-class UserUpdateHandler(ResourceHandler):
+class UserUpdateHandler(APIHandler):
     """ /users/[id_]/update """
 
     def get(self, request, id_):
@@ -123,7 +123,7 @@ class UserUpdateHandler(ResourceHandler):
         })
 
 
-class LoginHandler(ResourceHandler):
+class LoginHandler(APIHandler):
     """ /users/login """
 
     def post(self, request):
@@ -149,7 +149,7 @@ class LoginHandler(ResourceHandler):
             return JsonResponse({'redirect': next_page})
 
 
-class LogoutHandler(ResourceHandler):
+class LogoutHandler(APIHandler):
     """ /users/logout """
 
     def get(self, request):

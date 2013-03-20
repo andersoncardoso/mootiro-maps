@@ -21,10 +21,10 @@ urlpatterns = patterns('main.views',
 
 if settings.TESTING:
     # This is a little bit ugly but its for testing
-    from .views import TestResourceHandler
+    from .views import TestAPIHandler
 
     urlpatterns += patterns('',
-        url(r'^test_resource/$', TestResourceHandler.dispatch),
+        url(r'^test_resource/$', TestAPIHandler.dispatch),
     )
 
 if settings.DEBUG:

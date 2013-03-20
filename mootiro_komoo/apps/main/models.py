@@ -344,12 +344,12 @@ class GeoRefObject(GeoRefModel, BaseModel):
 
     def is_valid(self):
         self.errors = {}
-        validates = True
+        valid = True
         require = ['otype', 'name', 'creator']
         for field in require:
             if not getattr(self, field, None):
                 valid, self.errors[field] = False, _('Required field')
-        return validates
+        return valid
 
     def save(self, *args, **kwargs):
         if not getattr(self, 'id', None):
