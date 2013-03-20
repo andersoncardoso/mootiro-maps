@@ -43,6 +43,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    'django_assets.finders.AssetsFinder',
 )
 
 
@@ -113,6 +114,7 @@ INSTALLED_APPS = [
     'django_nose',
     'ajaxforms',
     'djcelery',
+    'django_assets',
 
     # our apps
     'main',

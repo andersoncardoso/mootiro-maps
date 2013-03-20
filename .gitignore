@@ -23,3 +23,4 @@ mootiro_komoo/.build/
 mootiro_komoo/importation
 node_modules/
 mootiro_komoo/lib/elasticsearch/
+.webassets-cache/

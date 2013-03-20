@@ -135,6 +135,7 @@ table_id_map = {
     'User': 'u',
     'Community': 'c',
     'Project': 'p',
+    'GeoRefObject': 'g'
 }
 
 

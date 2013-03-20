@@ -183,5 +183,4 @@ class Resource_GRO(GeoRefObject):
             self.otype = 'resource'
 
         r_ = super(Resource_GRO, self).save(*args, **kwargs)
-        # index_object_for_search.send(sender=self, obj=self)
         return r_

@@ -9,6 +9,7 @@ from bson.objectid import ObjectId
 from authentication.models import User
 from komoo_map.models import GeoRefModel
 from tags.models import TagField, EMPTY_TAG
+from search.signals import index_object_for_search
 
 from .utils import build_obj_from_dict, get_model_from_table_ref
 from .relations import RELATIONS
@@ -357,4 +358,5 @@ class GeoRefObject(GeoRefModel, BaseModel):
         if self.id and hasattr(self, '_postponed'):
             for item in self._postponed:
                 setattr(self, item[0], item[1])
+        index_object_for_search.send(sender=self, obj=self)
         return r
