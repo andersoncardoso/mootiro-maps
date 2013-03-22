@@ -2678,3 +2678,25 @@ ul.two-cols li {
     padding: 20px;
     border: solid 1px #999999;
 }
+
+/* ===================== form contact and collection widget ============ */
+
+.field-container.contact .collection-container {
+    margin: 2px 0;
+}
+.field-container.contact .collection-container div {
+    display: inline-block;
+    margin-right: 5px;
+}
+.field-container.contact .collection-container select,
+.field-container.contact .collection-container input {
+    display: inline;
+    height: auto;
+}
+.field-container.contact .collection-container input {
+    padding: 6px 4px;
+    width: 250px !important;
+}
+.field-container.contact .collection-container select {
+    padding: 4px;
+}

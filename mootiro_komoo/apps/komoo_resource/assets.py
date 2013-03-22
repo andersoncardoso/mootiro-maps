@@ -5,6 +5,7 @@ resource_form_js = Bundle(
     'lib/reForm.js',
     'js/templates/_common.js',
     markitup_js,
+    'js/widgets/contact.js',
     'js/resources/models.js',
     'js/resources/forms.js',
     filters='jsmin',

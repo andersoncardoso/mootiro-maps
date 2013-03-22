@@ -7,11 +7,16 @@
       {
         name: 'name',
         widget: ReForm.commonWidgets.TextWidget,
-        label: 'Name:'
+        label: i18n('Name')
       }, {
         name: 'description',
         widget: window.KomooNS.widgets.MarkItUpWidget,
-        label: 'Description:'
+        label: 'Description'
+      }, {
+        name: 'contact',
+        label: i18n('Contact'),
+        container_class: 'contact',
+        widget: window.KomooNS.widgets.ContactWidget
       }, {
         name: 'geometry',
         widget: ReForm.commonWidgets.HiddenWidget,
