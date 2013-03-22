@@ -3,7 +3,7 @@ Resource = Backbone.Model.extend
   urlRoot: '/api/resources/'
 
 
-KomooNS ?= {}
-KomooNS.models ?= {}
-KomooNS.models.Resource = Resource
+window.KomooNS ?= {}
+window.KomooNS.models ?= {}
+window.KomooNS.models.Resource = Resource
 

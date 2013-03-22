@@ -1,14 +1,14 @@
 (function() {
-  var Resource;
+  var Resource, _base;
 
   Resource = Backbone.Model.extend({
     urlRoot: '/api/resources/'
   });
 
-  if (typeof KomooNS === "undefined" || KomooNS === null) KomooNS = {};
+  if (window.KomooNS == null) window.KomooNS = {};
 
-  if (KomooNS.models == null) KomooNS.models = {};
+  if ((_base = window.KomooNS).models == null) _base.models = {};
 
-  KomooNS.models.Resource = Resource;
+  window.KomooNS.models.Resource = Resource;
 
 }).call(this);

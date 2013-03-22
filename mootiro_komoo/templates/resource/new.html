@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 {% load komoo_tags %}
+{% load assets %}
 
 {% block menu %} {% menu "resource" %} {% endblock %}
 
@@ -59,14 +60,13 @@
   {#   }); #}
 
   {# </script> #}
-<style type="text/css">
-
-</style>
+  {% assets "resource_form_css" %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
+  {% endassets %}
 {% endblock %}
 
 {% block page_scripts %}
-  {% load assets %}
-  {% assets "resource_form" %}
+  {% assets "resource_form_js" %}
       <script type="text/javascript" src="{{ ASSET_URL }}"></script>
   {% endassets %}
 

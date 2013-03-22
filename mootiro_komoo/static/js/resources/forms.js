@@ -2,7 +2,7 @@
   var FormResource;
 
   FormResource = ReForm.Form.extend({
-    template: KomooNS.templates.formTemplate,
+    template: window.KomooNS.templates.formTemplate,
     fields: [
       {
         name: 'name',
@@ -10,8 +10,12 @@
         label: 'Name:'
       }, {
         name: 'description',
-        widget: ReForm.commonWidgets.TextAreaWidget,
+        widget: window.KomooNS.widgets.MarkItUpWidget,
         label: 'Description:'
+      }, {
+        name: 'geometry',
+        widget: ReForm.commonWidgets.HiddenWidget,
+        label: ''
       }
     ],
     events: {
@@ -26,7 +30,7 @@
     var form;
     form = new FormResource({
       formId: 'form_resource',
-      model: new KomooNS.models.Resource()
+      model: new window.KomooNS.models.Resource()
     });
     return $('#reForm-wrapper').html(form.render().el);
   });

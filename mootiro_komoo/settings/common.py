@@ -185,3 +185,6 @@ MAILGUN_API_KEY = 'override me on local_settings'
 
 # ========== Datalog ==========================================================
 DATALOG_SERVER = "http://localhost:8008/"
+
+# ========== WebAssets ========================================================
+ASSETS_DEBUG = True

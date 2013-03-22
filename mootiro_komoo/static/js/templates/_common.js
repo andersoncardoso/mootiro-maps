@@ -1,12 +1,12 @@
 (function() {
-  var formTemplate;
+  var formTemplate, _base;
 
   formTemplate = "<form action=\"\" method=\"post\" id=\"<%= formId %>\" >\n    <div class=\"form-actions\">\n        <input class=\"btn button\" type=\"submit\" name=\"submit\" value=\"<%=submit_label%>\" />\n    </div>\n</form>";
 
-  if (typeof KomooNS === "undefined" || KomooNS === null) KomooNS = {};
+  if (window.KomooNS == null) window.KomooNS = {};
 
-  if (KomooNS.templates == null) KomooNS.templates = {};
+  if ((_base = window.KomooNS).templates == null) _base.templates = {};
 
-  KomooNS.templates.formTemplate = formTemplate;
+  window.KomooNS.templates.formTemplate = formTemplate;
 
 }).call(this);

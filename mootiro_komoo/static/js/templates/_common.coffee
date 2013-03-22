@@ -7,6 +7,6 @@ formTemplate = """
 </form>
 """
 
-KomooNS ?= {}
-KomooNS.templates ?= {}
-KomooNS.templates.formTemplate = formTemplate
+window.KomooNS ?= {}
+window.KomooNS.templates ?= {}
+window.KomooNS.templates.formTemplate = formTemplate
