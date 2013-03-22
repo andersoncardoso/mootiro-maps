@@ -6,8 +6,10 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 
-from main.utils import (APIHandler, JsonResponse, JsonResponseNotFound,
-        JsonResponseError, get_json_data, get_fields_to_show)
+from main.utils import APIHandler
+from main.utils import JsonResponse
+from main.utils import get_json_data
+from main.utils import get_fields_to_show
 from main.datalog import log_data
 
 from .models import User, Login
@@ -59,7 +61,7 @@ class UserHandler(APIHandler):
                 user, json_data, form_validates)
 
         if not form_validates:
-            return JsonResponseError(user.errors)
+            return JsonResponse(user.errors, response_type='error')
         else:
             user.is_active = False
             user.set_password(json_data.get('password'))
@@ -78,7 +80,7 @@ class UsersHandler(APIHandler):
         user = request.user if id_ == 'me' else User.get_by_id(id_)
 
         if not user:
-            return JsonResponseNotFound()
+            return JsonResponse(response_type='not_found')
 
         user_data = user.to_cleaned_dict(fields=fields, user=request.user)
         return JsonResponse(user_data)
@@ -89,21 +91,20 @@ class UsersHandler(APIHandler):
         json_data = get_json_data(request)
         user = User.get_by_id(id_)
         if not user:
-            JsonResponseNotFound()
+            return JsonResponse(response_type='not_found')
 
         if user.can_edit(request.user):
             user.from_dict(json_data)
             if not user.is_valid(ignore=['password']):
-                return JsonResponseError(user.errors)
+                return JsonResponse(user.errors, response_type='error')
 
             user.save()
             log_data.send(
                     sender=user, object_=user, user=request.user, action='E')
             return JsonResponse({})
         else:
-            return JsonResponseError({
-                'all': _('You don\'t have permission for this operation')
-            })
+            return JsonResponse(
+                    request.user.no_permission_message, response_type='error')
 
 
 class UserUpdateHandler(APIHandler):
@@ -139,7 +140,8 @@ class LoginHandler(APIHandler):
         login = Login()
         login.from_dict({'email': email, 'password': password})
         if not login.is_valid():
-            return JsonResponseError(login.errors, status_code=401)
+            return JsonResponse(
+                    login.errors, status_code=401, response_type='error')
         else:
             user = login.user
             auth_login(request, user)

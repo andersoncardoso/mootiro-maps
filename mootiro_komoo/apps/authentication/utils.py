@@ -2,8 +2,7 @@
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 
-from main.utils import JsonResponseError
-
+from main.utils import JsonResponse
 from .models import AnonymousUser
 from .models import User, SocialAuth
 
@@ -67,7 +66,8 @@ def api_login_required(func=None):
     def wrapped_func(handler, request, *a, **kw):
         if not request.user.is_authenticated():
             # TODO: integrate this with reForm
-            return JsonResponseError({'form': 'Login required.'})
+            return JsonResponse(
+                    {'form': 'Login required.'}, response_type='error')
         else:
             return func(handler, request, *a, **kw)
     return wrapped_func

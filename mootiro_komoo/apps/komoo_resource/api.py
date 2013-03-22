@@ -2,24 +2,14 @@
 from __future__ import unicode_literals
 import logging
 
-from django.utils.translation import ugettext as _
-
-from main.utils import (APIHandler, JsonResponse, JsonResponseNotFound,
-        JsonResponseError, get_json_data)
+from main.utils import APIHandler
+from main.utils import JsonResponse
+from main.utils import get_json_data
 # from main.datalog import log_data
-
 from .models import Resource_GRO as Resource
 
 
 logger = logging.getLogger(__name__)
-
-
-def _resource_form_specific_validations(resource, json_data, form_validates):
-    """
-    This method makes Resource's Form specific validation.
-    Used on: /user <POST>
-    """
-    return form_validates
 
 
 class ResourcesHandler(APIHandler):
@@ -33,16 +23,15 @@ class ResourcesHandler(APIHandler):
         resource = Resource()
         resource.from_dict(json_data)
 
-        # user model validations
-        form_validates = resource.is_valid()
-        form_validates = _resource_form_specific_validations(
-                resource, json_data, form_validates)
+        if not request.user.can_edit(resource):
+            return JsonResponse(
+                    request.user.no_permission_message, response_type='error')
 
-        if not form_validates:
-            return JsonResponseError(resource.errors)
-        else:
-            resource.save()
-            return JsonResponse()
+        if not resource.is_valid():
+            return JsonResponse(resource.errors, response_type='error')
+
+        resource.save()
+        return JsonResponse()
 
 
 class ResourcesIDHandler(APIHandler):
@@ -52,7 +41,7 @@ class ResourcesIDHandler(APIHandler):
         resource = Resource.get_by_id(id_)
 
         if not resource:
-            return JsonResponseNotFound()
+            return JsonResponse(response_type='not_found')
 
         # resource_data = resource.to_cleaned_dict(user=request.user)
         resource_data = resource.to_dict()
@@ -63,19 +52,18 @@ class ResourcesIDHandler(APIHandler):
         json_data = get_json_data(request)
         res = Resource.get_by_id(id_)
         if not res:
-            JsonResponseNotFound()
+            JsonResponse(response_type='not_found')
 
-        if res.can_edit(request.user):
-            res.from_dict(json_data)
-            if not res.is_valid():
-                return JsonResponseError(res.errors)
+        if not request.user.can_edit(res):
+            return JsonResponse(
+                    request.user.no_permission_message, response_type='error')
 
-            res.save()
-            # log_data.send(
-            #         sender=res, object_=res, user=request.user, action='E')
-            return JsonResponse({})
-        else:
-            return JsonResponseError({
-                'all': _('You don\'t have permission for this operation')
-            })
+        res.from_dict(json_data)
+        if not res.is_valid():
+            return JsonResponse(res.errors, response_type='error')
+
+        res.save()
+        # log_data.send(
+        #         sender=res, object_=res, user=request.user, action='E')
+        return JsonResponse({})
 

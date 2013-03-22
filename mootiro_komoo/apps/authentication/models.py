@@ -30,7 +30,35 @@ the IT3S team.
 ''')
 
 
-class User(GeoRefModel, BaseModel):
+class UserPermissionMixin(object):
+    """
+    permission methods to be used by a User model (or variations
+    like AnonymousUser)
+    """
+
+    def can_edit(self, obj):
+        """ Default edit permissions """
+        if not obj or not self.is_authenticated():
+            return False
+
+        # superusers can edit everything
+        if self.is_superuser():
+            return True
+
+        # otherwise only the user can edit itself
+        if obj.__class__.__name__ == 'User':
+            # use .__class__.__name__ is ugly, but we don't want circular
+            # dependencies
+            return obj == self
+
+        # active users can edit every content
+        return self.is_active
+
+    no_permission_message = {
+        'all': _('You don\'t have permission for this operation')}
+
+
+class User(GeoRefModel, BaseModel, UserPermissionMixin):
     """
     User model. Replaces django.contrib.auth, CAS and social_auth
     with our own unified solution.
@@ -217,7 +245,7 @@ class User(GeoRefModel, BaseModel):
         return Project.get_projects_for_contributor(self)
 
 
-class AnonymousUser(object):
+class AnonymousUser(UserPermissionMixin):
     '''Dummy Class to integrate with other django apps.'''
     def is_authenticated(self):
         return False
@@ -243,7 +271,6 @@ class AnonymousUser(object):
     # dummy fix for django weirdness =/
     def get_and_delete_messages(self):
         pass
-
 
 
 PROVIDERS = {

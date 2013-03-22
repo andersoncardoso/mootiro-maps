@@ -261,16 +261,6 @@ def send_mail(title='', message='',
         )
 
 
-def get_handler_method(request_handler, http_method):
-    """Utility function for the Resource Class dispacther."""
-    try:
-        handler_method = getattr(request_handler, http_method.lower())
-        if callable(handler_method):
-            return handler_method
-    except AttributeError:
-        pass
-
-
 def randstr(l=10):
     chars = letters + digits
     s = ''
@@ -436,28 +426,23 @@ class JsonResponse(HttpResponse):
                 return JsonResponse(my_errors_dict, status_code=400)
         ```
     """
-    def __init__(self, data={}, status_code=None):
+    def __init__(self, data={}, status_code=None, response_type=''):
+        if response_type == 'error':
+            data = {'errors': data}
+            if not status_code:
+                status_code = 400
+
+        if response_type == 'not_found':
+            err = _('Not Found')
+            msg = err if not data else '{}: {}'.format(err, data)
+            data = {'errors': msg}
+            status_code = 404
+
         content = to_json(data)
         super(JsonResponse, self).__init__(content=content,
                     mimetype='application/json')
         if status_code:
             self.status_code = status_code
-
-
-class JsonResponseError(JsonResponse):
-    """ Json Response for errors """
-    def __init__(self, error={}, status_code=400):
-        super(JsonResponseError, self).__init__(
-                {'errors': error}, status_code=status_code)
-
-
-class JsonResponseNotFound(JsonResponseError):
-    """ Json Response for 404 Not Found error """
-    def __init__(self, msg=''):
-        err = 'Not found'
-        super(JsonResponseNotFound, self).__init__(
-                err if not msg else '{}: {}'.format(err, msg),
-                status_code=404)
 
 
 def build_obj_from_dict(obj, data, keys=[], date_keys=[]):
