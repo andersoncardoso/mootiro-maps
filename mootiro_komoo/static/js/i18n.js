@@ -26,6 +26,9 @@
     'Name': {
       'pt-br': 'Nome'
     },
+    'Classifiers': {
+      'pt-br': 'Classificadores'
+    },
     'Password Confirmation': {
       'pt-br': 'Confirmação da Senha'
     },
@@ -157,6 +160,9 @@
     },
     'Go': {
       'pt-br': 'Ir'
+    },
+    'Add': {
+      'pt-br': 'Adicione'
     },
     'Clean': {
       'pt-br': 'Limpo'

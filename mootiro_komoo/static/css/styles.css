@@ -1497,6 +1497,7 @@ form div.tagsinput input{
   border: 1px solid rgb(204, 204, 204);
   background: none repeat scroll 0% 0% rgba(215, 215, 215, 0.2);
   box-shadow: 1px 1px 1px rgb(190, 189, 204) ;
+  margin-top: 2px;
 }
 input[type=text], textarea{
   background: none repeat scroll 0% 0% rgba(215, 215, 215, 0.2);

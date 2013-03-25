@@ -14,9 +14,14 @@
         label: 'Description'
       }, {
         name: 'contact',
-        label: i18n('Contact'),
+        widget: window.KomooNS.widgets.ContactWidget,
         container_class: 'contact',
-        widget: window.KomooNS.widgets.ContactWidget
+        label: i18n('Contact')
+      }, {
+        name: 'tags',
+        label: i18n('Classifiers'),
+        container_class: 'tags',
+        widget: window.KomooNS.widgets.NamespacedTagsWidget
       }, {
         name: 'geometry',
         widget: ReForm.commonWidgets.HiddenWidget,

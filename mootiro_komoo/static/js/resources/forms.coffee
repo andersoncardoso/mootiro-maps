@@ -3,24 +3,30 @@ FormResource = ReForm.Form.extend
   template: window.KomooNS.templates.formTemplate
   fields: [
     {
-      name: 'name',
-      widget: ReForm.commonWidgets.TextWidget,
+      name: 'name'
+      widget: ReForm.commonWidgets.TextWidget
       label: i18n 'Name'
     }
     {
-      name: 'description',
-      widget: window.KomooNS.widgets.MarkItUpWidget,
+      name: 'description'
+      widget: window.KomooNS.widgets.MarkItUpWidget
       label: 'Description'
     }
     {
-      name: 'contact',
-      label: i18n 'Contact'
-      container_class: 'contact'
+      name: 'contact'
       widget: window.KomooNS.widgets.ContactWidget
+      container_class: 'contact'
+      label: i18n 'Contact'
     }
     {
-      name: 'geometry',
-      widget: ReForm.commonWidgets.HiddenWidget,
+      name: 'tags'
+      label: i18n 'Classifiers'
+      container_class: 'tags'
+      widget: window.KomooNS.widgets.NamespacedTagsWidget
+    }
+    {
+      name: 'geometry'
+      widget: ReForm.commonWidgets.HiddenWidget
       label: ''
     }
   ]
