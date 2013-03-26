@@ -85,7 +85,7 @@ class MultiWidget extends ReForm.Widget
       html(_collectionTemplate args).children().detach()
 
     instances = {}
-    for field in @fields.slice(0).reverse()
+    for field in @fields #.slice(0).reverse()
       # build args object
       args =
         name: "#{@name}_#{field.name}_#{@rows}"
@@ -100,7 +100,7 @@ class MultiWidget extends ReForm.Widget
 
       field = $('<div>').html(_fieldTemplate args).children().detach()
       field.find('.widget-container').append widget.render().el
-      renderedCollection.prepend(field).data 'instances', instances
+      renderedCollection.append(field).data 'instances', instances
 
     # prepend renderedCollection on form
     @$('.fields-container').append renderedCollection

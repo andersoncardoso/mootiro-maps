@@ -118,7 +118,7 @@
       };
       renderedCollection = $('<div>').html(_collectionTemplate(args)).children().detach();
       instances = {};
-      _ref = this.fields.slice(0).reverse();
+      _ref = this.fields;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         field = _ref[_i];
         args = {
@@ -132,7 +132,7 @@
         instances[field.name] = widget;
         field = $('<div>').html(_fieldTemplate(args)).children().detach();
         field.find('.widget-container').append(widget.render().el);
-        renderedCollection.prepend(field).data('instances', instances);
+        renderedCollection.append(field).data('instances', instances);
       }
       this.$('.fields-container').append(renderedCollection);
       for (key in content) {

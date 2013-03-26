@@ -1,9 +1,8 @@
-MultiWidget = KomooNS.widgets.MultiWidget
 TagsWidget = KomooNS.widgets.TagsWidget
 
 template = """
 <div class="nstags-container"></div>
-<a class="nstags-add-namespace" href="#">+ <%=i18n('Add classifier type')%></a>
+<a class="nstags-add-namespace">+ <%=i18n('Add classifier type')%></a>
 """
 
 namespaceTemplate = """
@@ -12,10 +11,10 @@ namespaceTemplate = """
     <a href="#" title="<%= i18n('remove namespace')%>" nstags_counter="<%=counter%>">[-]</a>
   </div>
   <div class="nstags-namespace-widget">
-    <input type='text' name='namespace' value='' />
+    <input type='text' id="id_namespace_<%=counter%>" name='namespace_<%=counter%>' value='<%=namespace%>' />
   </div>
   <div class="nstags-tags-container">
-    <input name="tags_<%=counter%>" id="id_tags_<%=counter%>" value=""/>
+    <input name="tags_<%=counter%>" id="id_tags_<%=counter%>" value="<%=tags%>"/>
   </div>
 </div>
 """
@@ -33,15 +32,21 @@ class NamespacedTagsWidget extends ReForm.Widget
     @namespaceCounter = 0
     @_namespaceTemplate = _.template @namespaceTemplate
 
-  addNamespace: (evt) ->
-    evt.preventDefault()
+  addNamespace: (evt, namespace="", tags="") ->
+    evt?.preventDefault?()
     renderedTemplate = @_namespaceTemplate
       counter: @namespaceCounter
+      namespace: namespace
+      tags: tags
 
     @$el.find('.nstags-container').append renderedTemplate
     tagsContainer = @$el.find(".nstags-tags-container " +
                               "input[name=tags_#{@namespaceCounter}]")
-    tagsContainer.tagsInput {}
+    tagsContainer.tagsInput
+      defaultText: i18n "Add"
+      height: 'auto'
+      width: '100%'
+
     @namespaceCounter++
     false
 
@@ -54,12 +59,23 @@ class NamespacedTagsWidget extends ReForm.Widget
     false
 
   get: ->
-    # TODO implement-me
-    console.log 'get ns tags vals'
+    nstags = {}
+    ns_list = @$el.find('.nstags-namespace-container')
+    ns_list.each (idx, el)->
+      $el = $(el)
+      counter = $el.attr('nstags_counter')
+      ns = $el.find("#id_namespace_#{counter}").val()
+      tags = $el.find("#id_tags_#{counter}").val()
+      if ns.length and tags.length
+        nstags[ns] = tags.split(',')
+    nstags
+
 
   set: (obj) ->
-    # TODO implement-me
-    console.log 'set obj', obj
+    $('.nstags-namespace-container').remove()
+    @addNamespace({}, nm, tags) for nm, tags of obj
+    this
+
 
 
 

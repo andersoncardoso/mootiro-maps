@@ -11,7 +11,6 @@ class TagsWidget extends ReForm.Widget
         defaultText: i18n "Add"
         height: 'auto'
         width: '100%'
-        interactive: true
 
 KomooNS ?= {}
 KomooNS.widgets ?= {}

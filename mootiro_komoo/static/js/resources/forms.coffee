@@ -41,6 +41,7 @@ $ () ->
   form = new FormResource
     formId: 'form_resource'
     model: new window.KomooNS.models.Resource()
+  window.form = form
 
   $('#reForm-wrapper').html form.render().el
 

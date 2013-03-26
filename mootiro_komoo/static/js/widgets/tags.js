@@ -21,8 +21,7 @@
         return _this.$el.find("#id_" + _this.name).tagsInput({
           defaultText: i18n("Add"),
           height: 'auto',
-          width: '100%',
-          interactive: true
+          width: '100%'
         });
       });
     };

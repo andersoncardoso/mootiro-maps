@@ -179,6 +179,9 @@ trans =
   'Change point position':
     'pt-br': 'Mudar ponto no mapa'
 
+  'Add classifier type':
+    'pt-br': 'Adicionar tipo de classificador'
+
 
 window.i18n = (str) ->
   lang = window.KomooNS.lang
