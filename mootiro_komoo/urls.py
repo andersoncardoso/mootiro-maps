@@ -49,6 +49,7 @@ urlpatterns = patterns('',
     url(r'', include('main.urls')),
     url(r'', include('search.urls')),
     url(r'', include('komoo_resource.urls')),
+    url(r'', include('tags.urls')),
 
     # prefixed apps urls
     url(r'^need/', include('need.urls')),

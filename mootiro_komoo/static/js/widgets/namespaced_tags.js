@@ -33,7 +33,7 @@
     };
 
     NamespacedTagsWidget.prototype.addNamespace = function(evt, namespace, tags) {
-      var renderedTemplate, tagsContainer;
+      var nmField, renderedTemplate, tagsField;
       if (namespace == null) namespace = "";
       if (tags == null) tags = "";
       if (evt != null) {
@@ -45,11 +45,24 @@
         tags: tags
       });
       this.$el.find('.nstags-container').append(renderedTemplate);
-      tagsContainer = this.$el.find(".nstags-tags-container " + ("input[name=tags_" + this.namespaceCounter + "]"));
-      tagsContainer.tagsInput({
+      nmField = this.$el.find(".nstags-namespace-widget " + ("input[name=namespace_" + this.namespaceCounter + "]"));
+      nmField.autocomplete({
+        source: '/tags/search_namespace',
+        minLength: 1
+      });
+      tagsField = this.$el.find(".nstags-tags-container " + ("input[name=tags_" + this.namespaceCounter + "]"));
+      tagsField.tagsInput({
         defaultText: i18n("Add"),
         height: 'auto',
-        width: '100%'
+        width: '100%',
+        autocomplete_url: function(req, resp) {
+          var val;
+          val = nmField.val();
+          return $.get("/tags/search_tags?namespace=" + val + "&term=" + req.term, function(data) {
+            data = JSON.parse(data);
+            return resp(data);
+          });
+        }
       });
       this.namespaceCounter++;
       return false;

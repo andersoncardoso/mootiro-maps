@@ -40,12 +40,24 @@ class NamespacedTagsWidget extends ReForm.Widget
       tags: tags
 
     @$el.find('.nstags-container').append renderedTemplate
-    tagsContainer = @$el.find(".nstags-tags-container " +
-                              "input[name=tags_#{@namespaceCounter}]")
-    tagsContainer.tagsInput
+
+    nmField = @$el.find(".nstags-namespace-widget " +
+                        "input[name=namespace_#{@namespaceCounter}]")
+    nmField.autocomplete
+      source: '/tags/search_namespace'
+      minLength: 1
+
+    tagsField = @$el.find(".nstags-tags-container " +
+                          "input[name=tags_#{@namespaceCounter}]")
+    tagsField.tagsInput
       defaultText: i18n "Add"
       height: 'auto'
       width: '100%'
+      autocomplete_url: (req, resp) ->
+        val = nmField.val()
+        $.get "/tags/search_tags?namespace=#{val}&term=#{req.term}", (data)->
+          data = JSON.parse data
+          resp data
 
     @namespaceCounter++
     false
