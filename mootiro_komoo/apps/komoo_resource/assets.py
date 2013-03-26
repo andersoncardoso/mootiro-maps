@@ -7,7 +7,6 @@ resource_form_js = Bundle(
     'lib/reForm.js',
     'js/templates/_common.js',
     markitup_js,
-    'js/widgets/multi_widget.js',
     'js/widgets/contact.js',
     tags_js,
     'js/resources/models.js',

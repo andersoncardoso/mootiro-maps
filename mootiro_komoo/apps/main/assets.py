@@ -16,7 +16,6 @@ markitup_css = Bundle(
 tags_js = Bundle(
     'lib/tagsinput/jquery.tagsinput.js',
     'js/widgets/tags.js',
-    'js/widgets/namespaced_tags.js',
 )
 
 tags_css = Bundle(
