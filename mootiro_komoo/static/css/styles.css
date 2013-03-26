@@ -2701,3 +2701,28 @@ ul.two-cols li {
 .field-container.contact .collection-container select {
     padding: 4px;
 }
+/* ======================= namespaced tags ================================ */
+.nstags-namespace-widget {
+    width: 250px;
+    display: inline-block;
+    vertical-align: top;
+}
+.nstags-namespace-widget input{
+    margin-top: 6px;
+    width: 240px;
+    height: 1.65em;
+}
+.nstags-tags-container {
+    width: 400px;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 20px;
+}
+.nstags-tags-container .tagsinput{
+    min-height: 0 !important;
+}
+.nstags-remove-namespace {
+    display: inline-block;
+    margin-right: 10px;
+    margin-top: 12px;
+}
