@@ -2703,7 +2703,7 @@ ul.two-cols li {
 }
 /* ======================= namespaced tags ================================ */
 .nstags-namespace-widget {
-    width: 250px;
+    width: 220px;
     display: inline-block;
     vertical-align: top;
 }
@@ -2713,7 +2713,7 @@ ul.two-cols li {
     height: 1.65em;
 }
 .nstags-tags-container {
-    width: 400px;
+    width: 410px;
     display: inline-block;
     vertical-align: top;
     margin-left: 20px;
@@ -2724,14 +2724,14 @@ ul.two-cols li {
 }
 .nstags-remove-namespace {
     display: inline-block;
-    margin-right: 10px;
-    margin-top: 12px;
+    margin-right: 5px;
+    margin-top: 7px;
 }
 .collection-container .remove {
     display: inline-block;
     vertical-align: top;
-    margin-right: 10px;
-    margin-top: 6px;
+    margin-right: 5px;
+    margin-top: 1px;
 }
 .field-container.tags, .field-container.contact {
     margin-top: 20px;

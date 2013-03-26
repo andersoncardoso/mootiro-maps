@@ -32,16 +32,20 @@ FormResource = ReForm.Form.extend
   ]
   events:
     'success': 'onSuccess'
+    'validation': 'onValidation'
+
+  onValidation: ()->
+    console.log 'calling validation'
+    true
 
   onSuccess: (data) ->
-    console.dir data
+    console?.dir data   ## <<< ------------------------ DEBUG ONLY, remove-me!! --------------------------
 
 
 $ () ->
   form = new FormResource
     formId: 'form_resource'
     model: new window.KomooNS.models.Resource()
-  window.form = form
 
   $('#reForm-wrapper').html form.render().el
 

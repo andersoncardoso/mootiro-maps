@@ -29,10 +29,15 @@
       }
     ],
     events: {
-      'success': 'onSuccess'
+      'success': 'onSuccess',
+      'validation': 'onValidation'
+    },
+    onValidation: function() {
+      console.log('calling validation');
+      return true;
     },
     onSuccess: function(data) {
-      return console.dir(data);
+      return typeof console !== "undefined" && console !== null ? console.dir(data) : void 0;
     }
   });
 
@@ -42,7 +47,6 @@
       formId: 'form_resource',
       model: new window.KomooNS.models.Resource()
     });
-    window.form = form;
     return $('#reForm-wrapper').html(form.render().el);
   });
 

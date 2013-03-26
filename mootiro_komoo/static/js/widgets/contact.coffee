@@ -1,7 +1,7 @@
 
 collectionTemplate = """
   <div class="collection-container <%=container_class%>">
-    <a href="#" class="remove" title="<%=i18n('Remove')%>">[-]</a>
+    <a href="#" class="remove btn" title="<%=i18n('Remove')%>"><i class="icon-trash"></i></a>
   </div>
 """
 
@@ -69,7 +69,10 @@ class MultiWidget extends ReForm.Widget
   onRemoveClick: (e) ->
     e.preventDefault()
     el = $(e.target)
-    el.parent().remove()
+    if el.parent().is '.collection-container'
+      el.parent().remove()
+    else
+      el.parent().parent().remove()
 
   addRow: (content) ->
     # field Template

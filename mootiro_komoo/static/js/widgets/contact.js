@@ -3,7 +3,7 @@
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
-  collectionTemplate = "<div class=\"collection-container <%=container_class%>\">\n  <a href=\"#\" class=\"remove\" title=\"<%=i18n('Remove')%>\">[-]</a>\n</div>";
+  collectionTemplate = "<div class=\"collection-container <%=container_class%>\">\n  <a href=\"#\" class=\"remove btn\" title=\"<%=i18n('Remove')%>\"><i class=\"icon-trash\"></i></a>\n</div>";
 
   fieldTemplate = "<div class=\"field-container <%=container_class%>\">\n  <label><%=label%></label>\n  <div class=\"widget-container\"></div>\n</div>";
 
@@ -104,7 +104,11 @@
       var el;
       e.preventDefault();
       el = $(e.target);
-      return el.parent().remove();
+      if (el.parent().is('.collection-container')) {
+        return el.parent().remove();
+      } else {
+        return el.parent().parent().remove();
+      }
     };
 
     MultiWidget.prototype.addRow = function(content) {

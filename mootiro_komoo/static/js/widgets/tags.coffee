@@ -1,4 +1,3 @@
-TagsWidget = KomooNS.widgets.TagsWidget
 
 template = """
 <div class="nstags-container"></div>
@@ -7,8 +6,8 @@ template = """
 
 namespaceTemplate = """
 <div class="nstags-namespace-container" nstags_counter="<%=counter%>">
-  <div class="nstags-remove-namespace" >
-    <a href="#" title="<%= i18n('remove namespace')%>" nstags_counter="<%=counter%>">[-]</a>
+  <div class="nstags-remove-namespace btn" title="<%= i18n('remove namespace')%>" nstags_counter="<%=counter%>">
+    <i class="icon-trash"></i>
   </div>
   <div class="nstags-namespace-widget">
     <input type='text' id="id_namespace_<%=counter%>" name='namespace_<%=counter%>' value='<%=namespace%>' />
@@ -64,7 +63,10 @@ class NamespacedTagsWidget extends ReForm.Widget
 
   removeNamespace: (evt) ->
     evt.preventDefault()
+    $el = $(evt.target)
     ns_counter = $(evt.target).attr('nstags_counter')
+    if not ns_counter
+      ns_counter = $(evt.target).parent().attr('nstags_counter')
     $el = @$el.find ".nstags-namespace-container[nstags_counter=#{ns_counter}]"
     $el.remove()
     # TODO unbind stuff
