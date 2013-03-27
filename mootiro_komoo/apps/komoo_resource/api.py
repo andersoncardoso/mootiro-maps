@@ -27,6 +27,7 @@ class ResourcesHandler(APIHandler):
             return JsonResponse(
                     request.user.no_permission_message, response_type='error')
 
+        resource.creator = request.user
         if not resource.is_valid():
             return JsonResponse(resource.errors, response_type='error')
 

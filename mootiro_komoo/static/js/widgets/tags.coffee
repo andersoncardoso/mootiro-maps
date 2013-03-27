@@ -80,7 +80,7 @@ class NamespacedTagsWidget extends ReForm.Widget
     ns_list = @$el.find('.nstags-namespace-container')
     ns_list.each (idx, el)->
       $el = $(el)
-      counter = $el.attr('nstags_counter')
+      counter = $el.attr 'nstags_counter'
       ns = $el.find("#id_namespace_#{counter}").val()
       tags = $el.find("#id_tags_#{counter}").val()
       if ns.length and tags.length
