@@ -2706,32 +2706,48 @@ ul.two-cols li {
 }
 .field-container.contact .collection-container select {
     padding: 4px;
+    background-color: #fbfbfb;
 }
 /* ======================= namespaced tags ================================ */
+.nstags-namespace-container {
+    border-top: solid 1px #ccc;
+    border-bottom: solid 1px #ccc;
+    margin-top: -1px;
+    padding: 10px 0;
+}
 .nstags-namespace-widget {
-    width: 220px;
+    width: 200px;
     display: inline-block;
     vertical-align: top;
+    background-color: rgba(215, 215, 215, 0.5);
+    padding: 5px 20px 5px 10px;
+    border-radius: 4px;
 }
 .nstags-namespace-widget input{
     margin-top: 6px;
-    width: 240px;
+    width: 200px;
     height: 1.65em;
+    background-color: #fafafa;
 }
 .nstags-tags-container {
-    width: 410px;
+    width: 400px;
     display: inline-block;
     vertical-align: top;
     margin-left: 20px;
+    padding: 5px 0;
 }
 .nstags-tags-container .tagsinput{
     min-height: 0 !important;
-    width: 410px !important;
+    width: 400px !important;
+}
+.nstags-tags-container .tagsinput input{
+    border-radius: 4px;
+    min-width: 85px;
 }
 .nstags-remove-namespace {
     display: inline-block;
     margin-right: 5px;
-    margin-top: 7px;
+    /* margin-top: 37px; */
 }
 .collection-container .remove {
     display: inline-block;

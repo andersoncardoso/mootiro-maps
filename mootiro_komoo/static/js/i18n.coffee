@@ -182,6 +182,24 @@ trans =
   'Add classifier type':
     'pt-br': 'Adicionar tipo de classificador'
 
+  'Define the classifier type':
+    'pt-br': 'Defina o tipo do classificador'
+
+  'Define the keywords for this classifier type':
+    'pt-br': 'Defina as palavras-chave para esse tipo de classificador'
+
+  'keyword':
+    'pt-br': 'palavra-chave'
+
+  'Classifier Type':
+    'pt-br': 'Tipo de Classificador'
+
+  'A Classifier Type can\'t have an empty Tags list':
+    'pt-br': 'Um tipo de Classificador não pode ter uma lista de palavras-chaves vazia'
+
+  'Classifier Type can\'t be empty':
+    'pt-br': 'Tipo de Classificador não pode ser vazio'
+    
 
 window.i18n = (str) ->
   lang = window.KomooNS.lang

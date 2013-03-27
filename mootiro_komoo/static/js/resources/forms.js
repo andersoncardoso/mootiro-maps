@@ -29,12 +29,7 @@
       }
     ],
     events: {
-      'success': 'onSuccess',
-      'validation': 'onValidation'
-    },
-    onValidation: function() {
-      console.log('calling validation');
-      return true;
+      'success': 'onSuccess'
     },
     onSuccess: function(data) {
       return typeof console !== "undefined" && console !== null ? console.dir(data) : void 0;

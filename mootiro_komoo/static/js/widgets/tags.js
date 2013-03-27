@@ -5,7 +5,7 @@
 
   template = "<div class=\"nstags-container\"></div>\n<a class=\"nstags-add-namespace\">+ <%=i18n('Add classifier type')%></a>";
 
-  namespaceTemplate = "<div class=\"nstags-namespace-container\" nstags_counter=\"<%=counter%>\">\n  <div class=\"nstags-remove-namespace btn\" title=\"<%= i18n('remove namespace')%>\" nstags_counter=\"<%=counter%>\">\n    <i class=\"icon-trash\"></i>\n  </div>\n  <div class=\"nstags-namespace-widget\">\n    <input type='text' id=\"id_namespace_<%=counter%>\" name='namespace_<%=counter%>' value='<%=namespace%>' />\n  </div>\n  <div class=\"nstags-tags-container\">\n    <input name=\"tags_<%=counter%>\" id=\"id_tags_<%=counter%>\" value=\"<%=tags%>\"/>\n  </div>\n</div>";
+  namespaceTemplate = "<div class=\"nstags-namespace-container field-container\" for=\"tags_<%=counter%>\" nstags_counter=\"<%=counter%>\">\n  <div class=\"nstags-remove-namespace btn\" title=\"<%= i18n('remove namespace')%>\" nstags_counter=\"<%=counter%>\">\n    <i class=\"icon-trash\"></i>\n  </div>\n  <div class=\"nstags-namespace-widget\">\n    <label><%= i18n('Define the classifier type')%>:</label>\n    <input class=\"nstags-namespace-input\" placeholder=\"<%= i18n('Classifier Type')%>\" type='text' id=\"id_namespace_<%=counter%>\" name='namespace_<%=counter%>' value='<%=namespace%>' />\n  </div>\n  <div class=\"nstags-tags-container\">\n    <label><%= i18n(\"Define the keywords for this classifier type\")%>:</label>\n    <input class=\"nstags-tags-input\" name=\"tags_<%=counter%>\" id=\"id_tags_<%=counter%>\" value=\"<%=tags%>\"/>\n  </div>\n  <div class=\"widget-container\"></div>\n</div>";
 
   NamespacedTagsWidget = (function(_super) {
 
@@ -50,7 +50,7 @@
       });
       tagsField = this.$el.find(".nstags-tags-container " + ("input[name=tags_" + this.namespaceCounter + "]"));
       tagsField.tagsInput({
-        defaultText: i18n("Add"),
+        defaultText: i18n("keyword"),
         height: 'auto',
         width: '100%',
         autocomplete_url: function(req, resp) {
@@ -100,6 +100,33 @@
         this.addNamespace({}, nm, tags);
       }
       return this;
+    };
+
+    NamespacedTagsWidget.prototype.validate = function(obj) {
+      var valid,
+        _this = this;
+      valid = true;
+      this.$el.find('.nstags-namespace-container').each(function(idx, obj) {
+        var $nm, $obj, $tags;
+        $obj = $(obj);
+        if (valid) {
+          $nm = $obj.find('.nstags-namespace-input');
+          if (!$nm.val()) {
+            _this.errorTargetName = $obj.attr('for');
+            _this.error = i18n('Classifier Type can\'t be empty');
+            valid = false;
+          }
+        }
+        if (valid) {
+          $tags = $obj.find('.nstags-tags-input');
+          if (!$tags.val()) {
+            _this.errorTargetName = $obj.attr('for');
+            _this.error = i18n('A Classifier Type can\'t have an empty Tags list');
+            return valid = false;
+          }
+        }
+      });
+      return valid;
     };
 
     return NamespacedTagsWidget;

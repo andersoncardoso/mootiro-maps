@@ -5,16 +5,19 @@ template = """
 """
 
 namespaceTemplate = """
-<div class="nstags-namespace-container" nstags_counter="<%=counter%>">
+<div class="nstags-namespace-container field-container" for="tags_<%=counter%>" nstags_counter="<%=counter%>">
   <div class="nstags-remove-namespace btn" title="<%= i18n('remove namespace')%>" nstags_counter="<%=counter%>">
     <i class="icon-trash"></i>
   </div>
   <div class="nstags-namespace-widget">
-    <input type='text' id="id_namespace_<%=counter%>" name='namespace_<%=counter%>' value='<%=namespace%>' />
+    <label><%= i18n('Define the classifier type')%>:</label>
+    <input class="nstags-namespace-input" placeholder="<%= i18n('Classifier Type')%>" type='text' id="id_namespace_<%=counter%>" name='namespace_<%=counter%>' value='<%=namespace%>' />
   </div>
   <div class="nstags-tags-container">
-    <input name="tags_<%=counter%>" id="id_tags_<%=counter%>" value="<%=tags%>"/>
+    <label><%= i18n("Define the keywords for this classifier type")%>:</label>
+    <input class="nstags-tags-input" name="tags_<%=counter%>" id="id_tags_<%=counter%>" value="<%=tags%>"/>
   </div>
+  <div class="widget-container"></div>
 </div>
 """
 
@@ -49,7 +52,7 @@ class NamespacedTagsWidget extends ReForm.Widget
     tagsField = @$el.find(".nstags-tags-container " +
                           "input[name=tags_#{@namespaceCounter}]")
     tagsField.tagsInput
-      defaultText: i18n "Add"
+      defaultText: i18n "keyword"
       height: 'auto'
       width: '100%'
       autocomplete_url: (req, resp) ->
@@ -90,6 +93,23 @@ class NamespacedTagsWidget extends ReForm.Widget
     @addNamespace({}, nm, tags) for nm, tags of obj
     this
 
+  validate: (obj) ->
+    valid = true
+    @$el.find('.nstags-namespace-container').each (idx, obj) =>
+      $obj = $(obj)
+      if valid
+        $nm = $obj.find '.nstags-namespace-input'
+        if not $nm.val()
+          @errorTargetName = $obj.attr('for')
+          @error = i18n 'Classifier Type can\'t be empty'
+          valid = false
+      if valid
+        $tags = $obj.find '.nstags-tags-input'
+        if not $tags.val()
+          @errorTargetName = $obj.attr('for')
+          @error = i18n 'A Classifier Type can\'t have an empty Tags list'
+          valid = false
+    return valid
 
 
 
