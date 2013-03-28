@@ -9,6 +9,7 @@ from bson.objectid import ObjectId
 from authentication.models import User
 from komoo_map.models import GeoRefModel
 from tags.models import TagField, EMPTY_TAG
+from fileupload.models import UploadedFile
 from search.signals import index_object_for_search
 
 from .utils import build_obj_from_dict, get_model_from_table_ref
@@ -299,11 +300,13 @@ class GeoRefObject(GeoRefModel, BaseModel):
 
     def to_dict(self):
         return {
+            'id': self.id,
             'name': self.name,
             'description': self.description,
             'otype': self.otype,
             'creator': self.creator,
             'creation_date': self.creation_date,
+            'geometry': self.geojson,
             'last_editor': self.last_editor,
             'last_update': self.last_update,
             'tags': self.tags,
@@ -345,7 +348,7 @@ class GeoRefObject(GeoRefModel, BaseModel):
     def is_valid(self):
         self.errors = {}
         valid = True
-        require = ['name', 'creator']
+        require = ['name', 'creator', 'otype']
         for field in require:
             if not getattr(self, field, None):
                 valid, self.errors[field] = False, _('Required field')
@@ -360,3 +363,60 @@ class GeoRefObject(GeoRefModel, BaseModel):
                 setattr(self, item[0], item[1])
         index_object_for_search.send(sender=self, obj=self)
         return r
+
+
+class CommonObjectManager(models.Manager):
+
+    def get_query_set(self):
+        return super(CommonObjectManager, self).get_query_set().filter(
+                otype=self.model.commonobject_type)
+
+
+class CommonObjectMixin(GeoRefObject):
+
+    class Meta:
+        proxy = True
+
+    url_root = ''
+    commonobject_type = ''
+    objects = CommonObjectManager()
+
+    def __init__(self, *args, **kwargs):
+        super(CommonObjectMixin, self).__init__(*args, **kwargs)
+        if not getattr(self, 'otype', None) == self.commonobject_type:
+            self.otype = self.commonobject_type
+
+    @property
+    def _url_root(self):
+        if not self.url_root.endswith('/'):
+            return self.url_root + '/'
+        else:
+            return self.url_root
+
+    @property
+    def url(self):
+        return self.view_url
+
+    @property
+    def view_url(self):
+        return self._url_root + self.id
+
+    @property
+    def edit_url(self):
+        return self._url_root + self.id + '/edit'
+
+    # @property
+    # def admin_url(self):
+    #     return reverse('admin:{}_{}_change'.format(self._meta.app_label,
+    #         self._meta.module_name), args=[self.id])
+
+    def files_set(self):
+        """ pseudo-reverse query for retrieving Resource Files"""
+        return UploadedFile.get_files_for(self)
+
+    def save(self, *args, **kwargs):
+        if not getattr(self, 'otype', None) == self.commonobject_type:
+            self.otype = self.commonobject_type
+
+        r_ = super(CommonObjectMixin, self).save(*args, **kwargs)
+        return r_

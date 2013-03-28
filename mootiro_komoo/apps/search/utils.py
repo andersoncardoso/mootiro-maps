@@ -136,7 +136,7 @@ table_id_map = {
     'Community': 'c',
     'Project': 'p',
     'GeoRefObject': 'g',
-    'Resource_GRO': 'g',
+    'Resource_CO': 'g',
 }
 
 

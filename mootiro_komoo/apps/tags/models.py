@@ -151,7 +151,7 @@ class TagField(object):
     """
     def __get__(self, instance, owner):
         tag_list = _TagList(self, instance)
-        tag_list[COMMON_NAMESPACE] = []
+        # tag_list[COMMON_NAMESPACE] = []
         for tag in TaggedObject.get_tags_for_object(instance):
             if not tag.namespace.name in tag_list:
                 tag_list[tag.namespace.name] = [tag.name, ]

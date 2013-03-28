@@ -394,18 +394,16 @@ def _to_json_default(obj):
     usage:
         simplejson.dumps(data, default=to_json)
     """
-
-    # Geometries
-    if getattr(obj, 'geojson', None):
-        return simplejson.dumps(obj.geojson)
-
-    # Datetime
-    if isinstance(obj, datetime.datetime):
-        return datetime_to_iso(obj)
-
     try:
         return obj.id
     except Exception:
+        # Geometries
+        if getattr(obj, 'geojson', None):
+            return simplejson.dumps(obj.geojson)
+
+        # Datetime
+        if isinstance(obj, datetime.datetime):
+            return datetime_to_iso(obj)
         raise TypeError(repr(obj) + ' is not JSON serializable')
 
 

@@ -18,6 +18,7 @@ from django.db.models.query import QuerySet
 from markitup.templatetags.markitup_tags import render_markup
 
 from main.utils import templatetag_args_parser, create_geojson
+from main.utils import to_json as json_encoder
 from main.widgets import (ImageSwitch, ImageSwitchMultiple, TaggitWidget,
                           Autocomplete)
 from community.models import Community
@@ -184,8 +185,8 @@ def jsonify(object):
 # jsonify.is_safe = True
 
 @register.filter
-def to_json(object):
-    return jsonify(object)
+def to_json(obj):
+    return json_encoder(obj)
 
 @register.filter
 def linkencode(val):

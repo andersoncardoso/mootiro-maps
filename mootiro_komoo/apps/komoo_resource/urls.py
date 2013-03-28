@@ -5,16 +5,16 @@ from .api import ResourcesHandler, ResourcesIDHandler
 
 
 urlpatterns = patterns('komoo_resource.views',
-    url(r'^resource/new/?$', 'new_resource', name='new_resource'),
+    url(r'^resource/new/?$', 'edit', name='new_resource'),
     url(r'^resource/new/from_map/?$', 'new_resource_from_map',
                 name='new_resource_from_map'),
     url(r'^resource/$', 'resource_list', name='resource_list'),
     url(r'^resource/search_by_kind/$', 'search_by_kind',
                 name='resource_search_by_kind'),
-    url(r'^resource/search_tags/$', 'search_tags', name='resource_search_tags'),
 
-    url(pr(r'^resource/ID/edit/?$'), 'edit_resource', name='edit_resource'),
     url(pr(r'^resource/ID/?$'), 'show', name='view_resource'),
+    url(pr(r'^resource/ID/edit/?$'), 'edit', name='edit_resource'),
+    # url(pr(r'^resource/OID/?$'), 'show', name='view_resource'),
 )
 
 # =============================================================================

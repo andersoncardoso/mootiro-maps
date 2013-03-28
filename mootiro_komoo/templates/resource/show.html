@@ -22,7 +22,7 @@
 {% block menu %} {% menu "resource" %} {% endblock %}
 
 {% block content %}
-  {% komoo_map geojson 'type=view' 'width=100%' 'height=100%' 'zoom=13' 'ajax=True' 'lazy=True' %}
+  {% komoo_map resource.geojson 'type=view' 'width=100%' 'height=100%' 'zoom=13' 'ajax=True' 'lazy=True' %}
 <div id="main-content">
     <div class="main-column">
 
@@ -32,7 +32,7 @@
 
                 <div class="view-edit-btn">
                     {% history resource %}
-                    <a href="{% url view_discussion resource.perm_id %}" class="btn login-required" title="Ver página de discussão"><i class="icon-comment"></i></a>
+                    {# <a href="{% url view_discussion resource.perm_id %}" class="btn login-required" title="Ver página de discussão"><i class="icon-comment"></i></a> #}
                     <a href="{{ resource.edit_url }}" class="btn login-required" title="Editar conteúdo">
                         <i class="icon-pencil"></i>
                     </a>
@@ -41,7 +41,7 @@
 
             </div>
 
-            <span class="resource-type">{% trans 'type:' %} &nbsp;<strong>{{ resource.kind }}</strong></span>
+            {# <span class="resource-type">{% trans 'type:' %} &nbsp;<strong>{{ resource.kind }}</strong></span> #}
         </div>
 
         <div class="view-body">
@@ -49,10 +49,10 @@
         </div>
 
         <div class="view-footer">
-            {% image_gallery resource %}
+            {# {% image_gallery resource %} #}
         </div>
 
-        {% investments_list resource.investments.all %}
+        {# {% investments_list resource.investments.all %} #}
 
         <div class="view-extras">
                 {% track_buttons resource %}

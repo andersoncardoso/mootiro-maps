@@ -11,7 +11,8 @@ admin.autodiscover()
 
 # Some URL fragments to be reused throughout the application
 SLUG = r'(?P<slug>[a-zA-Z0-9-]+)'
-ID = r'(?P<id>\d+)'
+# ID = r'(?P<id>\d+)'
+ID = r'(?P<id>[a-zA-Z0-9-]+)'
 
 handler500 = 'main.views.custom_500'
 handler404 = 'main.views.custom_404'

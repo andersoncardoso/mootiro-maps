@@ -27,22 +27,21 @@
         widget: ReForm.commonWidgets.HiddenWidget,
         label: ''
       }
-    ],
-    events: {
-      'success': 'onSuccess'
-    },
-    onSuccess: function(data) {
-      return typeof console !== "undefined" && console !== null ? console.dir(data) : void 0;
-    }
+    ]
   });
 
   $(function() {
-    var form;
+    var form, model, _ref;
+    model = new window.KomooNS.models.Resource();
     form = new FormResource({
       formId: 'form_resource',
-      model: new window.KomooNS.models.Resource()
+      model: model
     });
-    return $('#reForm-wrapper').html(form.render().el);
+    $('#reForm-wrapper').html(form.render().el);
+    if (((_ref = KomooNS.data) != null ? _ref.resource : void 0) != null) {
+      form.model.set(KomooNS.data.resource);
+      return $('#reForm-wrapper').html(form.render().el);
+    }
   });
 
 }).call(this);

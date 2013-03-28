@@ -33,10 +33,11 @@
     NamespacedTagsWidget.prototype.addNamespace = function(evt, namespace, tags) {
       var nmField, renderedTemplate, tagsField;
       if (namespace == null) namespace = "";
-      if (tags == null) tags = "";
+      if (tags == null) tags = [];
       if (evt != null) {
         if (typeof evt.preventDefault === "function") evt.preventDefault();
       }
+      tags = tags.join(',');
       renderedTemplate = this._namespaceTemplate({
         counter: this.namespaceCounter,
         namespace: namespace,
@@ -73,6 +74,7 @@
       ns_counter = $(evt.target).attr('nstags_counter');
       if (!ns_counter) ns_counter = $(evt.target).parent().attr('nstags_counter');
       $el = this.$el.find(".nstags-namespace-container[nstags_counter=" + ns_counter + "]");
+      $el.unbind();
       $el.remove();
       return false;
     };
@@ -94,7 +96,7 @@
 
     NamespacedTagsWidget.prototype.set = function(obj) {
       var nm, tags;
-      $('.nstags-namespace-container').remove();
+      this.$el.find('.nstags-namespace-container').remove();
       for (nm in obj) {
         tags = obj[nm];
         this.addNamespace({}, nm, tags);

@@ -16,7 +16,7 @@ from komoo_map.models import GeoRefModel, POLYGON, LINESTRING, POINT
 from investment.models import Investment
 from fileupload.models import UploadedFile
 from search.signals import index_object_for_search
-from main.models import GeoRefObject
+from main.models import CommonObjectMixin
 
 
 class ResourceKind(models.Model):
@@ -126,14 +126,11 @@ if not reversion.is_registered(Resource):
 #     ('others', _('Others')),
 # )
 
-class ResourceManager(models.Manager):
-    def get_query_set(self):
-        return super(ResourceManager, self).get_query_set().filter(
-                otype='resource')
 
+class Resource_CO(CommonObjectMixin):
 
-class Resource_GRO(GeoRefObject):
-    objects = ResourceManager()
+    url_root = '/resource/'
+    commonobject_type = 'resource'
 
     class Meta:
         proxy = True
@@ -146,41 +143,6 @@ class Resource_GRO(GeoRefObject):
         geometries = (POLYGON, LINESTRING, POINT)
         zindex = 15
 
-    # ================
-    # url properties hell
-
-    @property
-    def url(self):
-        return self.view_url()
-
-    @property
-    def view_url(self):
-        return reverse('view_resource', kwargs={'id': self.id})
-
-    @property
-    def edit_url(self):
-        return reverse('edit_resource', kwargs={'id': self.id})
-
-    @property
-    def admin_url(self):
-        return reverse('admin:{}_{}_change'.format(self._meta.app_label,
-            self._meta.module_name), args=[self.id])
-
-    @property
-    def new_investment_url(self):
-        return reverse('new_investment') + '?type=resource&obj={id}'.format(
-                id=self.id)
-
-    def files_set(self):
-        """ pseudo-reverse query for retrieving Resource Files"""
-        return UploadedFile.get_files_for(self)
-
     image = "img/resource.png"
     image_off = "img/resource-off.png"
 
-    def save(self, *args, **kwargs):
-        if not getattr(self, 'otype', None) == 'resource':
-            self.otype = 'resource'
-
-        r_ = super(Resource_GRO, self).save(*args, **kwargs)
-        return r_

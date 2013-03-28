@@ -22,8 +22,8 @@ class Comment(models.Model):
     sub_comments = models.IntegerField(blank=True, default=0)
     pub_date = models.DateTimeField(auto_now_add=True)
     # dynamic ref
-    content_type = models.ForeignKey(ContentType,  null=True, blank=True)
-    object_id = models.PositiveIntegerField(null=True, blank=True)
+    content_type = models.ForeignKey(ContentType, null=True, blank=True)
+    object_id = models.CharField(max_length=24, null=True, blank=True)
     content_object = generic.GenericForeignKey('content_type', 'object_id')
 
     def save(self, *args, **kwargs):

@@ -6,7 +6,7 @@ from main.utils import APIHandler
 from main.utils import JsonResponse
 from main.utils import get_json_data
 # from main.datalog import log_data
-from .models import Resource_GRO as Resource
+from .models import Resource_CO as Resource
 
 
 logger = logging.getLogger(__name__)
@@ -32,7 +32,7 @@ class ResourcesHandler(APIHandler):
             return JsonResponse(resource.errors, response_type='error')
 
         resource.save()
-        return JsonResponse()
+        return JsonResponse({'redirect': resource.url})
 
 
 class ResourcesIDHandler(APIHandler):

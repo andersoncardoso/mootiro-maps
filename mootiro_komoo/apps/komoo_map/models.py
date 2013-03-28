@@ -39,6 +39,16 @@ class GeoRefModel(geomodels.Model):
             geojson['features'][0]['properties']['alwaysVisible'] = True
         return json.dumps(geojson)
 
+    @geojson.setter
+    def geojson(self, feature_collection):
+        geojson = {
+            "type": "GeometryCollection",
+            "geometries": [feature['geometry']
+                for feature in feature_collection['features']]
+        }
+        self.geometry = json.dumps(geojson)
+
+
     class Meta:
         abstract = True
 

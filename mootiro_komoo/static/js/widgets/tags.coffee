@@ -34,8 +34,9 @@ class NamespacedTagsWidget extends ReForm.Widget
     @namespaceCounter = 0
     @_namespaceTemplate = _.template @namespaceTemplate
 
-  addNamespace: (evt, namespace="", tags="") ->
+  addNamespace: (evt, namespace="", tags=[]) ->
     evt?.preventDefault?()
+    tags = tags.join(',')
     renderedTemplate = @_namespaceTemplate
       counter: @namespaceCounter
       namespace: namespace
@@ -71,8 +72,8 @@ class NamespacedTagsWidget extends ReForm.Widget
     if not ns_counter
       ns_counter = $(evt.target).parent().attr('nstags_counter')
     $el = @$el.find ".nstags-namespace-container[nstags_counter=#{ns_counter}]"
+    $el.unbind()
     $el.remove()
-    # TODO unbind stuff
     false
 
   get: ->
@@ -89,7 +90,7 @@ class NamespacedTagsWidget extends ReForm.Widget
 
 
   set: (obj) ->
-    $('.nstags-namespace-container').remove()
+    @$el.find('.nstags-namespace-container').remove()
     @addNamespace({}, nm, tags) for nm, tags of obj
     this
 

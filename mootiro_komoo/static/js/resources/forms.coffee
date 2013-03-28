@@ -30,17 +30,17 @@ FormResource = ReForm.Form.extend
       label: ''
     }
   ]
-  events:
-    'success': 'onSuccess'
-
-  onSuccess: (data) ->
-    console?.dir data   ## <<< ------------------------ DEBUG ONLY, remove-me!! --------------------------
 
 
 $ () ->
+  model = new window.KomooNS.models.Resource()
   form = new FormResource
     formId: 'form_resource'
-    model: new window.KomooNS.models.Resource()
+    model: model
 
   $('#reForm-wrapper').html form.render().el
+
+  if KomooNS.data?.resource?
+    form.model.set KomooNS.data.resource
+    $('#reForm-wrapper').html form.render().el
 
