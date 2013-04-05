@@ -136,6 +136,7 @@ INSTALLED_APPS = [
     'importsheet',
     'search',
     'tags',
+    'highlight',
     'locker',
 ]
 

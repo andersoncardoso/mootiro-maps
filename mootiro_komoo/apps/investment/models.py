@@ -128,6 +128,7 @@ class Investment(BaseModel, models.Model):
     slug = models.CharField(max_length=256, null=False, blank=False,
                 db_index=True, editable=False)
     description = models.TextField()
+    short_description = models.CharField(max_length=250, null=True, blank=True)
     value = models.DecimalField(decimal_places=2, max_digits=14, null=True,
                 blank=True)
     currency = models.CharField(max_length=3, choices=CURRENCIES_CHOICES,
