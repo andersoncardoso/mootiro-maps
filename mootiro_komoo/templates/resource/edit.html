@@ -1,6 +1,5 @@
 {% extends 'global.html' %}
 {% load komoo_map_tags %}
-{% load upload_tags %}
 {% load i18n %}
 {% load komoo_tags %}
 {% load assets %}
@@ -18,9 +17,7 @@
               Os campos com asterisco (<strong>*</strong>) são obrigatórios!
           </div>
       </div>
-      {#% crispy form_resource form_resource.helper %#}
-      <div id="reForm-wrapper">
-      </div>
+      <div id="reForm-wrapper"></div>
       <div class="right-bar">
         {# {% komoo_map geojson 'type=preview' 'edit_button=True' %} #}
       </div>
@@ -70,9 +67,6 @@
   {% assets "resource_form_js" %}
       <script type="text/javascript" src="{{ ASSET_URL }}"></script>
   {% endassets %}
-
-  {#% load_files resource %#}
-
 {% endblock %}
 
 {% block help_center %}

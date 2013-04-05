@@ -31,16 +31,18 @@
   });
 
   $(function() {
-    var form, model, _ref;
+    var form, model, _ref, _ref2;
     model = new window.KomooNS.models.Resource();
     form = new FormResource({
       formId: 'form_resource',
       model: model
     });
-    $('#reForm-wrapper').html(form.render().el);
     if (((_ref = KomooNS.data) != null ? _ref.resource : void 0) != null) {
       form.model.set(KomooNS.data.resource);
-      return $('#reForm-wrapper').html(form.render().el);
+    }
+    $('#reForm-wrapper').html(form.render().el);
+    if (((_ref2 = KomooNS.data) != null ? _ref2.resource : void 0) != null) {
+      return form.instances.tags.set(KomooNS.data.resource.tags);
     }
   });
 

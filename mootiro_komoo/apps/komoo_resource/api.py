@@ -66,5 +66,5 @@ class ResourcesIDHandler(APIHandler):
         res.save()
         # log_data.send(
         #         sender=res, object_=res, user=request.user, action='E')
-        return JsonResponse({})
+        return JsonResponse({'redirect': res.url})
 

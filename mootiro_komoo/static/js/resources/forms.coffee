@@ -38,9 +38,11 @@ $ () ->
     formId: 'form_resource'
     model: model
 
-  $('#reForm-wrapper').html form.render().el
 
   if KomooNS.data?.resource?
     form.model.set KomooNS.data.resource
-    $('#reForm-wrapper').html form.render().el
 
+  $('#reForm-wrapper').html form.render().el
+
+  if KomooNS.data?.resource?
+    form.instances.tags.set KomooNS.data.resource.tags

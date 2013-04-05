@@ -62,20 +62,9 @@ def new_resource_from_map(request, *args, **kwargs):
 @render_to('resource/edit.html')
 def edit(request, id=None, *arg, **kwargs):
     resource = get_object_or_None(Resource, pk=id)
-    # geojson = create_geojson([resource], convert=False)
+    geojson = resource.geojson if resource else json.dumps({})
 
-    # if geojson and geojson.get('features'):
-    #     geojson['features'][0]['properties']['userCanEdit'] = True
-    # geojson = json.dumps(geojson)
-    if resource:
-        geojson = resource.geojson
-    else:
-        geojson = json.dumps({})
-
-    data = {}
-    if resource:
-        data['resource'] = resource.to_dict()
-
+    data = {'resource': resource.to_dict()} if resource else {}
     return {'KomooNS_data': data, 'geojson': geojson}
 
 
