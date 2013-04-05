@@ -6,9 +6,9 @@ from django.contrib.gis.db import models
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
-import reversion
 from lib.taggit.managers import TaggableManager
 
+from main.models import CommonObjectMixin
 from authentication.models import User
 from community.models import Community
 from komoo_map.models import GeoRefModel, POLYGON, LINESTRING, POINT
@@ -56,7 +56,7 @@ class NeedCategory(models.Model):
     @classmethod
     def backtrans(klass, trans_name):
         idnames = [nc.name for nc in klass.objects.all()]
-        btdict = {_(name):name for name in idnames}
+        btdict = {_(name): name for name in idnames}
         return btdict[trans_name] if trans_name in btdict else trans_name
 
 
@@ -81,14 +81,18 @@ class Need(GeoRefModel):
     short_description = models.CharField(max_length=250, null=True, blank=True)
 
     # Meta info
-    creator = models.ForeignKey(User, editable=False, null=True, related_name='created_needs')
+    creator = models.ForeignKey(User, editable=False, null=True,
+                related_name='created_needs')
     creation_date = models.DateTimeField(auto_now_add=True)
-    last_editor = models.ForeignKey(User, editable=False, null=True, blank=True)
+    last_editor = models.ForeignKey(User, editable=False, null=True,
+                blank=True)
     last_update = models.DateTimeField(auto_now=True)
 
     # Relationships
-    # community = models.ForeignKey(Community, related_name="needs", null=True, blank=True)
-    community = models.ManyToManyField(Community, related_name="needs", null=True, blank=True)
+    # community = models.ForeignKey(Community, related_name="needs", null=True,
+    # blank=True)
+    community = models.ManyToManyField(Community, related_name="needs",
+            null=True, blank=True)
     categories = models.ManyToManyField(NeedCategory)
     target_audiences = models.ManyToManyField(TargetAudience, blank=False)
 
@@ -97,7 +101,7 @@ class Need(GeoRefModel):
     class Map:
         title = _('Need')
         editable = True
-        background_color =  '#f42c5e'
+        background_color = '#f42c5e'
         border_color = '#d31e52'
         geometries = (POLYGON, LINESTRING, POINT)
         categories = [
@@ -155,5 +159,19 @@ class Need(GeoRefModel):
         return 'n%d' % self.id
 
 
-if not reversion.is_registered(Need):
-    reversion.register(Need)
+# =============================================================================
+
+class Need_CO(CommonObjectMixin):
+
+    url_root = '/need/'
+    commonobject_type = 'need'
+
+    class Meta:
+        proxy = True
+
+    class Map:
+        title = _('Need')
+        editable = True
+        background_color = '#f42c5e'
+        border_color = '#d31e52'
+        geometries = (POLYGON, LINESTRING, POINT)

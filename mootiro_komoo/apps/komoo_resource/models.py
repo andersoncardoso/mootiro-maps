@@ -145,6 +145,3 @@ class Resource_CO(CommonObjectMixin):
         geometries = (POLYGON, LINESTRING, POINT)
         zindex = 15
 
-    image = "img/resource.png"
-    image_off = "img/resource-off.png"
-

@@ -9,8 +9,6 @@ urlpatterns = patterns('komoo_resource.views',
     url(r'^resource/new/from_map/?$', 'new_resource_from_map',
                 name='new_resource_from_map'),
     url(r'^resource/$', 'resource_list', name='resource_list'),
-    url(r'^resource/search_by_kind/$', 'search_by_kind',
-                name='resource_search_by_kind'),
 
     url(pr(r'^resource/ID/?$'), 'show', name='view_resource'),
     url(pr(r'^resource/ID/edit/?$'), 'edit', name='edit_resource'),

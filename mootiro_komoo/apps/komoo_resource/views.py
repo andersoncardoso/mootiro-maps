@@ -3,8 +3,7 @@ from __future__ import unicode_literals
 import logging
 import json
 
-from django.shortcuts import HttpResponse, get_object_or_404
-from django.utils import simplejson
+from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 
 from annoying.decorators import render_to
@@ -26,7 +25,6 @@ def resource_list(request):
     sort_order = ['creation_date', 'name']
 
     query_set = filtered_query(Resource.objects, request)
-
     resources_list = sorted_query(query_set, sort_order, request)
     resources_count = resources_list.count()
     resources = paginated_query(resources_list, request)
@@ -66,17 +64,6 @@ def edit(request, id=None, *arg, **kwargs):
 
     data = {'resource': resource.to_dict()} if resource else {}
     return {'KomooNS_data': data, 'geojson': geojson}
-
-
-# DEPRECATED
-def search_by_kind(request):
-    # term = request.GET.get('term', '')
-    # kinds = ResourceKind.objects.filter(Q(name__icontains=term) |
-        # Q(slug__icontains=term))
-    kinds = []
-    d = [{'value': k.id, 'label': k.name} for k in kinds]
-    return HttpResponse(simplejson.dumps(d),
-        mimetype="application/x-javascript")
 
 
 @render_to('komoo_map/show.html')
