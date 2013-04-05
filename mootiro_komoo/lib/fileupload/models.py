@@ -18,8 +18,8 @@ class UploadedFile(models.Model):
     subtitle = models.TextField(null=True, blank=True)
 
     # dynamic ref
-    content_type = models.ForeignKey(ContentType,  null=True, blank=True)
-    object_id = models.PositiveIntegerField(null=True, blank=True)
+    content_type = models.ForeignKey(ContentType, null=True, blank=True)
+    object_id = models.CharField(null=True, blank=True, max_length=24)
     content_object = generic.GenericForeignKey('content_type', 'object_id')
 
     def __unicode__(self):

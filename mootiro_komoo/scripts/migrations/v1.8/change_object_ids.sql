@@ -3,3 +3,4 @@ ALTER TABLE signatures_signature ALTER COLUMN object_id TYPE character varying(2
 ALTER TABLE moderation_moderation ALTER COLUMN object_id TYPE character varying(24);
 ALTER TABLE komoo_comments_comment ALTER COLUMN object_id TYPE character varying(24);
 ALTER TABLE komoo_project_projectrelatedobject ALTER COLUMN object_id TYPE character varying(24);
+ALTER TABLE fileupload_uploadedfile ALTER COLUMN object_id TYPE character varying(24);

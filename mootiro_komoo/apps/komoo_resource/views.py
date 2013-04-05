@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import logging
 import json
 
-from django.shortcuts import HttpResponse, get_object_or_404, redirect
+from django.shortcuts import HttpResponse, get_object_or_404
 from django.utils import simplejson
 from django.core.urlresolvers import reverse
 
@@ -19,10 +19,6 @@ from main.utils import (create_geojson, paginated_query, sorted_query,
 
 
 logger = logging.getLogger(__name__)
-
-
-def resources_to_resource(self):
-    return redirect(reverse('resource_list'), permanent=True)
 
 
 @render_to('resource/list.html')
