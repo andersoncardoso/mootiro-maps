@@ -1,4 +1,6 @@
 
+window.KW_NAMESPACE = 'keywords'
+
 template = """
 <div class="nstags-container"></div>
 <a class="nstags-add-namespace">+ <%=i18n('Add classifier type')%></a>
@@ -10,11 +12,17 @@ namespaceTemplate = """
     <i class="icon-trash"></i>
   </div>
   <div class="nstags-namespace-widget">
+    <% if (namespace !== KW_NAMESPACE) { %>
     <label><%= i18n('Define the classifier type')%>:</label>
     <input class="nstags-namespace-input" placeholder="<%= i18n('Classifier Type')%>" type='text' id="id_namespace_<%=counter%>" name='namespace_<%=counter%>' value='<%=namespace%>' />
+    <% } else { %>
+    <div class="nstags-commonnamespace-placeholder"><%= i18n('Keywords')%>:</div>
+    <input class="nstags-namespace-input" type='text' id="id_namespace_<%=counter%>" name='namespace_<%=counter%>' value='<%=namespace%>' style="display: none;"/>
+    <% } %>
+
   </div>
   <div class="nstags-tags-container">
-    <label><%= i18n("Define the keywords for this classifier type")%>:</label>
+    <label><%= i18n("Define a set of classifiers for this type")%>:</label>
     <input class="nstags-tags-input" name="tags_<%=counter%>" id="id_tags_<%=counter%>" value="<%=tags%>"/>
   </div>
   <div class="widget-container"></div>
@@ -34,6 +42,16 @@ class NamespacedTagsWidget extends ReForm.Widget
     @namespaceCounter = 0
     @_namespaceTemplate = _.template @namespaceTemplate
 
+  behavior: ->
+    # kluudge
+    setTimeout =>
+        console.log @get()
+        if _.isEmpty @get()
+          obj = {}
+          obj[KW_NAMESPACE] = []
+          @set obj
+      , 500
+
   addNamespace: (evt, namespace="", tags=[]) ->
     evt?.preventDefault?()
     tags = tags.join(',')
@@ -46,14 +64,18 @@ class NamespacedTagsWidget extends ReForm.Widget
 
     nmField = @$el.find(".nstags-namespace-widget " +
                         "input[name=namespace_#{@namespaceCounter}]")
-    nmField.autocomplete
-      source: '/tags/search_namespace'
-      minLength: 1
+
+    if namespace is KW_NAMESPACE
+      nmField.attr('disabled', 'disabled')
+    else
+      nmField.autocomplete
+        source: '/tags/search_namespace'
+        minLength: 1
 
     tagsField = @$el.find(".nstags-tags-container " +
                           "input[name=tags_#{@namespaceCounter}]")
     tagsField.tagsInput
-      defaultText: i18n "keyword"
+      defaultText: i18n "classifier"
       height: 'auto'
       width: '100%'
       autocomplete_url: (req, resp) ->
@@ -91,7 +113,15 @@ class NamespacedTagsWidget extends ReForm.Widget
 
   set: (obj) ->
     @$el.find('.nstags-namespace-container').remove()
-    @addNamespace({}, nm, tags) for nm, tags of obj
+
+    # sort by namespace.
+    keys = _.sortBy(_.keys(obj), (el) -> el)
+    # If contains KW_NAMESPACE start with him.
+    if _.contains(keys, KW_NAMESPACE)
+      keys = _.without keys, KW_NAMESPACE
+      keys.splice 0, 0, KW_NAMESPACE
+
+    @addNamespace({}, nm, obj[nm]) for nm in keys
     this
 
   validate: (obj) ->
@@ -106,7 +136,7 @@ class NamespacedTagsWidget extends ReForm.Widget
           valid = false
       if valid
         $tags = $obj.find '.nstags-tags-input'
-        if not $tags.val()
+        if $nm.val() isnt KW_NAMESPACE and not $tags.val()
           @errorTargetName = $obj.attr('for')
           @error = i18n 'A Classifier Type can\'t have an empty Tags list'
           valid = false

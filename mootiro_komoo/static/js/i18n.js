@@ -29,6 +29,12 @@
     'Classifiers': {
       'pt-br': 'Classificadores'
     },
+    'classifier': {
+      'pt-br': 'classificador'
+    },
+    'Keywords': {
+      'pt-br': 'Palavras-chave'
+    },
     'Password Confirmation': {
       'pt-br': 'Confirmação da Senha'
     },
@@ -188,8 +194,8 @@
     'Define the classifier type': {
       'pt-br': 'Defina o tipo do classificador'
     },
-    'Define the keywords for this classifier type': {
-      'pt-br': 'Defina as palavras-chave para esse tipo de classificador'
+    'Define a set of classifiers for this type': {
+      'pt-br': 'Defina um conjunto de classificadores para este tipo'
     },
     'keyword': {
       'pt-br': 'palavra-chave'

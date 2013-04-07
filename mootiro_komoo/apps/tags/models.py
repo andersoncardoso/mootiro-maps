@@ -3,7 +3,7 @@ from django.db import models
 from django.db import IntegrityError
 
 
-COMMON_NAMESPACE = 'common'
+COMMON_NAMESPACE = 'keywords'
 
 EMPTY_TAG = {COMMON_NAMESPACE: []}
 
@@ -151,7 +151,7 @@ class TagField(object):
     """
     def __get__(self, instance, owner):
         tag_list = _TagList(self, instance)
-        # tag_list[COMMON_NAMESPACE] = []
+        tag_list[COMMON_NAMESPACE] = []
         for tag in TaggedObject.get_tags_for_object(instance):
             if not tag.namespace.name in tag_list:
                 tag_list[tag.namespace.name] = [tag.name, ]

@@ -42,8 +42,9 @@
     }
     $('#reForm-wrapper').html(form.render().el);
     if (((_ref2 = KomooNS.data) != null ? _ref2.resource : void 0) != null) {
-      return form.instances.tags.set(KomooNS.data.resource.tags);
+      form.instances.tags.set(KomooNS.data.resource.tags);
     }
+    return window.form = form;
   });
 
 }).call(this);

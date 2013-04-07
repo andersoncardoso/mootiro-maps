@@ -3,9 +3,11 @@
     __hasProp = Object.prototype.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
+  window.KW_NAMESPACE = 'keywords';
+
   template = "<div class=\"nstags-container\"></div>\n<a class=\"nstags-add-namespace\">+ <%=i18n('Add classifier type')%></a>";
 
-  namespaceTemplate = "<div class=\"nstags-namespace-container field-container\" for=\"tags_<%=counter%>\" nstags_counter=\"<%=counter%>\">\n  <div class=\"nstags-remove-namespace btn\" title=\"<%= i18n('remove namespace')%>\" nstags_counter=\"<%=counter%>\">\n    <i class=\"icon-trash\"></i>\n  </div>\n  <div class=\"nstags-namespace-widget\">\n    <label><%= i18n('Define the classifier type')%>:</label>\n    <input class=\"nstags-namespace-input\" placeholder=\"<%= i18n('Classifier Type')%>\" type='text' id=\"id_namespace_<%=counter%>\" name='namespace_<%=counter%>' value='<%=namespace%>' />\n  </div>\n  <div class=\"nstags-tags-container\">\n    <label><%= i18n(\"Define the keywords for this classifier type\")%>:</label>\n    <input class=\"nstags-tags-input\" name=\"tags_<%=counter%>\" id=\"id_tags_<%=counter%>\" value=\"<%=tags%>\"/>\n  </div>\n  <div class=\"widget-container\"></div>\n</div>";
+  namespaceTemplate = "<div class=\"nstags-namespace-container field-container\" for=\"tags_<%=counter%>\" nstags_counter=\"<%=counter%>\">\n  <div class=\"nstags-remove-namespace btn\" title=\"<%= i18n('remove namespace')%>\" nstags_counter=\"<%=counter%>\">\n    <i class=\"icon-trash\"></i>\n  </div>\n  <div class=\"nstags-namespace-widget\">\n    <% if (namespace !== KW_NAMESPACE) { %>\n    <label><%= i18n('Define the classifier type')%>:</label>\n    <input class=\"nstags-namespace-input\" placeholder=\"<%= i18n('Classifier Type')%>\" type='text' id=\"id_namespace_<%=counter%>\" name='namespace_<%=counter%>' value='<%=namespace%>' />\n    <% } else { %>\n    <div class=\"nstags-commonnamespace-placeholder\"><%= i18n('Keywords')%>:</div>\n    <input class=\"nstags-namespace-input\" type='text' id=\"id_namespace_<%=counter%>\" name='namespace_<%=counter%>' value='<%=namespace%>' style=\"display: none;\"/>\n    <% } %>\n\n  </div>\n  <div class=\"nstags-tags-container\">\n    <label><%= i18n(\"Define a set of classifiers for this type\")%>:</label>\n    <input class=\"nstags-tags-input\" name=\"tags_<%=counter%>\" id=\"id_tags_<%=counter%>\" value=\"<%=tags%>\"/>\n  </div>\n  <div class=\"widget-container\"></div>\n</div>";
 
   NamespacedTagsWidget = (function(_super) {
 
@@ -30,6 +32,19 @@
       return this._namespaceTemplate = _.template(this.namespaceTemplate);
     };
 
+    NamespacedTagsWidget.prototype.behavior = function() {
+      var _this = this;
+      return setTimeout(function() {
+        var obj;
+        console.log(_this.get());
+        if (_.isEmpty(_this.get())) {
+          obj = {};
+          obj[KW_NAMESPACE] = [];
+          return _this.set(obj);
+        }
+      }, 500);
+    };
+
     NamespacedTagsWidget.prototype.addNamespace = function(evt, namespace, tags) {
       var nmField, renderedTemplate, tagsField;
       if (namespace == null) namespace = "";
@@ -45,13 +60,17 @@
       });
       this.$el.find('.nstags-container').append(renderedTemplate);
       nmField = this.$el.find(".nstags-namespace-widget " + ("input[name=namespace_" + this.namespaceCounter + "]"));
-      nmField.autocomplete({
-        source: '/tags/search_namespace',
-        minLength: 1
-      });
+      if (namespace === KW_NAMESPACE) {
+        nmField.attr('disabled', 'disabled');
+      } else {
+        nmField.autocomplete({
+          source: '/tags/search_namespace',
+          minLength: 1
+        });
+      }
       tagsField = this.$el.find(".nstags-tags-container " + ("input[name=tags_" + this.namespaceCounter + "]"));
       tagsField.tagsInput({
-        defaultText: i18n("keyword"),
+        defaultText: i18n("classifier"),
         height: 'auto',
         width: '100%',
         autocomplete_url: function(req, resp) {
@@ -95,11 +114,18 @@
     };
 
     NamespacedTagsWidget.prototype.set = function(obj) {
-      var nm, tags;
+      var keys, nm, _i, _len;
       this.$el.find('.nstags-namespace-container').remove();
-      for (nm in obj) {
-        tags = obj[nm];
-        this.addNamespace({}, nm, tags);
+      keys = _.sortBy(_.keys(obj), function(el) {
+        return el;
+      });
+      if (_.contains(keys, KW_NAMESPACE)) {
+        keys = _.without(keys, KW_NAMESPACE);
+        keys.splice(0, 0, KW_NAMESPACE);
+      }
+      for (_i = 0, _len = keys.length; _i < _len; _i++) {
+        nm = keys[_i];
+        this.addNamespace({}, nm, obj[nm]);
       }
       return this;
     };
@@ -121,7 +147,7 @@
         }
         if (valid) {
           $tags = $obj.find('.nstags-tags-input');
-          if (!$tags.val()) {
+          if ($nm.val() !== KW_NAMESPACE && !$tags.val()) {
             _this.errorTargetName = $obj.attr('for');
             _this.error = i18n('A Classifier Type can\'t have an empty Tags list');
             return valid = false;

@@ -2749,6 +2749,10 @@ ul.two-cols li {
     margin-right: 5px;
     /* margin-top: 37px; */
 }
+.nstags-commonnamespace-placeholder {
+    padding-bottom: 10px;
+    padding-top: 40px;
+}
 .collection-container .remove {
     display: inline-block;
     vertical-align: top;

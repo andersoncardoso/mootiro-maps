@@ -46,3 +46,5 @@ $ () ->
 
   if KomooNS.data?.resource?
     form.instances.tags.set KomooNS.data.resource.tags
+
+  window.form = form
