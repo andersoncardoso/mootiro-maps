@@ -78,7 +78,7 @@ def work():
     """Start watchers"""
     # compilers
     local('./scripts/coffee_compiler.js &')
-    local('sass --watch ./ &')
+    # local('sass --watch ./ &')
 
     # test runners go here!
 
