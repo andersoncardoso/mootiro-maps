@@ -12,7 +12,6 @@ urlpatterns = patterns('komoo_resource.views',
 
     url(pr(r'^resource/ID/?$'), 'show', name='view_resource'),
     url(pr(r'^resource/ID/edit/?$'), 'edit', name='edit_resource'),
-    # url(pr(r'^resource/OID/?$'), 'show', name='view_resource'),
 )
 
 # =============================================================================

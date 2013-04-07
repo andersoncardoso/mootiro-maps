@@ -26,7 +26,7 @@
           {% pagination needs %}
         </div>
 
-        {% visualization_opts 'need' "sorters=['title','creation_date']" "filters=['tags','community', 'need_categories', 'target_audiences']"%}
+        {% visualization_opts 'need' "sorters=['name','creation_date']" "filters=['tags','community', 'need_categories', 'target_audiences']"%}
 
       </div>
 
@@ -34,29 +34,14 @@
       <div class="view-list-item {% cycle 'odd' '' %}">
         <h4>
           <span class="apart big">
-            <a href="{{ need.view_url }}"> {{ need.title }} </a>
-            {% if need.community.all.count %}
-            {% trans 'at' %}
-            {% for comm in need.community.all %}
-              <a href="{% url view_community comm.id %}">{{ comm.name }}</a>
-              {% if not forloop.last %}&nbsp;|&nbsp;{% endif %}
-            {% endfor %}
-            {% endif %}
+            <a href="{{ need.view_url }}"> {{ need.name }} </a>
           </span>
           <a class="small preview-on-map list-map-preview" href="#" data-geojson="{% geojson need %}" title="ver no mapa">
             <i class="icon-see-on-map"></i>
           </a>
-          <ul class="horizontal">
-            {% for c in need.categories.all %}
-            <li><img src="{{ STATIC_URL }}{{ c.image }}" title="{%trans c.name %}" /></li>
-            {% endfor %}
-          </ul>
           <div class="clear-both"></div>
           {% comments_summary need %}
         </h4>
-        <p>
-          <span class="meta-info">{% trans 'Target audiences' %}</span> {{ need.target_audiences.all|join:", " }}
-        </p>
         <p>{{ need.description|render_markup|safe }}</p>
 
         <div class="view-list-footer">

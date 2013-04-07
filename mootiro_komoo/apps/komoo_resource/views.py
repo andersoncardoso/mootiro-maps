@@ -7,7 +7,6 @@ from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 
 from annoying.decorators import render_to
-from annoying.functions import get_object_or_None
 from ajaxforms import ajax_form
 
 from authentication.utils import login_required
@@ -59,7 +58,7 @@ def new_resource_from_map(request, *args, **kwargs):
 @login_required
 @render_to('resource/edit.html')
 def edit(request, id=None, *arg, **kwargs):
-    resource = get_object_or_None(Resource, pk=id)
+    resource = Resource.get_by_id(id)
     geojson = resource.geojson if resource else json.dumps({})
 
     data = {'resource': resource.to_dict()} if resource else {}
