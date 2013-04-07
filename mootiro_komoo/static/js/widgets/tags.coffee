@@ -45,7 +45,6 @@ class NamespacedTagsWidget extends ReForm.Widget
   behavior: ->
     # kluudge
     setTimeout =>
-        console.log @get()
         if _.isEmpty @get()
           obj = {}
           obj[KW_NAMESPACE] = []

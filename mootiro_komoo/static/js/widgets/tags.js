@@ -36,7 +36,6 @@
       var _this = this;
       return setTimeout(function() {
         var obj;
-        console.log(_this.get());
         if (_.isEmpty(_this.get())) {
           obj = {};
           obj[KW_NAMESPACE] = [];
