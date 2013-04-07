@@ -27,6 +27,26 @@
 {% endblock %}
 
 {% block css %}
+  {% assets "resource_form_css" %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
+  {% endassets %}
+{% endblock %}
+
+{% block page_scripts %}
+  {% assets "resource_form_js" %}
+      <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+{% endblock %}
+
+{% block help_center %}
+  <script type="text/javascript">
+    var help = new HelpCenter(
+      "#help_button",
+      ["resource:acronym", "resource:description"]
+    );
+  </script>
+{% endblock %}
+
   {# <script type="text/javascript"> #}
   {#   $(function(){ #}
 
@@ -58,22 +78,3 @@
   {#   }); #}
 
   {# </script> #}
-  {% assets "resource_form_css" %}
-    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
-  {% endassets %}
-{% endblock %}
-
-{% block page_scripts %}
-  {% assets "resource_form_js" %}
-      <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-  {% endassets %}
-{% endblock %}
-
-{% block help_center %}
-  <script type="text/javascript">
-    var help = new HelpCenter(
-      "#help_button",
-      ["resource:acronym", "resource:description"]
-    );
-  </script>
-{% endblock %}

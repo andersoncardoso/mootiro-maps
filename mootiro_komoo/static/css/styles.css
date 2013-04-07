@@ -1483,9 +1483,6 @@ a.btnShowForm{
 #form_resource {
   width: 100%;
 }
-#form_resource input[type=text], #form_resource textarea{
-  width: 100%;
-}
 #form_resource #div_id_tags .ui-autocomplete-input{
   background: none repeat scroll 0% 0% #fbfbfb; /*rgba(215, 215, 215, 0.2);*/
   box-shadow: 1px 1px 1px rgb(190, 189, 204) ;
@@ -1507,6 +1504,7 @@ form div.tagsinput input{
 input[type=text], textarea{
   background: none repeat scroll 0% 0% rgba(215, 215, 215, 0.2);
   box-shadow: 1px 1px 1px rgb(190, 189, 204) ;
+  width: 99%;
 }
 .inline-block{
   display: inline-block;
