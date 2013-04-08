@@ -1,4 +1,3 @@
-
 Need = Backbone.Model.extend
   urlRoot: '/api/needs/'
 

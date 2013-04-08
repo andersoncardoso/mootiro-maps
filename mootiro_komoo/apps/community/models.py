@@ -121,7 +121,7 @@ class Community_CO(CommonObjectMixin):
     # TODO: order communities from the database
     def closest_communities(self, max=3, radius=Distance(km=25)):
         center = self.geometry.centroid
-        unordered = self.__class__.objects.filter(
+        unordered = Community_CO.objects.filter(
                         polys__distance_lte=(center, radius))
         closest = sorted(unordered, key=lambda c: c.geometry.distance(center))
         return closest[1:(max + 1)]

@@ -64,7 +64,6 @@ def new_need_from_map(request, id=""):
 def edit(request, id=None):
     need = Need.get_by_id(id)
     geojson = need.geojson if need else json.dumps({})
-
     data = {'need': need.to_dict()} if need else {}
     return {'KomooNS_data': data, 'geojson': geojson}
 
