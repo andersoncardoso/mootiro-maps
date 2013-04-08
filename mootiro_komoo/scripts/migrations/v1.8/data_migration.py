@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from komoo_resource.models import Resource, Resource_CO
 from need.models import Need, Need_CO
+from community.models import Community, Community_CO
 from tags.models import COMMON_NAMESPACE
-# from main.models import GeoRefObject
 
 
 contact_info = u"""
@@ -13,29 +13,38 @@ contact_info = u"""
 """
 
 
-def migrate_resources():
-    for res in Resource.objects.all():
-        o = Resource_CO()
-        # o = GeoRefObject()
-        # o.otype = 'resource'
-        o.name = res.name
-        o.description = getattr(res, 'description', '')
-        contact = getattr(res, 'contact', '')
+def _migrate_common_data(model, model_co, _extras=None):
+    for orig in model.objects.all():
+        new = model_co()
+        new.name = orig.name
+        new.description = getattr(orig, 'description', '')
+        contact = getattr(orig, 'contact', '')
         if contact:
-            o.description += contact_info.format(contact)
-        o.contact = {}
-        o.creator = res.creator
-        o.creation_date = res.creation_date
-        o.last_editor = res.last_editor
-        o.last_update = res.last_update
-        o.geometry = res.geometry
+            new.description += contact_info.format(contact)
+        # short description ??
+        new.contact = {}
+        new.creator = orig.creator
+        new.creation_date = orig.creation_date
+        new.last_editor = orig.last_editor
+        new.last_update = orig.last_update
+        new.geometry = orig.geometry
 
-        o.save()
+        new.save()
 
         # m2m relations
-        o.tags = {
-            COMMON_NAMESPACE: [tag.name for tag in res.tags.all()]
+        new.tags = {
+            COMMON_NAMESPACE: [tag.name for tag in orig.tags.all()],
+
         }
+
+        if _extras:
+            _extras(new, orig)
+
+
+def migrate_resources():
+    print 'migrating Resources'
+
+    def _resource_extras(o, res):
         if res.kind:
             o.tags.add(res.kind.name, namespace='Tipo de Recurso')
 
@@ -45,30 +54,13 @@ def migrate_resources():
         for inv in res.investments.all():
             o.relations.add(inv)  # , 'relation type????')
 
+        _migrate_common_data(Resource, Resource_CO, _resource_extras)
+
 
 def migrate_needs():
-    for need in Need.objects.all():
-        o = Need_CO()
-        o.name = need.name
-        o.description = getattr(need, 'description', '')
-        # contact = getattr(need, 'contact', '')
-        # if contact:
-        #     o.description += contact_info.format(contact)
-        # short description ??
-        o.contact = {}
-        o.creator = need.creator
-        o.creation_date = need.creation_date
-        o.last_editor = need.last_editor
-        o.last_update = need.last_update
-        o.geometry = need.geometry
+    print 'migrating Needs'
 
-        o.save()
-
-        # m2m relations
-        o.tags = {
-            COMMON_NAMESPACE: [tag.name for tag in need.tags.all()],
-
-        }
+    def _need_extras(o, need):
         for cat in need.categories.all():
             o.tags.add(cat.name, namespace='Tipo de Necessidade')
 
@@ -78,6 +70,16 @@ def migrate_needs():
         for com in need.community.all():
             o.relations.add(com)  # , 'relation type????')
 
+    _migrate_common_data(Need, Need_CO, _need_extras)
 
-# migrate_resources()
-migrate_needs()
+
+def migrate_communities():
+    print 'migrating Communities'
+
+    _migrate_common_data(Community, Community_CO)
+
+
+def migrate_all():
+    migrate_resources()
+    migrate_needs()
+    migrate_communities()

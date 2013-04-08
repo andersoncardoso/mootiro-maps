@@ -7,8 +7,8 @@ from django.core.urlresolvers import reverse
 
 from django.utils.translation import ugettext as _
 
-import reversion
 from main.mixins import BaseModel
+from main.models import CommonObjectMixin
 from django.template.defaultfilters import slugify
 from lib.taggit.managers import TaggableManager
 from komoo_map.models import GeoRefModel, POLYGON
@@ -93,5 +93,35 @@ class Community(BaseModel, GeoRefModel):
         return 'c%d' % self.id
 
 
-if not reversion.is_registered(Community):
-    reversion.register(Community)
+# =============================================================================
+
+class Community_CO(CommonObjectMixin):
+
+    url_root = '/community/'
+    commonobject_type = 'community'
+
+    class Meta:
+        proxy = True
+
+    class Map:
+        title = _('Community')
+        editable = True
+        background_color = '#ffc166'
+        border_color = '#ff2e2e'
+        geometries = (POLYGON, )
+        min_zoom_geometry = 10
+        max_zoom_geometry = 100
+        min_zoom_point = 0
+        max_zoom_point = 0
+        min_zoom_icon = 0
+        max_zoom_icon = 0
+        zindex = 5
+
+    # THIS IS USED ANYWHERE?
+    # TODO: order communities from the database
+    def closest_communities(self, max=3, radius=Distance(km=25)):
+        center = self.geometry.centroid
+        unordered = self.__class__.objects.filter(
+                        polys__distance_lte=(center, radius))
+        closest = sorted(unordered, key=lambda c: c.geometry.distance(center))
+        return closest[1:(max + 1)]
