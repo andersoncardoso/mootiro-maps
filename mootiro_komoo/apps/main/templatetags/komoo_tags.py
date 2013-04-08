@@ -28,6 +28,7 @@ from komoo_resource.models import Resource
 from proposal.models import Proposal
 from signatures.models import Signature
 from komoo_project.models import Project
+from tags.models import COMMON_NAMESPACE
 
 register = template.Library()
 
@@ -157,21 +158,17 @@ def social_buttons():
 
 @register.inclusion_tag('main/templatetags/taglist.html')
 def taglist(obj, community=None):
+    tags = obj.tags
+    if COMMON_NAMESPACE in tags and not tags[COMMON_NAMESPACE]:
+        del tags[COMMON_NAMESPACE]
+
     sorter = 'name'
-    if isinstance(obj, Resource):
-        link = reverse('resource_list')
-    elif isinstance(obj, Organization):
-        link = reverse('organization_list')
-    elif isinstance(obj, Need):
-        link = reverse('need_list')
-        sorter = 'title'
-    elif isinstance(obj, Community):
-        link = reverse('list_communities')
-    elif isinstance(obj, Project):
-        link = reverse('project_list')
-    else:
+    try:
+        link = obj.list_url
+    except Exception:
         link = '#'
-    return dict(object=obj, link=link, sorter=sorter)
+    return dict(tags=tags, link=link, sorter=sorter,
+                COMMON_NAMESPACE=COMMON_NAMESPACE)
 
 
 @register.filter

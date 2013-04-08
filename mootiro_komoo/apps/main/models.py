@@ -405,6 +405,10 @@ class CommonObjectMixin(GeoRefObject):
     def edit_url(self):
         return self._url_root + self.id + '/edit'
 
+    @property
+    def list_url(self):
+        return self._url_root
+
     # @property
     # def admin_url(self):
     #     return reverse('admin:{}_{}_change'.format(self._meta.app_label,

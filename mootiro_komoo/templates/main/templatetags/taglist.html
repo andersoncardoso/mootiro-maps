@@ -1,13 +1,20 @@
 {% load i18n %}
 {% load komoo_tags %}
 <div class="view-tag-list">
-  {% if object.tags.all %}
-  <span class="inline-block meta-info">{% trans 'Tags' %}</span>
+  {% if tags %}
+  <span class="inline-block meta-info">{% trans 'Classifiers' %}</span>
   <div class="view-tag-list-tags">
-  {% for tag in object.tags.all %}
+  {% for namespace,taglist in tags.iteritems %}
+    {% if namespace == COMMON_NAMESPACE %}
+    <div class="tags-namespace">{% trans 'Keywords' %}:</div>
+    {% else %}
+    <div class="tags-namespace">{{namespace}}:</div>
+    {% endif %}
+    {% for tag in taglist %}
     <span class="inline-block tag">
-      <a href="{{ link }}?sorters={{ sorter }}&filters=tags&tags={{ tag.name|linkencode }}">{{ tag.name }}</a>
+      <a href="{{ link }}?sorters={{ sorter }}&filters=tags&tags={{ tag.name|linkencode }}">{{ tag}}</a>
     </span>
+    {% endfor %}
   {% endfor %}
   </div>
   {% else %}
