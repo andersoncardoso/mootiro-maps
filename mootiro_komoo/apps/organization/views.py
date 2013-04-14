@@ -7,18 +7,15 @@ from django.shortcuts import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.db.models.query_utils import Q
 from django.utils import simplejson
-from django.db.models import Count
 from django.core.urlresolvers import reverse
 
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
-from fileupload.models import UploadedFile
-from lib.taggit.models import TaggedItem
 from ajaxforms import ajax_form
 from authentication.utils import login_required
 
-from organization.models import Organization
-from organization.forms import FormOrganization, FormOrganizationGeoRef
+from organization.models import Organization_CO as Organization
+from organization.forms import FormOrganizationGeoRef
 from main.utils import (paginated_query, create_geojson, sorted_query,
                         filtered_query)
 
@@ -41,12 +38,7 @@ def organization_list(request):
 @render_to('organization/show.html')
 def show(request, id=''):
     organization = get_object_or_404(Organization, pk=id)
-
-    geojson = create_geojson([organization])
-    files = UploadedFile.get_files_for(organization)
-    if organization.logo_id:
-        files = files.exclude(pk=organization.logo_id)
-
+    geojson = organization.geojson
     return dict(organization=organization, geojson=geojson)
 
 
@@ -57,20 +49,7 @@ def related_items(request, id=''):
     return {'organization': organization, 'geojson': geojson}
 
 
-@login_required
-@ajax_form('organization/new.html', FormOrganization, 'form_organization')
-def new_organization(request, *arg, **kwargs):
-
-    def on_get(request, form):
-        form.helper.form_action = reverse('new_organization')
-        return form
-
-    def on_after_save(request, obj):
-        return {'redirect': obj.view_url}
-
-    return {'on_get': on_get, 'on_after_save': on_after_save}
-
-
+# DEPRECATED
 @login_required
 @ajax_form('organization/new_frommap.html', FormOrganizationGeoRef,
            'form_organization')
@@ -87,45 +66,20 @@ def new_organization_from_map(request, *arg, **kwargs):
 
 
 @login_required
-@ajax_form('organization/edit.html', FormOrganizationGeoRef,
-           'form_organization')
-def edit_organization(request, id='', *arg, **kwargs):
-    organization = get_object_or_None(Organization, pk=id) or Organization()
-
-    geojson = create_geojson([organization], convert=False)
-    if geojson and geojson.get('features'):
-        geojson['features'][0]['properties']['userCanEdit'] = True
-    geojson = json.dumps(geojson)
-
-    def on_get(request, form):
-        form = FormOrganizationGeoRef(instance=organization)
-        form.helper.form_action = reverse('edit_organization',
-                                          kwargs={'id': organization.id})
-        return form
-
-    def on_after_save(request, obj):
-        return {'redirect': reverse('view_organization',
-                                    kwargs={'id': obj.id})}
-
-    return {'on_get': on_get, 'on_after_save': on_after_save,
-            'geojson': geojson, 'organization': organization}
+@render_to('organization/edit.html')
+def edit(request, id=None, *arg, **kwargs):
+    organization = Organization.get_by_id(id)
+    geojson = organization.geojson if organization else json.dumps({})
+    data = {'organization': organization.to_dict()} if organization else {}
+    return {'KomooNS_data': data, 'geojson': geojson}
 
 
+# USED ANYWHERE
 def search_by_name(request):
     term = request.GET.get('term', '')
-    orgs = Organization.objects.filter(Q(name__icontains=term) |
-        Q(slug__icontains=term))
+    orgs = Organization.objects.filter(Q(name__icontains=term))
     d = [{'value': o.id, 'label': o.name} for o in orgs]
     return HttpResponse(simplejson.dumps(d),
         mimetype="application/x-javascript")
 
-
-def search_tags(request):
-    term = request.GET['term']
-    qset = TaggedItem.tags_for(Organization).filter(name__istartswith=term
-            ).annotate(count=Count('taggit_taggeditem_items__id')
-            ).order_by('-count', 'slug')[:10]
-    tags = [t.name for t in qset]
-    return HttpResponse(simplejson.dumps(tags),
-                mimetype="application/x-javascript")
 

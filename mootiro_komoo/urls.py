@@ -54,11 +54,11 @@ urlpatterns = patterns('',
     url(r'', include('community.urls')),
     url(r'', include('tags.urls')),
     url(r'', include('highlight.urls')),
+    url(r'', include('organization.urls')),
 
     # prefixed apps urls
     url(r'^proposal/', include('proposal.urls')),
     url(r'^comments/', include('komoo_comments.urls')),
-    url(r'^organization/', include('organization.urls')),
     url(r'^investment/', include('investment.urls')),
     url(r'^moderation/', include('moderation.urls')),
     url(r'^project/', include('komoo_project.urls')),

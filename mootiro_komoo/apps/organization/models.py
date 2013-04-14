@@ -20,6 +20,7 @@ from investment.models import Investment, Investor
 from fileupload.models import UploadedFile
 from lib.taggit.managers import TaggableManager
 from search.signals import index_object_for_search
+from main.models import CommonObjectMixin
 
 
 LOGO_CHOICES = (
@@ -185,12 +186,15 @@ class OrganizationCategory(models.Model):
         self.slug = slugify(self.name)
         return super(OrganizationCategory, self).save(*a, **kw)
 
-    def get_translated_name(self):
-        if settings.LANGUAGE_CODE == 'en-us':
+    def get_translated_name(self, lang=''):
+        if not lang:
+            lang = settings.LANGUAGE_CODE
+
+        if lang == 'en-us':
             return self.name
         else:
             return OrganizationCategoryTranslation.objects.get(
-                lang=settings.LANGUAGE_CODE, category=self).name
+                lang=lang, category=self).name
 
     @classmethod
     def category_logos_dict(cls):
@@ -237,3 +241,21 @@ class OrganizationCategoryTranslation(models.Model):
         self.slug = slugify(self.name)
         return super(OrganizationCategoryTranslation, self).save(*a, **kw)
 
+#==============================================================================
+
+
+class Organization_CO(CommonObjectMixin):
+
+    url_root = '/organization/'
+    commonobject_type = 'organization'
+
+    class Meta:
+        proxy = True
+
+    class Map:
+        editable = True
+        title = _('Organization')
+        tooltip = _('Add Organization')
+        background_color = '#3a61d6'
+        border_color = '#1f49b2'
+        geometries = (POLYGON, POINT)

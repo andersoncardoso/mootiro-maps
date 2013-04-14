@@ -279,6 +279,7 @@ class GeoRefObject(GeoRefModel, BaseModel):
     id = models.CharField(primary_key=True, max_length=24)
     name = models.CharField(max_length=512)
     description = models.TextField()
+    short_description = models.CharField(max_length=250, null=True, blank=True)
     otype = models.CharField(max_length=512)  # object type
 
     creator = models.ForeignKey(User, editable=False, null=True,

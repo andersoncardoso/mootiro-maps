@@ -3,6 +3,7 @@ from komoo_resource.models import Resource, Resource_CO
 from need.models import Need, Need_CO
 from community.models import Community, Community_CO
 from tags.models import COMMON_NAMESPACE
+from organization.models import Organization, Organization_CO
 
 
 contact_info = u"""
@@ -22,6 +23,9 @@ def _migrate_common_data(model, model_co, _extras=None):
         if contact:
             new.description += contact_info.format(contact)
         # short description ??
+        short_desc = getattr(orig, 'short_description', '')
+        if short_desc:
+            new.short_description = short_desc
         new.contact = {}
         new.creator = orig.creator
         new.creation_date = orig.creation_date
@@ -79,7 +83,33 @@ def migrate_communities():
     _migrate_common_data(Community, Community_CO)
 
 
+def migrate_organizations():
+    print 'migrating Organizations'
+
+    def _organization_extras(new, orig):
+        for ta in orig.target_audiences.all():
+            new.tags.add(ta.name, namespace=u'Público Alvo')
+
+        for com in orig.community.all():
+            new.relations.add(com)  # , 'relation type????')
+
+        new.contact['website'] = orig.link
+
+        for cat in orig.categories.all():
+            new.tags.add(
+                    cat.get_translated_name(lang='pt-br'),
+                    namespace=u'Tipo de Organização')
+
+        for inv in orig.investments.all():
+            new.relations.add(inv)  # , 'relation type????')
+
+        # logo ????
+
+    _migrate_common_data(Organization, Organization_CO, _organization_extras)
+
+
 def migrate_all():
     migrate_resources()
     migrate_needs()
     migrate_communities()
+    migrate_organizations()
