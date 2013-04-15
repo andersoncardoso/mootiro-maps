@@ -2,7 +2,6 @@
 from django.conf.urls.defaults import url, patterns
 
 from mootiro_komoo.urls import prepare_regex as pr
-from .api import CommunitiesIDHandler, CommunitiesHandler
 
 
 urlpatterns = patterns('community.views',
@@ -18,12 +17,3 @@ urlpatterns = patterns('community.views',
     url(pr(r'^community/ID/map/?$'), 'on_map', name='community_on_map'),
 )
 
-# =============================================================================
-# API urls
-urlpatterns += patterns('community.api',
-        url(r'^api/communities/?$', CommunitiesHandler.dispatch,
-                name='api_communities'),
-
-        url(r'^api/communities/(?P<id_>\w+)/?$', CommunitiesIDHandler.dispatch,
-                name='api_communities_id'),
-)

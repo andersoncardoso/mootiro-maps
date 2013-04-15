@@ -55,6 +55,7 @@ urlpatterns = patterns('',
     url(r'', include('tags.urls')),
     url(r'', include('highlight.urls')),
     url(r'', include('organization.urls')),
+    url(r'', include('common_objects.urls')),
 
     # prefixed apps urls
     url(r'^proposal/', include('proposal.urls')),

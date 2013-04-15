@@ -77,8 +77,7 @@ class TaggedObject(models.Model):
         return [
             tagged_obj.tag for tagged_obj in TaggedObject.objects.filter(
                 object_id=getattr(obj, 'id', None),
-                object_table='{}.{}'.format(obj._meta.app_label,
-                    obj.__class__.__name__)
+                object_table=obj.table_ref
             )]
 
     @classmethod
@@ -87,8 +86,7 @@ class TaggedObject(models.Model):
         return [
             tagged_obj.tag for tagged_obj in TaggedObject.objects.filter(
                 object_id=getattr(obj, 'id', None),
-                object_table='{}.{}'.format(obj._meta.app_label,
-                    obj.__class__.__name__),
+                object_table=obj.table_ref,
                 tag__namespace__name=namespace
         )]
 
@@ -96,8 +94,7 @@ class TaggedObject(models.Model):
     def add_tag_to_object(cls, tag, obj):
         obj, created = TaggedObject.objects.get_or_create(
             object_id=getattr(obj, 'id', None),
-            object_table='{}.{}'.format(obj._meta.app_label,
-                obj.__class__.__name__),
+            object_table=obj.table_ref,
             tag=tag)
 
 
@@ -124,6 +121,7 @@ class TagField(object):
     The constructor uses an optional 'namespace' attribute to specialize
     the tags. The default namesmpace is 'tag'
     usage:
+        ```
         class MyClass(models.Model):
             tags = TagField()
 
@@ -148,6 +146,7 @@ class TagField(object):
         obj.tags.add('tag C', namespace='target_audience')
         # Now we have a 'tag C' for the default namespace 'common' and other
         # for the 'target_audience' namespace
+        ```
     """
     def __get__(self, instance, owner):
         tag_list = _TagList(self, instance)
@@ -171,8 +170,7 @@ class TagField(object):
         tags = [
             tagged_obj for tagged_obj in TaggedObject.objects.filter(
                 object_id=getattr(instance, 'id', None),
-                object_table='{}.{}'.format(instance._meta.app_label,
-                    instance.__class__.__name__)
+                object_table=instance.table_ref
         )]
         for tag in tags:
             tag.delete()
@@ -191,8 +189,7 @@ class TagField(object):
         if tag:
             TaggedObject.objects.filter(
                     object_id=getattr(instance, 'id', None),
-                    object_table='{}.{}'.format(instance._meta.app_label,
-                        instance.__class__.__name__),
+                    object_table=instance.table_ref,
                     tag=tag
             ).delete()
 
@@ -201,8 +198,7 @@ class TagField(object):
         tags = [
             tagged_obj.tag.name for tagged_obj in TaggedObject.objects.filter(
                 object_id=getattr(instance, 'id', None),
-                object_table='{}.{}'.format(instance._meta.app_label,
-                    instance.__class__.__name__),
+                object_table=instance.table_ref,
                 tag__namespace=tag_namespace
         )]
         return tags

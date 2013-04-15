@@ -16,7 +16,7 @@ from komoo_map.models import GeoRefModel, POLYGON, LINESTRING, POINT
 from investment.models import Investment
 from fileupload.models import UploadedFile
 from search.signals import index_object_for_search
-from main.models import CommonObjectMixin
+from common_objects.models import CommonObjectMixin
 
 
 class ResourceKind(models.Model):

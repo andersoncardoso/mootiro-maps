@@ -1,7 +1,22 @@
 
+CommonObject = Backbone.Model.extend
+  urlRoot: '/api/objects/'
+
 FormCommonObject = ReForm.Form.extend
   template: window.KomooNS.templates.formTemplate
   fields: [
+    {
+      name: 'type'
+      widget: ReForm.commonWidgets.DropdownWidget
+      label: i18n 'Object Type'
+      args:
+        choices: [
+          {value: 'community', title: i18n 'Community'}
+          {value: 'organization', title: i18n 'Organization'}
+          {value: 'need', title: i18n 'Need'}
+          {value: 'resource', title: i18n 'Resource'}
+        ]
+    }
     {
       name: 'name'
       widget: ReForm.commonWidgets.TextWidget
@@ -34,3 +49,17 @@ FormCommonObject = ReForm.Form.extend
 window.KomooNS ?= {}
 window.KomooNS.forms ?= {}
 window.KomooNS.forms.FormCommonObject = FormCommonObject
+
+$ () ->
+  model = new CommonObject()
+  model.set({type: KomooNS.data.type}) if KomooNS.data?.type?
+
+  form = new FormCommonObject
+    formId: 'form_object'
+    model: model
+
+
+  form.model.set(KomooNS.data.object) if KomooNS.data?.object?
+
+  $('#reForm-wrapper').html form.render().el
+  form.instances.tags.set(KomooNS.data.object.tags) if KomooNS.data?.object?

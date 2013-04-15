@@ -1,0 +1,71 @@
+{% extends "global.html" %}
+{% load komoo_tags %}
+{% load komoo_map_tags %}
+{% load comment_tags %}
+{% load markitup_tags %}
+{% load i18n %}
+
+{% block title %}{{ type }}{% endblock %}
+
+{% block menu %} {% menu type %} {% endblock %}
+
+{% block content %}
+<div id="main-content">
+  <div class="highlight">
+    <div class="button-new">
+      <a class="button login-required" href="/objects/new?type={{ type }}" title="Adicionar Object">Create New {{ type }}</a>
+    </div>
+    <div class="list">
+      <div class="view-list-top">
+        <div class="view-list-pagination">
+          {% pagination objects %}
+        </div>
+
+        {% visualization_opts type "sorters=['name','creation_date']" "filters=['tags']" %}
+      </div>
+
+      {% for obj in objects.object_list %}
+      <div class="view-list-item {% cycle 'odd' '' %}">
+        <h4>
+          <span class="apart">
+            <a href="{% url show_object obj.id %}">{{ obj.name }}</a>
+          </span>
+          <a data-geojson="{% geojson obj %}" href="#" class="small preview-on-map list-map-preview" title="ver no mapa" >
+              <i class="icon-see-on-map"></i>
+          </a>
+          <div class="clear-both"></div>
+        </h4>
+        <p class="mark-down">{{ obj.description|render_markup|safe }}</p>
+
+        <div class="view-list-footer">
+          {% if obj.tags.count %}
+          <div class="view-list-item-tags">
+            {% taglist obj %}
+          </div>
+          {% endif %}
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% pagination objects %}
+</div>
+
+{% komoo_map_tooltip %}
+
+{% endblock %}
+
+{% block page_scripts %}
+  {% visualization_opts_js %}
+{% endblock %}
+
+{% block help_center %}
+  <script type="text/javascript">
+    var help = new HelpCenter(
+      "#help_button",
+      ["community:what_is"],
+      'community_list'
+    );
+  </script>
+{% endblock %}

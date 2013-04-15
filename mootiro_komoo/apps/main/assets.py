@@ -22,16 +22,3 @@ tags_css = Bundle(
     'lib/tagsinput/jquery.tagsinput.css',
 )
 
-common_form_js = Bundle(
-    'lib/reForm.js',
-    'js/templates/_common.js',
-    markitup_js,
-    'js/widgets/contact.js',
-    tags_js,
-    'js/common/forms.js',
-)
-
-common_form_css = Bundle(
-    markitup_css,
-    tags_css,
-)

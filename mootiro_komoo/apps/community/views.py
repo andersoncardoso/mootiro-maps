@@ -5,7 +5,7 @@ from __future__ import unicode_literals  # unicode by default
 import json
 import logging
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.contrib.gis.geos import Polygon
@@ -15,21 +15,15 @@ from authentication.utils import login_required
 
 from annoying.decorators import render_to, ajax_request
 
-from community.models import Community_CO as Community
-from main.utils import (create_geojson, paginated_query, sorted_query,
-                        filtered_query)
+from common_objects.models import Community
+from main.utils import create_geojson
 
 logger = logging.getLogger(__name__)
 
 
 @render_to('community/list.html')
 def list(request):
-    sort_order = ['creation_date', 'name']
-    query_set = filtered_query(Community.objects, request)
-    communities = sorted_query(query_set, sort_order, request)
-    communities_count = communities.count()
-    communities = paginated_query(communities, request)
-    return dict(communities=communities, communities_count=communities_count)
+    return redirect('/objects?type=community', permanent=True)
 
 
 @render_to('community/view.html')

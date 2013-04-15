@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 from lib.taggit.managers import TaggableManager
 
-from main.models import CommonObjectMixin
+from common_objects.models import CommonObjectMixin
 from authentication.models import User
 from community.models import Community
 from komoo_map.models import GeoRefModel, POLYGON, LINESTRING, POINT

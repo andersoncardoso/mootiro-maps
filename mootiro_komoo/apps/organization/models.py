@@ -20,7 +20,7 @@ from investment.models import Investment, Investor
 from fileupload.models import UploadedFile
 from lib.taggit.managers import TaggableManager
 from search.signals import index_object_for_search
-from main.models import CommonObjectMixin
+from common_objects.models import CommonObjectMixin
 
 
 LOGO_CHOICES = (
