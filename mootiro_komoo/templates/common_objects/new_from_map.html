@@ -1,0 +1,28 @@
+{% load i18n %}
+{% load assets %}
+
+  {% assets "objects_form_css" %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
+  {% endassets %}
+
+  <div id="main-content">
+    <div class="main-column">
+        <div class='form-legend'>Add Object</div>
+
+        <div class='alert alert-info required-notice' data-alert='info'>
+            <div class='msg'>
+                Os campos com asterisco (<strong>*</strong>) são obrigatórios!
+            </div>
+        </div>
+        <div id="reForm-wrapper"></div>
+    </div>
+
+  </div>
+
+
+  {% assets "objects_form_js" %}
+      <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+      <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+
+

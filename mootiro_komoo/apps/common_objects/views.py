@@ -43,3 +43,10 @@ def edit(request, id=None):
         'KomooNS_data': data,
         'geojson': obj.geojson if obj else '{}'
     }
+
+
+@render_to('common_objects/new_from_map.html')
+def new_from_map(request):
+    type = request.GET.get('type', '')
+    return {'KomooNS_data': {'type': type}}
+

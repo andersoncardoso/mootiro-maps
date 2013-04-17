@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals  # unicode by default
+from __future__ import unicode_literals
 
 import json
 import logging
@@ -10,11 +10,9 @@ from django.http import HttpResponse
 from django.utils import simplejson
 from django.contrib.gis.geos import Polygon
 from django.db.models.query_utils import Q
-
-from authentication.utils import login_required
-
 from annoying.decorators import render_to, ajax_request
 
+from authentication.utils import login_required
 from common_objects.models import Community
 from main.utils import create_geojson
 
@@ -31,10 +29,13 @@ def view(request, id):
 
 @login_required
 def edit(request, id=''):
-    if id:
-        return redirect("/objects/%s/edit" % id, permanent=True)
-    else:
-        return redirect("/objects/new?type=community", permanent=True)
+    url = "/objects/%s/edit" % id if id else "/objects/new"
+    return redirect(url, permanent=True)
+
+
+@login_required
+def new_community_from_map(request):
+    return redirect("/objects/new_from_map?type=community", permanent=True)
 
 
 @render_to('community/on_map.html')

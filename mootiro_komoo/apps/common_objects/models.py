@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+import os
 from django.db import models
 from django.contrib.gis.measure import Distance
+from django.conf import settings
 from django.utils.translation import ugettext as _
 from bson.objectid import ObjectId
 from jsonfield import JSONField
@@ -160,6 +162,17 @@ class CommonObjectMixin(GeoRefObject):
     def files_set(self):
         """ pseudo-reverse query for retrieving Resource Files"""
         return UploadedFile.get_files_for(self)
+
+    @property
+    def logo_url(self):
+        url = getattr(self, 'default_logo_url', 'img/logo-fb.png')
+        url = '{}{}'.format(settings.STATIC_URL, url)
+        files = self.files_set()
+        for fl in files:
+            if os.path.exists(fl.file.url[1:]):
+                url = fl.file.url
+                break
+        return url
 
     def save(self, *args, **kwargs):
         if not getattr(self, 'otype', None) == self.commonobject_type:

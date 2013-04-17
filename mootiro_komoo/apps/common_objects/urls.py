@@ -6,8 +6,10 @@ from .api import CommonObjectsHandler, CommonObjectsIDHandler
 
 
 urlpatterns = patterns('common_objects.views',
-    url(r'^objects/new$', 'edit', name='new_object'),
     url(r'^objects/$', 'list', name='list_objects'),
+    url(r'^objects/new/?$', 'edit', name='new_object'),
+    url(r'^objects/new_from_map/?$', 'new_from_map',
+            name='new_object_from_map'),
     url(pr(r'^objects/ID/edit/?$'), 'edit', name='edit_object'),
     url(pr(r'^objects/ID/?$'), 'show', name='show_object'),
     # url(pr(r'^objects/ID/map/?$'), 'on_map', name='object_on_map'),
