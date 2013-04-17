@@ -1,43 +1,28 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import logging
-import json
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.core.urlresolvers import reverse
 
 from annoying.decorators import render_to
 from ajaxforms import ajax_form
 
 from authentication.utils import login_required
-from komoo_resource.models import Resource_CO as Resource
+from common_objects.models import Resource
 from komoo_resource.forms import FormResourceGeoRef
-from main.utils import (create_geojson, paginated_query, sorted_query,
-                        filtered_query)
+from main.utils import create_geojson
 
 
 logger = logging.getLogger(__name__)
 
 
-@render_to('resource/list.html')
 def resource_list(request):
-    sort_order = ['creation_date', 'name']
-
-    query_set = filtered_query(Resource.objects, request)
-    resources_list = sorted_query(query_set, sort_order, request)
-    resources_count = resources_list.count()
-    resources = paginated_query(resources_list, request)
-
-    return dict(resources=resources, resources_count=resources_count)
+    return redirect("/objects?type=resource", permanent=True)
 
 
-@render_to('resource/show.html')
 def show(request, id=None):
-    resource = get_object_or_404(Resource, pk=id)
-    geojson = resource.geojson
-    similar = []
-
-    return dict(resource=resource, similar=similar, geojson=geojson)
+    return redirect("/objects/%s" % id, permanent=True)
 
 
 # DEPRECATED
@@ -56,13 +41,11 @@ def new_resource_from_map(request, *args, **kwargs):
 
 
 @login_required
-@render_to('resource/edit.html')
 def edit(request, id=None, *arg, **kwargs):
-    resource = Resource.get_by_id(id)
-    geojson = resource.geojson if resource else json.dumps({})
-
-    data = {'resource': resource.to_dict()} if resource else {}
-    return {'KomooNS_data': data, 'geojson': geojson}
+    if id:
+        return redirect("/objects/%s/edit", permanent=True)
+    else:
+        return redirect("/objects/new", permanent=True)
 
 
 @render_to('komoo_map/show.html')

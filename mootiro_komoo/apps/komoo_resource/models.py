@@ -16,7 +16,6 @@ from komoo_map.models import GeoRefModel, POLYGON, LINESTRING, POINT
 from investment.models import Investment
 from fileupload.models import UploadedFile
 from search.signals import index_object_for_search
-from common_objects.models import CommonObjectMixin
 
 
 class ResourceKind(models.Model):
@@ -117,31 +116,4 @@ if not reversion.is_registered(Resource):
     reversion.register(Resource)
 
 
-#==============================================================================
-
-# RESOURCE_TYPE = (
-#     ('computer', _('Computer Lab')),
-#     ('park', _('Park')),
-#     ('sports', _('Sports Club')),
-#     ('social', _('Social Service')),
-#     ('equipment', _('Equipment')),
-#     ('others', _('Others')),
-# )
-
-
-class Resource_CO(CommonObjectMixin):
-
-    url_root = '/resource/'
-    commonobject_type = 'resource'
-
-    class Meta:
-        proxy = True
-
-    class Map:
-        title = _('Resource')
-        editable = True
-        background_color = '#28CB05'
-        border_color = '#1D9104'
-        geometries = (POLYGON, LINESTRING, POINT)
-        zindex = 15
 

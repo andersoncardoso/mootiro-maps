@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import logging
-import json
 
-from django.shortcuts import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import HttpResponse, redirect
 from django.db.models.query_utils import Q
 from django.utils import simplejson
 from django.core.urlresolvers import reverse
@@ -14,32 +12,19 @@ from annoying.functions import get_object_or_None
 from ajaxforms import ajax_form
 from authentication.utils import login_required
 
-from organization.models import Organization_CO as Organization
+from common_objects.models import Organization
 from organization.forms import FormOrganizationGeoRef
-from main.utils import (paginated_query, create_geojson, sorted_query,
-                        filtered_query)
+from main.utils import create_geojson
 
 logger = logging.getLogger(__name__)
 
 
-@render_to('organization/list.html')
 def organization_list(request):
-    org_sort_order = ['creation_date', 'name']
-
-    query_set = filtered_query(Organization.objects, request)
-    organizations_list = sorted_query(query_set, org_sort_order,
-                                         request)
-    organizations_count = organizations_list.count()
-    organizations = paginated_query(organizations_list, request)
-    return dict(organizations=organizations,
-                organizations_count=organizations_count)
+    return redirect('/objects?type=organization', permanent=True)
 
 
-@render_to('organization/show.html')
 def show(request, id=''):
-    organization = get_object_or_404(Organization, pk=id)
-    geojson = organization.geojson
-    return dict(organization=organization, geojson=geojson)
+    return redirect('/objects/%s' % id, permanent=True)
 
 
 @render_to('organization/related_items.html')
@@ -66,12 +51,11 @@ def new_organization_from_map(request, *arg, **kwargs):
 
 
 @login_required
-@render_to('organization/edit.html')
 def edit(request, id=None, *arg, **kwargs):
-    organization = Organization.get_by_id(id)
-    geojson = organization.geojson if organization else json.dumps({})
-    data = {'organization': organization.to_dict()} if organization else {}
-    return {'KomooNS_data': data, 'geojson': geojson}
+    if id:
+        return redirect('/objects/%s/edit' % id, permanent=True)
+    else:
+        return redirect('/objects/new', permanent=True)
 
 
 # USED ANYWHERE

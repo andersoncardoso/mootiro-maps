@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls.defaults import patterns, url
 from mootiro_komoo.urls import prepare_regex as pr
-from .api import ResourcesHandler, ResourcesIDHandler
 
 
 urlpatterns = patterns('komoo_resource.views',
@@ -14,12 +13,3 @@ urlpatterns = patterns('komoo_resource.views',
     url(pr(r'^resource/ID/edit/?$'), 'edit', name='edit_resource'),
 )
 
-# =============================================================================
-# API urls
-urlpatterns += patterns('komoo_resource.api',
-        url(r'^api/resources/?$', ResourcesHandler.dispatch,
-                name='api_resources'),
-
-        url(r'^api/resources/(?P<id_>\w+)/?$', ResourcesIDHandler.dispatch,
-                name='api_resources_id'),
-)

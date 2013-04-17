@@ -223,3 +223,47 @@ class Need(CommonObjectMixin):
         background_color = '#f42c5e'
         border_color = '#d31e52'
         geometries = (POLYGON, LINESTRING, POINT)
+
+
+# RESOURCE_TYPE = (
+#     ('computer', _('Computer Lab')),
+#     ('park', _('Park')),
+#     ('sports', _('Sports Club')),
+#     ('social', _('Social Service')),
+#     ('equipment', _('Equipment')),
+#     ('others', _('Others')),
+# )
+
+
+class Resource(CommonObjectMixin):
+
+    # url_root = '/resource/'
+    commonobject_type = 'resource'
+
+    class Meta:
+        proxy = True
+
+    class Map:
+        title = _('Resource')
+        editable = True
+        background_color = '#28CB05'
+        border_color = '#1D9104'
+        geometries = (POLYGON, LINESTRING, POINT)
+        zindex = 15
+
+
+class Organization(CommonObjectMixin):
+
+    # url_root = '/organization/'
+    commonobject_type = 'organization'
+
+    class Meta:
+        proxy = True
+
+    class Map:
+        editable = True
+        title = _('Organization')
+        tooltip = _('Add Organization')
+        background_color = '#3a61d6'
+        border_color = '#1f49b2'
+        geometries = (POLYGON, POINT)
