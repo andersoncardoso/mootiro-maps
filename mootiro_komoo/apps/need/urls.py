@@ -2,7 +2,6 @@
 from django.conf.urls.defaults import patterns, url
 
 from mootiro_komoo.urls import prepare_regex as pr
-from .api import NeedsHandler, NeedsIDHandler
 
 
 urlpatterns = patterns('need.views',
@@ -18,13 +17,3 @@ urlpatterns = patterns('need.views',
     url(pr(r'^need/ID/?$'), 'view', name='view_need'),
 )
 
-
-# =============================================================================
-# API urls
-urlpatterns += patterns('need.api',
-        url(r'^api/needs/?$', NeedsHandler.dispatch,
-                name='api_needs'),
-
-        url(r'^api/needs/(?P<id_>\w+)/?$', NeedsIDHandler.dispatch,
-                name='api_needs_id'),
-)

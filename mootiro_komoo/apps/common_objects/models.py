@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 from bson.objectid import ObjectId
 from jsonfield import JSONField
 
-from komoo_map.models import POLYGON
+from komoo_map.models import POLYGON, LINESTRING, POINT
 from main.models import RelationsField
 from authentication.models import User
 from komoo_map.models import GeoRefModel
@@ -14,14 +14,14 @@ from search.signals import index_object_for_search
 from fileupload.models import UploadedFile
 
 from main.utils import build_obj_from_dict
-from main.mixins import BaseModel
+from main.mixins import BaseModel, URLModelMixin
 
 # =============================================================================
 # Common Objects
 #
 
 
-class GeoRefObject(GeoRefModel, BaseModel):
+class GeoRefObject(GeoRefModel, BaseModel, URLModelMixin):
     """
     Common objects base model.
 
@@ -66,6 +66,9 @@ class GeoRefObject(GeoRefModel, BaseModel):
 
     def __unicode__(self):
         return unicode(self.name)
+
+    # for the url model mixin
+    url_root = '/objects/'
 
     def to_dict(self):
         return {
@@ -146,7 +149,6 @@ class CommonObjectMixin(GeoRefObject):
     class Meta:
         proxy = True
 
-    url_root = ''
     commonobject_type = ''
     objects = CommonObjectManager()
 
@@ -154,34 +156,6 @@ class CommonObjectMixin(GeoRefObject):
         super(CommonObjectMixin, self).__init__(*args, **kwargs)
         if not getattr(self, 'otype', None) == self.commonobject_type:
             self.otype = self.commonobject_type
-
-    @property
-    def _url_root(self):
-        if not self.url_root.endswith('/'):
-            return self.url_root + '/'
-        else:
-            return self.url_root
-
-    @property
-    def url(self):
-        return self.view_url
-
-    @property
-    def view_url(self):
-        return self._url_root + self.id
-
-    @property
-    def edit_url(self):
-        return self._url_root + self.id + '/edit'
-
-    @property
-    def list_url(self):
-        return self._url_root
-
-    # @property
-    # def admin_url(self):
-    #     return reverse('admin:{}_{}_change'.format(self._meta.app_label,
-    #         self._meta.module_name), args=[self.id])
 
     def files_set(self):
         """ pseudo-reverse query for retrieving Resource Files"""
@@ -205,7 +179,7 @@ class CommonObjectMixin(GeoRefObject):
 
 class Community(CommonObjectMixin):
 
-    url_root = '/community/'
+    # url_root = '/community/'
     commonobject_type = 'community'
 
     class Meta:
@@ -233,3 +207,19 @@ class Community(CommonObjectMixin):
                         polys__distance_lte=(center, radius))
         closest = sorted(unordered, key=lambda c: c.geometry.distance(center))
         return closest[1:(max + 1)]
+
+
+class Need(CommonObjectMixin):
+
+    # url_root = '/need/'
+    commonobject_type = 'need'
+
+    class Meta:
+        proxy = True
+
+    class Map:
+        title = _('Need')
+        editable = True
+        background_color = '#f42c5e'
+        border_color = '#d31e52'
+        geometries = (POLYGON, LINESTRING, POINT)

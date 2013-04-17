@@ -159,19 +159,3 @@ class Need(GeoRefModel):
         return 'n%d' % self.id
 
 
-# =============================================================================
-
-class Need_CO(CommonObjectMixin):
-
-    url_root = '/need/'
-    commonobject_type = 'need'
-
-    class Meta:
-        proxy = True
-
-    class Map:
-        title = _('Need')
-        editable = True
-        background_color = '#f42c5e'
-        border_color = '#d31e52'
-        geometries = (POLYGON, LINESTRING, POINT)

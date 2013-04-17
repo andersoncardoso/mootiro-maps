@@ -1,0 +1,106 @@
+{% extends 'global.html' %}
+
+{% load komoo_map_tags %}
+{% load moderation_tags %}
+{% load comment_tags %}
+{% load markitup_tags %}
+{% load komoo_tags %}
+{% load upload_tags %}
+{% load project_tags %}
+{% load i18n %}
+
+{% block title %}{{ object.name }}{% endblock %}
+
+{% block facebook_meta %}
+  <meta property="og:title" content="{{object.name}} - MootiroMaps" />
+  <meta property="og:url" content="{{SITE_URL}}{{object.view_url}}"/>
+  <meta property="og:image" content="{{SITE_URL}}{{STATIC_URL}}img/logo-fb.png"/>
+{% endblock %}
+
+{% block menu %} {% menu object.otype %} {% endblock %}
+
+{% block content %}
+  {% komoo_map object.geojson 'type=view' 'width=100%' 'height=100%' 'zoom=13' 'ajax=True' 'lazy=True' %}
+<div id="main-content">
+    <div class="main-column">
+
+        <div class="view-header">
+            <div>
+                <h2 class="inline-block title">{{ object.name }}</h2>
+
+                <div class="view-edit-btn">
+                    {% history object %}
+                    {# <a href="{% url view_discussion object.perm_id %}" class="btn login-required" title="Ver página de discussão"><i class="icon-comment"></i></a> #}
+                    <a href="{{ object.edit_url }}" class="btn login-required" title="Editar conteúdo">
+                        <i class="icon-pencil"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="view-body">
+            <div class="mark-down">{{ object.description|render_markup|safe }}</div>
+        </div>
+
+        <div class="view-footer">
+            {# {% image_gallery object %} #}
+        </div>
+
+
+        <div class="view-extras">
+                {% track_buttons object %}
+                {% report_content object %}
+                {% delete_button object %}
+                {% social_buttons %}
+                {% comments object %}
+        </div>
+
+    </div>
+    <div class="right-bar right-bar-modif">
+        <div id="map-preview">{% komoo_map object.geojson 'type=preview' %}</div>
+        <a class="see-on-map" href="#">{% trans 'see on map' %}</a>
+
+        <div class="centralizer apart">
+          <a class="button login-required" href="{{ object.new_investment_url }}">{% trans "New Investment" %}</a>
+        </div>
+
+
+            <div class="block">
+
+                <h4>{% trans 'Contact' %}</h4>
+                <p>
+                    {% if object.contact %}
+                        {{ object.contact|render_markup|safe }}
+                    {% else %}
+                        {% trans 'No contact info provided' %}
+                    {% endif %}
+                </p>
+            </div>
+
+        {% projects_for_object object %}
+
+        {% taglist object %}
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+{% block page_scripts %}
+    {% comments_staticfiles %}
+{% endblock %}
+
+{% block help_center %}
+  <script type="text/javascript">
+    var help = new HelpCenter(
+      "#help_button",
+      ["resource:what_is", "resource:difference_organization"],
+      'resource_show'
+    );
+  </script>
+{% endblock %}

@@ -21,25 +21,20 @@ from main.utils import create_geojson
 logger = logging.getLogger(__name__)
 
 
-@render_to('community/list.html')
 def list(request):
-    return redirect('/objects?type=community', permanent=True)
+    return redirect("/objects?type=community", permanent=True)
 
 
-@render_to('community/view.html')
 def view(request, id):
-    community = get_object_or_404(Community, pk=id)
-    geojson = community.geojson
-    return dict(community=community, geojson=geojson)
+    return redirect("/objects/%s" % id, permanent=True)
 
 
 @login_required
-@render_to('community/edit.html')
 def edit(request, id=''):
-    comm = Community.get_by_id(id)
-    geojson = comm.geojson if comm else json.dumps({})
-    data = {'community': comm.to_dict()} if comm else {}
-    return {'KomooNS_data': data, 'geojson': geojson}
+    if id:
+        return redirect("/objects/%s/edit" % id, permanent=True)
+    else:
+        return redirect("/objects/new?type=community", permanent=True)
 
 
 @render_to('community/on_map.html')

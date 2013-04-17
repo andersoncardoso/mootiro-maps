@@ -68,3 +68,30 @@ class BaseModel(models.Model):
         else:
             raise Exception('No .from_dict() method defined')
 
+
+class URLModelMixin(object):
+
+    url_root = ''
+
+    @property
+    def _url_root(self):
+        if not self.url_root.endswith('/'):
+            return self.url_root + '/'
+        else:
+            return self.url_root
+
+    @property
+    def url(self):
+        return self.view_url
+
+    @property
+    def view_url(self):
+        return self._url_root + self.id
+
+    @property
+    def edit_url(self):
+        return self._url_root + self.id + '/edit'
+
+    @property
+    def list_url(self):
+        return self._url_root

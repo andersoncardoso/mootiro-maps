@@ -26,12 +26,8 @@ def list(request):
 
 @render_to('common_objects/show.html')
 def show(request, id):
-    accessor, err = get_accessor(request)
-    if err:
-        return err
-    else:
-        obj = get_object_or_404(accessor, pk=id)
-        return {'object': obj, 'geojson': obj.geojson}
+    obj = get_object_or_404(GeoRefObject, pk=id)
+    return {'object': obj}
 
 
 @login_required

@@ -50,6 +50,7 @@ def api_update_by_id(model, request, id_):
         return JsonResponse(
                 request.user.no_permission_message, response_type='error')
 
+    json_data['last_editor'] = request.user
     obj.from_dict(json_data)
     if not obj.is_valid():
         return JsonResponse(obj.errors, response_type='error')

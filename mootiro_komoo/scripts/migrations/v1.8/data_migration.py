@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from komoo_resource.models import Resource, Resource_CO
-from need.models import Need, Need_CO
+from need.models import Need
 from community.models import Community
 from tags.models import COMMON_NAMESPACE
 from organization.models import Organization, Organization_CO
 from common_objects.models import Community as Community_CO
+from common_objects.models import Need as Need_CO
 
 
 contact_info = u"""
