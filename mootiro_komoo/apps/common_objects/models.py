@@ -298,3 +298,26 @@ class Proposal(CommonObjectMixin):
         geometries = (POLYGON, LINESTRING, POINT)
 
 
+# CURRENCIES_CHOICES = (
+#     ('BRL', _('Real')),
+#     ('USD', _('Dollar')),
+#     ('EUR', _('Euro')),
+# )
+
+
+class Investment(CommonObjectMixin):
+
+    # url_root = "/investment/"
+    commonobject_type = "investment"
+
+    class Meta:
+        proxy = True
+
+    class Map:
+        title = _('Investment')
+        editable = True
+        background_color = '#3a61d6'
+        border_color = '#1f49b2'
+        geometries = (POLYGON, LINESTRING, POINT)
+
+

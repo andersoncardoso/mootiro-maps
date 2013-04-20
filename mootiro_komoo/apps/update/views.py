@@ -2,12 +2,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals  # unicode by default
 
-import itertools
-
 from annoying.decorators import render_to
-from reversion.models import Version, VERSION_DELETE
 
-from main.utils import paginated_query, sorted_query, filtered_query
+from main.utils import paginated_query, sorted_query
 from .models import Update, News
 
 

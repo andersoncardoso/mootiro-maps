@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+from main.utils import datetime_to_iso
+from tags.models import COMMON_NAMESPACE
+
 from komoo_resource.models import Resource
 from need.models import Need
 from community.models import Community
 from organization.models import Organization
 from proposal.models import Proposal
-
-from tags.models import COMMON_NAMESPACE
 
 from common_objects.models import Community as Community_CO
 from common_objects.models import Need as Need_CO
@@ -125,10 +126,31 @@ def migrate_proposals():
             orig.need.table_ref = "need.Need"
             new.relations.add(orig.need)  # relation type???
         new.extra_data = {'cost': orig.cost}
+        new.save()
         for inv in orig.investments.all():
             new.relations.add(inv)  # , 'relation type????')
 
     _migrate_common_data(Proposal, Proposal_CO, _proposal_extras)
+
+
+def migrate_investments():
+    print("migrating Investments")
+
+    def _investment_extras(new, orig):
+        new.extra_data = {
+            'value': orig.value,
+            'currency': orig.currency,
+            'date': datetime_to_iso(orig.date),
+            'end_of_date': datetime_to_iso(orig.end_of_date),
+            'investor': {
+                "name": orig.investor.name,
+                "is_anonymous": orig.investor.is_anonymous,
+                "type": orig.investor.typ
+            }
+        }
+        new.save()
+
+        new.relations.add(orig.grantee)  # relation type ????
 
 
 def migrate_all():
@@ -137,3 +159,4 @@ def migrate_all():
     migrate_communities()
     migrate_organizations()
     migrate_proposals()
+    migrate_investments()

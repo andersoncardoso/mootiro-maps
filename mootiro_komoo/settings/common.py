@@ -56,7 +56,6 @@ MIDDLEWARE_CLASSES = [
     'authentication.utils.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
-    'lib.reversion.middleware.RevisionMiddleware',
 ]
 
 CONTEXT_PROCESSORS = (
@@ -106,7 +105,6 @@ INSTALLED_APPS = [
     'taggit',
     'django_js_utils',
     'crispy_forms',
-    'lib.reversion',
     'markitup',
     'lib.ajax_select',
     'fileupload',

@@ -8,7 +8,6 @@ from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
 
 from annoying.functions import get_object_or_None
-import reversion
 
 from main.mixins import BaseModel
 from authentication.models import User
@@ -187,5 +186,3 @@ class Investment(BaseModel, models.Model):
         return 'i%d' % self.id
 
 
-if not reversion.is_registered(Investment):
-    reversion.register(Investment)

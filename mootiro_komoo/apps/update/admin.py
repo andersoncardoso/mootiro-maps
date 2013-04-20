@@ -1,11 +1,5 @@
 from django.contrib import admin
 from django import forms
-
-from reversion import VersionAdmin
-from moderation.admin import abuse_reports
-
-from django import forms
-
 from update.models import News
 
 
@@ -16,7 +10,7 @@ class NewsAdminForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea(), required=False)
 
 
-class NewsAdmin(VersionAdmin):
+class NewsAdmin(admin.ModelAdmin):
     form = NewsAdminForm
 
 admin.site.register(News, NewsAdmin)
