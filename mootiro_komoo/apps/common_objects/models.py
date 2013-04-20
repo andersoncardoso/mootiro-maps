@@ -280,3 +280,21 @@ class Organization(CommonObjectMixin):
         background_color = '#3a61d6'
         border_color = '#1f49b2'
         geometries = (POLYGON, POINT)
+
+
+class Proposal(CommonObjectMixin):
+
+    # url_root = "/proposal/"
+    commonobject_type = "proposal"
+
+    class Meta:
+        proxy = True
+
+    class Map:
+        title = _('Proposal')
+        editable = True
+        background_color = '#f42c5e'
+        border_color = '#d31e52'
+        geometries = (POLYGON, LINESTRING, POINT)
+
+

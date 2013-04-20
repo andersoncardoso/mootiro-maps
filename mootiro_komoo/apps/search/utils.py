@@ -134,14 +134,10 @@ table_id_map = {
     'Need': 'n',
     'User': 'u',
     'Community': 'c',
+    'Proposal': 'pp',
     'Project': 'p',
+    'Investment': 'i',
     'GeoRefObject': 'g',
-    # 'Resource_CO': 'g',
-    # 'Need_CO': 'g',
-    # 'Community_CO': 'g',
-    # 'Organization_CO': 'g',
-    'Proposal_CO': 'g',
-    'Investment_CO': 'g',
 }
 
 

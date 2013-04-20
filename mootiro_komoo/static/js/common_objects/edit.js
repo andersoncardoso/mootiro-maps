@@ -26,6 +26,9 @@
             }, {
               value: 'resource',
               title: i18n('Resource')
+            }, {
+              value: 'proposal',
+              title: i18n('Proposal')
             }
           ]
         }
