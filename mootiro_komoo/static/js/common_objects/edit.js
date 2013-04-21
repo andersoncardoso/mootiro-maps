@@ -29,6 +29,9 @@
             }, {
               value: 'proposal',
               title: i18n('Proposal')
+            }, {
+              value: 'investment',
+              title: i18n('Investment')
             }
           ]
         }

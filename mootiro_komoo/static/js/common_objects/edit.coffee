@@ -16,6 +16,7 @@ FormCommonObject = ReForm.Form.extend
           {value: 'need', title: i18n 'Need'}
           {value: 'resource', title: i18n 'Resource'}
           {value: 'proposal', title: i18n 'Proposal'}
+          {value: 'investment', title: i18n 'Investment'}
         ]
     }
     {

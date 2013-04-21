@@ -4,7 +4,7 @@ from mootiro_komoo.urls import prepare_regex as pr
 
 
 urlpatterns = patterns('proposal.views',
-    url(pr(r'^new/?$'), 'edit', name='new_proposal'),
-    url(pr(r'^ID/edit/?$'), 'edit', name='edit_proposal'),
-    url(pr(r'^ID/?$'), 'show', name='view_proposal'),
+    url(pr(r'^proposal/new/?$'), 'edit', name='new_proposal'),
+    url(pr(r'^proposal/ID/edit/?$'), 'edit', name='edit_proposal'),
+    url(pr(r'^proposal/ID/?$'), 'show', name='view_proposal'),
 )
