@@ -25,6 +25,7 @@ contact_info = u"""
 
 def _migrate_common_data(model, model_co, _extras=None):
     for orig in model.objects.all():
+        print("{} -> {}".format(model.__name__, orig.id))
         new = model_co()
         new.name = orig.name
         new.description = getattr(orig, 'description', '')
@@ -41,6 +42,8 @@ def _migrate_common_data(model, model_co, _extras=None):
         new.last_editor = orig.last_editor
         new.last_update = orig.last_update
         new.geometry = orig.geometry
+
+        new.legacy_id = orig.id
 
         new.save()
 

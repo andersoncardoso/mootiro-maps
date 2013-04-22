@@ -3,6 +3,7 @@ DROP TABLE main_georefobject;
 CREATE TABLE common_objects_georefobject
 (
   id character varying(24) NOT NULL,
+  legacy_id integer,
   name character varying(512) NOT NULL,
   description text NOT NULL,
   short_description character varying(250),

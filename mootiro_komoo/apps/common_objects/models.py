@@ -47,6 +47,7 @@ class GeoRefObject(GeoRefModel, BaseModel, URLModelMixin):
     """
     # bson.objectid.ObjectId
     id = models.CharField(primary_key=True, max_length=24)
+    legacy_id = models.PositiveIntegerField()  # old id
     name = models.CharField(max_length=512)
     description = models.TextField()
     short_description = models.CharField(max_length=250, null=True, blank=True)

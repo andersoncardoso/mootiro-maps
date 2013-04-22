@@ -19,13 +19,6 @@ from update.signals import create_update
 logger = logging.getLogger(__name__)
 
 
-@render_to('comments/comments_poc.html')
-def comments_index(request):
-    from need.models import Need
-    return {'content_object': Need.objects.get(pk=1)}
-    # return {'content_object': None}
-
-
 @login_required
 @ajax_request
 def comments_add(request):
